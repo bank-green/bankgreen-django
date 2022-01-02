@@ -10,6 +10,7 @@ import pandas as pd
 from datasource.models.datasource import Datasource
 from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 
+
 class Banktrack(Datasource):
     update_date = models.DateTimeField(
         "Banktrack data refresh date and time", null=False, editable=False
@@ -44,7 +45,9 @@ class Banktrack(Datasource):
         for i, row in df.iterrows():
 
             bank = Banktrack(
-                update_date=datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
+                update_date=datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(
+                    tzinfo=timezone.utc
+                ),
                 banktrack_link=row.link,
                 tag=row.tag,
                 name=row.title,

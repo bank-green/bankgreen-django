@@ -9,6 +9,7 @@ from bank.models import Bank
 from django.db import models
 from django.utils import timezone
 
+
 class Datasource(models.Model):
     """
     Datasource is the parent of various individual datasources.
@@ -92,6 +93,6 @@ class Datasource(models.Model):
 
         tag is set in the bank model
         """
-        mystr = unidecode.unidecode(self.name).lower().rstrip().lstrip().replace(' ', '_')
-        mystr = re.sub('[\W]', '', mystr)
+        mystr = unidecode.unidecode(self.name).lower().rstrip().lstrip().replace(" ", "_")
+        mystr = re.sub("[\W]", "", mystr)
         return mystr
