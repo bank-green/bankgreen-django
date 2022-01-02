@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import json
 import re
 
@@ -7,9 +7,7 @@ import requests
 import unidecode
 from bank.models import Bank
 from django.db import models
-
-# from datasource_models import Banktrack
-
+from django.utils import timezone
 
 class Datasource(models.Model):
     """
@@ -73,7 +71,7 @@ class Datasource(models.Model):
     subsidiary_of_4_pct = models.IntegerField("percentage owned by subsidiary 4", default=0)
 
     # metadata
-    date_added = models.DateTimeField(default=datetime.datetime.now)
+    date_added = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name

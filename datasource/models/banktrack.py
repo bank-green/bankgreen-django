@@ -1,5 +1,6 @@
 import json
 import requests
+from datetime import datetime, timezone
 
 from bank.models import Bank
 from django.db import models
@@ -26,24 +27,24 @@ class Banktrack(Datasource):
     def load_and_create(cls, load_from_api=False):
 
         # load from api or from local disk.
-        # this is here because we don't have permission to publish one column of the data in this table
-        # and definitely don't have permission for opening up BankTrack's api.
         df = None
         if not load_from_api:
             df = pd.read_csv("./datasource/local/banktrack/bankprofiles.csv")
         else:
             r = requests.post(
                 "https://www.banktrack.org/service/sections/Bankprofile/financedata",
-                data={"pass": password},
+                data={"pass": banktrack_password},
             )
             res = json.loads(r.text)
             df = pd.DataFrame(res["bankprofiles"])
             df = df.drop(columns=["general_comment"])
             df.to_csv("bankprofiles.csv")
 
+        banks = []
         for i, row in df.iterrows():
+
             bank = Banktrack(
-                update_date=row.updated_at,  # TODO: Make these timezone aware
+                update_date=datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
                 banktrack_link=row.link,
                 tag=row.tag,
                 name=row.title,
@@ -52,3 +53,6 @@ class Banktrack(Datasource):
                 # TODO: Parse Countries for adding. Maybe override __init__? country=row.country,
             )
             bank.save()
+            banks.append(bank)
+
+        return banks
