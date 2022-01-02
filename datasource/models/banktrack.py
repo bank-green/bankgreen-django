@@ -1,8 +1,13 @@
+import json
+import requests
+
 from bank.models import Bank
 from django.db import models
 
-from datasource.models.datasource import Datasource
+import pandas as pd
 
+from datasource.models.datasource import Datasource
+from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 
 class Banktrack(Datasource):
     update_date = models.DateTimeField(
