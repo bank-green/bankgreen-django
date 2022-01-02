@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+black = { git = "git://github.com/psf/black" }
+celery = {extras = ["sqs"], version = "*"}
+django = "*"
+django-braces = "*"
+django-cryptography = "*"
+django-celery-beat = "*"
+django-celery-results = "*"
+django-debug-toolbar = "*"
+django-extensions = "*"
+django-model-utils = "*"
+djangorestframework = "*"
+networkx = "*"
+pandas = "*"
+pycountry = "*"
+python-dotenv = "*"
+qwikidata = "*"
+requests = "*"
+django-crispy-forms = "*"
+unidecode = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"

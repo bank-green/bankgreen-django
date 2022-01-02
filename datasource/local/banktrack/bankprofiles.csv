@@ -1,0 +1,228 @@
+,tag,title,updated_at,link,address,postal_code,city,country,website,filink_id
+0,bnp_paribas,BNP Paribas,2021-02-01 00:00:00,https://www.banktrack.org/bank/bnp_paribas,"16, boulevard des Italiens",75009,Paris,France,http://www.bnpparibas.com/en,217
+1,abn_amro,ABN AMRO,2021-05-06 00:00:00,https://www.banktrack.org/bank/abn_amro,Gustav Mahlerlaan 10, 1082 PP,Amsterdam,Netherlands,http://www.abnamro.nl/en/index.html,44
+2,anz,ANZ,2021-01-28 00:00:00,https://www.banktrack.org/bank/anz,"833 Collins Street, Docklands",3008,Melbourne,Australia,http://www.anz.com.au,411
+3,banco_bradesco,Banco Bradesco,2021-03-22 16:58:28,https://www.banktrack.org/bank/banco_bradesco,"Cidade de Deus, Prédio Novo, Vila Yara",06029-900 Osasco,São Paulo,Brazil,https://www.bradescori.com.br/en/,127
+4,banco_do_brasil,Banco do Brasil,2021-05-21 00:00:00,https://www.banktrack.org/bank/banco_do_brasil,SBS Quadra 01 Bloco G ed. sede III - 24° Andar Setor Bancario Sul,70074-900 ,Brasilia,Brazil,http://www.bb.com.br,46
+5,itau_unibanco,Itaú-Unibanco,2021-06-17 00:00:00,https://www.banktrack.org/bank/itau_unibanco,"Praça Alfredo Egydio de Souza Aranha, 100 Torre Olavo Setubal, Parque Jabaquara", 04344-902 ,São Paulo,Brazil,http://www.itau.com.br,47
+6,santander,Banco Santander,2021-01-21 00:00:00,https://www.banktrack.org/bank/santander,Santander Group City. Avda. de Cantabria s/n,28660,"Boadilla del Monte, Madrid",Spain,http://www.santander.com,224
+7,bank_mandiri,Bank Mandiri,2021-07-20 15:05:37,https://www.banktrack.org/bank/bank_mandiri,"Plaza Mandiri, Jl. Jend. Gatot, Subroto Kav. 36-38",12190,Jakarta,Indonesia,https://www.bankmandiri.co.id/en/web/guest,707
+8,bank_of_america,Bank of America,2021-02-02 00:00:00,https://www.banktrack.org/bank/bank_of_america,100 North Tryon Street,28255,"Charlotte, NC",United States,http://www.bankofamerica.com,132
+9,bank_of_china,Bank of China,2021-02-04 00:00:00,https://www.banktrack.org/bank/bank_of_china,"No.1 Fuxingmen Nei Street, Xicheng District",100818 ,Beijing,China,http://www.boc.cn/en/index.html,194
+10,barclays,Barclays,2021-05-04 00:00:00,https://www.banktrack.org/bank/barclays,1 Churchill Place,E14 5HP,London,United Kingdom,http://www.barclays.com,53
+11,bank_of_tokyo_mitsubishi_ufj,Mitsubishi UFJ Financial Group (MUFG),2021-02-23 00:00:00,https://www.banktrack.org/bank/bank_of_tokyo_mitsubishi_ufj,7-1 Marunouchi 2-Chome Chiyoda,100-0005 ,Tokyo,Japan,http://www.bk.mufg.jp/global/,52
+12,citi,Citi,2021-03-16 10:52:41,https://www.banktrack.org/bank/citi,399 Park Avenue NY 10043,,New York,United States,http://www.citigroup.com,58
+13,credit_suisse,Credit Suisse,2021-04-29 00:00:00,https://www.banktrack.org/bank/credit_suisse,Paradeplatz 8,8070,Zurich,Switzerland,http://www.credit-suisse.com,59
+14,deutsche_bank,Deutsche Bank,2021-01-07 00:00:00,https://www.banktrack.org/bank/deutsche_bank,Taunusanlage 12,60325,Frankfurt am Main,Germany,http://www.db.com,243
+15,goldman_sachs,Goldman Sachs,2021-02-10 00:00:00,https://www.banktrack.org/bank/goldman_sachs,200 West Street,10282,New York,United States,http://www.goldmansachs.com/,498
+16,hsbc,HSBC,2021-05-28 11:35:48,https://www.banktrack.org/bank/hsbc,8 Canada Square, E14 5 HQ,London,United Kingdom,http://www.hsbc.com,66
+17,jpmorgan_chase,JPMorgan Chase,2021-02-25 00:00:00,https://www.banktrack.org/bank/jpmorgan_chase,270 Park Avenue,10017-2070,New York,United States,http://www.jpmorganchase.com,346
+18,societe_generale,Société Générale,2021-03-01 00:00:00,https://www.banktrack.org/bank/societe_generale,"29, boulevard Haussmann",75009,Paris,France,http://www.societegenerale.com/,105
+19,belfius,Belfius,2021-04-13 00:00:00,https://www.banktrack.org/bank/belfius,Place Charles Rogier 11,1210,Brussels,Belgium,https://www.belfius.com/EN/index.aspx,1658
+20,ing,ING,2021-02-16 00:00:00,https://www.banktrack.org/bank/ing,Bijlmerdreef 106,1102 CT,Amsterdam,Netherlands,https://www.ing.com/Home.htm,68
+21,intesa_sanpaolo,Intesa Sanpaolo,2021-02-22 00:00:00,https://www.banktrack.org/bank/intesa_sanpaolo,Corso Inghilterra 3,10138,Torino,Italy,https://www.group.intesasanpaolo.com,79
+22,sumitomo_mitsui_banking_corporation,Sumitomo Mitsui Banking Corporation (SMBC),2021-03-08 00:00:00,https://www.banktrack.org/bank/sumitomo_mitsui_banking_corporation,"1-1-2, Marunouchi, Chiyoda-ku",100-0005,Tokyo,Japan,http://www.smbc.co.jp/global/index.html,81
+23,mizuho,Mizuho Financial Group,2021-02-24 00:00:00,https://www.banktrack.org/bank/mizuho,"1–5–5, Otemachi, Chiyoda–ku",100–8176,Tokyo,Japan,https://www.mizuho-fg.com/index.html,74
+24,westpac,Westpac,2021-03-08 00:00:00,https://www.banktrack.org/bank/westpac,275 Kent Street,2000,Sydney,Australia,http://www.westpac.com.au,86
+25,ubs,UBS,2021-03-04 00:00:00,https://www.banktrack.org/bank/ubs,Bahnhofstrasse 45,CH 8098,Zurich,Switzerland,http://www.ubs.com,396
+26,standard_chartered,Standard Chartered,2021-02-17 00:00:00,https://www.banktrack.org/bank/standard_chartered,1 Basinghall Avenue,EC2V 5DD,London,United Kingdom,http://www.standardchartered.com,80
+27,kbc,KBC,2021-03-02 00:00:00,https://www.banktrack.org/bank/kbc,Havenlaan 2,1080,Brussels,Belgium,https://www.kbc.com,70
+28,bbva,BBVA,2021-01-21 00:00:00,https://www.banktrack.org/bank/bbva,Plaza San Nicolás 4,48005,Bilbao,Spain,https://www.bbva.com/en/,54
+29,morgan_stanley,Morgan Stanley,2021-02-05 00:00:00,https://www.banktrack.org/bank/morgan_stanley,1585 Broadway,NY 10036,New York,United States,http://www.morganstanley.com/,234
+30,nedbank,Nedbank,2021-04-22 00:00:00,https://www.banktrack.org/bank/nedbank,135 Rivonia Road,Gauteng 2196,Sandton,South Africa,http://www.nedbankgroup.co.za/,76
+31,rabobank,Rabobank,2021-02-23 00:00:00,https://www.banktrack.org/bank/rabobank,Croeselaan 18,3521 CB,Utrecht,Netherlands,http://www.rabobank.nl,77
+32,rbc,Royal Bank of Canada (RBC),2021-02-26 00:00:00,https://www.banktrack.org/bank/rbc,200 Bay Street,ON  M5J 2J5,Toronto,Canada,http://www.rbc.com,78
+33,natwest,NatWest Group,2021-02-23 00:00:00,https://www.banktrack.org/bank/natwest,36 St Andrew Square,EH2 2YB, Edinburgh Scotland,United Kingdom,https://www.natwestgroup.com/,82
+34,scotiabank,Scotiabank,2021-01-12 00:00:00,https://www.banktrack.org/bank/scotiabank,44 King St. W.,M5H 1H1,Toronto,Canada,http://www.scotiabank.com,262
+35,china_construction_bank,China Construction Bank,2021-02-16 00:00:00,https://www.banktrack.org/bank/china_construction_bank,"25 Finance Street, Xicheng District",,Beijing,China,http://en.ccb.com/en/home/indexv3.html,195
+36,industrial_commercial_bank_of_china,Industrial and Commercial Bank of China (ICBC),2021-02-19 00:00:00,https://www.banktrack.org/bank/industrial_commercial_bank_of_china,"55 Fuxingmennei Avenue, Xicheng District",10032,Beijing,China,http://www.icbc-ltd.com/ICBCLtd/en/,199
+37,state_bank_of_india,State Bank of India,2021-03-03 00:00:00,https://www.banktrack.org/bank/state_bank_of_india,"Central Office, 8th Fl., Madame Cama Road 400 021",,Mumbai,India,https://sbi.co.in/,968
+38,standard_bank,Standard Bank,2021-03-15 00:00:00,https://www.banktrack.org/bank/standard_bank,9th Floor - 5 Simmonds St.,2001,Johannesburg,South Africa,http://www.standardbank.co.za/,260
+39,credit_agricole,Crédit Agricole,2021-02-15 00:00:00,https://www.banktrack.org/bank/credit_agricole,"114, avenue de la République",92120,Montrouge,France,http://www.credit-agricole.com/en,1026
+40,unicredit,UniCredit,2021-04-16 11:13:36,https://www.banktrack.org/bank/unicredit,Plazza Gae Aulenti 3 - Tower A,20154,Milan,Italy,http://www.unicreditgroup.eu,1634
+41,banco_galicia,Banco Galicia,2020-09-29 00:00:00,https://www.banktrack.org/bank/banco_galicia,Tte. Gral. Juan D. Perón 407,C1038AAI,Buenos Aires,Argentina,http://www.bancogalicia.com,1481
+42,bmo_financial_group,Bank of Montreal (BMO),2021-02-09 00:00:00,https://www.banktrack.org/bank/bmo_financial_group,1 First Canadian Place,ON M5X 1H3,Toronto,Canada,http://www.bmo.com/home,51
+43,triodos_bank,Triodos Bank,2021-01-07 15:25:07,https://www.banktrack.org/bank/triodos_bank,Nieuweroordweg 1,3704 EC,Zeist,Netherlands,http://www.triodos.com,88
+44,banca_etica,Banca Etica,2016-03-29 12:56:32,https://www.banktrack.org/bank/banca_etica,"Via Niccolò Tommaseo, 7",35131,Padova,Italy,https://www.bancaetica.it/,1451
+45,alternative_bank_schweiz,Alternative Bank Schweiz,2015-12-23 17:08:31,https://www.banktrack.org/bank/alternative_bank_schweiz,Amthausquai 21,4601,Olten,Switzerland,http://www.abs.ch,1262
+46,asn_bank,ASN Bank,2020-11-03 16:14:36,https://www.banktrack.org/bank/asn_bank,Bezuidenhoutseweg 153,2594AG,The Hague,Netherlands,http://www.asnbank.nl/,100
+47,gls_bank,GLS Bank,2021-05-07 00:00:00,https://www.banktrack.org/bank/gls_bank,Christstraße 9,44789,Bochum,Germany,http://www.gls.de,1252
+48,macquarie_group,Macquarie,2020-12-04 00:00:00,https://www.banktrack.org/bank/macquarie_group,50 Martin Place,NSW 2000,Sydney,Australia,http://www.macquarie.com.au,549
+49,the_co_operative_bank,The co-operative bank,2021-04-05 00:00:00,https://www.banktrack.org/bank/the_co_operative_bank,1 Balloon Street,M60 4EP,Manchester,United Kingdom,https://www.co-operativebank.co.uk/,96
+50,rsf_social_finance,RSF Social Finance,2016-10-31 17:15:11,https://www.banktrack.org/bank/rsf_social_finance,1002A O’Reilly Avenue,CA 94129,San Francisco,United States,http://www.rsfsocialfinance.org,1189
+51,caixa_economica_federal,Caixa Econômica Federal,2021-06-17 00:00:00,https://www.banktrack.org/bank/caixa_economica_federal,SBS Quadra 4 Lotes 3 E 4 Edificio Sede 21 ,,Brasilia,Brazil,http://www.caixa.gov.br/Paginas/home-caixa.aspx,599
+52,CaixaBank,CaixaBank,2021-02-09 00:00:00,https://www.banktrack.org/bank/CaixaBank,Avda Diagonal 621-629,8028,Barcelona,Spain,http://www.caixabank.com,290
+53,banco_popular_espanol,Banco Popular Español,2018-07-30 12:03:13,https://www.banktrack.org/bank/banco_popular_espanol,"C/Velázquez, 34 esq. Goya 35, Madrid",28001,Madrid,Spain,https://www.bancopopular.es,1361
+54,banco_espirito_santo,Banco Espirito Santo,2016-08-02 16:16:51,https://www.banktrack.org/bank/banco_espirito_santo,"Avenida da Liberdade, 195",1250-142,Lisboa,Portugal,http://www.bes.pt/01.1_home_uk.html,55
+55,caisse_de_economie_solidaire_desjardins,Desjardins Group,2020-12-10 15:10:31,https://www.banktrack.org/bank/caisse_de_economie_solidaire_desjardins,100 Des Commandeurs Street,QC G6V 7N5,Lévis,Canada,https://www.desjardins.com,1392
+56,ekobanken,Ekobanken,2015-12-23 17:00:52,https://www.banktrack.org/bank/ekobanken,Skäve Magasin,153 22,Järna,Sweden,https://www.ekobanken.se/en/,1264
+57,china_development_bank,China Development Bank,2021-01-07 00:00:00,https://www.banktrack.org/bank/china_development_bank,"18 Fuxingmennei Street, Xicheng District",100031,Beijing,China,http://www.cdb.com.cn/,196
+58,china_exim_bank,Export-Import Bank of China,2016-05-24 11:19:52,https://www.banktrack.org/bank/china_exim_bank,"No.30, Fu Xing Men Nei Street, Xi cheng District,",100031,Beijing,China,http://english.eximbank.gov.cn/,1633
+59,china_everbright_bank,China Everbright Bank,2021-01-18 00:00:00,https://www.banktrack.org/bank/china_everbright_bank,"China Everbright Center, 25 Taipingqiao Avenue",,"Xicheng District, Beijing",China,http://www.cebbank.com,1827
+60,cibc,Canadian Imperial Bank of Commerce (CIBC),2021-02-16 00:00:00,https://www.banktrack.org/bank/cibc,Commerce Court,M5L 1A2,Toronto,Canada,https://www.cibc.com/en/,998
+61,manulife,Manulife,2021-09-03 15:07:22,https://www.banktrack.org/bank/manulife,200 Bloor East Street,M4W 1E5,Toronto,Canada,http://www.manulife.com,1513
+62,nordea,Nordea,2021-03-05 00:00:00,https://www.banktrack.org/bank/nordea,Satamaradankatu 5, FI-00020,Helsinki,Finland,http://www.nordea.com,370
+63,zurich_kantonalbank,Zurich Kantonalbank,2016-10-31 17:15:11,https://www.banktrack.org/bank/zurich_kantonalbank,Bahnhofstrasse 9,8001,Zurich,Switzerland,http://www.zkb.ch/de/center_worlds/englishwindow.html,403
+64,td_bank_financial_group,Toronto-Dominion Bank (TD Bank),2021-03-02 00:00:00,https://www.banktrack.org/bank/td_bank_financial_group,"12th Floor, 55 King St. West",ON M5K 1A2,Toronto,Canada,http://www.td.com,394
+65,danske_bank,Danske Bank,2021-04-19 00:00:00,https://www.banktrack.org/bank/danske_bank,Holmens Kanal 2-12,1092,Copenhagen,Denmark,http://www.danskebank.com,298
+66,erste_group,Erste Group Bank,2021-05-10 00:00:00,https://www.banktrack.org/bank/erste_group,Am Belvedere 1,1100,Vienna,Austria,http://www.erstegroup.com,1328
+67,wells_fargo,Wells Fargo,2021-01-08 11:03:32,https://www.banktrack.org/bank/wells_fargo,420 Montgomery Street,CA 94104,San Francisco,United States,http://www.wellsfargo.com/,84
+68,commonwealth_bank,Commonwealth Bank,2021-09-03 12:53:45,https://www.banktrack.org/bank/commonwealth_bank,11 Harbour Street,NSW 2000,Sydney,Australia,http://www.commbank.com.au,957
+69,national_australia_bank_group,National Australia Bank (NAB),2021-02-25 00:00:00,https://www.banktrack.org/bank/national_australia_bank_group,"800 Bourke St W, Docklands Victoria",3008,Melbourne,Australia,https://www.nab.com.au/,367
+70,dekabank,DekaBank,2021-03-11 00:00:00,https://www.banktrack.org/bank/dekabank,Mainzer Landstraße 16,60325, Frankfurt am Main,Germany,https://www.deka.de/deka-group,833
+71,natixis,Natixis,2021-02-16 00:00:00,https://www.banktrack.org/bank/natixis,"30, avenue Pierre Mendès France",75013,Paris,France,http://www.natixis.com/,235
+72,commerzbank,Commerzbank,2021-08-30 12:02:26,https://www.banktrack.org/bank/commerzbank,Kaiserplatz ,60261,Frankfurt am Main,Germany,https://www.commerzbank.com/,293
+73,industrial_bank,Industrial Bank,2021-02-19 00:00:00,https://www.banktrack.org/bank/industrial_bank,154 Hudong Road,350003,"Fuzhou, Fujian",China,https://www.cib.com.cn/en/,1471
+74,bangkok_bank,Bangkok Bank,2016-04-04 15:58:04,https://www.banktrack.org/bank/bangkok_bank,333 Silom Rd,10500,Bangkok,Thailand,http://www.bangkokbank.com/BangkokBank/Pages/homepage.aspx,254
+75,kasikorn_bank,Kasikorn Bank,2016-04-04 15:58:04,https://www.banktrack.org/bank/kasikorn_bank,1 Soi. Kasikornthai Ratburana Rd.,10140,Bangkok,Thailand,http://www.kasikornbank.com/en/Pages/Default.aspx,822
+76,absa_bank_limited,Absa Group,2021-04-08 13:58:37,https://www.banktrack.org/bank/absa_bank_limited,"7th Floor, Absa Towers West  15 Troye Street ",2000,Johannesburg,South Africa,https://www.absa.africa/absaafrica/,1476
+77,access_bank,Access Bank,2021-09-06 00:00:00,https://www.banktrack.org/bank/access_bank,"Plot 999C, Danmole Street",,"Victoria Island, Lagos State",Nigeria,http://www.accessbankplc.com/,1477
+78,arab_african_international_bank,Arab African International Bank,2021-07-26 13:12:29,https://www.banktrack.org/bank/arab_african_international_bank,5 Midan Al Saray Al Koubra Garden City,11516, Cairo,Egypt,http://www.aaib.com,1479
+79,banco_de_la_republica_oriental_del_uruguay,Banco de la República Oriental del Uruguay,2020-09-29 00:00:00,https://www.banktrack.org/bank/banco_de_la_republica_oriental_del_uruguay,Calle Cerrito 351,11000,Montevideo,Uruguay,https://www.portal.brou.com.uy/,1480
+80,bancolombia_s_a_,Bancolombia,2021-07-27 11:36:19,https://www.banktrack.org/bank/bancolombia_s_a_,Calle 50 No. 51-66,,Medellin,Colombia,https://www.grupobancolombia.com,1482
+81,bank_muscat,Bank Muscat,2021-09-17 11:40:26,https://www.banktrack.org/bank/bank_muscat,Markaz Al Tejari Street P.O. Box No.134 Post Ruwi,,Muscat,Oman,http://www.bankmuscat.com,1483
+82,corpbanca,Itaú Corpbanca,2016-08-02 16:16:51,https://www.banktrack.org/bank/corpbanca,660 Rosario Norte Las Condes,,Santiago,Chile,http://www.corpbanca.cl,817
+83,dnb,DNB,2020-12-01 12:12:21,https://www.banktrack.org/bank/dnb,Dronning Eufemias Gate 30,191,Oslo,Norway,https://www.dnb.no/en,1466
+84,export_development_canada,Export Development Canada,2021-05-06 00:00:00,https://www.banktrack.org/bank/export_development_canada,150 Slater Street,ON K1A 1K3,Ottawa,Canada,http://www.edc.ca,249
+85,firstrand_group_ltd,FirstRand,2020-11-03 00:00:00,https://www.banktrack.org/bank/firstrand_group_ltd,"4 Merchant Place, Cnr. Fredman Drive & Rivonia Road, 4th Floor",2196,Sandton,South Africa,https://www.firstrand.co.za/,1489
+86,fmo,FMO,2021-05-21 13:46:49,https://www.banktrack.org/bank/fmo,Anna van Saksenlaan 71  ,2593 HW,The Hague,Netherlands,http://www.fmo.nl,1601
+87,kfw_ipex_bank,KfW IPEX-Bank,2021-05-06 00:00:00,https://www.banktrack.org/bank/kfw_ipex_bank,Palmengartenstrasse 5-9,60325,Frankfurt am Main,Germany,https://www.kfw-ipex-bank.de/International-financing/KfW-IPEX-Bank/,1492
+88,lloyds_banking_group_plc,Lloyds Banking Group,2021-02-05 00:00:00,https://www.banktrack.org/bank/lloyds_banking_group_plc,25 Gresham Street,EC2V 7HN,London,United Kingdom,http://www.lloydsbankinggroup.com,354
+89,seb,Skandinaviska Enskilda Banken (SEB),2020-12-01 11:49:40,https://www.banktrack.org/bank/seb,Kungsträdgårdsgatan 8,SE 106-40,Stockholm,Sweden,https://sebgroup.com/,1636
+90,bnp_paribas_fortis,BNP Paribas Fortis,2021-04-09 00:00:00,https://www.banktrack.org/bank/bnp_paribas_fortis,Warandeberg 3,B-1000,Brussels,Belgium,https://www.bnpparibasfortis.com/,1498
+91,garantibank,Garanti BBVA,2021-03-18 11:59:51,https://www.banktrack.org/bank/garantibank,Maslak Mahallesi Eski Büyükdere Caddesi No:23,34450,Istanbul,Turkey,https://www.garantibbva.com.tr/en,857
+92,akbank,Akbank,2021-03-14 00:00:00,https://www.banktrack.org/bank/akbank,Sabanci Center 4.Levent,34330,Istanbul,Turkey,http://www.akbank.com/en-us/Pages/default.aspx,858
+93,bmce_bank,BMCE Bank of Africa,2021-07-26 15:03:48,https://www.banktrack.org/bank/bmce_bank,"140, Avenue Hassan II",P.O. Box 13425 Casa,Casablanca,Morocco,https://www.bankofafrica.ma/en/bank-of-africa,287
+94,agricultural_bank_of_china,Agricultural Bank of China,2021-01-21 00:00:00,https://www.banktrack.org/bank/agricultural_bank_of_china,"No.69, Jianguomen, NeiAvenue, Dongcheng District",100005,Beijing,China,http://www.abchina.com/en/,193
+95,pnc,PNC,2016-06-30 15:45:32,https://www.banktrack.org/bank/pnc,"249 Fifth Avenue, One PNC Plaza",PA 15222,Pittsburgh,United States,https://www.pnc.com/,1517
+96,nibc,NIBC,2021-07-26 13:48:04,https://www.banktrack.org/bank/nibc,Carnegieplein 4,2517 KJ,The Hague,Netherlands,http://www.nibc.com,1505
+97,ahli_united_bank,Ahli United Bank,2021-09-03 15:32:53,https://www.banktrack.org/bank/ahli_united_bank,"Building 2495, Road 2832, Al Seef District 428",P.O. Box 2424,Manama,Bahrain,http://www.ahliunited.com,1540
+98,vnesheconombank,Vnesheconombank,2016-10-31 17:15:11,https://www.banktrack.org/bank/vnesheconombank,"Akademika Sakharova Prospekt, 9",107996,Moscow,Russian Federation,http://www.veb.ru/en/,1444
+99,sberbank,Sberbank,2021-03-02 00:00:00,https://www.banktrack.org/bank/sberbank,19 Vavilova St,117997,Moscow,Russian Federation,http://www.sbrf.ru/en/,1446
+100,bank_of_communications,Bank of Communications,2021-01-15 00:00:00,https://www.banktrack.org/bank/bank_of_communications,188 Yinchengzhong Road,200120,Shanghai,China,http://www.bankcomm.com/BankCommSite/shtml/jyjr/en/2600212/list.shtml?channelId=,616
+101,hua_xia_bank,Hua Xia Bank,2016-05-24 11:19:52,https://www.banktrack.org/bank/hua_xia_bank,"Hua Xia Bank Plaza, No.22 Jianguomennei Street, Dongcheng District",100005,Beijing,China,http://www.hxb.com.cn/home/en/,888
+102,china_merchants_bank,China Merchants Bank,2021-01-19 00:00:00,https://www.banktrack.org/bank/china_merchants_bank,"China Merchants Bank Tower, No 7088, Shennan Boulevard",518040,Shenzhen,China,http://english.cmbchina.com/,1436
+103,shanghai_pudong_development_bank,Shanghai Pudong Development Bank,2021-01-20 00:00:00,https://www.banktrack.org/bank/shanghai_pudong_development_bank,NO.12 Zhongshan Dong Yi Road,200002,Shanghai,China,http://www.spdb.com.cn,1775
+104,china_minsheng_bank,China Minsheng Bank,2021-01-19 00:00:00,https://www.banktrack.org/bank/china_minsheng_bank,"2 Fuxingmen Nei Street, Xicheng District",100031,Beijing,China,http://en.cmbc.com.cn/,1668
+105,citic_bank_international,CITIC Bank International,2016-08-08 14:13:33,https://www.banktrack.org/bank/citic_bank_international,232 Des Voeux Road Central,,Hong Kong,China,http://www.cncbinternational.com/home/en/index.jsp,436
+106,axis_bank,Axis Bank,2020-12-03 00:00:00,https://www.banktrack.org/bank/axis_bank,"Bombay Dyeing Mills Compound, Pandurang Budhkar Marg, Worli",400 005,Mumbai,India,http://www.axisbank.com,1638
+107,industrial_development_bank_of_india,Industrial Development Bank of India (IDBI),2020-12-07 00:00:00,https://www.banktrack.org/bank/industrial_development_bank_of_india,"IDBI Tower, WTC Complex, Cuffe Parade, Colaba",400005,Mumbai,India,http://www.idbi.com,1630
+108,alfa_bank,Alfa Bank,2016-10-31 17:15:11,https://www.banktrack.org/bank/alfa_bank,27 Kalanchevskaya Street,107078,moscow,Russian Federation,http://www.alfabank.com,1442
+109,hdfc_bank,HDFC Bank,2020-12-07 13:53:15,https://www.banktrack.org/bank/hdfc_bank,"HDFC Bank House, Senapati Bapat Marg, Lower Parel",400013,Mumbai,India,http://hdfcbank.com,1646
+110,icici_bank,ICICI Bank,2020-12-04 00:00:00,https://www.banktrack.org/bank/icici_bank,"ICICI Bank Tower, Near Chakli Circle, Old Padra Road, Vadodara",390 007,Gujarat,India,http://www.icicibank.com,974
+111,china_citic_bank,China CITIC Bank,2021-01-15 00:00:00,https://www.banktrack.org/bank/china_citic_bank,"Fuhua Mansion Block C, No. 8 Choayangmen Beidajie, Dongcheng District",100027,Beijing,China,http://www.citicbank.com,2013
+112,ping_an_bank,Ping An Bank,2021-01-20 00:00:00,https://www.banktrack.org/bank/ping_an_bank,No. 5047 Shennan East Road Luohu District Shenzhen,518001,Guangdong,China,http://bank.pingan.com/en/index.shtml,1660
+113,bank_of_beijing,Bank of Beijing,2016-05-24 11:19:52,https://www.banktrack.org/bank/bank_of_beijing,"Bank of Beijing Mansion, No.17 Financial Street",,Beijing,China,http://www.bankofbeijing.com.cn/en2011/index.html,436
+114,bank_of_ningbo,Bank of Ningbo,2016-05-24 11:19:52,https://www.banktrack.org/bank/bank_of_ningbo,"No. 294, Zhongshan East Road",,"Ningbo, Zhejiang",China,http://www.nbcb.cn/ywb/index.shtml,436
+115,bank_of_nanjing,Bank of Nanjing,2016-05-24 11:19:52,https://www.banktrack.org/bank/bank_of_nanjing,No 288 Zhongshan Road,Xuanwu District,Nanjing,China,http://www.njcb.com.cn/col/col1642/index.html,436
+116,vtb_bank,VTB,2016-10-18 11:32:11,https://www.banktrack.org/bank/vtb_bank,"Ul. Bolshaya Morskaya, 29,",190000,St. Petersburg,Russian Federation,http://www.vtb.com/,1445
+117,maybank,Maybank,2021-07-27 11:18:06,https://www.banktrack.org/bank/maybank,"Malayan Banking Berhad Level 14, Menara Maybank 100 Jalan Tun Perak",50050,Kuala Lumpur,Malaysia,http://www.maybank.com,965
+118,cimb,CIMB,2016-09-07 10:58:13,https://www.banktrack.org/bank/cimb,Jalan Raja Laut,50350,Kuala Lumpur,Malaysia,http://www.cimb.com,966
+119,dbs,DBS,2020-12-08 16:15:09,https://www.banktrack.org/bank/dbs,"12 Marina Boulevard, Marina Bay Financial Centre Tower 3, Level 3",18992,,Singapore,http://www.dbs.com/,232
+120,ocbc,OCBC Bank,2020-12-10 00:00:00,https://www.banktrack.org/bank/ocbc,"65 Chulia Street, OCBC Centre",49513,,Singapore,http://www.ocbc.com/,1061
+121,uob,United Overseas Bank (UOB),2021-08-26 00:00:00,https://www.banktrack.org/bank/uob,"80 Raffles Avenue, UOB Plaza 1",48624,,Singapore,http://www.uobgroup.com/,951
+122,bank_negara_indonesia,Bank Negara Indonesia (BNI),2021-07-20 00:00:00,https://www.banktrack.org/bank/bank_negara_indonesia,Jl. Jenderal Sudirman Kav. 1,10220,Jakarta,Indonesia,http://www.bni.co.id,976
+123,bank_rakyat_indonesia,Bank Rakyat Indonesia (BRI),2016-09-07 10:58:13,https://www.banktrack.org/bank/bank_rakyat_indonesia,Jl. Jenderal Sudirman Kav.44-46,10210,Jakarta,Indonesia,http://www.bri.co.id/,977
+124,idfc,IDFC,2021-07-26 00:00:00,https://www.banktrack.org/bank/idfc,"Naman Chambers, C-32",400 051,Mumbai,India,http://www.idfc.com,1592
+125,otkritie_bank,Otkritie Bank,2016-10-31 17:15:11,https://www.banktrack.org/bank/otkritie_bank,2/4 Letnikovskaya St.,115114,Moscow,Russian Federation,http://www.openbank.ru,1593
+126,banco_de_credito_del_peru_bcp_,Banco de Crédito del Perú (BCP),2021-04-08 00:00:00,https://www.banktrack.org/bank/banco_de_credito_del_peru_bcp_,"Calle Centenario 156, La Molina",12,Lima,Peru,https://www.viabcp.com,961
+127,dz_bank,DZ Bank,2021-02-09 00:00:00,https://www.banktrack.org/bank/dz_bank,Platz der Republik,60265,Frankfurt am Main Hessen,Germany,http://www.dzbank.com/,231
+128,bny_mellon,BNY Mellon,2021-04-13 16:04:20,https://www.banktrack.org/bank/bny_mellon,1 Wall Street,10286,New York,United States,https://www.bnymellon.com,990
+129,us_bancorp,U.S. Bancorp,2021-03-04 00:00:00,https://www.banktrack.org/bank/us_bancorp,800 Nicolett Mall,55402,Minneapolis,United States,https://www.usbank.com/index.html,1423
+130,suncorp,Suncorp,2016-10-31 17:15:11,https://www.banktrack.org/bank/suncorp,36 Wickham Tce,4000,Brisbane,Australia,http://www.suncorpgroup.com.au,1604
+131,la_banque_postale,La Banque Postale,2016-04-01 12:09:52,https://www.banktrack.org/bank/la_banque_postale,"115, rue de Sèvres","115, rue de Sèvres",Paris,France,https://www.labanquepostale.fr,1605
+132,allianz,Allianz,2021-05-10 00:00:00,https://www.banktrack.org/bank/allianz,Köninginstraße 28,80802,München,Germany,https://www.allianz.com,1606
+133,bayernlb,BayernLB,2021-05-04 00:00:00,https://www.banktrack.org/bank/bayernlb,Brienner Straße 18,80333,München,Germany,https://www.bayernlb.com/internet/en/blb/resp/index.jsp,236
+134,helaba,Helaba,2016-10-31 17:15:11,https://www.banktrack.org/bank/helaba,Neue Mainzer Straße 52-58,D-60311,Frankfurt am Main,Germany,https://www.helaba.de,1556
+135,hsh_nordbank,HSH Nordbank,2016-10-31 17:15:11,https://www.banktrack.org/bank/hsh_nordbank,Gerhart-Hauptmann-Platz 50,20095,Hamburg,Germany,http://www.hsh-nordbank.com,1607
+136,lbbw,LBBW,2021-06-10 00:00:00,https://www.banktrack.org/bank/lbbw,Am Hauptbahnhof 2,70173,Stuttgart,Germany,https://www.lbbw.de/,352
+137,norddeutsche_landesbank_nordlb_,NORD/LB,2016-10-31 17:15:11,https://www.banktrack.org/bank/norddeutsche_landesbank_nordlb_,Friedrichswall 10,30159,Hanover,Germany,https://www.nordlb.com,1501
+138,mediobanca,Mediobanca,2021-05-10 00:00:00,https://www.banktrack.org/bank/mediobanca,"Piazzetta E. Cuccia, 1",20121,Milan,Italy,http://www.mediobanca.it/en/index.html,1465
+139,raiffeisen_zentralbank,Raiffeisen Bank International,2021-06-07 00:00:00,https://www.banktrack.org/bank/raiffeisen_zentralbank,Am Stadtpark 9,A-1030,Vienna,Austria,http://www.rbinternational.com ,1526
+140,swedbank,Swedbank,2020-12-07 16:03:36,https://www.banktrack.org/bank/swedbank, Landsvägen 40,172 63,Sundbyberg,Sweden,http://www.swedbank.com,388
+141,bank_of_india,Bank of India,2020-12-03 13:50:39,https://www.banktrack.org/bank/bank_of_india,Star House C-5 400 051,,Mumbai,India,http://www.bankofindia.co.in,1003
+142,power_finance_corporation,Power Finance Corporation (PFC),2016-10-31 17:15:11,https://www.banktrack.org/bank/power_finance_corporation,"1, Barakhamba Lane, Connaught Place",110 001,New Delhi,India,http://www.pfcindia.com,1610
+143,life_insurance_corporation_of_india,Life Insurance Corporation of India,2016-07-05 12:01:52,https://www.banktrack.org/bank/life_insurance_corporation_of_india,"4th Floor, West Wing, Yogakshema,Jeevan Bhima Marg, Nariman Point",19953,Mumbai-400021,India,http://www.licindia.in,1611
+144,pko_bank_polski,PKO Bank Polski,2021-02-25 00:00:00,https://www.banktrack.org/bank/pko_bank_polski,15 Pulawska Street,00-975,Warsaw,Poland,http://www.pkobp.pl/pkobppl-en,1612
+145,bank_gospodarstwa_krajowego,Bank Gospodarstwa Krajowego (BGK),2016-10-31 17:15:11,https://www.banktrack.org/bank/bank_gospodarstwa_krajowego,Al. Jerozolimskie 7,00-955,Warsaw,Poland,http://www.bgk.com.pl,1613
+146,getin_noble_bank,Getin Noble Bank,2016-10-31 17:15:11,https://www.banktrack.org/bank/getin_noble_bank,Przyokopowa 33,01-208,Warsaw,Poland,http://en.gnb.pl/,1615
+147,bank_millennium,Bank Millennium,2016-10-31 17:15:11,https://www.banktrack.org/bank/bank_millennium,Stanislawa Zaryna 2A,02-593,Warsaw,Poland,http://www.bankmillennium.pl,1616
+148,bank_central_asia,Bank Central Asia,2016-10-31 17:15:11,https://www.banktrack.org/bank/bank_central_asia,Jl. MH Thamrin No. 1,10310,Jakarta,Indonesia,http://www.bca.co.id/en,963
+149,bank_danamon,Bank Danamon,2016-10-31 17:15:11,https://www.banktrack.org/bank/bank_danamon,Jl. Prof. Dr. Satrio Kav. E IV No. 6,12950,Jakarta,Indonesia,http://www.danamon.co.id,1572
+150,bank_gospodarki_ywno_ciowej,Bank Gospodarki Żywnościowej,2016-10-31 17:15:11,https://www.banktrack.org/bank/bank_gospodarki_ywno_ciowej,ul. Kasprzaka 10/16,01-211,Warsaw,Poland,http://www.bgz.pl/en/about/index.html,1627
+151,credit_mutuel,Crédit Mutuel,2021-02-04 00:00:00,https://www.banktrack.org/bank/credit_mutuel,34 rue Wacken,67000,Strasbourg,France,https://www.creditmutuel.fr/,1439
+152,bndes,BNDES,2016-09-01 15:46:22,https://www.banktrack.org/bank/bndes,"Av. Republica do Chile, 100 – 14*. Andar -  sala 1423",20031-917,Rio de Janeiro,Brazil,http://www.bndes.gov.br,1431
+153,bankia,Bankia,2021-05-07 12:09:19,https://www.banktrack.org/bank/bankia,Calle Pintor Sorolla 8,E-46002,Valencia,Spain,http://www.bankia.com/en/,1628
+154,norges_bank,Norges Bank,2021-03-23 00:00:00,https://www.banktrack.org/bank/norges_bank,Bankplassen 2,151,Oslo,Norway,http://www.norges-bank.no,1424
+155,kfw,KfW,2016-10-31 17:15:11,https://www.banktrack.org/bank/kfw,Palmengartenstraße 5-9,60325,Frankfurt am Main,Germany,https://www.kfw.de/kfw.de-2.html,1640
+156,bpce_group,BPCE,2021-02-15 00:00:00,https://www.banktrack.org/bank/bpce_group,"50, avenue Pierre Mendès France",75201,Paris,France,http://www.bpce.fr/,1639
+157,wing_lung_bank,Wing Lung Bank,2016-09-01 17:22:39,https://www.banktrack.org/bank/wing_lung_bank,"45 Des Voeux Road Central, Central and Western District",,Hong Kong Island,Hong Kong,http://www.winglungbank.com/wlb_corporate/en/index.html,1667
+158,cathay_united_bank,Cathay United Bank,2021-09-17 13:36:05,https://www.banktrack.org/bank/cathay_united_bank,"1F no 7, Songren Road 110",,Taipei City  ,"Taiwan, Republic of China",http://www.cathaybk.com.tw,972
+159,sumitomo_mitsui_trust_holdings,Sumitomo Mitsui Trust Holdings,2021-03-08 00:00:00,https://www.banktrack.org/bank/sumitomo_mitsui_trust_holdings,"1-4-1 Marunouchi, Chiyoda-ku",,Tokyo,Japan,http://www.smth.jp/en/,1720
+160,banco_sabadell,Banco Sabadell,2021-05-10 00:00:00,https://www.banktrack.org/bank/banco_sabadell,Avenida Óscar Esplá 37,3007,Alicante,Spain,https://www.grupbancsabadell.com/en/,1763
+161,bank_hapoalim,Bank Hapoalim,2021-07-22 00:00:00,https://www.banktrack.org/bank/bank_hapoalim,50 Rothschild Boulevard,61025, Tel Aviv,Israel,http://www.bankhapoalim.com/,1815
+162,bank_leumi,Bank Leumi,2021-07-22 00:00:00,https://www.banktrack.org/bank/bank_leumi,24-32 Yehuda Halevi St. ,65546,Tel-Aviv,Israel,https://english.leumi.co.il/,1816
+163,israel_discount_bank,Israel Discount Bank,2021-07-22 00:00:00,https://www.banktrack.org/bank/israel_discount_bank,23 Yehuda Halevy St.,6513601,Tel Aviv,Israel,https://www.discountbank.co.il/DB/en,1818
+164,mizrahi_tefahot_bank,Mizrahi Tefahot Bank,2021-07-22 00:00:00,https://www.banktrack.org/bank/mizrahi_tefahot_bank,"7 Jaboutinsky St, P.O.B. 3450 ",52136,Ramat gan,Israel,https://www.mizrahi-tefahot.co.il/en/bank/pages/default.aspx,1819
+165,first_international_bank_of_israel,First International Bank of Israel (FIBI),2021-07-22 13:50:10,https://www.banktrack.org/bank/first_international_bank_of_israel,42 Rothschild Blvd.,6688310,Tel-Aviv,Israel,https://online.fibi.co.il/wps/portal/FibiMenu/HomeEN,1817
+166,mauritius_commercial_bank,Mauritius Commercial Bank,2021-09-17 10:52:49,https://www.banktrack.org/bank/mauritius_commercial_bank,9-15 Sir William Newton Street,,Port Louis,Mauritius,http://www.mcbgroup.com/en/,1801
+167,cibanco,CIBanco,2020-10-20 00:00:00,https://www.banktrack.org/bank/cibanco,Paseo de las Palmas 215,Distrito Federal 110,Mexico City,Mexico,http://www.cibanco.com,1798
+168,fidelity_bank_plc_,Fidelity Bank,2021-09-06 14:49:46,https://www.banktrack.org/bank/fidelity_bank_plc_,"Fidelity Place, 2 Kofo Abayomi Street P. O. Box 72439 Victoria Island",, Lagos,Nigeria,https://www.fidelitybank.ng/,1800
+169,ecobank,Ecobank,2021-09-17 12:12:27,https://www.banktrack.org/bank/ecobank,2365 Boulevard du Mono B.P. 3261,, Lomé,Togo,http://www.ecobank.com/group/,1799
+170,finnfund,Finnfund,2016-11-07 13:26:10,https://www.banktrack.org/bank/finnfund,Uudenmaankatu 16B,FI-00121,Helsinki,Finland,http://www.finnfund.fi/,1623
+171,export_import_bank_of_india,India Exim Bank,2020-12-07 11:49:11,https://www.banktrack.org/bank/export_import_bank_of_india,"21st Floor, Centre One Building, World Trade Centre, Cuffe Parade-Colaba",400005,Mumbai,India,http://www.eximbankindia.in,209
+172,us_exim,Export-Import Bank of the United States (EXIM),2020-11-03 00:00:00,https://www.banktrack.org/bank/us_exim,811 Vermont Avenue NW,20571,Washington DC,United States,http://www.exim.gov/,484
+173,suntrust_bank,Truist Financial Corporation,2021-03-04 00:00:00,https://www.banktrack.org/bank/suntrust_bank, 214 N. Tryon St.,, Charlotte,United States,https://www.truist.com/,1772
+174,cifi,CIFI,2020-11-05 00:00:00,https://www.banktrack.org/bank/cifi,"MMG Tower, Costa del Este, 13th floor Office 13ª, Roberto Motta Avenue",,Panama City,Panama,http://www.cifi.com/en/,1778
+175,banco_mercantil_del_norte,Banco Mercantil del Norte (Banorte),2020-10-26 15:21:10,https://www.banktrack.org/bank/banco_mercantil_del_norte,Avenue Revolucion 3000,NL 64830,Monterrey,Mexico,http://www.banorte.com,1779
+176,banco_votorantim,Banco Votorantim,2020-10-22 00:00:00,https://www.banktrack.org/bank/banco_votorantim,"Av. das Nações Unidas, Torre A - 18° andar - Vila Gertrudes 141",1000,Sao Paolo,Brazil,https://www.bancovotorantim.com.br,947
+177,uk_export_finance,UK Export Finance,2020-11-03 00:00:00,https://www.banktrack.org/bank/uk_export_finance,1 Horse Guards Road, SW1A 2HQ,London,United Kingdom,https://www.gov.uk/government/organisations/uk-export-finance,1780
+178,svenska_handelsbanken,Svenska Handelsbanken,2020-12-01 00:00:00,https://www.banktrack.org/bank/svenska_handelsbanken,Kungsträdgårdsgatan 2 ,SE-106 70,Stockholm,Sweden,http://www.handelsbanken.com,1682
+179,bankinter,Bankinter,2021-05-10 00:00:00,https://www.banktrack.org/bank/bankinter,Paseo de la Castellana 29,28046,Madrid,Spain,http://www.bankinter.com,1764
+180,e_sun_commercial_bank,E.SUN Commercial Bank,2020-10-22 15:05:42,https://www.banktrack.org/bank/e_sun_commercial_bank,"No.117, Sec.3, Minsheng E.Rd.",105-46,Taipei,"Taiwan, Republic of China",http://www.esunbank.com.tw,1664
+181,efic,Export Finance Australia,2020-10-20 14:15:55,https://www.banktrack.org/bank/efic,Level 10 Export House 22 Pitt Street,2000, Sydney,Australia,http://www.efic.gov.au,438
+182,eksport_kredit_fonden,Denmarks Export Credit Agency,2021-01-04 15:46:24,https://www.banktrack.org/bank/eksport_kredit_fonden,Lautrupsgade 11,2100,Kopenhagen,Denmark,http://www.ekf.dk,63
+183,export_credit_norway,Export Credit Norway,2020-10-20 14:05:09,https://www.banktrack.org/bank/export_credit_norway,Hieronymus Heyerdahls gate 1,160,Oslo,Norway,http://www.eksportkreditt.no,1782
+184,instituto_de_credito_oficial,Instituto de Crédito Oficial (ICO),2020-10-22 14:50:45,https://www.banktrack.org/bank/instituto_de_credito_oficial,Paseo del Prado 4,28014,Madrid,Spain,https://www.ico.es/en/web/ico_en/home,1765
+185,national_bank_of_abu_dhabi,First Abu Dhabi Bank (FAB),2021-09-17 11:28:33,https://www.banktrack.org/bank/national_bank_of_abu_dhabi,Al Qurm – Business Park P.O. Box 6316,,Abu Dhabi,United Arab Emirates,https://www.bankfab.com/en-ae/about-fab,1783
+186,op_financial_group,OP Financial Group,2020-10-20 16:34:04,https://www.banktrack.org/bank/op_financial_group,Teollisuuskatu 1b 00510,510,Helsinki,Finland,http://www.op.fi,1784
+187,btg_pactual,BTG Pactual,2020-10-27 11:07:52,https://www.banktrack.org/bank/btg_pactual,"Av. Brigadeiro Faria Lima, 3.477 14º Andar - Itaim Bibi ",04538-133 ,São Paulo,Brazil,http://www.btgpactual.com,1566
+188,uk_green_investment_bank,Green Investment Group,2020-11-05 00:00:00,https://www.banktrack.org/bank/uk_green_investment_bank,Atria One Level 7 144 Morrison street,EH3 8EX,Edinburgh,United Kingdom,http://greeninvestmentgroup.com/,1785
+189,bancoestado,Banco del Estado de Chile,2020-10-27 00:00:00,https://www.banktrack.org/bank/bancoestado,Av. Libertador Bernardo O'Higgins nº1111,,Santiago,Chile,http://www.bancoestado.cl,1711
+190,bank_of_jiangsu,Bank of Jiangsu,2020-10-27 00:00:00,https://www.banktrack.org/bank/bank_of_jiangsu,26 Zhonghua Road,PC 210001,Nanjing,China,http://www.jsbchina.cn,1786
+191,credicorp,Credicorp,2020-10-26 14:58:55,https://www.banktrack.org/bank/credicorp,"Clarendon House, 2 Church Street P.O. Box HM 666 ",,Hamilton,Bermuda,https://credicorp.gcs-web.com/,1788
+192,swedish_export_credit_corporation_sek,Swedish Export Credit Corporation (SEK),2020-11-03 00:00:00,https://www.banktrack.org/bank/swedish_export_credit_corporation_sek,Klarabergsviadukten 61-63,SE 101-23,Stockholm,Sweden,http://www.sek.se/en/,1811
+193,korea_development_bank_kdc,Korea Development Bank (KDB),2021-09-01 00:00:00,https://www.banktrack.org/bank/korea_development_bank_kdc,"14 Eunhaeng-ro, Yeongdeungpo-gu",7242,Seoul,South Korea,https://www.kdb.co.kr/ih/simpleJsp.do,1474
+194,the_norinchukin_bank,Norinchukin Bank,2020-11-03 11:21:35,https://www.banktrack.org/bank/the_norinchukin_bank,"13-2, Yurakucho 1-chome, Chiyoda-ku",100-8420,Tokyo,Japan,https://www.nochubank.or.jp/en/,1752
+195,fubon_financial_holdings,Fubon Financial Holding,2020-12-07 00:00:00,https://www.banktrack.org/bank/fubon_financial_holdings,"No 237, Section 1 - Jianquo South Road 106",,Taipei City,"Taiwan, Republic of China",https://www.fubon.com/financialholdings/en/home/index.html,1662
+196,de_volksbank,De Volksbank,2021-03-15 00:00:00,https://www.banktrack.org/bank/de_volksbank,Croeselaan 1 ,3521 BJ ,Utrecht,Netherlands,https://www.devolksbank.nl/home.html,1762
+197,nykredit,Nykredit Bank,2020-12-07 00:00:00,https://www.banktrack.org/bank/nykredit,Kalvebod Brygge 1-3,1780 ,København V,Denmark,https://www.nykredit.com/en-gb/,1952
+198,jyske_bank,Jyske Bank,2020-12-03 12:35:01,https://www.banktrack.org/bank/jyske_bank,Vestergade 8-16, DK-8600, Silkeborg,Denmark,https://www.jyskebank.dk/,1855
+199,sydbank,Sydbank,2020-12-03 00:00:00,https://www.banktrack.org/bank/sydbank,Peberlyk 4,DK-6200,Aabenraa,Denmark,https://www.sydbank.com/,1964
+200,sparebank_1_srbank,SpareBank 1 SR-Bank,2020-12-07 00:00:00,https://www.banktrack.org/bank/sparebank_1_srbank,Christen Tranesgate 35,4007 ,Stavanger,Norway,https://www.sparebank1.no/en/sr-bank/personal.html,1957
+201,obank,O-Bank,2021-09-03 00:00:00,https://www.banktrack.org/bank/obank,"No.99, Sec. 2, Tiding Blvd., Neihu Dist., ",,Taipei City,"Taiwan, Republic of China",http://www.o-bank.com,1988
+202,postal_savings_bank_of_china,Postal Savings Bank of China,2021-03-09 00:00:00,https://www.banktrack.org/bank/postal_savings_bank_of_china,"No. 131 Xuanwumen West Street, Xicheng District",100808,Beijing ,China,http://www.psbc.com/cn/index.html,1989
+203,shinkin_central_bank,Shinkin Central Bank,2021-09-03 14:08:09,https://www.banktrack.org/bank/shinkin_central_bank,"3-7, Yaesu 1-chome, Chuo-ku", 103-0028,Tokyo,Japan,https://www.shinkin-central-bank.jp/e/,1990
+204,national_bank_of_egypt,National Bank of Egypt,2021-01-27 00:00:00,https://www.banktrack.org/bank/national_bank_of_egypt,"1187 Corniche El Nil, Cairo Plaza",,Cairo,Egypt,https://www.nbe.com.eg/NBE/E/#/EN/Home,2004
+205,banque_misr,Banque Misr,2021-01-27 00:00:00,https://www.banktrack.org/bank/banque_misr,151 Mohamed Farid St.,,Cairo,Egypt,http://www.banquemisr.com,1930
+206,zenith_bank,Zenith Bank,2020-11-20 00:00:00,https://www.banktrack.org/bank/zenith_bank,"Plot 84 Ajose Adeogun Street, Victoria Island",,Lagos,Nigeria,http://www.zenithbank.com,2005
+207,commercial_international_bank_cib,Commercial International Bank (CIB),2021-01-27 00:00:00,https://www.banktrack.org/bank/commercial_international_bank_cib,"Nile Tower Building, 21/23 Charles De Gaulle, Giza",,Cairo,Egypt,http://www.cibeg.com,1836
+208,attijariwafa_bank,Attijariwafa Bank,2020-12-31 15:13:24,https://www.banktrack.org/bank/attijariwafa_bank,2 boulevard Moulay Youssef BP 11141,2000,Casablanca,Morocco,https://www.attijariwafabank.com/en,1996
+209,banque_populaire,Banque Populaire,2020-12-31 00:00:00,https://www.banktrack.org/bank/banque_populaire,"01, boulevard Mohamed Zerktouni – BP 10.622",20100,Casablanca,Morocco,https://www.groupebcp.com/EN,2007
+210,shinhan_financial_group,Shinhan Financial Group,2020-11-17 00:00:00,https://www.banktrack.org/bank/shinhan_financial_group,"Shinhan Financial Group, Deakyung B/D, 120.2-Ga, Taepyung-ro, jung-Gu. ",,"Seoul, 100-102",South Korea,http://www.shinhangroup.com/en/index.jsp,1841
+211,yuanta_commercial_bank,Yuanta Commercial Bank,2020-11-19 00:00:00,https://www.banktrack.org/bank/yuanta_commercial_bank,1F-10F 66 1F 2F 2F-1 7F 9F 68 Section 1 Dunhua S Rd ,10557,Taipei City,"Taiwan, Republic of China",http://www.yuantabank.com.tw,2008
+212,shinsei_bank,Shinsei Bank,2020-11-19 00:00:00,https://www.banktrack.org/bank/shinsei_bank,"4-3, Nihonbashi-muromachi 2-chome, Chuo-ku",103-8303,Tokyo ,Japan,http://www.shinseibank.com,1751
+213,mianyang_city_commercial_bank,Mianyang City Commercial Bank,2020-11-19 00:00:00,https://www.banktrack.org/bank/mianyang_city_commercial_bank,3 Wenzhu Street W Section Linyuan Rd Fucheng,621000, Mianyang,China,https://www.mycc-bank.com/,2009
+214,ctbc_bank,CTBC Bank,2020-11-19 00:00:00,https://www.banktrack.org/bank/ctbc_bank,"1F., No.3, Songshou Rd., Sinyi District",110,Taipei City,"Taiwan, Republic of China",https://www.ctbcbank.com,1916
+215,chongqing_rural_commercial_bank,Chongqing Rural Commercial Bank,2020-11-26 00:00:00,https://www.banktrack.org/bank/chongqing_rural_commercial_bank,36 Jinshamen Road ,400023,Jiangbei ,China,http://www.cqrcb.com,2010
+216,bank_sinopac,Bank SinoPac,2020-11-26 00:00:00,https://www.banktrack.org/bank/bank_sinopac,"No. 36, Nanking East Road, Sec. 3",,Taipei City,"Taiwan, Republic of China",https://bank.sinopac.com/sinopacBT/en/index.html,1705
+217,bank_of_huzhou,Bank of Huzhou,2020-11-26 00:00:00,https://www.banktrack.org/bank/bank_of_huzhou,471-475 South Street,313000 ,Huzhou,China,http://www.hzccb.net/portal/zh_CN/home/index.html,1918
+218,first_commercial_bank,First Commercial Bank,2021-01-05 00:00:00,https://www.banktrack.org/bank/first_commercial_bank,"30,Chung King South Road,Sec. 1",100, Taipei,"Taiwan, Republic of China",http://www.firstbank.com.tw,2011
+219,kb_financial_group,KB Financial Group,2021-03-09 00:00:00,https://www.banktrack.org/bank/kb_financial_group,"26, Gukjegeumyung-ro 8-gil, Yeongdeungpo-gu",,Seoul,South Korea,http://www.kbfg.com,348
+220,bank_of_guizhou,Bank of Guizhou,2021-07-19 15:10:23,https://www.banktrack.org/bank/bank_of_guizhou,No. 149 South Zhonghua Road,GUZ  550001,Guiyang,China,https://english.bgzchina.com/,2017
+221,taishin_international_bank,Taishin International Bank,2021-07-19 15:10:32,https://www.banktrack.org/bank/taishin_international_bank,"No.44 Chung-Shan N. Rd., Sec.2,",,Taipei,"Taiwan, Republic of China",https://www.taishinbank.com.tw,1666
+222,mega_bank,Mega Bank,2021-09-03 14:15:18,https://www.banktrack.org/bank/mega_bank,"No 100, Chi-lin Road",10424,Taipei City ,"Taiwan, Republic of China",http://www.megabank.com.tw,1663
+223,woori_bank,Woori Bank,2021-09-03 14:14:25,https://www.banktrack.org/bank/woori_bank,"1-203, Hoehyeon-dong, Jung-gu",,Seoul,South Korea,https://www.wooribank.com/,1508
+224,hana_financial_group,Hana Financial Group,2021-09-03 14:13:15,https://www.banktrack.org/bank/hana_financial_group,"66 Euljiro,  2-ga, Jung-gu, ",,Seoul,South Korea,https://www.hanafn.com,1838
+225,bank_of_chongqing,Bank of Chongqing,2021-09-03 14:06:09,https://www.banktrack.org/bank/bank_of_chongqing, No. 6 Yongpingmen Street Chengxi Avenue Jiangbei District,400024,Chongqing Sichuan,China,http://www.cqcbank.com/cn/home/index.html,2019
+226,nonghyup_bank,NongHyup Bank,2021-09-03 14:04:37,https://www.banktrack.org/bank/nonghyup_bank,"120, Tongil-ro, Jung-gu",4517,Seoul,South Korea,https://banking.nonghyup.com,2020
