@@ -1,9 +1,5 @@
-from datetime import datetime
-import json
 import re
 
-import pandas as pd
-import requests
 import unidecode
 from bank.models import Bank
 from django.db import models
@@ -18,12 +14,8 @@ class Datasource(models.Model):
     """
 
     # human readable characteristics
-    name = models.CharField(
-        "Name of this data source", max_length=200, null=False, blank=False, default="-unnamed-"
-    )
-    description = models.TextField(
-        "Description of this instance of a data source", null=True, blank=True
-    )
+    name = models.CharField("Name of this data source", max_length=200, null=False, blank=False, default="-unnamed-")
+    description = models.TextField("Description of this instance of a data source", null=True, blank=True)
     website = models.URLField("Website of this data source", null=True, blank=True)
     # TODO: Make this a list
     countries = models.CharField(max_length=200)
@@ -73,6 +65,7 @@ class Datasource(models.Model):
 
     # metadata
     date_added = models.DateTimeField(default=timezone.now)
+    date_updated = models.DateTimeField("Time of last update", default=timezone.now, null=False, editable=False)
 
     def __str__(self):
         return self.name

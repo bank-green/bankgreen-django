@@ -2,7 +2,6 @@ import json
 import requests
 from datetime import datetime, timezone
 
-from bank.models import Bank
 from django.db import models
 
 import pandas as pd
@@ -12,9 +11,6 @@ from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 
 
 class Banktrack(Datasource):
-    update_date = models.DateTimeField(
-        "Banktrack data refresh date and time", null=False, editable=False
-    )
     banktrack_link = models.URLField("Link to the banktrack bank page", editable=False)
     tag = models.CharField(max_length=100, null=False, blank=False, editable=False)
 
@@ -33,8 +29,7 @@ class Banktrack(Datasource):
             df = pd.read_csv("./datasource/local/banktrack/bankprofiles.csv")
         else:
             r = requests.post(
-                "https://www.banktrack.org/service/sections/Bankprofile/financedata",
-                data={"pass": banktrack_password},
+                "https://www.banktrack.org/service/sections/Bankprofile/financedata", data={"pass": banktrack_password}
             )
             res = json.loads(r.text)
             df = pd.DataFrame(res["bankprofiles"])
@@ -45,11 +40,9 @@ class Banktrack(Datasource):
         for i, row in df.iterrows():
 
             bank = Banktrack(
-                update_date=datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(
-                    tzinfo=timezone.utc
-                ),
+                update_date=datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
                 banktrack_link=row.link,
-                tag=row.tag,
+                tag=cls._generate_tag(cls, row.tag),
                 name=row.title,
                 description=row.general_comment if "general_comment" in row.values else "",
                 website=row.website
@@ -59,3 +52,17 @@ class Banktrack(Datasource):
             banks.append(bank)
 
         return banks
+
+    @classmethod
+    def _generate_tag(cls, bt_tag, increment=0):
+        existing_tags = {x.tag for x in cls.objects.all()}
+
+        if increment < 1:
+            bt_tag = "banktrack_" + bt_tag
+        else:
+            bt_tag = "banktrack_" + bt_tag + "_" + str(increment).zfill(2)
+
+        if bt_tag not in existing_tags:
+            return bt_tag
+        else:
+            return cls.generate_tag(cls, bt_tag, increment + 1)
