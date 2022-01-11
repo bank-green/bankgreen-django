@@ -1,6 +1,7 @@
 import re
 
 import unidecode
+
 from bank.models import Bank
 from django.db import models
 from django.utils import timezone
@@ -19,6 +20,14 @@ class Datasource(models.Model):
     website = models.URLField("Website of this data source", null=True, blank=True)
     # TODO: Make this a list
     countries = models.CharField(max_length=200)
+    tag = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        editable=False,
+        unique=True,
+        help_text="the tag we use or this datasource record at Bank.Green",
+    )
 
     # Relationships to Bank
     # TODO: Read Docs on on_delete and adjust models accordingly

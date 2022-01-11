@@ -12,7 +12,15 @@ from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 
 class Banktrack(Datasource):
     banktrack_link = models.URLField("Link to the banktrack bank page", editable=False)
-    tag = models.CharField(max_length=100, null=False, blank=False, editable=False)
+
+    bt_tag = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        editable=False,
+        unique=True,
+        help_text="the original tag used in banktrack URLS",
+    )
 
     # TODO: Fix Tag Generation / storage and decide which
     # @property
@@ -36,33 +44,46 @@ class Banktrack(Datasource):
             df = df.drop(columns=["general_comment"])
             df.to_csv("bankprofiles.csv")
 
+        existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
+        num_created = 0
         for i, row in df.iterrows():
+            tag = cls._generate_tag(bt_tag=row.tag, existing_tags=existing_tags)
+            bt_tag = row.tag
 
-            bank = Banktrack(
-                update_date=datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
-                banktrack_link=row.link,
-                tag=cls._generate_tag(cls, row.tag),
-                name=row.title,
-                description=row.general_comment if "general_comment" in row.values else "",
-                website=row.website
-                # TODO: Parse Countries for adding. Maybe override __init__? country=row.country,
+            bank, created = Banktrack.objects.update_or_create(
+                bt_tag=bt_tag,
+                defaults={
+                    'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
+                    'banktrack_link': row.link,
+                    'tag': tag,
+                    'bt_tag': bt_tag,
+                    'name': row.title,
+                    'description': row.general_comment if "general_comment" in row.values else "",
+                    'website': row.website,
+                },
             )
-            bank.save()
-            banks.append(bank)
 
-        return banks
+            banks.append(bank)
+            num_created += 1 if created else 0
+            existing_tags.add(tag)
+
+        return banks, num_created
 
     @classmethod
-    def _generate_tag(cls, bt_tag, increment=0):
-        existing_tags = {x.tag for x in cls.objects.all()}
+    def _generate_tag(cls, bt_tag, increment=0, existing_tags=None):
+        og_tag = bt_tag
+
+        # memoize existing tags for faster recursion
+        if not existing_tags:
+            existing_tags = {x.tag for x in cls.objects.all()}
 
         if increment < 1:
-            bt_tag = "banktrack_" + bt_tag
+            bt_tag = "banktrack_" + og_tag
         else:
-            bt_tag = "banktrack_" + bt_tag + "_" + str(increment).zfill(2)
+            bt_tag = "banktrack_" + og_tag + "_" + str(increment).zfill(2)
 
         if bt_tag not in existing_tags:
             return bt_tag
         else:
-            return cls.generate_tag(cls, bt_tag, increment + 1)
+            return cls._generate_tag(og_tag, increment=increment + 1, existing_tags=existing_tags)
