@@ -13,21 +13,6 @@ from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 class Banktrack(Datasource):
     banktrack_link = models.URLField("Link to the banktrack bank page", editable=False)
 
-    bt_tag = models.CharField(
-        max_length=100,
-        null=False,
-        blank=False,
-        editable=False,
-        unique=True,
-        help_text="the original tag used in banktrack URLS",
-    )
-
-    # TODO: Fix Tag Generation / storage and decide which
-    # @property
-    # def tag(self):
-    # '''overwrites parent property. Must be lowercased and stripped to match pipeline expectations'''
-    # return self.source_id.lower().rstrip().lstrip()
-
     @classmethod
     def load_and_create(cls, load_from_api=False):
 
@@ -49,15 +34,15 @@ class Banktrack(Datasource):
         num_created = 0
         for i, row in df.iterrows():
             tag = cls._generate_tag(bt_tag=row.tag, existing_tags=existing_tags)
-            bt_tag = row.tag
+            source_id = row.tag
 
             bank, created = Banktrack.objects.update_or_create(
-                bt_tag=bt_tag,
+                source_id=source_id,
                 defaults={
                     'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
                     'banktrack_link': row.link,
                     'tag': tag,
-                    'bt_tag': bt_tag,
+                    'source_id': source_id,
                     'name': row.title,
                     'description': row.general_comment if "general_comment" in row.values else "",
                     'website': row.website,

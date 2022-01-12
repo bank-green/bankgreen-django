@@ -18,8 +18,8 @@ class Datasource(models.Model):
     name = models.CharField("Name of this data source", max_length=200, null=False, blank=False, default="-unnamed-")
     description = models.TextField("Description of this instance of a data source", null=True, blank=True)
     website = models.URLField("Website of this data source", null=True, blank=True)
-    # TODO: Make this a list
-    countries = models.CharField(max_length=200)
+
+    countries = models.CharField(max_length=200)  # TODO: Make this a list
     tag = models.CharField(
         max_length=100,
         null=False,
@@ -27,6 +27,15 @@ class Datasource(models.Model):
         editable=False,
         unique=True,
         help_text="the tag we use or this datasource record at Bank.Green",
+    )
+
+    source_id = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        editable=False,
+        unique=True,
+        help_text="the original identifier used by the datasource. i.e wikiid, or banktrack tag",
     )
 
     # Relationships to Bank
@@ -40,7 +49,6 @@ class Datasource(models.Model):
     viafid = models.CharField(max_length=15)
     lei = models.CharField(max_length=15)
     googleid = models.CharField(max_length=15)
-    wikiid = models.CharField(max_length=15)
     rssd = models.CharField(max_length=15)
     rssd_hd = models.CharField(max_length=15)
     cusip = models.CharField(max_length=15)
