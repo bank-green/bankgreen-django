@@ -6,40 +6,28 @@ from django.db import models
 import datasource.models as dsm
 
 
-class Bank(models.Model):
+class Brand(models.Model):
     """
-    A "Bank" is the instance shown to the end user.
-    Multiple Datasources may be associated with a single bank.
-    The bank's charasterics are initially determined by the data sources.
+    A "Brand" is the instance shown to the end user.
+    Multiple Datasources may be associated with a single brand.
+    The brand's charasterics are initially determined by the data sources.
     However, they may be overwritten by the user.
     """
 
-    tag = models.CharField(
-        "Unique tag for the bank", max_length=100, unique=True, null=False, blank=False
-    )
+    tag = models.CharField("Unique tag for the brand", max_length=100, unique=True, null=False, blank=False)
     name = models.CharField(
-        "Name of the Bank to be displayed to the user",
-        max_length=200,
-        null=False,
-        blank=False,
-        default="unknown",
+        "Name of the Bank brand to be displayed to the user", max_length=200, null=False, blank=False, default="unknown"
     )
     description = models.TextField(
-        "Description of the bank to be displayed to the user", null=False, blank=True, default=""
+        "Description of the bank brand to be displayed to the user", null=False, blank=True, default=""
     )
 
-    snippet_1 = models.TextField(
-        "Custom fact about the bank.", help_text="Used to fill in templates"
-    )
-    snippet_2 = models.TextField(
-        "Custom fact about the bank.", help_text="Used to fill in templates"
-    )
-    snippet_3 = models.TextField(
-        "Custom fact about the bank.", help_text="Used to fill in templates"
-    )
+    snippet_1 = models.TextField("Custom fact about the brand.", help_text="Used to fill in templates")
+    snippet_2 = models.TextField("Custom fact about the brand.", help_text="Used to fill in templates")
+    snippet_3 = models.TextField("Custom fact about the brand.", help_text="Used to fill in templates")
 
     def refresh_name(self, overwrite_existing=False):
-        # sometimes a preferred name is specified for a bank.
+        # sometimes a preferred name is specified for a brand.
         # In that case, return the preferred name
         # If there is more than one, just randomly choose one.
         field_default = self.__class__.name.field.default
@@ -48,7 +36,7 @@ class Bank(models.Model):
             return
 
         # Favor Banktrack names
-        if banktrack_datasources := dsm.Banktrack.objects.filter(bank=self):
+        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
             self.name = banktrack_datasources[0].name
             self.save()
         else:
@@ -62,7 +50,7 @@ class Bank(models.Model):
             return
 
         # Favor Banktrack descriptions
-        if banktrack_datasources := dsm.Banktrack.objects.filter(bank=self):
+        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
             self.description = banktrack_datasources[0].description
             self.save()
         else:

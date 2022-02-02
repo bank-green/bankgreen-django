@@ -19,8 +19,10 @@ class Banktrack(Datasource):
         # load from api or from local disk.
         df = None
         if not load_from_api:
+            print("Loading Banktrack data from local copy...")
             df = pd.read_csv("./datasource/local/banktrack/bankprofiles.csv")
         else:
+            print("Loading Banktrack data from API...")
             r = requests.post(
                 "https://www.banktrack.org/service/sections/Bankprofile/financedata", data={"pass": banktrack_password}
             )
@@ -30,13 +32,13 @@ class Banktrack(Datasource):
             df.to_csv("bankprofiles.csv")
 
         existing_tags = {x.tag for x in cls.objects.all()}
-        banks = []
+        brands = []
         num_created = 0
         for i, row in df.iterrows():
             tag = cls._generate_tag(bt_tag=row.tag, existing_tags=existing_tags)
             source_id = row.tag
 
-            bank, created = Banktrack.objects.update_or_create(
+            brand, created = Banktrack.objects.update_or_create(
                 source_id=source_id,
                 defaults={
                     'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
@@ -49,11 +51,11 @@ class Banktrack(Datasource):
                 },
             )
 
-            banks.append(bank)
+            brands.append(brand)
             num_created += 1 if created else 0
             existing_tags.add(tag)
 
-        return banks, num_created
+        return brands, num_created
 
     @classmethod
     def _generate_tag(cls, bt_tag, increment=0, existing_tags=None):

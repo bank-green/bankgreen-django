@@ -2,7 +2,7 @@ import re
 
 import unidecode
 
-from bank.models import Bank
+from brand.models import Brand
 from django.db import models
 from django.utils import timezone
 
@@ -38,9 +38,9 @@ class Datasource(models.Model):
         help_text="the original identifier used by the datasource. i.e wikiid, or banktrack tag",
     )
 
-    # Relationships to Bank
+    # Relationships to brand
     # TODO: Read Docs on on_delete and adjust models accordingly
-    bank = models.ForeignKey(Bank, null=True, blank=True, on_delete=models.SET_NULL)
+    brand = models.ForeignKey(Brand, null=True, blank=True, on_delete=models.SET_NULL)
 
     # unique identifiers
     # These are all institutional identifiers of this entity
