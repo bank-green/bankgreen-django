@@ -14,12 +14,13 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-
         datasources = [x.lower().strip() for x in options['datasources']]
-        load_from_api = False if 'all' in options['local'] else True
+
+        load_from_api = False if options['local'] and 'all' in options['local'] else True
+
         if 'all' in datasources or 'banktrack' in datasources:
 
-            if 'banktrack' in options['local']:
+            if options['local'] and 'banktrack' in options['local']:
                 load_from_api = False
 
             banks, num_created = Banktrack.load_and_create(load_from_api=load_from_api)
