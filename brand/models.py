@@ -1,9 +1,9 @@
-from django.db import models
-
-# from datasource.models import Banktrack as bt
-# from datasource.models import Datasource as ds
+import re
 
 import datasource.models as dsm
+import unidecode
+from django.db import models
+from django.utils import timezone
 
 
 class Brand(models.Model):
@@ -14,36 +14,115 @@ class Brand(models.Model):
     However, they may be overwritten by the user.
     """
 
-    tag = models.CharField("Unique tag for the brand", max_length=100, unique=True, null=False, blank=False)
     name = models.CharField(
-        "Name of the Bank brand to be displayed to the user", max_length=200, null=False, blank=False, default="unknown"
+        "Name of this brand/data source", max_length=200, null=False, blank=False, default="-unnamed-"
     )
-    description = models.TextField(
-        "Description of the bank brand to be displayed to the user", null=False, blank=True, default=""
+    description = models.TextField("Description of this instance of this brand/data source", null=True, blank=True)
+    website = models.URLField("Website of this brand/data source", null=True, blank=True)
+    countries = models.CharField(max_length=200, blank=True)  # TODO: Make this a list
+    tag = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        editable=True,
+        unique=True,
+        help_text=(
+            "the tag we use or this brand/datasource record at Bank.Green. ",
+            "Prepend this with the relevant datasource. i.e. banktrack_bank_of_america. "
+            "for brands, prepend with nothing at all i.e. bank_of_america",
+        ),
     )
 
-    snippet_1 = models.TextField("Custom fact about the brand.", help_text="Used to fill in templates")
-    snippet_2 = models.TextField("Custom fact about the brand.", help_text="Used to fill in templates")
-    snippet_3 = models.TextField("Custom fact about the brand.", help_text="Used to fill in templates")
+    source_id = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        editable=True,
+        unique=True,
+        help_text="the original identifier used by the datasource. i.e wikiid, or banktrack tag",
+    )
+
+    # display snippets
+    snippet_1 = models.TextField(
+        "Custom fact about the brand.", help_text="Used to fill in templates", blank=True, default=''
+    )
+    snippet_2 = models.TextField(
+        "Custom fact about the brand.", help_text="Used to fill in templates", blank=True, default=''
+    )
+    snippet_3 = models.TextField(
+        "Custom fact about the brand.", help_text="Used to fill in templates", blank=True, default=''
+    )
+
+    # unique identifiers
+    # These are all institutional identifiers of this entity
+    permid = models.CharField(max_length=15, blank=True)
+    isin = models.CharField(max_length=15, blank=True)
+    viafid = models.CharField(max_length=15, blank=True)
+    lei = models.CharField(max_length=15, blank=True)
+    googleid = models.CharField(max_length=15, blank=True)
+    rssd = models.CharField(max_length=15, blank=True)
+    rssd_hd = models.CharField(max_length=15, blank=True)
+    cusip = models.CharField(max_length=15, blank=True)
+    thrift = models.CharField(max_length=15, blank=True)
+    thrift_hc = models.CharField(max_length=15, blank=True)
+    aba_prim = models.CharField(max_length=15, blank=True)
+    ncua = models.CharField(max_length=15, blank=True)
+    fdic_cert = models.CharField(max_length=15, blank=True)
+    occ = models.CharField(max_length=15, blank=True)
+    ein = models.CharField(max_length=15, blank=True)
+
+    # subsidiary information. Subsidiaries should be listed in descending order of ownership
+    # i.e. a DataSource A wholly owned by DataSource B would have subsidiary_of_1 set to B, and
+    # subsidiary_of_1_pct set to 100
+    subsidiary_of_1 = models.ForeignKey(
+        "self", on_delete=models.SET_NULL, null=True, related_name="subsidiary_of_1_data_source", blank=True
+    )
+    subsidiary_of_1_pct = models.IntegerField("percentage owned by subsidiary 1", default=0)
+    subsidiary_of_2 = models.ForeignKey(
+        "self", on_delete=models.SET_NULL, null=True, related_name="subsidiary_of_2_data_source", blank=True
+    )
+    subsidiary_of_2_pct = models.IntegerField("percentage owned by subsidiary 2", default=0)
+    subsidiary_of_3 = models.ForeignKey(
+        "self", on_delete=models.SET_NULL, null=True, related_name="subsidiary_of_3_data_source", blank=True
+    )
+    subsidiary_of_3_pct = models.IntegerField("percentage owned by subsidiary 3", default=0)
+    subsidiary_of_4 = models.ForeignKey(
+        "self", on_delete=models.SET_NULL, null=True, related_name="subsidiary_of_4_data_source", blank=True
+    )
+    subsidiary_of_4_pct = models.IntegerField("percentage owned by subsidiary 4", default=0)
+
+    # metadata
+    date_added = models.DateTimeField(default=timezone.now)
+    date_updated = models.DateTimeField("Time of last update", default=timezone.now, null=False, editable=True)
+
+    def __str__(self):
+        return self.tag
+
+    def __repr__(self):
+        return self.tag
 
     def refresh_name(self, overwrite_existing=False):
-        # sometimes a preferred name is specified for a brand.
-        # In that case, return the preferred name
-        # If there is more than one, just randomly choose one.
-        field_default = self.__class__.name.field.default
-
-        if overwrite_existing and self.name != field_default:
+        # if the existing name is the default, we are overwriting
+        # otherwise, we're not doing anything.
+        if self.name == self.__class__.name.field.default:
+            overwrite_existing = True
+        if overwrite_existing is False:
             return
+
+        old_name = self.name
 
         # Favor Banktrack names
         if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            self.name = banktrack_datasources[0].name
-            self.save()
-        else:
-            self.name = field_default
-            self.save()
+            if len(banktrack_datasources) > 0:
+                new_name = banktrack_datasources[0]
+                self.name = new_name
+                self.save()
+                return (old_name, new_name)
 
-    # TODO: Figure out how I can deduplicate these refreshes, perhaps specifying a field and an order of Datasource type priority
+        return (old_name, old_name)
+
+    # TODO: Figure out how I can deduplicate these refreshes, perhaps specifying a
+    # field and an order of Datasource type priority
     def refresh_description(self, overwrite_existing=False):
         field_default = self.__class__.description.field.default
         if overwrite_existing and self.description != field_default:
@@ -63,26 +142,13 @@ class Brand(models.Model):
         if description:
             self.refresh_description(overwrite_existing)
 
-    # TODO: Decide how tag should be stored or just generated
+    def suggest_tag(self):
+        """
+        using the bank name replace spaces with underscores.
+        convert accented characters to non accented. Remove special characters.
 
-    # @property
-    # def tag(self):
-    #     # Check the id_tag_dict for entries. If there are entries there, return them.
-    #     lookup_tag = self.bankreg.return_tag_from_id_tag_dict(
-    #         permid=self.permid, isin=self.isin, viafid=self.viafid, lei=self.lei,
-    #         googleid=self.googleid, wikiid=self.wikiid, rssd=self.rssd)
-    #     if lookup_tag:
-    #         return lookup_tag.lower()
-
-    #     # check the name_tag_dict. If there is an entry there, return it.
-    #     name_tag_dict = self.bankreg.name_tag_dict
-    #     if name_tag_dict.get(self.name):
-    #         return name_tag_dict.get(self.name).lower()
-
-    #     # check the name_tag_dict for unidecoded names. If there is an entry there, return it.
-    #     unidecoded_name = unidecode.unidecode(self.name)
-    #     if name_tag_dict.get(unidecoded_name):
-    #         return name_tag_dict.get(unidecoded_name).lower()
-
-    #     # if all else fails, autogenerate a tag
-    #     return self.autogenerate_tag().lower()
+        tag is set in the bank model
+        """
+        mystr = unidecode.unidecode(self.name).lower().rstrip().lstrip().replace(" ", "_")
+        mystr = re.sub("[\W]", "", mystr)
+        return mystr
