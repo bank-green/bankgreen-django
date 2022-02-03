@@ -12,8 +12,6 @@ from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 
 
 class Banktrack(Datasource):
-    tag_prepend_str = "banktrack_"
-
     banktrack_link = models.URLField("Link to the banktrack bank page", editable=False)
 
     @classmethod
