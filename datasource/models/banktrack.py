@@ -51,7 +51,6 @@ class Banktrack(Datasource):
             defaults={
                 'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
                 'banktrack_link': row.link,
-                'source_id': source_id,
                 'name': row.title,
                 'description': row.general_comment,
                 'website': row.website,

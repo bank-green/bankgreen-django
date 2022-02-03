@@ -92,7 +92,7 @@ class Brand(models.Model):
         return self.tag
 
     def __repr__(self):
-        return self.tag
+        return f"<{type(self).__name__}: {self.tag}>"
 
     def refresh_name(self, overwrite_existing=False):
         # if the existing name is the default, we are overwriting
@@ -158,12 +158,13 @@ class Brand(models.Model):
         for bank in banks:
             tag = bank.tag.replace(bank.tag_prepend_str, '')
 
+            # brand must be saved to bank after brand creation for refresh methods to work
             brand, created = Brand.objects.get_or_create(tag=tag)
-            brand.refresh(name=True, description=True, overwrite_existing=False)
-            brand.save()
-
             bank.brand = brand
             bank.save()
+
+            brand.refresh(name=True, description=True, overwrite_existing=False)
+            brand.save()
 
             if created:
                 brands_created.append(brand)
