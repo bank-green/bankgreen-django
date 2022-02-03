@@ -1,9 +1,11 @@
 import re
+from typing import List, Tuple
 
 import datasource.models as dsm
 import unidecode
 from django.db import models
 from django.utils import timezone
+from numpy import DataSource
 
 
 class Brand(models.Model):
@@ -31,15 +33,6 @@ class Brand(models.Model):
             "Prepend this with the relevant datasource. i.e. banktrack_bank_of_america. "
             "for brands, prepend with nothing at all i.e. bank_of_america",
         ),
-    )
-
-    source_id = models.CharField(
-        max_length=100,
-        null=False,
-        blank=False,
-        editable=True,
-        unique=True,
-        help_text="the original identifier used by the datasource. i.e wikiid, or banktrack tag",
     )
 
     # display snippets
@@ -107,14 +100,14 @@ class Brand(models.Model):
         if self.name == self.__class__.name.field.default:
             overwrite_existing = True
         if overwrite_existing is False:
-            return
+            return self.name, self.name
 
         old_name = self.name
 
         # Favor Banktrack names
         if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
             if len(banktrack_datasources) > 0:
-                new_name = banktrack_datasources[0]
+                new_name = banktrack_datasources[0].name
                 self.name = new_name
                 self.save()
                 return (old_name, new_name)
@@ -124,17 +117,21 @@ class Brand(models.Model):
     # TODO: Figure out how I can deduplicate these refreshes, perhaps specifying a
     # field and an order of Datasource type priority
     def refresh_description(self, overwrite_existing=False):
-        field_default = self.__class__.description.field.default
-        if overwrite_existing and self.description != field_default:
-            return
+        if self.description == self.__class__.description.field.default:
+            overwrite_existing = True
+        if overwrite_existing is False:
+            return (self.description, self.description)
+
+        old_description = self.description
 
         # Favor Banktrack descriptions
         if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            self.description = banktrack_datasources[0].description
-            self.save()
-        else:
-            self.description = field_default
-            self.save()
+            if len(banktrack_datasources) > 0:
+                self.description = banktrack_datasources[0].description
+                self.save()
+                return (old_description, self.description)
+
+        return (old_description, old_description)
 
     def refresh(self, name=True, description=True, overwrite_existing=False):
         if name:
@@ -142,6 +139,7 @@ class Brand(models.Model):
         if description:
             self.refresh_description(overwrite_existing)
 
+    @classmethod
     def suggest_tag(self):
         """
         using the bank name replace spaces with underscores.
@@ -152,3 +150,24 @@ class Brand(models.Model):
         mystr = unidecode.unidecode(self.name).lower().rstrip().lstrip().replace(" ", "_")
         mystr = re.sub("[\W]", "", mystr)
         return mystr
+
+    @classmethod
+    def create_brand_from_datasource(self, banks: List[DataSource]) -> Tuple[List, List]:
+        brands_updated, brands_created = [], []
+
+        for bank in banks:
+            tag = bank.tag.replace(bank.tag_prepend_str, '')
+
+            brand, created = Brand.objects.get_or_create(tag=tag)
+            brand.refresh(name=True, description=True, overwrite_existing=False)
+            brand.save()
+
+            bank.brand = brand
+            bank.save()
+
+            if created:
+                brands_created.append(brand)
+            else:
+                brands_updated.append(brand)
+
+        return (brands_created, brands_updated)

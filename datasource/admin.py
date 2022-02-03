@@ -6,5 +6,5 @@ from .models import Banktrack, Bimpact, Bocc, Fairfinance, Gabv, Marketforces, S
 @admin.register(Banktrack, Bimpact, Bocc, Fairfinance, Gabv, Marketforces, Switchit, Usnic, Wikidata)
 class DatasourceAdmin(admin.ModelAdmin):
     # a list of displayed columns name.
-    list_display = ["name", "website"]
-    search_fields = ["name", "website"]
+    list_display = ["name", 'tag', "website"]
+    search_fields = ["name", 'tag', "website"]

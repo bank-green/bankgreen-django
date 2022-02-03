@@ -13,6 +13,16 @@ class Datasource(Brand):
     # TODO: Read Docs on on_delete and adjust models accordingly
     brand = models.ForeignKey(Brand, related_name='bank_brand', null=True, blank=True, on_delete=models.SET_NULL)
 
+    # used to identify duplicates on refresh
+    source_id = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        editable=True,
+        unique=True,
+        help_text="the original identifier used by the datasource. i.e wikiid, or banktrack tag",
+    )
+
     def get_data(self, url, params=None):
         """
         get_data is a generic method that can be used to get data from any data source.

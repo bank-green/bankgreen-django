@@ -1,4 +1,5 @@
 import json
+from re import I
 import requests
 from datetime import datetime, timezone
 
@@ -11,6 +12,8 @@ from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 
 
 class Banktrack(Datasource):
+    tag_prepend_str = "banktrack_"
+
     banktrack_link = models.URLField("Link to the banktrack bank page", editable=False)
 
     @classmethod
@@ -28,34 +31,41 @@ class Banktrack(Datasource):
             )
             res = json.loads(r.text)
             df = pd.DataFrame(res["bankprofiles"])
-            df = df.drop(columns=["general_comment"])
             df.to_csv("bankprofiles.csv")
 
         existing_tags = {x.tag for x in cls.objects.all()}
-        brands = []
+        banks = []
         num_created = 0
         for i, row in df.iterrows():
-            tag = cls._generate_tag(bt_tag=row.tag, existing_tags=existing_tags)
-            source_id = row.tag
+            num_created, existing_tags = cls._load_or_create_individual_instance(existing_tags, banks, num_created, row)
 
-            brand, created = Banktrack.objects.update_or_create(
-                source_id=source_id,
-                defaults={
-                    'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
-                    'banktrack_link': row.link,
-                    'tag': tag,
-                    'source_id': source_id,
-                    'name': row.title,
-                    'description': row.general_comment if "general_comment" in row.values else "",
-                    'website': row.website,
-                },
-            )
+        return banks, num_created
 
-            brands.append(brand)
-            num_created += 1 if created else 0
-            existing_tags.add(tag)
+    @classmethod
+    def _load_or_create_individual_instance(cls, existing_tags, banks, num_created, row):
+        tag = cls._generate_tag(bt_tag=row.tag, existing_tags=existing_tags)
+        source_id = row.tag
 
-        return brands, num_created
+        bank, created = Banktrack.objects.update_or_create(
+            source_id=source_id,
+            defaults={
+                'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
+                'banktrack_link': row.link,
+                'source_id': source_id,
+                'name': row.title,
+                'description': row.general_comment,
+                'website': row.website,
+            },
+        )
+
+        if created:
+            bank.tag = tag
+            bank.save()
+
+        banks.append(bank)
+        num_created += 1 if created else 0
+        existing_tags.add(tag)
+        return num_created, existing_tags
 
     @classmethod
     def _generate_tag(cls, bt_tag, increment=0, existing_tags=None):
@@ -66,9 +76,9 @@ class Banktrack(Datasource):
             existing_tags = {x.tag for x in cls.objects.all()}
 
         if increment < 1:
-            bt_tag = "banktrack_" + og_tag
+            bt_tag = cls.tag_prepend_str + og_tag
         else:
-            bt_tag = "banktrack_" + og_tag + "_" + str(increment).zfill(2)
+            bt_tag = cls.tag_prepend_str + og_tag + "_" + str(increment).zfill(2)
 
         if bt_tag not in existing_tags:
             return bt_tag
