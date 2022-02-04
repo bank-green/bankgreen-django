@@ -23,6 +23,7 @@ qwikidata = "*"
 requests = "*"
 django-crispy-forms = "*"
 unidecode = "*"
+numpy = "*"
 
 [dev-packages]
 

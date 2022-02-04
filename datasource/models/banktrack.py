@@ -3,7 +3,7 @@ from re import I
 import requests
 from datetime import datetime, timezone
 
-from django.db import models
+from django.db import modelscode
 
 import pandas as pd
 
@@ -29,7 +29,7 @@ class Banktrack(Datasource):
             )
             res = json.loads(r.text)
             df = pd.DataFrame(res["bankprofiles"])
-            df.to_csv("bankprofiles.csv")
+            df.to_csv("./datasource/local/banktrack/bankprofiles.csv")
 
         existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
