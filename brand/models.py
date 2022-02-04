@@ -142,11 +142,28 @@ class Brand(models.Model):
 
         return (old_description, old_description)
 
-    def refresh(self, name=True, description=True, overwrite_existing=False):
+    def refresh_countries(self):
+        """refresh countries is additive. It never removes countries from brands"""
+        old_countries = self.countries
+        new_countries = self.countries
+        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
+            for banktrack_datasource in banktrack_datasources:
+                self.countries = old_countries + banktrack_datasource.countries
+                new_countries = self.countries
+        if bimpacts := dsm.Bimpact.objects.filter(brand=self):
+            for bimpact in bimpacts:
+                self.countries = old_countries + bimpact.countries
+                new_countries = self.countries
+
+        return old_countries, new_countries
+
+    def refresh(self, name=True, description=True, countries=True, overwrite_existing=False):
         if name:
             self.refresh_name(overwrite_existing)
         if description:
             self.refresh_description(overwrite_existing)
+        if countries:
+            self.refresh_countries()
 
     @classmethod
     def suggest_tag(self):

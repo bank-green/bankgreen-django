@@ -2,9 +2,8 @@ import json
 from re import I
 import requests
 from datetime import datetime, timezone
-import pycountry
 
-from django.db import models
+from datasource.pycountry_utils import pycountries
 
 import pandas as pd
 
@@ -34,19 +33,20 @@ class Banktrack(Datasource):
         banks = []
         num_created = 0
         for i, row in df.iterrows():
-            num_created, existing_tags = cls._load_or_create_individual_instance(existing_tags, banks, num_created, row)
-
+            try:
+                num_created, existing_tags = cls._load_or_create_individual_instance(
+                    existing_tags, banks, num_created, row
+                )
+            except Exception as e:
+                print('\n\n===Banktrack failed creation or updating===\n\n')
+                print(row)
+                print(e)
         return banks, num_created
 
     @classmethod
     def _load_or_create_individual_instance(cls, existing_tags, banks, num_created, row):
         tag = cls._generate_tag(bt_tag=row.tag, existing_tags=existing_tags)
         source_id = row.tag
-
-        pycountries = {x.name.lower(): x.alpha_2 for x in pycountry.countries}
-        pycountries['taiwan, republic of china'] = 'TW'  # Taiwan is sometimes referred to as a republic of china
-        pycountries['united states of america'] = 'US'
-        pycountries['south korea'] = 'KR'
 
         bank, created = Banktrack.objects.update_or_create(
             source_id=source_id,

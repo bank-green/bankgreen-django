@@ -1,12 +1,13 @@
 import json
+import logging.config
 from datetime import datetime, timezone
 
 import pandas as pd
 import requests
-from django.db import models
 
+from datasource.local.bimpact.secret import TOKEN, USERNAME
 from datasource.models.datasource import Datasource
-from datasource.local.bimpact.secret import USERNAME, TOKEN
+from datasource.pycountry_utils import pycountries
 
 
 class Bimpact(Datasource):
@@ -42,7 +43,14 @@ class Bimpact(Datasource):
         banks = []
         num_created = 0
         for i, row in df.iterrows():
-            num_created, existing_tags = cls._load_or_create_individual_instance(existing_tags, banks, num_created, row)
+            try:
+                num_created, existing_tags = cls._load_or_create_individual_instance(
+                    existing_tags, banks, num_created, row
+                )
+            except Exception as e:
+                print('\n\n===Bimpact failed creation or updating===\n\n')
+                print(row)
+                print(e)
 
         return banks, num_created
 
@@ -53,13 +61,15 @@ class Bimpact(Datasource):
             og_tag=None, existing_tags=existing_tags, company_name=row.company_name, company_id=row.company_id
         )
 
+        country = pycountries.get(row.country.lower(), None)
+
         bank, created = Bimpact.objects.update_or_create(
             source_id=source_id,
             defaults={
                 'date_updated': datetime.strptime(row.date_certified, "%Y-%m-%d").replace(tzinfo=timezone.utc),
                 'source_link': row.b_corp_profile,
                 'description': row.description,
-                # 'country': row.country,
+                'countries': country,
                 'name': row.company_name,
                 'website': row.website,
             },
