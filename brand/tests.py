@@ -12,7 +12,7 @@ class BrandTestCase(TestCase):
         self.test_bank = Banktrack.objects.create(
             source_id='unique_source_id',
             # date_updated=datetime.now(),
-            banktrack_link='abc',
+            source_link='abc',
             name='test_bank',
             description='test_description',
             website='test_website',

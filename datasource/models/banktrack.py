@@ -3,7 +3,7 @@ from re import I
 import requests
 from datetime import datetime, timezone
 
-from django.db import modelscode
+from django.db import models
 
 import pandas as pd
 
@@ -12,8 +12,6 @@ from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 
 
 class Banktrack(Datasource):
-    banktrack_link = models.URLField("Link to the banktrack bank page", editable=False)
-
     @classmethod
     def load_and_create(cls, load_from_api=False):
 
@@ -48,7 +46,7 @@ class Banktrack(Datasource):
             source_id=source_id,
             defaults={
                 'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
-                'banktrack_link': row.link,
+                'source_link': row.link,
                 'name': row.title,
                 'description': row.general_comment,
                 'website': row.website,

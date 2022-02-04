@@ -63,6 +63,12 @@ class Brand(models.Model):
     fdic_cert = models.CharField(max_length=15, blank=True)
     occ = models.CharField(max_length=15, blank=True)
     ein = models.CharField(max_length=15, blank=True)
+    source_link = models.URLField(
+        "Link to the data source's webpage. i.e. the banktrack.org or b-impact webpage for the bank",
+        editable=True,
+        null=True,
+        blank=True,
+    )
 
     # subsidiary information. Subsidiaries should be listed in descending order of ownership
     # i.e. a DataSource A wholly owned by DataSource B would have subsidiary_of_1 set to B, and

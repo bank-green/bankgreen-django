@@ -47,4 +47,4 @@ class BanktrackTestCase(TestCase):
         self.assertEqual(bank.tag, Banktrack.tag_prepend_str + "unique_tag")
         self.assertEqual(bank.source_id, "unique_tag")
         self.assertEqual(bank.website, "https://newuri")
-        self.assertEqual(bank.banktrack_link, "https://newuri")
+        self.assertEqual(bank.source_link, "https://newuri")
