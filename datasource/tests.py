@@ -22,6 +22,7 @@ class BanktrackTestCase(TestCase):
                     "tag": "unique_tag",
                     "link": "https://olduri",
                     "website": "https://olduri",
+                    "country": "South Korea",
                     "updated_at": "2020-01-01 00:00:00",
                 },
                 {
@@ -30,6 +31,7 @@ class BanktrackTestCase(TestCase):
                     "tag": "unique_tag",
                     "link": "https://newuri",
                     "website": "https://newuri",
+                    "country": "Taiwan, Republic of China",
                     "updated_at": "2020-01-01 00:00:00",
                 },
             ]
@@ -48,6 +50,7 @@ class BanktrackTestCase(TestCase):
         self.assertEqual(bank.tag, Banktrack.tag_prepend_str + "unique_tag")
         self.assertEqual(bank.source_id, "unique_tag")
         self.assertEqual(bank.website, "https://newuri")
+        self.assertEqual(bank.countries[0].code, "TW")
         self.assertEqual(bank.source_link, "https://newuri")
 
 

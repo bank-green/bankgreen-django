@@ -2,6 +2,7 @@ import json
 from re import I
 import requests
 from datetime import datetime, timezone
+import pycountry
 
 from django.db import models
 
@@ -19,7 +20,7 @@ class Banktrack(Datasource):
         df = None
         if not load_from_api:
             print("Loading Banktrack data from local copy...")
-            df = pd.read_csv("./datasource/local/banktrack/bankprofiles.csv")
+            df = pd.read_csv("./datasource/local/banktrack/banktrack.csv")
         else:
             print("Loading Banktrack data from API...")
             r = requests.post(
@@ -27,7 +28,7 @@ class Banktrack(Datasource):
             )
             res = json.loads(r.text)
             df = pd.DataFrame(res["bankprofiles"])
-            df.to_csv("./datasource/local/banktrack/bankprofiles.csv")
+            df.to_csv("./datasource/local/banktrack/banktrack2.csv")
 
         existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
@@ -42,12 +43,18 @@ class Banktrack(Datasource):
         tag = cls._generate_tag(bt_tag=row.tag, existing_tags=existing_tags)
         source_id = row.tag
 
+        pycountries = {x.name.lower(): x.alpha_2 for x in pycountry.countries}
+        pycountries['taiwan, republic of china'] = 'TW'  # Taiwan is sometimes referred to as a republic of china
+        pycountries['united states of america'] = 'US'
+        pycountries['south korea'] = 'KR'
+
         bank, created = Banktrack.objects.update_or_create(
             source_id=source_id,
             defaults={
                 'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
                 'source_link': row.link,
                 'name': row.title,
+                'countries': pycountries.get(row.country.lower(), None),
                 'description': row.general_comment,
                 'website': row.website,
             },

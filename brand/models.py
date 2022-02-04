@@ -5,6 +5,7 @@ import datasource.models as dsm
 import unidecode
 from django.db import models
 from django.utils import timezone
+from django_countries.fields import CountryField
 from numpy import DataSource
 
 
@@ -23,7 +24,7 @@ class Brand(models.Model):
         "Description of this instance of this brand/data source", null=True, blank=True, default='-blank-'
     )
     website = models.URLField("Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True)
-    countries = models.CharField(max_length=200, blank=True)  # TODO: Make this a list
+    countries = CountryField(multiple=True, help_text="Where the brand offers retails services")
     tag = models.CharField(
         max_length=100,
         null=False,
