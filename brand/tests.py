@@ -26,6 +26,7 @@ class BrandTestCase(TestCase):
         self.assertEqual(len(brands_updated), 0)
         self.assertEqual(brands_created[0].name, 'test_bank')
         self.assertEqual(brands_created[0].tag, 'unique_source_id')
+        self.assertEqual(brands_created[0].description, 'test_description')
 
         # test re-creating brands to see whether they are returned as updated
         brands_created, brands_updated = Brand.create_brand_from_datasource([self.test_bank])
@@ -33,3 +34,4 @@ class BrandTestCase(TestCase):
         self.assertEqual(len(brands_updated), 1)
         self.assertEqual(brands_updated[0].name, 'test_bank')
         self.assertEqual(brands_updated[0].tag, 'unique_source_id')
+        self.assertEqual(brands_updated[0].description, 'test_description')

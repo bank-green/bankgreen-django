@@ -19,7 +19,9 @@ class Brand(models.Model):
     name = models.CharField(
         "Name of this brand/data source", max_length=200, null=False, blank=False, default="-unnamed-"
     )
-    description = models.TextField("Description of this instance of this brand/data source", null=True, blank=True)
+    description = models.TextField(
+        "Description of this instance of this brand/data source", null=True, blank=True, default='-blank-'
+    )
     website = models.URLField("Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True)
     countries = models.CharField(max_length=200, blank=True)  # TODO: Make this a list
     tag = models.CharField(
