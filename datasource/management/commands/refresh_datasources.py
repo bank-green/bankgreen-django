@@ -1,6 +1,6 @@
 from json import load
 from django.core.management.base import BaseCommand, CommandError
-from datasource.models.banktrack import Banktrack
+from datasource.models import Banktrack, Bimpact
 from brand.models import Brand
 
 
@@ -19,6 +19,21 @@ class Command(BaseCommand):
 
         if 'all' in datasources or 'banktrack' in datasources:
             self.refresh_banktrack(options)
+
+        if 'all' in datasources or 'bimpact' in datasources:
+            self.refresh_bimpact(options)
+
+    def refresh_bimpact(self, options):
+        load_from_api = False if options['local'] and 'all' in options['local'] else True
+        if options['local'] and 'banktrack' in options['local']:
+            load_from_api = False
+
+        banks, num_created = Bimpact.load_and_create(load_from_api=load_from_api)
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Successfully refreshed {len(banks)} bimpact records, creating {num_created} new records\n"
+            )
+        )
 
     def refresh_banktrack(self, options):
         load_from_api = False if options['local'] and 'all' in options['local'] else True
