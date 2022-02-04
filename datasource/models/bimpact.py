@@ -32,7 +32,7 @@ class Bimpact(Datasource):
             uri = f"https://api.data.world/v0/sql/${USERNAME}/api-sandbox"
             headers = {"Authorization": f"Bearer ${TOKEN}", "Accept": "text/csv"}
             data = {'query': query}
-            response = requests.post('https://api.data.world/v0/sql/USERNAME/api-sandbox', headers=headers, data=data)
+            r = requests.post('https://api.data.world/v0/sql/USERNAME/api-sandbox', headers=headers, data=data)
 
             res = json.loads(r.text)
             # df = pd.DataFrame(res["bankprofiles"])
