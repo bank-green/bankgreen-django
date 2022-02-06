@@ -1,8 +1,15 @@
-from re import I
-from tokenize import blank_re
 from django.db import models
 from django_countries.fields import CountryField
 from brand.models import Brand
+from enum import Enum
+
+
+class RatingChoice(Enum):
+    GREAT = 'great'
+    OK = 'ok'
+    BAD = 'bad'
+    WORST = 'worst'
+    UNKNOWN = 'unknown'
 
 
 class Commentary(models.Model):
@@ -21,7 +28,7 @@ class Commentary(models.Model):
     )
     display_on_website = models.BooleanField(default=False)
     comment = models.TextField(help_text="Meta. Comments for staff and/or editors")
-    rating = models.CharField(max_length=6, null=False, blank=False)
+    rating = models.CharField(max_length=8, null=False, blank=False, choices=[(tag, tag.value) for tag in RatingChoice])
 
     # Neutral Commentary
     unique_statement = models.CharField(
@@ -70,8 +77,8 @@ class Commentary(models.Model):
     )
     recommended_order = models.IntegerField(
         help_text="Positive. in case there are more recommended banks than can fit on the page, lower numbers are given priority",
-        default=3,
         null=True,
+        blank=True,
     )
     recommended_in = CountryField(multiple=True, help_text="Positive. what countries will this bank be recommended in?")
     from_the_website = models.TextField(help_text='Positive. used to to describe green banks in their own words')
@@ -122,3 +129,9 @@ class Commentary(models.Model):
     free_international_card_payment_details = models.CharField(
         help_text="Positive. Details on free international card payments", max_length=50, null=True, blank=True
     )
+
+    def __repr__(self):
+        return f"Commentary: {self.brand.tag}"
+
+    def __str__(self):
+        return f"Commentary: {self.brand.tag}"
