@@ -25,6 +25,7 @@ django-crispy-forms = "*"
 unidecode = "*"
 numpy = "*"
 django-countries = {extras = ["pyuca"], version = "*"}
+airtable = "*"
 
 [dev-packages]
 
