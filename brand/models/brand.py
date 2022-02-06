@@ -38,17 +38,6 @@ class Brand(models.Model):
         ),
     )
 
-    # display snippets
-    snippet_1 = models.TextField(
-        "Custom fact about the brand.", help_text="Used to fill in templates", blank=True, default=''
-    )
-    snippet_2 = models.TextField(
-        "Custom fact about the brand.", help_text="Used to fill in templates", blank=True, default=''
-    )
-    snippet_3 = models.TextField(
-        "Custom fact about the brand.", help_text="Used to fill in templates", blank=True, default=''
-    )
-
     # unique identifiers
     # These are all institutional identifiers of this entity
     permid = models.CharField(max_length=15, blank=True)
@@ -138,9 +127,12 @@ class Brand(models.Model):
             if len(banktrack_datasources) > 0:
                 self.description = banktrack_datasources[0].description
                 self.save()
-                return (old_description, self.description)
+        elif bimpact_datasources := dsm.Bimpact.objects.filter(brand=self):
+            if len(bimpact_datasources) > 0:
+                self.description = bimpact_datasources[0].description
+                self.save()
 
-        return (old_description, old_description)
+        return (old_description, self)
 
     def refresh_countries(self):
         """refresh countries is additive. It never removes countries from brands"""

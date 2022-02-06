@@ -27,7 +27,7 @@ class Banktrack(Datasource):
             )
             res = json.loads(r.text)
             df = pd.DataFrame(res["bankprofiles"])
-            df.to_csv("./datasource/local/banktrack/banktrack2.csv")
+            df.to_csv("./datasource/local/banktrack/banktrack.csv")
 
         existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
@@ -48,17 +48,18 @@ class Banktrack(Datasource):
         tag = cls._generate_tag(bt_tag=row.tag, existing_tags=existing_tags)
         source_id = row.tag
 
-        bank, created = Banktrack.objects.update_or_create(
-            source_id=source_id,
-            defaults={
-                'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
-                'source_link': row.link,
-                'name': row.title,
-                'countries': pycountries.get(row.country.lower(), None),
-                'description': row.general_comment,
-                'website': row.website,
-            },
-        )
+        defaults = {
+            'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
+            'source_link': row.link,
+            'name': row.title,
+            'countries': pycountries.get(row.country.lower(), None),
+            'description': row.general_comment,
+            'website': row.website,
+        }
+        # filter out unnecessary defaults
+        defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
+
+        bank, created = Banktrack.objects.update_or_create(source_id=source_id, defaults=defaults)
 
         if created:
             bank.tag = tag

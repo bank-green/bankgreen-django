@@ -36,7 +36,6 @@ class Bimpact(Datasource):
             r = requests.post('https://api.data.world/v0/sql/USERNAME/api-sandbox', headers=headers, data=data)
 
             res = json.loads(r.text)
-            # df = pd.DataFrame(res["bankprofiles"])
             df.to_csv("./datasource/local/bimpact/bimpact.csv")
 
         existing_tags = {x.tag for x in cls.objects.all()}
@@ -63,17 +62,17 @@ class Bimpact(Datasource):
 
         country = pycountries.get(row.country.lower(), None)
 
-        bank, created = Bimpact.objects.update_or_create(
-            source_id=source_id,
-            defaults={
-                'date_updated': datetime.strptime(row.date_certified, "%Y-%m-%d").replace(tzinfo=timezone.utc),
-                'source_link': row.b_corp_profile,
-                'description': row.description,
-                'countries': country,
-                'name': row.company_name,
-                'website': row.website,
-            },
-        )
+        defaults = {
+            'date_updated': datetime.strptime(row.date_certified, "%Y-%m-%d").replace(tzinfo=timezone.utc),
+            'source_link': row.b_corp_profile,
+            'description': row.description,
+            'countries': country,
+            'name': row.company_name,
+            'website': row.website,
+        }
+        defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
+
+        bank, created = Bimpact.objects.update_or_create(source_id=source_id, defaults=defaults)
 
         if created:
             bank.tag = tag
