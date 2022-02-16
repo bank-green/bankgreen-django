@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django_countries",
     "datasource",
     "brand",
+    "graphene_django",
 ]
 
 MIDDLEWARE = [

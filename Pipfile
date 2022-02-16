@@ -26,6 +26,7 @@ unidecode = "*"
 numpy = "*"
 django-countries = {extras = ["pyuca"], version = "*"}
 airtable = "*"
+graphene-django = "*"
 
 [dev-packages]
 
