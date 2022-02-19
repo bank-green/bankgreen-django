@@ -30,3 +30,6 @@ venv
 .vscode
 .idea
 .editorconfig
+
+# static files
+static
