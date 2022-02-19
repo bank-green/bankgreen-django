@@ -1,14 +1,13 @@
 import json
-from re import I
-import requests
 from datetime import datetime, timezone
-
-from datasource.pycountry_utils import pycountries
+from re import I
 
 import pandas as pd
+import requests
 
-from datasource.models.datasource import Datasource
 from datasource.local.banktrack.secret import PASSWORD as banktrack_password
+from datasource.models.datasource import Datasource
+from datasource.pycountry_utils import pycountries
 
 
 class Banktrack(Datasource):
@@ -23,7 +22,8 @@ class Banktrack(Datasource):
         else:
             print("Loading Banktrack data from API...")
             r = requests.post(
-                "https://www.banktrack.org/service/sections/Bankprofile/financedata", data={"pass": banktrack_password}
+                "https://www.banktrack.org/service/sections/Bankprofile/financedata",
+                data={"pass": banktrack_password},
             )
             res = json.loads(r.text)
             df = pd.DataFrame(res["bankprofiles"])
@@ -38,7 +38,7 @@ class Banktrack(Datasource):
                     existing_tags, banks, num_created, row
                 )
             except Exception as e:
-                print('\n\n===Banktrack failed creation or updating===\n\n')
+                print("\n\n===Banktrack failed creation or updating===\n\n")
                 print(row)
                 print(e)
         return banks, num_created
@@ -49,12 +49,14 @@ class Banktrack(Datasource):
         source_id = row.tag
 
         defaults = {
-            'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
-            'source_link': row.link,
-            'name': row.title,
-            'countries': pycountries.get(row.country.lower(), None),
-            'description': row.general_comment,
-            'website': row.website,
+            "date_updated": datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(
+                tzinfo=timezone.utc
+            ),
+            "source_link": row.link,
+            "name": row.title,
+            "countries": pycountries.get(row.country.lower(), None),
+            "description": row.general_comment,
+            "website": row.website,
         }
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}

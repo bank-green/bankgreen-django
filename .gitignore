@@ -17,5 +17,16 @@ airtable_backups/*.pkl
 secret.py
 .env
 
+# virtualenv
+venv
+
 # database
 *.sqlite3
+
+# Pyenv
+.python-version
+
+# editor
+.vscode
+.idea
+.editorconfig

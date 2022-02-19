@@ -1,12 +1,14 @@
 import re
 from typing import List, Tuple
 
-import datasource.models as dsm
-import unidecode
 from django.db import models
 from django.utils import timezone
+
+import unidecode
 from django_countries.fields import CountryField
 from numpy import DataSource
+
+import datasource.models as dsm
 
 
 class Brand(models.Model):

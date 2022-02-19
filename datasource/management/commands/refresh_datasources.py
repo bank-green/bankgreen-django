@@ -1,30 +1,31 @@
+from django.core.management.base import BaseCommand
+
 from brand.models import Brand
 from datasource.models import Banktrack, Bimpact
-from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
     help = "refresh data"
 
     def add_arguments(self, parser):
-        parser.add_argument('datasources', nargs='+', type=str, help="the data sources to refresh")
+        parser.add_argument("datasources", nargs="+", type=str, help="the data sources to refresh")
         parser.add_argument(
-            '--local',
+            "--local",
             help="avoid API calls and load local data where possible. datasources for this option must be specified",
         )
 
     def handle(self, *args, **options):
-        datasources = [x.lower().strip() for x in options['datasources']]
+        datasources = [x.lower().strip() for x in options["datasources"]]
 
-        if 'all' in datasources or 'banktrack' in datasources:
+        if "all" in datasources or "banktrack" in datasources:
             self.refresh_banktrack(options)
 
-        if 'all' in datasources or 'bimpact' in datasources:
+        if "all" in datasources or "bimpact" in datasources:
             self.refresh_bimpact(options)
 
     def refresh_bimpact(self, options):
-        load_from_api = False if options['local'] and 'all' in options['local'] else True
-        if options['local'] and 'banktrack' in options['local']:
+        load_from_api = False if options["local"] and "all" in options["local"] else True
+        if options["local"] and "banktrack" in options["local"]:
             load_from_api = False
 
         banks, num_created = Bimpact.load_and_create(load_from_api=load_from_api)
@@ -39,8 +40,8 @@ class Command(BaseCommand):
         # self.output_brand_creation(brands_created, brands_updated, Bimpact)
 
     def refresh_banktrack(self, options):
-        load_from_api = False if options['local'] and 'all' in options['local'] else True
-        if options['local'] and 'banktrack' in options['local']:
+        load_from_api = False if options["local"] and "all" in options["local"] else True
+        if options["local"] and "banktrack" in options["local"]:
             load_from_api = False
 
         banks, num_created = Banktrack.load_and_create(load_from_api=load_from_api)

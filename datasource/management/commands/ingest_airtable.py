@@ -1,12 +1,15 @@
 import os
 from datetime import datetime, timezone
 
+from django.core.management.base import BaseCommand
+
 import pandas as pd
 from airtable import Airtable
+from dotenv import load_dotenv
+
 from brand.models import Brand
 from datasource.pycountry_utils import pycountries
-from django.core.management.base import BaseCommand
-from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -16,7 +19,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--local',
+            "--local",
             help="avoid API calls and load local data where possible. datasources for this option must be specified",
         )
 
@@ -26,17 +29,21 @@ class Command(BaseCommand):
         at = Airtable(base_id=os.getenv("base_key"), api_key=os.getenv("api_key"))
         records = self._get_all_records_from_airtable_table(at, table_name)
 
-        df = pd.DataFrame([record['fields'] for record in records], index=[record['id'] for record in records])
+        df = pd.DataFrame(
+            [record["fields"] for record in records], index=[record["id"] for record in records]
+        )
 
         new_brands, updated_brands = [], []
         for i, row in df.iterrows():
 
             # for panda reasons, name has to be accessed as a dict. Dot notation will return something else
             # test for NAN valus returned by pands. NaN != NaN
-            if row['name'] != row['name'] and row.tag != row.tag:
+            if row["name"] != row["name"] and row.tag != row.tag:
                 continue
 
-            source_link = f"https://api.airtable.com/v0/{os.getenv('base_key')}/{table_name}/{row.name}"
+            source_link = (
+                f"https://api.airtable.com/v0/{os.getenv('base_key')}/{table_name}/{row.name}"
+            )
             brand, created = self.create_brand_from_airtable_row(row, source_link)
             if created:
                 new_brands.append(brand)
@@ -112,19 +119,19 @@ class Command(BaseCommand):
     def create_brand_from_airtable_row(self, row, source_link):
 
         defaults = {
-            'date_updated': datetime.now().replace(tzinfo=timezone.utc),
-            'name': row['name'],
-            'countries': row.country,
-            'description': row.description,
-            'website': row.website,
-            'source_link': source_link,
+            "date_updated": datetime.now().replace(tzinfo=timezone.utc),
+            "name": row["name"],
+            "countries": row.country,
+            "description": row.description,
+            "website": row.website,
+            "source_link": source_link,
         }
         # remove any NaN default values (NaN != NaN)
         defaults = {k: v for k, v in defaults.items() if v == v}
 
         # resolve countries
-        if defaults.get('countries'):
-            defaults['countries'] = [pycountries.get(country.lower()) for country in row.country]
+        if defaults.get("countries"):
+            defaults["countries"] = [pycountries.get(country.lower()) for country in row.country]
 
         brand, created = Brand.objects.update_or_create(tag=row.tag, defaults=defaults)
         brand.save()
@@ -136,10 +143,10 @@ class Command(BaseCommand):
         # The API is unstable and the library documentation differs on their github page
         # and on the read the docs. Don't expect this to work for long
         page = at.get(table_name)
-        offset = page.get('offset')
-        records = page['records']
+        offset = page.get("offset")
+        records = page["records"]
         while offset:
             page = at.get(table_name, offset=offset)
-            offset = page.get('offset')
-            records += page['records']
+            offset = page.get("offset")
+            records += page["records"]
         return records

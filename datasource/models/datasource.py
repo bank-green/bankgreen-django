@@ -1,5 +1,6 @@
-from brand.models import Brand
 from django.db import models
+
+from brand.models import Brand
 
 
 class classproperty(property):
@@ -22,7 +23,9 @@ class Datasource(Brand):
 
     # Relationships to brand
     # TODO: Read Docs on on_delete and adjust models accordingly
-    brand = models.ForeignKey(Brand, related_name='bank_brand', null=True, blank=True, on_delete=models.SET_NULL)
+    brand = models.ForeignKey(
+        Brand, related_name="bank_brand", null=True, blank=True, on_delete=models.SET_NULL
+    )
 
     # used to identify duplicates on refresh
     source_id = models.CharField(
