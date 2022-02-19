@@ -20,3 +20,4 @@ django-crispy-forms==1.13.0
 unidecode
 numpy==1.19.5
 django-countries==7.2.1
+gunicorn==20.1.0
