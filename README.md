@@ -1,17 +1,67 @@
 # Bank Green Django App
 
-This is a django application for managing relationships between different instances of banks in the data sources we collect.
+This is a [python django](https://www.djangoproject.com/) application for cataloging and creating environmental ratings of worldwide banks.
 
-Refresh from API
+Data is harvested from a variety of "data sources." Datasources are then associated with "brands." One brand may be comprised of zero, one, or many data sources.
+
+# Installation and Development
+
+You will need to install "[pip](https://pip.pypa.io/en/stable/installation/)" (the python package management system) and "[virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)" (a python virtual environment manager) to your system. You can install virtualenv like: `sudo -H pip3 install virtualenv`
+
+## Installing Packages
+
+`virtualenv <venv>`
+
+## Activating the virtual environment
+
+`source <venv>/bin/activate`
+
+## Installing packages
+
+`pip install -r requirements.txt`
+
+## Deactivating the virtual environment
+
+`deactivate`
+
+## Django commands
 
 ```
-django refresh_datasources banktrack
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py collectstatic
+python manage.py runserver
+```
+
+## Nginx and Gunicorn userful commands
+
+```
+sudo systemctl stop/start/restart nginx
+sudo nginx -t
+sudo tail -F /var/log/nginx/error.log
+
+sudo systemctl status gunicorn.socket
+sudo systemctl start gunicorn.socket
+sudo systemctl enable gunicorn.socket
+sudo journalctl -u gunicorn.socket
+```
+
+## Refreshing Data
+
+### Refresh datasources from API
+
+```
+# python manage.py refresh_datasources [DATASOURCE_NAME]
+# i.e.
+python manage.py refresh_datasources banktrack
 # or
-django refresh_datasources all
+python manage.py refresh_datasources all
 ```
 
-Refresh from local
+### Refresh datasources from local
 
 ```
-django refresh_datasources banktrack --local banktrack
+# python manage.py refresh_datasources [DATASOURCE_NAME] --local [DATASOURCE_NAME]
+# i.e.
+python manage.py refresh_datasources banktrack --local banktrack
 ```
