@@ -1,6 +1,14 @@
 from django.contrib import admin
 
+from datasource.models.datasource import Datasource
 from .models import Brand
+
+
+class CompanyEmployeeInline(admin.TabularInline):
+    model = Datasource
+    extra = 0
+    # raw_id_fields = ["user"]
+    # fk_name = ''
 
 
 @admin.register(Brand)
@@ -18,6 +26,8 @@ class BrandAdmin(admin.ModelAdmin):
         ("subsidiary_of_4", "subsidiary_of_4_pct"),
         ("date_added", "date_updated"),
     )
+
+    # inlines = [CompanyEmployeeInline]
 
     def get_queryset(self, request):
         # filter out all but base class

@@ -16,8 +16,8 @@ from dotenv import load_dotenv
 
 """
 The .env file should be on the same dir as this file, that is loaded through load_dotenv().
-.env file is not tracked by git so in owr dev environment it will be different from prod. 
-Ex: in dev ALLOWED_HOSTS = [], but in prod server ALLOWED_HOSTS = [domain, IP]  
+.env file is not tracked by git so in owr dev environment it will be different from prod.
+Ex: in dev ALLOWED_HOSTS = [], but in prod server ALLOWED_HOSTS = [domain, IP]
 """
 load_dotenv()
 
@@ -34,7 +34,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(' ')
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ") if os.environ.get("ALLOWED_HOSTS") else []
 
 
 INSTALLED_APPS = [
