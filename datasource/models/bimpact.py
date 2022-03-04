@@ -2,16 +2,19 @@ import json
 import logging.config
 from datetime import datetime, timezone
 
+from django.db import models
+
 import pandas as pd
 import requests
 
+from brand.models.brand import Brand
 from datasource.local.banktrack.secret import TOKEN, USERNAME
 from datasource.models.datasource import Datasource
 from datasource.pycountry_utils import pycountries
 
 
 class Bimpact(Datasource):
-    """ """
+    # brand = models.OneToOneField('brand.Brand', on_delete=models.SET_NULL, null=True, blank=True)
 
     @classmethod
     def load_and_create(cls, load_from_api=False):
@@ -43,7 +46,13 @@ class Bimpact(Datasource):
         existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
         num_created = 0
+        print(df, "=====================================================")
+        print(existing_tags, "====================================", "\n")
+        for a in cls.objects.all():
+            num_created += 1
+            print(a.tag, "-----------", num_created)
         for i, row in df.iterrows():
+            print(i, "-----------", row, "------------")
             try:
                 num_created, existing_tags = cls._load_or_create_individual_instance(
                     existing_tags, banks, num_created, row

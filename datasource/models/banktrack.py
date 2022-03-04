@@ -2,15 +2,20 @@ import json
 from datetime import datetime, timezone
 from re import I
 
+from django.db import models
+
 import pandas as pd
 import requests
 
+from brand.models.brand import Brand
 from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 from datasource.models.datasource import Datasource
 from datasource.pycountry_utils import pycountries
 
 
 class Banktrack(Datasource):
+    # brand = models.OneToOneField(Brand, on_delete=models.SET_NULL, null=True, blank=True)
+
     @classmethod
     def load_and_create(cls, load_from_api=False):
 

@@ -1,5 +1,5 @@
-black
-isort
+black==22.1.0
+isort==5.10.1
 celery==4.0.0
 django==3.2.12
 django-braces==1.15.0
@@ -21,3 +21,4 @@ unidecode
 numpy==1.19.5
 django-countries==7.2.1
 gunicorn==20.1.0
+django-admin-list-filter-dropdown====1.0.3
