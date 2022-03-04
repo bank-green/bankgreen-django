@@ -14,6 +14,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+
 """
 The .env file should be on the same dir as this file, that is loaded through load_dotenv().
 .env file is not tracked by git so in owr dev environment it will be different from prod.
@@ -34,7 +35,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ") if os.environ.get("ALLOWED_HOSTS") else []
+ALLOWED_HOSTS = (
+    os.environ.get("ALLOWED_HOSTS").split(" ") if os.environ.get("ALLOWED_HOSTS") else []
+)
 
 
 INSTALLED_APPS = [
@@ -44,9 +47,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_countries",
+    # my apps
     "datasource",
     "brand",
+    # third party apps
+    "django_countries",
+    "django_admin_listfilter_dropdown",
 ]
 
 MIDDLEWARE = [
@@ -115,7 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
