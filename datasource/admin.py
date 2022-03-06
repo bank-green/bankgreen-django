@@ -94,11 +94,11 @@ class MarketforcesAdmin(BanktrackAdmin, admin.ModelAdmin):
     pass
 
 
-# @admin.register(Switchit)
-# class SwitchitAdmin(BanktrackAdmin, admin.ModelAdmin):
-#     pass
-#
-#
+@admin.register(Switchit)
+class SwitchitAdmin(BanktrackAdmin, admin.ModelAdmin):
+    pass
+
+
 # @admin.register(Usnic)
 # class UsnicAdmin(BanktrackAdmin, admin.ModelAdmin):
 #     pass
