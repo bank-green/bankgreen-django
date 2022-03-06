@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from brand.models import Brand
-from datasource.models import Banktrack, Bimpact
+from datasource.models import Banktrack, Bimpact, Fairfinance, Marketforces
 
 
 class Command(BaseCommand):
@@ -22,6 +22,12 @@ class Command(BaseCommand):
 
         if "all" in datasources or "bimpact" in datasources:
             self.refresh_bimpact(options)
+
+        if "all" in datasources or "fairfinance" in datasources:
+            self.refresh_fairfinance(options)
+
+        if "all" in datasources or "marketforces" in datasources:
+            self.refresh_marketforces(options)
 
     def refresh_bimpact(self, options):
         load_from_api = False if options["local"] and "all" in options["local"] else True
@@ -53,6 +59,36 @@ class Command(BaseCommand):
 
         brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
         self.output_brand_creation(brands_created, brands_updated, Banktrack)
+
+    def refresh_fairfinance(self, options):
+        load_from_api = False if options["local"] and "all" in options["local"] else True
+        if options["local"] and "fairfinance" in options["local"]:
+            load_from_api = False
+
+        banks, num_created = Fairfinance.load_and_create(load_from_api=load_from_api)
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Successfully refreshed {len(banks)} fairfinance records, creating {num_created} new records\n"
+            )
+        )
+
+        brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
+        self.output_brand_creation(brands_created, brands_updated, Fairfinance)
+
+    def refresh_marketforces(self, options):
+        load_from_api = False if options["local"] and "all" in options["local"] else True
+        if options["local"] and "marketforces" in options["local"]:
+            load_from_api = False
+
+        banks, num_created = Marketforces.load_and_create(load_from_api=load_from_api)
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Successfully refreshed {len(banks)} marketforces records, creating {num_created} new records\n"
+            )
+        )
+
+        brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
+        self.output_brand_creation(brands_created, brands_updated, Marketforces)
 
     def output_brand_creation(self, brands_created, brands_updated, datasource_class):
         self.stdout.write(

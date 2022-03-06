@@ -14,8 +14,6 @@ from datasource.pycountry_utils import pycountries
 
 
 class Banktrack(Datasource):
-    # brand = models.OneToOneField(Brand, on_delete=models.SET_NULL, null=True, blank=True)
-
     @classmethod
     def load_and_create(cls, load_from_api=False):
 
@@ -26,18 +24,27 @@ class Banktrack(Datasource):
             df = pd.read_csv("./datasource/local/banktrack/banktrack.csv")
         else:
             print("Loading Banktrack data from API...")
-            r = requests.post(
-                "https://www.banktrack.org/service/sections/Bankprofile/financedata",
-                data={"pass": banktrack_password},
-            )
-            res = json.loads(r.text)
-            df = pd.DataFrame(res["bankprofiles"])
-            df.to_csv("./datasource/local/banktrack/banktrack.csv")
+            df = pd.read_csv("./datasource/local/banktrack/banktrack.csv")
+            # r = requests.post(
+            #     "https://www.banktrack.org/service/sections/Bankprofile/financedata",
+            #     data={"pass": banktrack_password},
+            # )
+            # res = json.loads(r.text)
+            # df = pd.DataFrame(res["bankprofiles"])
+            # df.to_csv("./datasource/local/banktrack/banktrack.csv")
 
         existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
         num_created = 0
         for i, row in df.iterrows():
+            print(
+                i,
+                "-----------",
+                row.tag,
+                row.title,
+                row.website,
+                "============================================================",
+            )
             try:
                 num_created, existing_tags = cls._load_or_create_individual_instance(
                     existing_tags, banks, num_created, row
@@ -84,7 +91,7 @@ class Banktrack(Datasource):
         # memoize existing tags for faster recursion
         if not existing_tags:
             existing_tags = {x.tag for x in cls.objects.all()}
-
+        print("bbbbbb: ", bt_tag, "class: ", cls.tag_prepend_str)
         if increment < 1:
             bt_tag = cls.tag_prepend_str + og_tag
         else:
