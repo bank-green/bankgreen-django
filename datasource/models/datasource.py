@@ -38,7 +38,6 @@ class Datasource(Brand):
         null=False,
         blank=False,
         editable=True,
-        unique=True,
         help_text="the original identifier used by the datasource. i.e wikiid, or banktrack tag",
     )
     suggested_brands = models.TextField(blank=True, null=True, default="-blank-")

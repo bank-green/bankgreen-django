@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
                 ('free_atm_withdrawl_details', models.CharField(blank=True, default='', max_length=100, verbose_name='Positive. Details on available free ATM withdrawals')),
                 ('online_banking', models.BooleanField(default=False, verbose_name='Positive. does the bank offer online banking?')),
                 ('local_branches', models.BooleanField(default=False, verbose_name='Positive. does the bank offer local branches?')),
-                ('local_branhes_custom', models.CharField(blank=True, max_length=100, null=True, verbose_name='Positive. Details on local branches')),
+                ('local_branches_custom', models.CharField(blank=True, max_length=100, null=True, verbose_name='Positive. Details on local branches')),
                 ('mortgage_or_loan', models.BooleanField(default=False, verbose_name='Positive. does the bank offer mortgage or loans?')),
                 ('deposit_protection', models.CharField(blank=True, max_length=100, null=True, verbose_name='Positive. Details on deposit protection')),
                 ('credit_cards', models.BooleanField(default=False, verbose_name='Positive. does the bank offer credit cards?')),

@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from brand.models import Brand
-from datasource.models import Banktrack, Bimpact, Fairfinance, Marketforces
+from datasource.models import Banktrack, Bimpact, Fairfinance, Marketforces, Switchit
 
 
 class Command(BaseCommand):
@@ -29,9 +29,12 @@ class Command(BaseCommand):
         if "all" in datasources or "marketforces" in datasources:
             self.refresh_marketforces(options)
 
+        if "all" in datasources or "switchit" in datasources:
+            self.refresh_switchit()
+
     def refresh_bimpact(self, options):
         load_from_api = False if options["local"] and "all" in options["local"] else True
-        if options["local"] and "banktrack" in options["local"]:
+        if options["local"] and "bimpact" in options["local"]:
             load_from_api = False
 
         banks, num_created = Bimpact.load_and_create(load_from_api=load_from_api)
@@ -89,6 +92,17 @@ class Command(BaseCommand):
 
         brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
         self.output_brand_creation(brands_created, brands_updated, Marketforces)
+
+    def refresh_switchit(self):
+        banks, num_created = Switchit.load_and_create()
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Successfully refreshed {len(banks)} switchit records, creating {num_created} new records\n"
+            )
+        )
+
+        brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
+        self.output_brand_creation(brands_created, brands_updated, Switchit)
 
     def output_brand_creation(self, brands_created, brands_updated, datasource_class):
         self.stdout.write(

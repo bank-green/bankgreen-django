@@ -122,7 +122,7 @@ class Commentary(models.Model):
     local_branches = models.BooleanField(
         "Positive. does the bank offer local branches?", default=False
     )
-    local_branhes_custom = models.CharField(
+    local_branches_custom = models.CharField(
         "Positive. Details on local branches", max_length=100, null=True, blank=True
     )
 

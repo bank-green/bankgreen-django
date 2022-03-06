@@ -37,14 +37,6 @@ class Banktrack(Datasource):
         banks = []
         num_created = 0
         for i, row in df.iterrows():
-            print(
-                i,
-                "-----------",
-                row.tag,
-                row.title,
-                row.website,
-                "============================================================",
-            )
             try:
                 num_created, existing_tags = cls._load_or_create_individual_instance(
                     existing_tags, banks, num_created, row
@@ -91,7 +83,6 @@ class Banktrack(Datasource):
         # memoize existing tags for faster recursion
         if not existing_tags:
             existing_tags = {x.tag for x in cls.objects.all()}
-        print("bbbbbb: ", bt_tag, "class: ", cls.tag_prepend_str)
         if increment < 1:
             bt_tag = cls.tag_prepend_str + og_tag
         else:
