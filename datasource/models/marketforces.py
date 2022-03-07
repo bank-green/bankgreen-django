@@ -50,15 +50,10 @@ class Marketforces(Datasource):
     def _load_or_create_individual_instance(cls, existing_tags, banks, num_created, row):
         tag = cls._generate_tag(og_tag=None, existing_tags=existing_tags, bank=row.Name)
         source_id = row.Name.lower().strip().replace(" ", "_")
-        # from .datasource import Datasource
-        # datasources = Datasource.objects.filter(source_id=source_id)
-        # for da in datasources:
-        #     print(da, da.name, da.source_id, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
 
         defaults = {
             "date_updated": datetime.now(),
             "name": row.Name,
-            # "countries": pycountries.get(row.Countries.lower(), None),
         }
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}

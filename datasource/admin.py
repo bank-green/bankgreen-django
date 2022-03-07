@@ -74,11 +74,11 @@ class BimpactAdmin(BanktrackAdmin, admin.ModelAdmin):
     pass
 
 
-# @admin.register(Bocc)
-# class BoccAdmin(BanktrackAdmin, admin.ModelAdmin):
-#     pass
-#
-#
+@admin.register(Bocc)
+class BoccAdmin(BanktrackAdmin, admin.ModelAdmin):
+    pass
+
+
 @admin.register(Fairfinance)
 class FairfinanceAdmin(BanktrackAdmin, admin.ModelAdmin):
     pass
