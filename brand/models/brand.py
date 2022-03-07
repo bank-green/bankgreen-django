@@ -35,7 +35,7 @@ class Brand(models.Model):
     website = models.URLField(
         "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
     )
-    countries = CountryField(multiple=True, help_text="Where the brand offers retails services")
+    countries = CountryField(multiple=True, help_text="Where the brand offers retails services", blank=True)
     tag = models.CharField(
         max_length=100,
         null=False,

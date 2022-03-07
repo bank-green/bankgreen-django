@@ -14,8 +14,6 @@ from datasource.pycountry_utils import pycountries
 
 
 class Bimpact(Datasource):
-    # brand = models.OneToOneField('brand.Brand', on_delete=models.SET_NULL, null=True, blank=True)
-
     @classmethod
     def load_and_create(cls, load_from_api=False):
         df = None
@@ -46,13 +44,7 @@ class Bimpact(Datasource):
         existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
         num_created = 0
-        print(df, "=====================================================")
-        print(existing_tags, "====================================", "\n")
-        for a in cls.objects.all():
-            num_created += 1
-            print(a.tag, "-----------", num_created)
         for i, row in df.iterrows():
-            print(i, "-----------", row, "------------")
             try:
                 num_created, existing_tags = cls._load_or_create_individual_instance(
                     existing_tags, banks, num_created, row
