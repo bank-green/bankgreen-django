@@ -5,7 +5,7 @@ from django.db import models
 
 import pandas as pd
 import requests
-
+import pycountry
 from datasource.models.datasource import Datasource
 from datasource.pycountry_utils import pycountries
 
@@ -240,7 +240,7 @@ class Bocc(Datasource):
         defaults = {
             "date_updated": datetime.now(),
             "name": row.Bank,
-            "countries": pycountries.get(row.Country, None),
+            "countries": row.Country,
         }
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
