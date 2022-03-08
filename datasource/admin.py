@@ -84,11 +84,11 @@ class FairfinanceAdmin(BanktrackAdmin, admin.ModelAdmin):
     pass
 
 
-# @admin.register(Gabv)
-# class GabvAdmin(BanktrackAdmin, admin.ModelAdmin):
-#     pass
-#
-#
+@admin.register(Gabv)
+class GabvAdmin(BanktrackAdmin, admin.ModelAdmin):
+    pass
+
+
 @admin.register(Marketforces)
 class MarketforcesAdmin(BanktrackAdmin, admin.ModelAdmin):
     pass
