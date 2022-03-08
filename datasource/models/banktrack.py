@@ -1,14 +1,17 @@
 import json
 from datetime import datetime, timezone
+from pathlib import Path
 from re import I
 
+from django.conf import settings
 from django.db import models
 
 import pandas as pd
 import requests
 
 from brand.models.brand import Brand
-from datasource.local.banktrack.secret import PASSWORD as banktrack_password
+
+# from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 from datasource.models.datasource import Datasource
 from datasource.pycountry_utils import pycountries
 
@@ -27,7 +30,7 @@ class Banktrack(Datasource):
             df = pd.read_csv("./datasource/local/banktrack/banktrack.csv")
             # r = requests.post(
             #     "https://www.banktrack.org/service/sections/Bankprofile/financedata",
-            #     data={"pass": banktrack_password},
+            #     data={"pass": settings.PASSWORD},
             # )
             # res = json.loads(r.text)
             # df = pd.DataFrame(res["bankprofiles"])

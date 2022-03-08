@@ -24,6 +24,11 @@ You will need to install "[pip](https://pip.pypa.io/en/stable/installation/)" (t
 
 `deactivate`
 
+## Environment variables
+There's an .env file in the same path as settings.py
+where all environment variables are and should be placed.
+You should *call* them in settings.py and then import them like settings.KEYWORD
+
 ## Django commands
 
 ```

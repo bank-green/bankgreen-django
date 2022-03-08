@@ -4,8 +4,9 @@ from datetime import datetime, timezone
 from django.db import models
 
 import pandas as pd
-import requests
 import pycountry
+import requests
+
 from datasource.models.datasource import Datasource
 from datasource.pycountry_utils import pycountries
 
@@ -237,17 +238,11 @@ class Bocc(Datasource):
         tag = cls._generate_tag(og_tag=None, existing_tags=existing_tags, bank=row.Bank)
         source_id = row.Bank.lower().strip().replace(" ", "_")
 
-        defaults = {
-            "date_updated": datetime.now(),
-            "name": row.Bank,
-            "countries": row.Country,
-        }
+        defaults = {"date_updated": datetime.now(), "name": row.Bank, "countries": row.Country}
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
 
-        bank, created = Bocc.objects.update_or_create(
-            source_id=source_id, defaults=defaults
-        )
+        bank, created = Bocc.objects.update_or_create(source_id=source_id, defaults=defaults)
 
         if created:
             bank.tag = tag
@@ -277,4 +272,3 @@ class Bocc(Datasource):
             return bt_tag
         else:
             return cls._generate_tag(og_tag, increment=increment + 1, existing_tags=existing_tags)
-
