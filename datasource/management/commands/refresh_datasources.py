@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from brand.models import Brand
-from datasource.models import Banktrack, Bimpact, Bocc, Fairfinance, Marketforces, Switchit
+from datasource.models import Banktrack, Bimpact, Bocc, Fairfinance, Marketforces, Switchit, Gabv
 
 
 class Command(BaseCommand):
@@ -117,6 +117,14 @@ class Command(BaseCommand):
 
         brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
         self.output_brand_creation(brands_created, brands_updated, Bocc)
+
+    def refresh_gabv(self):
+        banks, num_created = Gabv.load_and_create()
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Successfully refreshed {len(banks)} gabv records, creating {num_created} new records\n"
+            )
+        )
 
     def output_brand_creation(self, brands_created, brands_updated, datasource_class):
         self.stdout.write(
