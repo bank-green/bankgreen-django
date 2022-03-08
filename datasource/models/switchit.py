@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timezone
 
 from django.db import models
+
 import pandas as pd
 import requests
 
@@ -14,14 +15,14 @@ class Switchit(Datasource):
     @classmethod
     def load_and_create(cls):
 
-        with open('./datasource/local/switchit/providers.json') as json_file:
+        with open("./datasource/local/switchit/providers.json") as json_file:
             data = json.load(json_file)
             # print(data['bank_providers'])
 
         existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
         num_created = 0
-        for row in data['bank_providers']:
+        for row in data["bank_providers"]:
             try:
                 num_created, existing_tags = cls._load_or_create_individual_instance(
                     existing_tags, banks, num_created, row
@@ -34,20 +35,14 @@ class Switchit(Datasource):
 
     @classmethod
     def _load_or_create_individual_instance(cls, existing_tags, banks, num_created, row):
-        tag = cls._generate_tag(og_tag=None, existing_tags=existing_tags, bank=row['name'])
-        source_id = row['name'].lower().strip().replace(" ", "_")
+        tag = cls._generate_tag(og_tag=None, existing_tags=existing_tags, bank=row["name"])
+        source_id = row["name"].lower().strip().replace(" ", "_")
 
-        defaults = {
-            "date_updated": datetime.now(),
-            "name": row['name'],
-            "website": row['url'],
-        }
+        defaults = {"date_updated": datetime.now(), "name": row["name"], "website": row["url"]}
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
 
-        bank, created = Switchit.objects.update_or_create(
-            source_id=source_id, defaults=defaults
-        )
+        bank, created = Switchit.objects.update_or_create(source_id=source_id, defaults=defaults)
 
         if created:
             bank.tag = tag

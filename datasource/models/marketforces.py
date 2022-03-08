@@ -51,10 +51,7 @@ class Marketforces(Datasource):
         tag = cls._generate_tag(og_tag=None, existing_tags=existing_tags, bank=row.Name)
         source_id = row.Name.lower().strip().replace(" ", "_")
 
-        defaults = {
-            "date_updated": datetime.now(),
-            "name": row.Name,
-        }
+        defaults = {"date_updated": datetime.now(), "name": row.Name}
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
 

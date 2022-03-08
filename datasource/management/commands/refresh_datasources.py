@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from brand.models import Brand
-from datasource.models import Banktrack, Bimpact, Fairfinance, Marketforces, Switchit, Bocc
+from datasource.models import Banktrack, Bimpact, Bocc, Fairfinance, Marketforces, Switchit
 
 
 class Command(BaseCommand):
