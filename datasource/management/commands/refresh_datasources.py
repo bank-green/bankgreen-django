@@ -78,9 +78,6 @@ class Command(BaseCommand):
             )
         )
 
-        brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
-        self.output_brand_creation(brands_created, brands_updated, Fairfinance)
-
     def refresh_marketforces(self, options):
         load_from_api = False if options["local"] and "all" in options["local"] else True
         if options["local"] and "marketforces" in options["local"]:
@@ -93,9 +90,6 @@ class Command(BaseCommand):
             )
         )
 
-        brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
-        self.output_brand_creation(brands_created, brands_updated, Marketforces)
-
     def refresh_switchit(self):
         banks, num_created = Switchit.load_and_create()
         self.stdout.write(
@@ -104,9 +98,6 @@ class Command(BaseCommand):
             )
         )
 
-        brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
-        self.output_brand_creation(brands_created, brands_updated, Switchit)
-
     def refresh_bocc(self):
         banks, num_created = Bocc.load_and_create()
         self.stdout.write(
@@ -114,9 +105,6 @@ class Command(BaseCommand):
                 f"Successfully refreshed {len(banks)} bocc records, creating {num_created} new records\n"
             )
         )
-
-        brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
-        self.output_brand_creation(brands_created, brands_updated, Bocc)
 
     def refresh_gabv(self):
         banks, num_created = Gabv.load_and_create()
