@@ -4,7 +4,14 @@ from django.utils.html import format_html
 
 from datasource.models.datasource import Datasource
 
-from .models import Brand
+from .models import Brand, Commentary
+
+
+class CommentaryInline(admin.TabularInline):
+    model = Commentary
+    extra = 0
+    # raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
+    # fk_name = "brand"
 
 
 class DatasourceInline(admin.TabularInline):
@@ -31,7 +38,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("date_added", "date_updated"),
     )
 
-    inlines = [DatasourceInline]
+    inlines = [DatasourceInline, CommentaryInline]
 
     def get_queryset(self, request):
         # filter out all but base class

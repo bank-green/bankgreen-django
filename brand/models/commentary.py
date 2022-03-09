@@ -10,7 +10,7 @@ from brand.models import Brand
 
 class Commentary(models.Model):
     # Metadata
-    brand = models.ForeignKey(
+    brand = models.OneToOneField(
         Brand,
         related_name="commentary_brand",
         help_text="What brand is this comment associated with?",
@@ -147,3 +147,7 @@ class Commentary(models.Model):
         null=True,
         blank=True,
     )
+
+    class Meta:
+        verbose_name = "Commentary"
+        verbose_name_plural = "Commentaries"
