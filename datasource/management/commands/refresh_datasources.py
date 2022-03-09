@@ -35,6 +35,9 @@ class Command(BaseCommand):
         if "all" in datasources or "bocc" in datasources:
             self.refresh_bocc()
 
+        if "all" in datasources or "gabv" in datasources:
+            self.refresh_gabv()
+
     def refresh_bimpact(self, options):
         load_from_api = False if options["local"] and "all" in options["local"] else True
         if options["local"] and "bimpact" in options["local"]:
