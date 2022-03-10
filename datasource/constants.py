@@ -30,7 +30,7 @@ read_only_fields = {
     "source_link",
     "date_added",
     "date_updated",
-    "suggested_brands",
+    # "suggested_brands",
 }
 
 model_names = [

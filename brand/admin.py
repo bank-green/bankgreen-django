@@ -3,15 +3,56 @@ from django.forms import ModelForm
 from django.utils.html import format_html
 
 from datasource.models.datasource import Datasource
-
+from django.urls import reverse
 from .models import Brand, Commentary
 
 
-class CommentaryInline(admin.TabularInline):
+# @admin.register(Commentary)
+# class DatasourceAdmin(admin.ModelAdmin):
+#     pass
+#
+#
+# def admin_change_url(obj):
+#     app_label = obj._meta.app_label
+#     model_name = obj._meta.model.__name__.lower()
+#     return reverse("admin:{}_{}_change".format(app_label, model_name), args=(obj.pk,))
+#
+#
+# def admin_link(attr, short_description, empty_description="-"):
+#     """Decorator used for rendering a link to a related model in
+#     the admin detail page.
+#     attr (str):
+#         Name of the related field.
+#     short_description (str):
+#         Name if the field.
+#     empty_description (str):
+#         Value to display if the related field is None.
+#     The wrapped method receives the related object and should
+#     return the link text.
+#     Usage:
+#         @admin_link('credit_card', _('Credit Card'))
+#         def credit_card_link(self, credit_card):
+#             return credit_card.name
+#     """
+#
+#     def wrap(func):
+#         def field_func(self, obj):
+#             related_obj = getattr(obj, attr)
+#             if related_obj is None:
+#                 return empty_description
+#             url = admin_change_url(related_obj)
+#             return format_html('<a href="{}">{}</a>', url, func(self, related_obj))
+#
+#         field_func.short_description = short_description
+#         field_func.allow_tags = True
+#         return field_func
+#
+#     return wrap
+
+
+class CommentaryInline(admin.StackedInline):
     model = Commentary
     extra = 0
-    # raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
-    # fk_name = "brand"
 
 
 class DatasourceInline(admin.TabularInline):
@@ -53,3 +94,9 @@ class BrandAdmin(admin.ModelAdmin):
         return related_datasources
 
     number_of_related_datasources.short_description = "Nr. Dts"
+
+    # @admin_link("commentary_brand", "Commentary")
+    # def commentary_link(self, commentary):
+    #     """Url link for the category of business."""
+    #     """With 20000 posts this decorator increases the list page load from 800 ms to ~3000 ms"""
+    #     return commentary
