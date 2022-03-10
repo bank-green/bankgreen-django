@@ -66,7 +66,40 @@ class Datasource(Brand):
                     continue
                 brand_list.append(tag)
         brands = ", ".join(brand_list)
-        return brands
+        print('ffffffffffffffffffffffffffffffffffffffffffffff', brands)
+        app_label = Brand._meta.app_label
+        model_name = Brand._meta.model.__name__.lower()
+        # return reverse(f"admin:{app_label}_{model_name}_change", )
+        from django.utils.html import format_html
+        from django.utils.safestring import mark_safe
+
+        suggested_brands = self.suggested_brands.split(',')
+        print(suggested_brands, 'yyyyyyyyyyyyyy')
+        for str_brand in suggested_brands:
+            print(str_brand, type(str_brand))
+            # if suggested_brands:
+            brand = Brand.objects.get(tag=str_brand)
+            # return reverse(f"admin:{app_label}_{model_name}_change", args=(brand.pk,))
+            # return mark_safe(
+            #     '<img src="%s" style="max-width: 60px; max-height:60px;" />' % self.photo.url
+            # )
+            return mark_safe(f'<a href="{app_label}/{model_name}/{brand.pk}/change">{brand}</a>')
+        # return brands
+
+    # from django.utils.html import format_html
+    # def brand_url(self):
+    #     app_label = Brand._meta.app_label
+    #     model_name = Brand._meta.model.__name__.lower()
+    #     # return reverse(f"admin:{app_label}_{model_name}_change", )
+    #
+    #     suggested_brands = self.suggested_brands.split()
+    #     print(suggested_brands, 'yyyyyyyyyyyyyy')
+    #     for str_brand in suggested_brands:
+    #     # if suggested_brands:
+    #         brand = Brand.objects.get(tag=str_brand)
+    #         # return reverse(f"admin:{app_label}_{model_name}_change", args=(brand.pk,))
+    #
+    #         return format_html(f'<a href="{app_label}/{model_name}{brand.pk}/change">zzz</a>')
 
     def save(self, *args, **kwargs):
         self.suggested_brands = self.brand_suggestions()
