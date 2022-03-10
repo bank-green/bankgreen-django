@@ -25,20 +25,20 @@ from .models import (
 )
 
 
-from django.forms import ModelForm, ValidationError
-class DatasourceAdminForm(ModelForm):
-    class Meta:
-        model = Datasource
-        fields = '__all__'
-
-    def clean_suggested_brands(self):
-        title = self.cleaned_data['suggested_brands']
-        a =  self.cleaned_data['suggested_brands'].split()
-        print(a, Brand._meta.app_label, '-------------', Brand._meta.model.__name__.lower(), self.cleaned_data['suggested_brands'])
-        if title != 'lsls':
-            print('llllllllllllalaaaaaaaaaa lllllllllllllllaaaaaaaaaa lllllllllaaaaaaaaaaaaaaaaa')
-            # raise ValidationError('invalid!')
-        return title
+# from django.forms import ModelForm, ValidationError
+# class DatasourceAdminForm(ModelForm):
+#     class Meta:
+#         model = Datasource
+#         fields = '__all__'
+#
+#     def clean_suggested_brands(self):
+#         title = self.cleaned_data['suggested_brands']
+#         a =  self.cleaned_data['suggested_brands'].split()
+#         print(a, Brand._meta.app_label, '-------------', Brand._meta.model.__name__.lower(), self.cleaned_data['suggested_brands'])
+#         if title != 'lsls':
+#             print('llllllllllllalaaaaaaaaaa lllllllllllllllaaaaaaaaaa lllllllllaaaaaaaaaaaaaaaaa')
+#             # raise ValidationError('invalid!')
+#         return title
 
 
 @admin.register(Datasource)
@@ -54,7 +54,7 @@ class DatasourceAdmin(admin.ModelAdmin):
 
 @admin.register(Banktrack)
 class BanktrackAdmin(admin.ModelAdmin):
-    form = DatasourceAdminForm
+    # form = DatasourceAdminForm
     list_display = ["name", "tag", "website", "brand"]
     search_fields = ["name", "tag", "website"]
     list_filter = (
