@@ -25,22 +25,6 @@ from .models import (
 )
 
 
-# from django.forms import ModelForm, ValidationError
-# class DatasourceAdminForm(ModelForm):
-#     class Meta:
-#         model = Datasource
-#         fields = '__all__'
-#
-#     def clean_suggested_brands(self):
-#         title = self.cleaned_data['suggested_brands']
-#         a =  self.cleaned_data['suggested_brands'].split()
-#         print(a, Brand._meta.app_label, '-------------', Brand._meta.model.__name__.lower(), self.cleaned_data['suggested_brands'])
-#         if title != 'lsls':
-#             print('llllllllllllalaaaaaaaaaa lllllllllllllllaaaaaaaaaa lllllllllaaaaaaaaaaaaaaaaa')
-#             # raise ValidationError('invalid!')
-#         return title
-
-
 @admin.register(Datasource)
 class DatasourceAdmin(admin.ModelAdmin):
     list_display = ["name", "tag", "website", "brand"]
@@ -54,7 +38,6 @@ class DatasourceAdmin(admin.ModelAdmin):
 
 @admin.register(Banktrack)
 class BanktrackAdmin(admin.ModelAdmin):
-    # form = DatasourceAdminForm
     list_display = ["name", "tag", "website", "brand"]
     search_fields = ["name", "tag", "website"]
     list_filter = (
@@ -62,6 +45,23 @@ class BanktrackAdmin(admin.ModelAdmin):
         ("countries", ChoiceDropdownFilter),
         ("brand", admin.EmptyFieldListFilter),
     )
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        Don't show all brands. Only those that are not related to other datasources
+        """
+        if db_field.name == "brand":
+            kwargs["queryset"] = Brand.objects.exclude(
+                models.Q(tag__startswith="banktrack_")
+                | models.Q(tag__startswith="bimpact_")
+                | models.Q(tag__startswith="bocc_")
+                | models.Q(tag__startswith="fairfinance_")
+                | models.Q(tag__startswith="gabv")
+                | models.Q(tag__startswith="marketforces_")
+                | models.Q(tag__startswith="switchit_")
+                | models.Q(tag__startswith="usnic_")
+            )
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def extra_field(self, obj):
         pass
@@ -84,20 +84,6 @@ class BanktrackAdmin(admin.ModelAdmin):
             if f in form.base_fields:
                 form.base_fields[f].disabled = True
         return form
-
-    # from django.utils.html import format_html
-    # def brand_url(self, obj):
-    #     app_label = Brand._meta.app_label
-    #     model_name = Brand._meta.model.__name__.lower()
-    #     # return reverse(f"admin:{app_label}_{model_name}_change", )
-    #
-    #     suggested_brands = self.cleaned_data['suggested_brands'].split()
-    #     for str_brand in suggested_brands:
-    #         brand = Brand.objects.get(tag=str_brand)
-    #         return reverse(f"admin:{app_label}_{model_name}_change", args=(brand.pk,))
-    #         # return format_html(f'<a href="{brand}">{brand}</a>')
-    #
-    # brand_url.allow_tags = True
 
 
 @admin.register(Bimpact)

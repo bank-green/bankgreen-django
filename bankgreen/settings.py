@@ -20,7 +20,7 @@ The .env file should be on the same dir as this file, that is loaded through loa
 .env file is not tracked by git so in owr dev environment it will be different from prod.
 Ex: in dev ALLOWED_HOSTS = [], but in prod server ALLOWED_HOSTS = [domain, IP]
 """
-ENV_DIR = str(Path().cwd() / 'bankgreen/.env')
+ENV_DIR = str(Path().cwd() / "bankgreen/.env")
 load_dotenv(ENV_DIR)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

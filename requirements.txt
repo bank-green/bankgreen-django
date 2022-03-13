@@ -1,4 +1,4 @@
-airtable=0.4.8
+airtable==0.4.8
 black==22.1.0
 isort==5.10.1
 celery==4.0.0
@@ -22,5 +22,6 @@ unidecode
 numpy==1.19.5
 django-countries==7.2.1
 gunicorn==20.1.0
-django-admin-list-filter-dropdown====1.0.3
+django-admin-list-filter-dropdown==1.0.3
 python-Levenshtein==0.12.2
+graphene-django==2.15.0

@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.forms import ModelForm
-from django.utils.html import format_html
-from datasource.models.datasource import Datasource
 from django.urls import reverse
+from django.utils.html import format_html
+
+from datasource.models.datasource import Datasource
+
 from .models import Brand, Commentary
 
 
@@ -10,52 +12,53 @@ class CommentaryInline(admin.StackedInline):
     model = Commentary
     fieldsets = (
         (
-            'Display Configuration',
+            "Display Configuration",
             {
-                'fields': (
-                    ('display_on_website', 'aliases'),
-                    ('rating', 'top_three_ethical'),
-                    ('recommended_in', 'recommended_order'),
+                "fields": (
+                    ("display_on_website", "aliases"),
+                    ("rating", "top_three_ethical"),
+                    ("recommended_in", "recommended_order"),
                 )
             },
         ),
         (
-            'Text used for both positively and negatively rated banks',
-            {'fields': ('headline', 'top_blurb_headline', 'top_blurb_subheadline')},
+            "Text used for both positively and negatively rated banks",
+            {"fields": ("headline", "top_blurb_headline", "top_blurb_subheadline")},
         ),
         (
-            'Text used for negatively rated banks',
+            "Text used for negatively rated banks",
             {
-                'fields': (
-                    ('snippet_1', 'snippet_1_link'),
-                    ('snippet_2', 'snippet_2_link'),
-                    ('snippet_3', 'snippet_3_link'),
+                "fields": (
+                    ("snippet_1", "snippet_1_link"),
+                    ("snippet_2", "snippet_2_link"),
+                    ("snippet_3", "snippet_3_link"),
                 )
             },
         ),
         (
-            'Text used for positively rated banks',
+            "Text used for positively rated banks",
             {
-                'fields': (
-                    ('from_the_website',),
-                    ('checking_saving_details', 'checking_saving'),
-                    ('free_checking_details', 'free_checking'),
-                    ('interest_rates',),
-                    ('free_atm_withdrawl_details', 'free_atm_withdrawl'),
-                    ('local_branches_details', 'local_branches', 'online_banking'),
-                    ('mortgage_or_loan', 'deposit_protection'),
-                    ('credit_cards_details', 'credit_cards'),
-                    ('free_international_card_payment',),
+                "fields": (
+                    ("from_the_website",),
+                    ("checking_saving_details", "checking_saving"),
+                    ("free_checking_details", "free_checking"),
+                    ("interest_rates",),
+                    ("free_atm_withdrawl_details", "free_atm_withdrawl"),
+                    ("local_branches_details", "local_branches", "online_banking"),
+                    ("mortgage_or_loan", "deposit_protection"),
+                    ("credit_cards_details", "credit_cards"),
+                    ("free_international_card_payment",),
                 )
             },
         ),
-        ('Meta', {'fields': ('comment',)}),
+        ("Meta", {"fields": ("comment",)}),
     )
 
 
 # class CommentaryInline(admin.StackedInline):
 #     model = Commentary
 #     extra = 0
+#
 
 
 class DatasourceInline(admin.TabularInline):
@@ -67,7 +70,7 @@ class DatasourceInline(admin.TabularInline):
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
-    list_filter = ('date_updated', 'countries')
+
     list_display = ["name", "tag", "number_of_related_datasources", "website"]
     search_fields = ["name", "tag", "website"]
     fields = (
@@ -79,6 +82,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("subsidiary_of_2", "subsidiary_of_2_pct"),
         ("subsidiary_of_3", "subsidiary_of_3_pct"),
         ("subsidiary_of_4", "subsidiary_of_4_pct"),
+        "suggested_datasource",
         ("date_added", "date_updated"),
     )
 

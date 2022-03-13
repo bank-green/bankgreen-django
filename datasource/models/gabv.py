@@ -2,12 +2,12 @@ import json
 from datetime import datetime, timezone
 
 from django.db import models
-import pandas as pd
-from datasource.pycountry_utils import pycountries
 
+import pandas as pd
 import requests
 
 from datasource.models.datasource import Datasource
+from datasource.pycountry_utils import pycountries
 
 
 class Gabv(Datasource):
@@ -35,10 +35,7 @@ class Gabv(Datasource):
     def _load_or_create_individual_instance(cls, existing_tags, banks, num_created, row):
         source_id = row.id
         tag = cls._generate_tag(
-            og_tag=None,
-            existing_tags=existing_tags,
-            company_name=row.company_name,
-            id=row.id,
+            og_tag=None, existing_tags=existing_tags, company_name=row.company_name, id=row.id
         )
 
         country = pycountries.get(row.country.lower(), None)
