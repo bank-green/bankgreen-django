@@ -55,9 +55,13 @@ class Datasource(Brand):
     def brand_suggestions(self):
         """Suggestion of brands based on Levenshtein distance"""
         brand_list = []
-        tag_without_cls_name = self.tag[len(self.tag_prepend_str):]
-        brand_tags = Brand.objects.filter(datasource__isnull=True).exclude(tag=tag_without_cls_name).values_list("tag", flat=True)
-
+        tag_without_cls_name = self.tag[len(self.tag_prepend_str) :]
+        brand_tags = (
+            Brand.objects.filter(datasource__isnull=True)
+            .exclude(tag=tag_without_cls_name)
+            .values_list("tag", flat=True)
+        )
+        # print(len(brand_tags), brand_tags)
         for tag in brand_tags:
             num = lev(self.tag, tag)
             if num <= lev_distance:
@@ -65,41 +69,8 @@ class Datasource(Brand):
                 if any(tag.startswith(model) for model in model_names):
                     continue
                 brand_list.append(tag)
-        # brands = ", ".join(brand_list)
-        # print('ffffffffffffffffffffffffffffffffffffffffffffff', brands)
-        # app_label = Brand._meta.app_label
-        # model_name = Brand._meta.model.__name__.lower()
-        # # return reverse(f"admin:{app_label}_{model_name}_change", )
-        # from django.utils.html import format_html
-        # from django.utils.safestring import mark_safe
-        #
-        # suggested_brands = self.suggested_brands.split(',')
-        # print(suggested_brands, 'yyyyyyyyyyyyyy')
-        # for str_brand in suggested_brands:
-        #     print(str_brand, type(str_brand))
-        #     # if suggested_brands:
-        #     brand = Brand.objects.get(tag=str_brand)
-        #     # return reverse(f"admin:{app_label}_{model_name}_change", args=(brand.pk,))
-        #     # return mark_safe(
-        #     #     '<img src="%s" style="max-width: 60px; max-height:60px;" />' % self.photo.url
-        #     # )
-        #     return mark_safe(f'<a href="{app_label}/{model_name}/{brand.pk}/change">{brand}</a>')
+        brands = ", ".join(brand_list)
         return brands
-
-    # from django.utils.html import format_html
-    # def brand_url(self):
-    #     app_label = Brand._meta.app_label
-    #     model_name = Brand._meta.model.__name__.lower()
-    #     # return reverse(f"admin:{app_label}_{model_name}_change", )
-    #
-    #     suggested_brands = self.suggested_brands.split()
-    #     print(suggested_brands, 'yyyyyyyyyyyyyy')
-    #     for str_brand in suggested_brands:
-    #     # if suggested_brands:
-    #         brand = Brand.objects.get(tag=str_brand)
-    #         # return reverse(f"admin:{app_label}_{model_name}_change", args=(brand.pk,))
-    #
-    #         return format_html(f'<a href="{app_label}/{model_name}{brand.pk}/change">zzz</a>')
 
     def save(self, *args, **kwargs):
         self.suggested_brands = self.brand_suggestions()
