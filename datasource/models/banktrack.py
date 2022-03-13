@@ -1,14 +1,19 @@
 import json
-from re import I
-import requests
 from datetime import datetime, timezone
+from pathlib import Path
+from re import I
 
-from datasource.pycountry_utils import pycountries
+from django.conf import settings
+from django.db import models
 
 import pandas as pd
+import requests
 
+from brand.models.brand import Brand
+
+# from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 from datasource.models.datasource import Datasource
-from datasource.local.banktrack.secret import PASSWORD as banktrack_password
+from datasource.pycountry_utils import pycountries
 
 
 class Banktrack(Datasource):
@@ -22,12 +27,14 @@ class Banktrack(Datasource):
             df = pd.read_csv("./datasource/local/banktrack/banktrack.csv")
         else:
             print("Loading Banktrack data from API...")
-            r = requests.post(
-                "https://www.banktrack.org/service/sections/Bankprofile/financedata", data={"pass": banktrack_password}
-            )
-            res = json.loads(r.text)
-            df = pd.DataFrame(res["bankprofiles"])
-            df.to_csv("./datasource/local/banktrack/banktrack.csv")
+            df = pd.read_csv("./datasource/local/banktrack/banktrack.csv")
+            # r = requests.post(
+            #     "https://www.banktrack.org/service/sections/Bankprofile/financedata",
+            #     data={"pass": settings.PASSWORD},
+            # )
+            # res = json.loads(r.text)
+            # df = pd.DataFrame(res["bankprofiles"])
+            # df.to_csv("./datasource/local/banktrack/banktrack.csv")
 
         existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
@@ -38,7 +45,7 @@ class Banktrack(Datasource):
                     existing_tags, banks, num_created, row
                 )
             except Exception as e:
-                print('\n\n===Banktrack failed creation or updating===\n\n')
+                print("\n\n===Banktrack failed creation or updating===\n\n")
                 print(row)
                 print(e)
         return banks, num_created
@@ -49,12 +56,14 @@ class Banktrack(Datasource):
         source_id = row.tag
 
         defaults = {
-            'date_updated': datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc),
-            'source_link': row.link,
-            'name': row.title,
-            'countries': pycountries.get(row.country.lower(), None),
-            'description': row.general_comment,
-            'website': row.website,
+            "date_updated": datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(
+                tzinfo=timezone.utc
+            ),
+            "source_link": row.link,
+            "name": row.title,
+            "countries": pycountries.get(row.country.lower(), None),
+            "description": row.general_comment,
+            "website": row.website,
         }
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
@@ -77,7 +86,6 @@ class Banktrack(Datasource):
         # memoize existing tags for faster recursion
         if not existing_tags:
             existing_tags = {x.tag for x in cls.objects.all()}
-
         if increment < 1:
             bt_tag = cls.tag_prepend_str + og_tag
         else:

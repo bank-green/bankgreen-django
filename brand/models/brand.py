@@ -1,12 +1,14 @@
 import re
 from typing import List, Tuple
 
-import datasource.models as dsm
-import unidecode
 from django.db import models
 from django.utils import timezone
+
+import unidecode
 from django_countries.fields import CountryField
 from numpy import DataSource
+
+import datasource.models as dsm
 
 
 class Brand(models.Model):
@@ -18,13 +20,24 @@ class Brand(models.Model):
     """
 
     name = models.CharField(
-        "Name of this brand/data source", max_length=200, null=False, blank=False, default="-unnamed-"
+        "Name of this brand/data source",
+        max_length=200,
+        null=False,
+        blank=False,
+        default="-unnamed-",
     )
     description = models.TextField(
-        "Description of this instance of this brand/data source", null=True, blank=True, default='-blank-'
+        "Description of this instance of this brand/data source",
+        null=True,
+        blank=True,
+        default="-blank-",
     )
-    website = models.URLField("Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True)
-    countries = CountryField(multiple=True, help_text="Where the brand offers retails services")
+    website = models.URLField(
+        "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
+    )
+    countries = CountryField(
+        multiple=True, help_text="Where the brand offers retails services", blank=True
+    )
     tag = models.CharField(
         max_length=100,
         null=False,
@@ -66,25 +79,43 @@ class Brand(models.Model):
     # i.e. a DataSource A wholly owned by DataSource B would have subsidiary_of_1 set to B, and
     # subsidiary_of_1_pct set to 100
     subsidiary_of_1 = models.ForeignKey(
-        "self", on_delete=models.SET_NULL, null=True, related_name="subsidiary_of_1_data_source", blank=True
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="subsidiary_of_1_data_source",
+        blank=True,
     )
     subsidiary_of_1_pct = models.IntegerField("percentage owned by subsidiary 1", default=0)
     subsidiary_of_2 = models.ForeignKey(
-        "self", on_delete=models.SET_NULL, null=True, related_name="subsidiary_of_2_data_source", blank=True
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="subsidiary_of_2_data_source",
+        blank=True,
     )
     subsidiary_of_2_pct = models.IntegerField("percentage owned by subsidiary 2", default=0)
     subsidiary_of_3 = models.ForeignKey(
-        "self", on_delete=models.SET_NULL, null=True, related_name="subsidiary_of_3_data_source", blank=True
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="subsidiary_of_3_data_source",
+        blank=True,
     )
     subsidiary_of_3_pct = models.IntegerField("percentage owned by subsidiary 3", default=0)
     subsidiary_of_4 = models.ForeignKey(
-        "self", on_delete=models.SET_NULL, null=True, related_name="subsidiary_of_4_data_source", blank=True
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="subsidiary_of_4_data_source",
+        blank=True,
     )
     subsidiary_of_4_pct = models.IntegerField("percentage owned by subsidiary 4", default=0)
 
     # metadata
     date_added = models.DateTimeField(default=timezone.now)
-    date_updated = models.DateTimeField("Time of last update", default=timezone.now, null=False, editable=True)
+    date_updated = models.DateTimeField(
+        "Time of last update", default=timezone.now, null=False, editable=True
+    )
 
     def __str__(self):
         return self.tag
@@ -174,7 +205,7 @@ class Brand(models.Model):
         brands_updated, brands_created = [], []
 
         for bank in banks:
-            tag = bank.tag.replace(bank.tag_prepend_str, '')
+            tag = bank.tag.replace(bank.tag_prepend_str, "")
 
             # brand must be saved to bank after brand creation for refresh methods to work
             brand, created = Brand.objects.get_or_create(tag=tag)

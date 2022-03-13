@@ -6,30 +6,49 @@ Data is harvested from a variety of "data sources." Datasources are then associa
 
 # Installation and Development
 
-You will need to install "[pip](https://pip.pypa.io/en/stable/installation/)" (the python package management system) and "[pipenv](https://pypi.org/project/pipenv/)" (a python virtualen environment manager) to your system.
+You will need to install "[pip](https://pip.pypa.io/en/stable/installation/)" (the python package management system) and "[virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)" (a python virtual environment manager) to your system. You can install virtualenv like: `sudo -H pip3 install virtualenv`
 
 ## Installing Packages
 
-`pipenv install`
+`virtualenv <venv>`
 
 ## Activating the virtual environment
 
-`pipenv shell`
+`source <venv>/bin/activate`
 
 ## Installing packages
 
-`pipenv install [PACKAGENAME]`
+`pip install -r requirements.txt`
 
 ## Deactivating the virtual environment
 
 `deactivate`
 
-# Usage
+## Environment variables
+There's an .env file in the same path as settings.py
+where all environment variables are and should be placed.
+You should *call* them in settings.py and then import them like settings.KEYWORD
 
-## Run the administrator panel
+## Django commands
 
 ```
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py collectstatic
 python manage.py runserver
+```
+
+## Nginx and Gunicorn userful commands
+
+```
+sudo systemctl stop/start/restart nginx
+sudo nginx -t
+sudo tail -F /var/log/nginx/error.log
+
+sudo systemctl status gunicorn.socket
+sudo systemctl start gunicorn.socket
+sudo systemctl enable gunicorn.socket
+sudo journalctl -u gunicorn.socket
 ```
 
 ## Refreshing Data

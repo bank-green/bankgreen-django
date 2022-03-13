@@ -1,8 +1,10 @@
 from re import M
+
 from django.test import TestCase
-from .models import Banktrack, Bimpact
 
 import pandas as pd
+
+from .models import Banktrack, Bimpact
 
 
 class BanktrackTestCase(TestCase):

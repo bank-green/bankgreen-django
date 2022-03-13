@@ -9,8 +9,19 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+
+"""
+The .env file should be on the same dir as this file, that is loaded through load_dotenv().
+.env file is not tracked by git so in owr dev environment it will be different from prod.
+Ex: in dev ALLOWED_HOSTS = [], but in prod server ALLOWED_HOSTS = [domain, IP]
+"""
+ENV_DIR = str(Path().cwd() / 'bankgreen/.env')
+load_dotenv(ENV_DIR)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,15 +31,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-e2te!78j34)l+6&x0@ob$-5eqke95y7c$4c-55*+s5(yf-h8(a"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = (
+    os.environ.get("ALLOWED_HOSTS").split(" ") if os.environ.get("ALLOWED_HOSTS") else []
+)
 
-
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -37,10 +48,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_countries",
+    # my apps
     "datasource",
     "brand",
+    # third party apps
     "graphene_django",
+    "django_countries",
+    "django_admin_listfilter_dropdown",
 ]
 
 MIDDLEWARE = [
@@ -109,8 +123,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+USERNAME = os.environ.get("USERNAME")
+TOKEN = os.environ.get("TOKEN")
+PASSWORD = os.environ.get("PASSWORD")

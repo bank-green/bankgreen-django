@@ -2,17 +2,20 @@ import json
 import logging.config
 from datetime import datetime, timezone
 
+from django.conf import settings
+from django.db import models
+
 import pandas as pd
 import requests
 
-from datasource.local.bimpact.secret import TOKEN, USERNAME
+from brand.models.brand import Brand
+
+# from datasource.local.banktrack.secret import TOKEN, USERNAME
 from datasource.models.datasource import Datasource
 from datasource.pycountry_utils import pycountries
 
 
 class Bimpact(Datasource):
-    """ """
-
     @classmethod
     def load_and_create(cls, load_from_api=False):
         df = None
@@ -27,13 +30,15 @@ class Bimpact(Datasource):
         else:
             print("Loading Bimpact data from API...")
 
-            with open('./datasource/local/bimpact/bimpact.sql') as f:
+            with open("./datasource/local/bimpact/bimpact.sql") as f:
                 query = f.read()
 
-            uri = f"https://api.data.world/v0/sql/${USERNAME}/api-sandbox"
-            headers = {"Authorization": f"Bearer ${TOKEN}", "Accept": "text/csv"}
-            data = {'query': query}
-            r = requests.post('https://api.data.world/v0/sql/USERNAME/api-sandbox', headers=headers, data=data)
+            uri = f"https://api.data.world/v0/sql/${settings.USERNAME}/api-sandbox"
+            headers = {"Authorization": f"Bearer ${settings.TOKEN}", "Accept": "text/csv"}
+            data = {"query": query}
+            r = requests.post(
+                "https://api.data.world/v0/sql/USERNAME/api-sandbox", headers=headers, data=data
+            )
 
             res = json.loads(r.text)
             df.to_csv("./datasource/local/bimpact/bimpact.csv")
@@ -47,7 +52,7 @@ class Bimpact(Datasource):
                     existing_tags, banks, num_created, row
                 )
             except Exception as e:
-                print('\n\n===Bimpact failed creation or updating===\n\n')
+                print("\n\n===Bimpact failed creation or updating===\n\n")
                 print(row)
                 print(e)
 
@@ -57,18 +62,23 @@ class Bimpact(Datasource):
     def _load_or_create_individual_instance(cls, existing_tags, banks, num_created, row):
         source_id = row.company_id
         tag = cls._generate_tag(
-            og_tag=None, existing_tags=existing_tags, company_name=row.company_name, company_id=row.company_id
+            og_tag=None,
+            existing_tags=existing_tags,
+            company_name=row.company_name,
+            company_id=row.company_id,
         )
 
         country = pycountries.get(row.country.lower(), None)
 
         defaults = {
-            'date_updated': datetime.strptime(row.date_certified, "%Y-%m-%d").replace(tzinfo=timezone.utc),
-            'source_link': row.b_corp_profile,
-            'description': row.description,
-            'countries': country,
-            'name': row.company_name,
-            'website': row.website,
+            "date_updated": datetime.strptime(row.date_certified, "%Y-%m-%d").replace(
+                tzinfo=timezone.utc
+            ),
+            "source_link": row.b_corp_profile,
+            "description": row.description,
+            "countries": country,
+            "name": row.company_name,
+            "website": row.website,
         }
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
 
@@ -83,7 +93,9 @@ class Bimpact(Datasource):
         return num_created, existing_tags
 
     @classmethod
-    def _generate_tag(cls, og_tag=None, increment=0, existing_tags=None, company_name=None, company_id=None):
+    def _generate_tag(
+        cls, og_tag=None, increment=0, existing_tags=None, company_name=None, company_id=None
+    ):
 
         if company_name and company_id:
             og_tag = company_name.lower().strip().replace(" ", "_") + "_" + str(company_id)
