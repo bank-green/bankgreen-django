@@ -55,8 +55,12 @@ class Datasource(Brand):
     def brand_suggestions(self):
         """Suggestion of brands based on Levenshtein distance"""
         brand_list = []
-        tag_without_cls_name = self.tag[len(self.tag_prepend_str):]
-        brand_tags = Brand.objects.filter(datasource__isnull=True).exclude(tag=tag_without_cls_name).values_list("tag", flat=True)
+        tag_without_cls_name = self.tag[len(self.tag_prepend_str) :]
+        brand_tags = (
+            Brand.objects.filter(datasource__isnull=True)
+            .exclude(tag=tag_without_cls_name)
+            .values_list("tag", flat=True)
+        )
         # print(len(brand_tags), brand_tags)
         for tag in brand_tags:
             num = lev(self.tag, tag)

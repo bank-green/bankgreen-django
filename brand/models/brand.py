@@ -6,11 +6,11 @@ from django.utils import timezone
 
 import unidecode
 from django_countries.fields import CountryField
-from numpy import DataSource
 from Levenshtein import distance as lev
-from datasource.constants import lev_distance, model_names
+from numpy import DataSource
 
 import datasource.models as dsm
+from datasource.constants import lev_distance, model_names
 
 
 class Brand(models.Model):
@@ -119,7 +119,6 @@ class Brand(models.Model):
         "Time of last update", default=timezone.now, null=False, editable=True
     )
     suggested_datasource = models.TextField(blank=True, null=True, default="-blank-")
-
 
     def __str__(self):
         return self.tag
@@ -233,25 +232,25 @@ class Brand(models.Model):
         datasource_tags = dsm.Datasource.objects.all().values_list("tag", flat=True)
         for tag in datasource_tags:
             if tag.startswith(model_names[2]):
-                tag = tag[len(model_names[2]) + 1:]
+                tag = tag[len(model_names[2]) + 1 :]
             elif tag.startswith(model_names[0]):
-                tag = tag[len(model_names[0]) + 1:]
+                tag = tag[len(model_names[0]) + 1 :]
             elif tag.startswith(model_names[1]):
-                tag = tag[len(model_names[1]) + 1:]
+                tag = tag[len(model_names[1]) + 1 :]
             elif tag.startswith(model_names[3]):
-                tag = tag[len(model_names[3]) + 1:]
+                tag = tag[len(model_names[3]) + 1 :]
             elif tag.startswith(model_names[4]):
-                tag = tag[len(model_names[4]) + 1:]
+                tag = tag[len(model_names[4]) + 1 :]
             elif tag.startswith(model_names[5]):
-                tag = tag[len(model_names[5]) + 1:]
+                tag = tag[len(model_names[5]) + 1 :]
             elif tag.startswith(model_names[6]):
-                tag = tag[len(model_names[6]) + 1:]
+                tag = tag[len(model_names[6]) + 1 :]
             elif tag.startswith(model_names[7]):
-                tag = tag[len(model_names[7]) + 1:]
+                tag = tag[len(model_names[7]) + 1 :]
             elif tag.startswith(model_names[8]):
-                tag = tag[len(model_names[8]) + 1:]
+                tag = tag[len(model_names[8]) + 1 :]
             elif tag.startswith(model_names[9]):
-                tag = tag[len(model_names[9]) + 1:]
+                tag = tag[len(model_names[9]) + 1 :]
             datasource_tags_without_model_names.append(tag)
 
         for tag in datasource_tags_without_model_names:
@@ -266,4 +265,3 @@ class Brand(models.Model):
     def save(self, *args, **kwargs):
         self.suggested_datasource = self.datasource_suggestions()
         super(Brand, self).save()
-

@@ -41,9 +41,7 @@ class Command(BaseCommand):
             if row["name"] != row["name"] and row.tag != row.tag:
                 continue
 
-            source_link = (
-                f"https://api.airtable.com/v0/{os.getenv('AIRTABLE_BASE_ID')}/{table_name}/{row.name}"
-            )
+            source_link = f"https://api.airtable.com/v0/{os.getenv('AIRTABLE_BASE_ID')}/{table_name}/{row.name}"
             brand, created = self.create_brand_from_airtable_row(row, source_link)
             if created:
                 new_brands.append(brand)

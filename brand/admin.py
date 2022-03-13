@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.forms import ModelForm
+from django.urls import reverse
 from django.utils.html import format_html
 
 from datasource.models.datasource import Datasource
-from django.urls import reverse
+
 from .models import Brand, Commentary
 
 
