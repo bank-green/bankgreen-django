@@ -26,7 +26,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         table_name = "staging"
-        at = Airtable(base_id=os.getenv("base_key"), api_key=os.getenv("api_key"))
+        at = Airtable(base_id=os.getenv("AIRTABLE_BASE_ID"), api_key=os.getenv("AIRTABLE_API_KEY"))
         records = self._get_all_records_from_airtable_table(at, table_name)
 
         df = pd.DataFrame(
@@ -41,9 +41,7 @@ class Command(BaseCommand):
             if row["name"] != row["name"] and row.tag != row.tag:
                 continue
 
-            source_link = (
-                f"https://api.airtable.com/v0/{os.getenv('base_key')}/{table_name}/{row.name}"
-            )
+            source_link = f"https://api.airtable.com/v0/{os.getenv('AIRTABLE_BASE_ID')}/{table_name}/{row.name}"
             brand, created = self.create_brand_from_airtable_row(row, source_link)
             if created:
                 new_brands.append(brand)

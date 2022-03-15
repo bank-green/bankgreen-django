@@ -1,3 +1,4 @@
+airtable=0.4.8
 black==22.1.0
 isort==5.10.1
 celery==4.0.0

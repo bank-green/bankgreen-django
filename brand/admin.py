@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.forms import ModelForm
+from django.urls import reverse
 from django.utils.html import format_html
 
 from datasource.models.datasource import Datasource
@@ -7,11 +8,9 @@ from datasource.models.datasource import Datasource
 from .models import Brand, Commentary
 
 
-class CommentaryInline(admin.TabularInline):
+class CommentaryInline(admin.StackedInline):
     model = Commentary
     extra = 0
-    # raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
-    # fk_name = "brand"
 
 
 class DatasourceInline(admin.TabularInline):
@@ -35,6 +34,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("subsidiary_of_2", "subsidiary_of_2_pct"),
         ("subsidiary_of_3", "subsidiary_of_3_pct"),
         ("subsidiary_of_4", "subsidiary_of_4_pct"),
+        "suggested_datasource",
         ("date_added", "date_updated"),
     )
 

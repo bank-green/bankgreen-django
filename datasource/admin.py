@@ -46,6 +46,23 @@ class BanktrackAdmin(admin.ModelAdmin):
         ("brand", admin.EmptyFieldListFilter),
     )
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        Don't show all brands. Only those that are not related to other datasources
+        """
+        if db_field.name == "brand":
+            kwargs["queryset"] = Brand.objects.exclude(
+                models.Q(tag__startswith="banktrack_")
+                | models.Q(tag__startswith="bimpact_")
+                | models.Q(tag__startswith="bocc_")
+                | models.Q(tag__startswith="fairfinance_")
+                | models.Q(tag__startswith="gabv")
+                | models.Q(tag__startswith="marketforces_")
+                | models.Q(tag__startswith="switchit_")
+                | models.Q(tag__startswith="usnic_")
+            )
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
     def extra_field(self, obj):
         pass
 
