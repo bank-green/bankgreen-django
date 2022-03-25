@@ -7,7 +7,7 @@ from django_countries.fields import CountryField
 from brand.models import Brand
 
 
-class RatingChoice(Enum):
+class RatingChoice(models.TextChoices):
     GREAT = "great"
     OK = "ok"
     BAD = "bad"
@@ -32,7 +32,7 @@ class Commentary(models.Model):
     display_on_website = models.BooleanField(default=False)
     comment = models.TextField(help_text="Meta. Comments for staff and/or editors")
     rating = models.CharField(
-        max_length=8, null=False, blank=False, choices=[(tag, tag.value) for tag in RatingChoice]
+        max_length=8, null=False, blank=False, choices=RatingChoice.choices, default=RatingChoice.UNKNOWN
     )
 
     # Neutral Commentary

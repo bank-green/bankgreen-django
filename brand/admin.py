@@ -55,12 +55,6 @@ class CommentaryInline(admin.StackedInline):
     )
 
 
-# class CommentaryInline(admin.StackedInline):
-#     model = Commentary
-#     extra = 0
-#
-
-
 class DatasourceInline(admin.TabularInline):
     model = Datasource
     extra = 0
