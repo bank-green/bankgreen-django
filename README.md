@@ -70,3 +70,19 @@ python manage.py refresh_datasources all
 # i.e.
 python manage.py refresh_datasources banktrack --local banktrack
 ```
+
+## Rate limit in Nginx
+Rate limit for endpoint **/graphql** is 10 request/sec for every IP.
+To disable it do: `sudo nano etc/nginx/sites-available/bankgreen` and comment out or delete this part:
+```
+location /graphql {
+        limit_req zone=ddos_limit;
+        limit_req_status 429;
+        include proxy_params;
+        proxy_pass http://unix:/home/django/gunicorn.sock;
+    }
+```
+`limit_req_zone $binary_remote_addr zone=ddos_limit:10m rate=10r/s;` This is the part where **ddos_limit** is defined.
+
+Then restart Nginx and Gunicorn:
+`sudo systemctl restart nginx && sudo systemctl restart gunicorn`
