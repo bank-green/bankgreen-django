@@ -7,7 +7,6 @@ from django.utils import timezone
 import unidecode
 from django_countries.fields import CountryField
 from Levenshtein import distance as lev
-from numpy import DataSource
 
 import datasource.models as dsm
 from datasource.constants import lev_distance, model_names
@@ -204,7 +203,7 @@ class Brand(models.Model):
         return mystr
 
     @classmethod
-    def create_brand_from_datasource(self, banks: List[DataSource]) -> Tuple[List, List]:
+    def create_brand_from_datasource(self, banks: List) -> Tuple[List, List]:
         brands_updated, brands_created = [], []
 
         for bank in banks:
