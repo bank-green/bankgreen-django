@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     "graphene_django",
     "django_countries",
     "django_admin_listfilter_dropdown",
-    "django_filters"
+    "django_filters",
 ]
 
 MIDDLEWARE = [

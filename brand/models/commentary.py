@@ -32,7 +32,11 @@ class Commentary(models.Model):
     display_on_website = models.BooleanField(default=False)
     comment = models.TextField(help_text="Meta. Comments for staff and/or editors")
     rating = models.CharField(
-        max_length=8, null=False, blank=False, choices=RatingChoice.choices, default=RatingChoice.UNKNOWN
+        max_length=8,
+        null=False,
+        blank=False,
+        choices=RatingChoice.choices,
+        default=RatingChoice.UNKNOWN,
     )
 
     # Neutral Commentary
