@@ -118,6 +118,7 @@ class Brand(models.Model):
         "Time of last update", default=timezone.now, null=False, editable=True
     )
     suggested_datasource = models.TextField(blank=True, null=True, default="-blank-")
+    graphql_country = models.CharField(max_length=150, blank=True, null=True)
 
     def __str__(self):
         return self.tag
@@ -261,6 +262,17 @@ class Brand(models.Model):
         brands = ", ".join(brand_list)
         return brands
 
+    def define_graphql_country(self):
+        countries = []
+        if self.countries:
+            for country in self.countries:
+                countries.append(country.name)
+        else:
+            pass
+        self.graphql_country = countries
+
     def save(self, *args, **kwargs):
         self.suggested_datasource = self.datasource_suggestions()
+        self.define_graphql_country()
+
         super(Brand, self).save()
