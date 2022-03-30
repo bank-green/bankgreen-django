@@ -40,6 +40,10 @@ ALLOWED_HOSTS = (
     os.environ.get("ALLOWED_HOSTS").split(" ") if os.environ.get("ALLOWED_HOSTS") else []
 )
 
+# Airtable keys
+AIRTABLE_BASE_ID = os.environ.get("AIRTABLE_BASE_ID") 
+AIRTABLE_API_KEY = os.environ.get("AIRTABLE_API_KEY")
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -55,7 +59,7 @@ INSTALLED_APPS = [
     "graphene_django",
     "django_countries",
     "django_admin_listfilter_dropdown",
-    "django_filters"
+    "django_filters",
 ]
 
 MIDDLEWARE = [
