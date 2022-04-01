@@ -230,27 +230,28 @@ class Brand(models.Model):
         brand_list = []
         datasource_tags_without_model_names = []
         datasource_tags = dsm.Datasource.objects.all().values_list("tag", flat=True)
+        print(datasource_tags, '=============================', len(datasource_tags))
         for tag in datasource_tags:
-            if tag.startswith(model_names[2]):
-                tag = tag[len(model_names[2]) + 1 :]
-            elif tag.startswith(model_names[0]):
-                tag = tag[len(model_names[0]) + 1 :]
-            elif tag.startswith(model_names[1]):
-                tag = tag[len(model_names[1]) + 1 :]
-            elif tag.startswith(model_names[3]):
-                tag = tag[len(model_names[3]) + 1 :]
-            elif tag.startswith(model_names[4]):
-                tag = tag[len(model_names[4]) + 1 :]
-            elif tag.startswith(model_names[5]):
-                tag = tag[len(model_names[5]) + 1 :]
-            elif tag.startswith(model_names[6]):
-                tag = tag[len(model_names[6]) + 1 :]
-            elif tag.startswith(model_names[7]):
-                tag = tag[len(model_names[7]) + 1 :]
-            elif tag.startswith(model_names[8]):
-                tag = tag[len(model_names[8]) + 1 :]
-            elif tag.startswith(model_names[9]):
-                tag = tag[len(model_names[9]) + 1 :]
+            # if tag.startswith(model_names[0]):
+            #     tag = tag[len(model_names[0]) + 1 :]
+            # elif tag.startswith(model_names[1]):
+            #     tag = tag[len(model_names[1]) + 1 :]
+            # elif tag.startswith(model_names[2]):
+            #     tag = tag[len(model_names[2]) + 1:]
+            # elif tag.startswith(model_names[3]):
+            #     tag = tag[len(model_names[3]) + 1 :]
+            # elif tag.startswith(model_names[4]):
+            #     tag = tag[len(model_names[4]) + 1 :]
+            # elif tag.startswith(model_names[5]):
+            #     tag = tag[len(model_names[5]) + 1 :]
+            # elif tag.startswith(model_names[6]):
+            #     tag = tag[len(model_names[6]) + 1 :]
+            # elif tag.startswith(model_names[7]):
+            #     tag = tag[len(model_names[7]) + 1 :]
+            # elif tag.startswith(model_names[8]):
+            #     tag = tag[len(model_names[8]) + 1 :]
+            # elif tag.startswith(model_names[9]):
+            #     tag = tag[len(model_names[9]) + 1 :]
             datasource_tags_without_model_names.append(tag)
 
         for tag in datasource_tags_without_model_names:
@@ -260,6 +261,10 @@ class Brand(models.Model):
                 if num <= lev_distance:
                     brand_list.append(tag)
         brands = ", ".join(brand_list)
+        print(
+            # datasource_tags_without_model_names, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+              len(datasource_tags_without_model_names))
+        print(self.tag, 'fffffffffffff\n', brand_list, len(brand_list))
         return brands
 
     def define_graphql_country(self):
