@@ -10,9 +10,6 @@
 */__pycache__/*
 __pycache__/*
 
-# airtable backups
-airtable_backups/*.pkl
-
 # secrets
 secret.py
 .env
