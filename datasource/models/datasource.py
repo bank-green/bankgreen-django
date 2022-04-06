@@ -3,7 +3,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from Levenshtein import distance as lev
 
-from brand.models import Brand
+from brand.models.brand import Brand
 
 from ..constants import lev_distance, model_names, read_only_fields
 

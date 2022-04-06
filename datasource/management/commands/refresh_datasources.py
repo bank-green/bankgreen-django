@@ -1,7 +1,16 @@
 from django.core.management.base import BaseCommand
 
 from brand.models import Brand
-from datasource.models import Banktrack, Bimpact, Bocc, Fairfinance, Gabv, Marketforces, Switchit
+from datasource.models import (
+    Banktrack,
+    Bimpact,
+    Bocc,
+    Fairfinance,
+    Gabv,
+    Marketforces,
+    Switchit,
+    Usnic,
+)
 
 
 class Command(BaseCommand):
@@ -37,6 +46,9 @@ class Command(BaseCommand):
 
         if "all" in datasources or "gabv" in datasources:
             self.refresh_gabv()
+
+        if "all" in datasources or "usnic" in datasources:
+            self.refresh_usnic()
 
     def refresh_bimpact(self, options):
         load_from_api = False if options["local"] and "all" in options["local"] else True
@@ -116,6 +128,16 @@ class Command(BaseCommand):
                 f"Successfully refreshed {len(banks)} gabv records, creating {num_created} new records\n"
             )
         )
+
+    def refresh_usnic(self):
+        banks, num_created = Usnic.load_and_create()
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Successfully refreshed {len(banks)} usnic records, creating {num_created} new records\n"
+            )
+        )
+        # After we create all objects, open the other file and create relations between objects
+        Usnic.link_parents()
 
     def output_brand_creation(self, brands_created, brands_updated, datasource_class):
         self.stdout.write(

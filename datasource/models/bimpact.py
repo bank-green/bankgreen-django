@@ -8,9 +8,6 @@ from django.db import models
 import pandas as pd
 import requests
 
-from brand.models.brand import Brand
-
-# from datasource.local.banktrack.secret import TOKEN, USERNAME
 from datasource.models.datasource import Datasource
 from datasource.pycountry_utils import pycountries
 

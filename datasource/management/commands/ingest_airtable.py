@@ -1,9 +1,9 @@
 from datetime import datetime, timezone
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 import pandas as pd
-from django.conf import settings
 from airtable import Airtable
 from dotenv import load_dotenv
 
@@ -36,7 +36,9 @@ class Command(BaseCommand):
                 continue
 
             # create brands
-            source_link = f"https://api.airtable.com/v0/{settings.AIRTABLE_BASE_ID}/{table_name}/{row.name}"
+            source_link = (
+                f"https://api.airtable.com/v0/{settings.AIRTABLE_BASE_ID}/{table_name}/{row.name}"
+            )
             brand, brand_created = self.create_brand_from_airtable_row(row, source_link)
             if brand_created:
                 new_brands.append(brand)
@@ -62,9 +64,7 @@ class Command(BaseCommand):
         df = None
         if load_from_api:
             self.stdout.write(self.style.NOTICE(f"Loading airtable data from API...\n"))
-            at = Airtable(
-                base_id=settings.AIRTABLE_BASE_ID, api_key=settings.AIRTABLE_API_KEY
-            )
+            at = Airtable(base_id=settings.AIRTABLE_BASE_ID, api_key=settings.AIRTABLE_API_KEY)
             records = self._get_all_records_from_airtable_table(at, table_name)
             df = pd.DataFrame(
                 [record["fields"] for record in records], index=[record["id"] for record in records]

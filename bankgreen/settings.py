@@ -41,7 +41,7 @@ ALLOWED_HOSTS = (
 )
 
 # Airtable keys
-AIRTABLE_BASE_ID = os.environ.get("AIRTABLE_BASE_ID") 
+AIRTABLE_BASE_ID = os.environ.get("AIRTABLE_BASE_ID")
 AIRTABLE_API_KEY = os.environ.get("AIRTABLE_API_KEY")
 
 
@@ -134,6 +134,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# This is used to delete this many objects at once
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 
 USERNAME = os.environ.get("USERNAME")

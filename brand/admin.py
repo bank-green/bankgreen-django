@@ -60,11 +60,12 @@ class DatasourceInline(admin.TabularInline):
     extra = 0
     raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
     fk_name = "brand"
+    show_change_link = True
 
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
-
+    raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
     list_display = ["name", "tag", "number_of_related_datasources", "website"]
     search_fields = ["name", "tag", "website"]
     fields = (

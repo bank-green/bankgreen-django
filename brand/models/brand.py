@@ -236,7 +236,7 @@ class Brand(models.Model):
             elif tag.startswith(model_names[1]):
                 tag = tag[len(model_names[1]) + 1 :]
             elif tag.startswith(model_names[2]):
-                tag = tag[len(model_names[2]) + 1:]
+                tag = tag[len(model_names[2]) + 1 :]
             elif tag.startswith(model_names[3]):
                 tag = tag[len(model_names[3]) + 1 :]
             elif tag.startswith(model_names[4]):
@@ -254,7 +254,6 @@ class Brand(models.Model):
             datasource_tags_without_model_names.append(tag)
 
         for tag in datasource_tags_without_model_names:
-            print(f"self tag: {self.tag} - other datasource tag: {tag}")
             # get rid of the one that is equal to self
             if self.tag != tag:
                 num = lev(self.tag, tag)
