@@ -7,7 +7,6 @@ from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary
 
-
 class CommentaryInline(admin.StackedInline):
     model = Commentary
     fieldsets = (
@@ -54,21 +53,51 @@ class CommentaryInline(admin.StackedInline):
         ("Meta", {"fields": ("comment",)}),
     )
 
+# @admin.display(description='Name')
+# def upper_case_name(obj):
+#     return obj.name.upper()
 
-class DatasourceInline(admin.TabularInline):
+class DatasourceInline(admin.StackedInline):
     model = Datasource
     extra = 0
-    raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
+    # raw_id_fields = ["subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
+    fields = ("name",)
     fk_name = "brand"
+
 
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
 
+    # you are currently attempting to link various datasources inside of a brand.
+    # this is achievable by generating an html link via the reverse(function)
+    # you are demo-ing with related_darasources
+    # uppsercase must be listed both in readonly_fields and in fields
+    @admin.display(description='related_darasources')
+    def related_darasources(self, obj):
+        datasources = Datasource.objects.filter(brand=obj)
+
+        links = []
+
+        banktracks = [x for x in datasources if hasattr(x, "banktrack")]
+        for bt in banktracks:
+        
+            url = reverse('admin:%s_%s_change' % ("datasource", "banktrack"), args=(bt.id,))
+            link = f'<a href="{url}" />{bt.name}</a>'
+            links.append(link)
+
+        # banktracks = [x for x in datasources if hasattr(x, "banktrack")]
+        # bt = banktracks[0]
+        # url = reverse('admin:%s_%s_change' % ("datasource", "banktrack"), args=(bt.id,))        
+        # names = ", ".join([d.name for d in datasources])
+        return ', '.join(links)
+
+    # foo ='bar'
     list_display = ["name", "tag", "number_of_related_datasources", "website"]
     search_fields = ["name", "tag", "website"]
+    readonly_fields = ["related_darasources"]
     fields = (
-        ("name", "tag"),
+        ("name", "tag", "related_darasources"),
         "description",
         "website",
         "countries",
@@ -80,7 +109,9 @@ class BrandAdmin(admin.ModelAdmin):
         ("date_added", "date_updated"),
     )
 
-    inlines = [DatasourceInline, CommentaryInline]
+    inlines = [
+        # CommentaryInline, 
+        DatasourceInline]
 
     def get_queryset(self, request):
         # filter out all but base class
