@@ -47,7 +47,7 @@ class Usnic(Datasource):
         source_id = row.NM_SHORT.lower().strip().replace(" ", "_")
 
         defaults = {
-            "date_updated": datetime.now(),
+            "date_updated": datetime.now().replace(tzinfo=timezone.utc),
             # "source_link": row.link,
             "name": row.NM_SHORT,
             "countries": pycountries.get(row.CNTRY_NM.lower(), None),
