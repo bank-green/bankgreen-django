@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import reverse
-from django.utils.html import escape, format_html,
+from django.utils.html import escape, format_html
 
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource

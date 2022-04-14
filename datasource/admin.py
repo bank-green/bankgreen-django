@@ -24,16 +24,15 @@ from .models import (
     Wikidata,
 )
 
-
-@admin.register(Datasource)
-class DatasourceAdmin(admin.ModelAdmin):
-    list_display = ["name", "tag", "website", "brand"]
-    search_fields = ["name", "tag", "website"]
-    list_filter = (
-        "date_added",
-        ("countries", ChoiceDropdownFilter),
-        ("brand", admin.EmptyFieldListFilter),
-    )
+# @admin.register(Datasource)
+# class DatasourceAdmin(admin.ModelAdmin):
+#     list_display = ["name", "tag", "website", "brand"]
+#     search_fields = ["name", "tag", "website"]
+#     list_filter = (
+#         "date_added",
+#         ("countries", ChoiceDropdownFilter),
+#         ("brand", admin.EmptyFieldListFilter),
+#     )
 
 
 @admin.register(Banktrack)
@@ -116,9 +115,11 @@ class SwitchitAdmin(BanktrackAdmin, admin.ModelAdmin):
     pass
 
 
-# @admin.register(Usnic)
-# class UsnicAdmin(BanktrackAdmin, admin.ModelAdmin):
-#     pass
+@admin.register(Usnic)
+class UsnicAdmin(BanktrackAdmin, admin.ModelAdmin):
+    pass
+
+
 #
 #
 # @admin.register(Wikidata)
