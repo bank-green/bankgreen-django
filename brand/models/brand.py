@@ -236,7 +236,7 @@ class Brand(models.Model):
             elif tag.startswith(model_names[1]):
                 tag = tag[len(model_names[1]) + 1 :]
             elif tag.startswith(model_names[2]):
-                tag = tag[len(model_names[2]) + 1:]
+                tag = tag[len(model_names[2]) + 1 :]
             elif tag.startswith(model_names[3]):
                 tag = tag[len(model_names[3]) + 1 :]
             elif tag.startswith(model_names[4]):

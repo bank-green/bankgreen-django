@@ -20,6 +20,7 @@ class BrandType(DjangoObjectType):
     Don't query countries field when queried with Graphql,
     instead of it query on graphql_country, this will be a list of Brand countries
     """
+
     class Meta:
         model = Brand
         exclude = ["countries"]
