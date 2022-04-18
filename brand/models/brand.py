@@ -239,7 +239,7 @@ class Brand(models.Model):
 
         return (brands_created, brands_updated)
 
-    def datasource_or_brand_suggestions(self):
+    def return_suggested_brands_or_datasources(self):
         """
         Suggestion of data sources based on Levenshtein distance
         Returns a list of records of datasource subclasses

@@ -78,7 +78,7 @@ class BrandDatasourceTestCase(TestCase):
         )
 
     def test_suggesting_datasources_from_a_brand(self):
-        suggested_datasources = self.brand.datasource_or_brand_suggestions()
+        suggested_datasources = self.brand.return_suggested_brands_or_datasources()
 
         # already associated datasources should not be in suggested
         self.assertTrue(self.kinged_fred not in suggested_datasources)
@@ -93,7 +93,7 @@ class BrandDatasourceTestCase(TestCase):
         self.assertTrue(self.pending_king_george in suggested_datasources)
 
     # def test_suggesting_brands_from_a_datasource(self):
-        suggested_brands = self.pending_king_george.datasource_or_brand_suggestions()
+        suggested_brands = self.pending_king_george.return_suggested_brands_or_datasources()
 
         self.assertTrue(self.brand in suggested_brands)
 
