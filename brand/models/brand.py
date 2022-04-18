@@ -206,18 +206,6 @@ class Brand(models.Model):
 
 
     @classmethod
-    def suggest_tag(self):
-        """
-        using the bank name replace spaces with underscores.
-        convert accented characters to non accented. Remove special characters.
-
-        tag is set in the bank model
-        """
-        mystr = unidecode.unidecode(self.name).lower().rstrip().lstrip().replace(" ", "_")
-        mystr = re.sub("[\W]", "", mystr)
-        return mystr
-
-    @classmethod
     def create_brand_from_datasource(self, banks: List) -> Tuple[List, List]:
         brands_updated, brands_created = [], []
 
