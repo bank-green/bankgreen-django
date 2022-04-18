@@ -190,6 +190,17 @@ class Brand(models.Model):
             self.refresh_description(overwrite_existing)
         if countries:
             self.refresh_countries()
+    
+    def subclass(self):
+        """returns the subclass (i.e. banktrack) that a brand is."""
+        if self.__class__ == Brand:
+            return self
+
+        for model_name in model_names:
+            if hasattr(self, model_name):
+                return getattr(self, model_name)
+        raise NotImplementedError(f"{self} is not a Brand and does not have subclass listed in model_names")
+
 
     @classmethod
     def suggest_tag(self):
@@ -225,16 +236,16 @@ class Brand(models.Model):
 
         return (brands_created, brands_updated)
 
-    def datasource_suggestions(self):
+    def datasource_or_brand_suggestions(self):
         """
         Suggestion of data sources based on Levenshtein distance
         Returns a list of records of datasource subclasses
         """
-        suggested_datasources = []
-        datasources = dsm.Datasource.objects.all()
-        brand_name = re.sub("[^0-9a-zA-Z]+", "*", self.name.lower())
+        suggested_datasources_or_brands = []
+        brands_or_datasources = dsm.Datasource.objects.all()
+        current_name = re.sub("[^0-9a-zA-Z]+", "", self.name.lower())
 
-        for ds in datasources:
+        for ds in brands_or_datasources:
             ds = ds.subclass()
 
             # get rid of the one that is already associated with the brand
@@ -242,9 +253,9 @@ class Brand(models.Model):
                 continue
 
             ds_name = re.sub("[^0-9a-zA-Z]+", "*", ds.name.lower())
-            if lev(ds.name.lower(), brand_name) <= lev_distance:
-                suggested_datasources.append(ds)
-        return suggested_datasources
+            if lev(ds.name.lower(), current_name) <= lev_distance:
+                suggested_datasources_or_brands.append(ds)
+        return suggested_datasources_or_brands
 
     def define_graphql_country(self):
         countries = []
