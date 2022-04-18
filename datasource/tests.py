@@ -4,6 +4,8 @@ from django.test import TestCase
 
 import pandas as pd
 
+from datasource.models.datasource import Datasource
+
 from .models import Banktrack, Bimpact
 
 
@@ -55,6 +57,21 @@ class BanktrackTestCase(TestCase):
         self.assertEqual(bank.countries[0].code, "TW")
         self.assertEqual(bank.source_link, "https://newuri")
 
+    def test_tag_prepend_str_when_accessed_via_a_datasource(self):
+        bt = Banktrack.objects.create(
+            source_id="unique_source_id",
+            # date_updated=datetime.now(),
+            source_link="abc",
+            name="bt",
+            description="test_description",
+            website="test_website",
+            countries="TW",
+            tag=Banktrack.tag_prepend_str + "bt",
+        )
+
+        ds_bt = Datasource.objects.all().first()
+        prepend_str = ds_bt.tag_prepend_str
+        self.assertEqual(prepend_str, 'banktrack_')
 
 class BimpactTextCase(TestCase):
     def setUp(self):
