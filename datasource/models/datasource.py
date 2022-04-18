@@ -54,10 +54,14 @@ class Datasource(Brand):
             if hasattr(cls, model_name):
                 return f"{model_name}_"
         else:
-            return "datasource_"
-        
+            return cls.__name__.lower() + "_"
 
-        return cls.__name__.lower() + "_"
+    def subclass(self):
+        """returns the subclass (i.e. banktrack) that a datasource is."""
+        for model_name in model_names:
+            if hasattr(self, model_name):
+                return getattr(self, "banktrack")
+        raise NotImplementedError(f"{self} does not have subclass listed in model_names")
 
     def brand_suggestions(self):
         """Suggestion of brands based on Levenshtein distance"""

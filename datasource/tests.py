@@ -71,7 +71,8 @@ class BanktrackTestCase(TestCase):
 
         ds_bt = Datasource.objects.all().first()
         prepend_str = ds_bt.tag_prepend_str
-        self.assertEqual(prepend_str, 'banktrack_')
+        self.assertEqual(prepend_str, "banktrack_")
+
 
 class BimpactTextCase(TestCase):
     def setUp(self):

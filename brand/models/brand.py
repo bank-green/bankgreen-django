@@ -226,42 +226,25 @@ class Brand(models.Model):
         return (brands_created, brands_updated)
 
     def datasource_suggestions(self):
-        """Suggestion of data sources based on Levenshtein distance"""
-        brand_list = []
-        datasource_tags_without_model_names = []
-        datasource_tags = dsm.Datasource.objects.all().values_list("tag", flat=True)
-        for tag in datasource_tags:
-            if tag.startswith(model_names[0]):
-                tag = tag[len(model_names[0]) + 1 :]
-            elif tag.startswith(model_names[1]):
-                tag = tag[len(model_names[1]) + 1 :]
-            elif tag.startswith(model_names[2]):
-                tag = tag[len(model_names[2]) + 1 :]
-            elif tag.startswith(model_names[3]):
-                tag = tag[len(model_names[3]) + 1 :]
-            elif tag.startswith(model_names[4]):
-                tag = tag[len(model_names[4]) + 1 :]
-            elif tag.startswith(model_names[5]):
-                tag = tag[len(model_names[5]) + 1 :]
-            elif tag.startswith(model_names[6]):
-                tag = tag[len(model_names[6]) + 1 :]
-            elif tag.startswith(model_names[7]):
-                tag = tag[len(model_names[7]) + 1 :]
-            elif tag.startswith(model_names[8]):
-                tag = tag[len(model_names[8]) + 1 :]
-            elif tag.startswith(model_names[9]):
-                tag = tag[len(model_names[9]) + 1 :]
-            datasource_tags_without_model_names.append(tag)
+        """
+        Suggestion of data sources based on Levenshtein distance
+        Returns a list of records of datasource subclasses
+        """
+        suggested_datasources = []
+        datasources = dsm.Datasource.objects.all()
+        brand_name = re.sub("[^0-9a-zA-Z]+", "*", self.name.lower())
 
-        for tag in datasource_tags_without_model_names:
-            print(f"self tag: {self.tag} - other datasource tag: {tag}")
-            # get rid of the one that is equal to self
-            if self.tag != tag:
-                num = lev(self.tag, tag)
-                if num <= lev_distance:
-                    brand_list.append(tag)
-        brands = ", ".join(brand_list)
-        return brands
+        for ds in datasources:
+            ds = ds.subclass()
+
+            # get rid of the one that is already associated with the brand
+            if ds.brand == self:
+                continue
+
+            ds_name = re.sub("[^0-9a-zA-Z]+", "*", ds.name.lower())
+            if lev(ds.name.lower(), brand_name) <= lev_distance:
+                suggested_datasources.append(ds)
+        return suggested_datasources
 
     def define_graphql_country(self):
         countries = []
@@ -273,7 +256,6 @@ class Brand(models.Model):
         self.graphql_country = countries
 
     def save(self, *args, **kwargs):
-        self.suggested_datasource = self.datasource_suggestions()
+        # self.suggested_datasource = self.datasource_suggestions()
         self.define_graphql_country()
-
         super(Brand, self).save()
