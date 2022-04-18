@@ -77,8 +77,8 @@ class BrandDatasourceTestCase(TestCase):
             tag=Banktrack.tag_prepend_str + "sad_aborted_pawn",
         )
 
-    def test_correct_banks_are_matched(self):
-        suggested_datasources = self.brand.datasource_suggestions()
+    def test_suggesting_datasources_from_a_brand(self):
+        suggested_datasources = self.brand.datasource_or_brand_suggestions()
 
         # already associated datasources should not be in suggested
         self.assertTrue(self.kinged_fred not in suggested_datasources)
@@ -91,3 +91,14 @@ class BrandDatasourceTestCase(TestCase):
 
         # similarly named datasources should be in suggested_datasources
         self.assertTrue(self.pending_king_george in suggested_datasources)
+
+    # def test_suggesting_brands_from_a_datasource(self):
+        suggested_brands = self.pending_king_george.datasource_or_brand_suggestions()
+
+        self.assertTrue(self.brand in suggested_brands)
+
+        # non-brands should not be suggested
+        self.assertListEqual([], [x for x in suggested_brands if x.__class__ != Brand])
+
+        # datasources should not recommend themselves
+        self.assertTrue(self.pending_king_george not in suggested_brands)
