@@ -60,11 +60,14 @@ class CommentaryInline(admin.StackedInline):
 #     return obj.name.upper()
 
 
+# TODO make this a series of dropdowns
 class DatasourceInline(admin.StackedInline):
     model = Datasource
     extra = 0
     # raw_id_fields = ["subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
-    fields = ("name",)
+    readonly_fields = ("name", "tag", "source_id")
+    fields = [readonly_fields]
+
     fk_name = "brand"
 
 
