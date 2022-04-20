@@ -104,14 +104,11 @@ class BrandAdmin(admin.ModelAdmin):
         ("subsidiary_of_2", "subsidiary_of_2_pct"),
         ("subsidiary_of_3", "subsidiary_of_3_pct"),
         ("subsidiary_of_4", "subsidiary_of_4_pct"),
-        "suggested_datasource",
+        # "suggested_datasource",
         ("date_added", "date_updated"),
     )
 
-    inlines = [
-        # CommentaryInline,
-        DatasourceInline
-    ]
+    inlines = [DatasourceInline, CommentaryInline]
 
     def get_queryset(self, request):
         # filter out all but base class

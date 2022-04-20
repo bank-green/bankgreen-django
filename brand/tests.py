@@ -1,8 +1,4 @@
-from datetime import datetime
-
 from django.test import TestCase
-
-import pandas as pd
 
 from datasource.models import Banktrack
 
@@ -92,7 +88,7 @@ class BrandDatasourceTestCase(TestCase):
         # similarly named datasources should be in suggested_datasources
         self.assertTrue(self.pending_king_george in suggested_datasources)
 
-    # def test_suggesting_brands_from_a_datasource(self):
+        # def test_suggesting_brands_from_a_datasource(self):
         suggested_brands = self.pending_king_george.return_suggested_brands_or_datasources()
 
         self.assertTrue(self.brand in suggested_brands)
