@@ -4,7 +4,6 @@ from typing import List, Tuple
 from django.db import models
 from django.utils import timezone
 
-import unidecode
 from django_countries.fields import CountryField
 from Levenshtein import distance as lev
 
@@ -117,7 +116,6 @@ class Brand(models.Model):
     date_updated = models.DateTimeField(
         "Time of last update", default=timezone.now, null=False, editable=True
     )
-    suggested_datasource = models.TextField(blank=True, null=True, default="-blank-")
     graphql_country = models.CharField(max_length=150, blank=True, null=True)
 
     def __str__(self):
@@ -190,7 +188,7 @@ class Brand(models.Model):
             self.refresh_description(overwrite_existing)
         if countries:
             self.refresh_countries()
-    
+
     def subclass(self):
         """returns the subclass (i.e. banktrack) that a brand is."""
         if hasattr(self, "datasource"):
@@ -202,8 +200,9 @@ class Brand(models.Model):
         if self.__class__ == Brand:
             return self
 
-        raise NotImplementedError(f"{self} is not a Brand and does not have subclass listed in model_names")
-
+        raise NotImplementedError(
+            f"{self} is not a Brand and does not have subclass listed in model_names"
+        )
 
     @classmethod
     def create_brand_from_datasource(self, banks: List) -> Tuple[List, List]:
@@ -237,7 +236,7 @@ class Brand(models.Model):
         suggested_brands_or_datasources = []
         brands_or_datasources = Brand.objects.all()
         current_name = re.sub("[^0-9a-zA-Z]+", "", self.name.lower())
-
+ 
         for bods in brands_or_datasources:
             bods = bods.subclass()
 
@@ -249,7 +248,7 @@ class Brand(models.Model):
             # In this case, self is a datasource
             if hasattr(self, "brand") and self.brand == bods:
                 continue
-            
+
             # get rids of brands that are already associated with the datasource
             # in this case, self is a brand
             if hasattr(bods, "brand") and bods.brand == self:
@@ -270,6 +269,5 @@ class Brand(models.Model):
         self.graphql_country = countries
 
     def save(self, *args, **kwargs):
-        # self.suggested_datasource = self.datasource_suggestions()
         self.define_graphql_country()
         super(Brand, self).save()

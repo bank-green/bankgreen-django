@@ -40,7 +40,7 @@ class Datasource(Brand):
         editable=True,
         help_text="the original identifier used by the datasource. i.e wikiid, or banktrack tag",
     )
-    suggested_brands = models.TextField(blank=True, null=True, default="-blank-")
+    suggested_brands = models.ManyToManyField(Brand, related_name="suggested_brands")
 
     def get_data(self, url, params=None):
         """
