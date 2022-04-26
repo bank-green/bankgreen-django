@@ -56,26 +56,5 @@ class Datasource(Brand):
         else:
             return cls.__name__.lower() + "_"
 
-    def brand_suggestions(self):
-        """Suggestion of brands based on Levenshtein distance"""
-        brand_list = []
-        tag_without_cls_name = self.tag[len(self.tag_prepend_str) :]
-        brand_tags = (
-            Brand.objects.filter(datasource__isnull=True)
-            .exclude(tag=tag_without_cls_name)
-            .values_list("tag", flat=True)
-        )
-        # print(len(brand_tags), brand_tags)
-        for tag in brand_tags:
-            num = lev(self.tag, tag)
-            if num <= lev_distance:
-                # this returns all tags, even datasource tags.
-                if any(tag.startswith(model) for model in model_names):
-                    continue
-                brand_list.append(tag)
-        brands = ", ".join(brand_list)
-        return brands
-
     def save(self, *args, **kwargs):
-        self.suggested_brands = self.brand_suggestions()
         super(Datasource, self).save()
