@@ -7,7 +7,7 @@ import pandas as pd
 import pycountry
 import requests
 
-from datasource.models.datasource import Datasource
+from datasource.models.datasource import Datasource, classproperty
 from datasource.pycountry_utils import pycountries
 
 
@@ -15,6 +15,10 @@ class Bocc(Datasource):
     """
     Data from the Banking on Climate Change report published by the Rainforest Action Network
     """
+
+    @classproperty
+    def tag_prepend_str(cls):
+        return cls.__name__.lower() + "_"
 
     @classmethod
     def load_and_create(cls, load_from_api=False):
@@ -34,7 +38,7 @@ class Bocc(Datasource):
                     existing_tags, banks, num_created, row
                 )
             except Exception as e:
-                print("\n\n===Banktrack failed creation or updating===\n\n")
+                print("\n\n===BOCC failed creation or updating===\n\n")
                 print(row)
                 print(e)
         return banks, num_created

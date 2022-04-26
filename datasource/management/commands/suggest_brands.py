@@ -10,7 +10,6 @@ from brand.models import Brand, Commentary, RatingChoice
 from datasource.models.datasource import Datasource
 
 
-
 class Command(BaseCommand):
     help = "suggest brands for each datasource"
 

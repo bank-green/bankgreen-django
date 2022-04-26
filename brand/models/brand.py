@@ -236,7 +236,7 @@ class Brand(models.Model):
         suggested_brands_or_datasources = []
         brands_or_datasources = Brand.objects.all()
         current_name = re.sub("[^0-9a-zA-Z]+", "", self.name.lower())
- 
+
         for bods in brands_or_datasources:
             bods = bods.subclass()
 

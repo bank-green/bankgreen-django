@@ -3,6 +3,7 @@ from re import M
 from django.test import TestCase
 
 import pandas as pd
+from datasource.models.bocc import Bocc
 
 from datasource.models.datasource import Datasource
 
@@ -57,7 +58,7 @@ class BanktrackTestCase(TestCase):
         self.assertEqual(bank.countries[0].code, "TW")
         self.assertEqual(bank.source_link, "https://newuri")
 
-    def test_tag_prepend_str_when_accessed_via_a_datasource(self):
+    def test_tag_prepend_str_when_accessed_via_a_datasource_banktrack(self):
         bt = Banktrack.objects.create(
             source_id="unique_source_id",
             # date_updated=datetime.now(),
@@ -70,8 +71,30 @@ class BanktrackTestCase(TestCase):
         )
 
         ds_bt = Datasource.objects.all().first()
+        ds_bt = ds_bt.subclass()
         prepend_str = ds_bt.tag_prepend_str
         self.assertEqual(prepend_str, "banktrack_")
+
+    def test_tag_prepend_str_when_accessed_via_a_datasource_bocc(self):
+        bocc = Bocc.objects.create(
+            source_id="unique_source_id",
+            # date_updated=datetime.now(),
+            source_link="abc",
+            name="bocc",
+            description="test_description",
+            website="test_website",
+            countries="TW",
+            tag=Bocc.tag_prepend_str + "bocc",
+        )
+
+        ds_bocc = Datasource.objects.all().first()
+        ds_bocc = ds_bocc.subclass()
+        prepend_str = ds_bocc.tag_prepend_str
+        self.assertEqual(prepend_str, "bocc_")
+
+    # def test_tag_prepend_str_when_accessed_via_a_class_bocc(self):
+    #     prepend_str = Bocc.tag_prepend_str
+    #     self.assertEqual(prepend_str, "bocc_")
 
 
 class BimpactTextCase(TestCase):

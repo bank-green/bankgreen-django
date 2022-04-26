@@ -11,11 +11,15 @@ import requests
 from brand.models.brand import Brand
 
 # from datasource.local.banktrack.secret import TOKEN, USERNAME
-from datasource.models.datasource import Datasource
+from datasource.models.datasource import Datasource, classproperty
 from datasource.pycountry_utils import pycountries
 
 
 class Bimpact(Datasource):
+    @classproperty
+    def tag_prepend_str(cls):
+        return cls.__name__.lower() + "_"
+
     @classmethod
     def load_and_create(cls, load_from_api=False):
         df = None

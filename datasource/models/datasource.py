@@ -50,11 +50,7 @@ class Datasource(Brand):
 
     @classproperty
     def tag_prepend_str(cls):
-        for model_name in model_names:
-            if hasattr(cls, model_name):
-                return f"{model_name}_"
-        else:
-            return cls.__name__.lower() + "_"
+        raise NotImplementedError
 
     def save(self, *args, **kwargs):
         super(Datasource, self).save()
