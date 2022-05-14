@@ -225,3 +225,4 @@ class WikidataTestCase(TestCase):
 
         # why can i not use bilbao.brand here?
         self.assertEqual(colombia.subsidiary_of_1, Brand.objects.get(source_link=bilbao.source_id))
+        self.assertEqual(colombia.subsidiary_of_1_pct, 100)

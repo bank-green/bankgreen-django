@@ -71,15 +71,19 @@ class Wikidata(Datasource):
             print(f'adding parent {parent.tag} to child {bank.tag}')
             if not bank.subsidiary_of_1:
                 bank.subsidiary_of_1 = parent
+                bank.subsidiary_of_1_pct = 100
                 return bank.save()
             if not bank.subsidiary_of_2:
                 bank.subsidiary_of_2 = parent
+                bank.subsidiary_of_2_pct = 100
                 return bank.save()
             if not bank.subsidiary_of_3:
                 bank.subsidiary_of_3 = parent
+                bank.subsidiary_of_3_pct = 100
                 return bank.save()
             if not bank.subsidiary_of_4:
                 bank.subsidiary_of_4 = parent
+                bank.subsidiary_of_4_pct = 100
                 return bank.save()
 
         for bank_obj in Wikidata.objects.all():
