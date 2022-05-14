@@ -24,15 +24,25 @@ from .models import (
     Wikidata,
 )
 
-# @admin.register(Datasource)
-# class DatasourceAdmin(admin.ModelAdmin):
-#     list_display = ["name", "tag", "website", "brand"]
-#     search_fields = ["name", "tag", "website"]
-#     list_filter = (
-#         "date_added",
-#         ("countries", ChoiceDropdownFilter),
-#         ("brand", admin.EmptyFieldListFilter),
-#     )
+
+@admin.register(Datasource)
+class DatasourceAdmin(admin.ModelAdmin):
+    list_display = ["name", "tag", "website", "brand"]
+    search_fields = ["name", "tag", "website"]
+    raw_id_fields = [
+        "subsidiary_of_1",
+        "subsidiary_of_2",
+        "subsidiary_of_3",
+        "subsidiary_of_4",
+        "brand",
+    ]
+    list_filter = (
+        "date_added",
+        ("countries", ChoiceDropdownFilter),
+        ("brand", admin.EmptyFieldListFilter),
+    )
+    exclude = ["graphql_country"]
+
 
 @admin.register(Banktrack)
 class BanktrackAdmin(admin.ModelAdmin):
@@ -89,40 +99,40 @@ class BanktrackAdmin(admin.ModelAdmin):
 
 
 @admin.register(Bimpact)
-class BimpactAdmin(BanktrackAdmin, admin.ModelAdmin):
+class BimpactAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Bocc)
-class BoccAdmin(BanktrackAdmin, admin.ModelAdmin):
+class BoccAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Fairfinance)
-class FairfinanceAdmin(BanktrackAdmin, admin.ModelAdmin):
+class FairfinanceAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Gabv)
-class GabvAdmin(BanktrackAdmin, admin.ModelAdmin):
+class GabvAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Marketforces)
-class MarketforcesAdmin(BanktrackAdmin, admin.ModelAdmin):
+class MarketforcesAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Switchit)
-class SwitchitAdmin(BanktrackAdmin, admin.ModelAdmin):
+class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Usnic)
-class UsnicAdmin(BanktrackAdmin, admin.ModelAdmin):
+class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
-# @admin.register(Wikidata)
-# class WikidataAdmin(BanktrackAdmin, admin.ModelAdmin):
-#     pass
+@admin.register(Wikidata)
+class WikidataAdmin(DatasourceAdmin, admin.ModelAdmin):
+    pass

@@ -133,6 +133,7 @@ class Brand(models.Model):
             return self.name, self.name
 
         old_name = self.name
+        new_name = old_name
 
         # Favor Banktrack names
         if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
@@ -141,8 +142,13 @@ class Brand(models.Model):
                 self.name = new_name
                 self.save()
                 return (old_name, new_name)
+        elif wikidata_datasources := dsm.Wikidata.objects.filter(brand=self):
+            if len(wikidata_datasources) > 0:
+                new_name = wikidata_datasources[0].name
+                self.name = new_name
+                self.save()
 
-        return (old_name, old_name)
+        return (old_name, new_name)
 
     # TODO: Figure out how I can deduplicate these refreshes, perhaps specifying a
     # field and an order of Datasource type priority

@@ -6,7 +6,6 @@ from django.conf import settings
 import pandas as pd
 import requests
 
-# from datasource.local.banktrack.secret import TOKEN, USERNAME
 from datasource.models.datasource import Datasource, classproperty
 from datasource.pycountry_utils import pycountries
 

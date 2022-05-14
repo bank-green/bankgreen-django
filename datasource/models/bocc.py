@@ -1,11 +1,6 @@
-import json
 from datetime import datetime, timezone
 
-from django.db import models
-
 import pandas as pd
-import pycountry
-import requests
 
 from datasource.models.datasource import Datasource, classproperty
 from datasource.pycountry_utils import pycountries

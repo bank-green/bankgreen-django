@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from brand.models import Brand
+
 from datasource.constants import model_names
 from datasource.models import (
     Banktrack,
@@ -11,6 +12,7 @@ from datasource.models import (
     Marketforces,
     Switchit,
     Usnic,
+    Wikidata,
 )
 
 
@@ -51,10 +53,12 @@ class Command(BaseCommand):
         if "all" in datasources or "usnic" in datasources:
             self.refresh_usnic()
 
+        if "all" in datasources or "wikidata" in datasources:
+            self.refresh_wikidata(options)
+
         for x in datasources:
             if x.lower() not in model_names:
                 raise NotImplementedError(f"{x.lower()} is not in known models: {model_names}")
-                
 
     def refresh_bimpact(self, options):
         load_from_api = False if options["local"] and "all" in options["local"] else True
@@ -86,6 +90,17 @@ class Command(BaseCommand):
 
         brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
         self.output_brand_creation(brands_created, brands_updated, Banktrack)
+
+    def refresh_wikidata(self, options):
+        load_from_api = False if options["local"] and "all" in options["local"] else True
+        if options["local"] and "wikidata" in options["local"]:
+            load_from_api = False
+        banks, num_created = Wikidata.load_and_create(load_from_api=load_from_api)
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Successfully refreshed {len(banks)} wikidata records, creating {num_created} new records\n"
+            )
+        )
 
     def refresh_fairfinance(self, options):
         load_from_api = False if options["local"] and "all" in options["local"] else True

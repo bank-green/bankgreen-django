@@ -85,7 +85,6 @@ def link_datasources(datasources, datasource_str):
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
-
     @admin.display(description="related_datasources")
     def related_datasources(self, obj):
         datasources = Datasource.objects.filter(brand=obj)
