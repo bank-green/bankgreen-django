@@ -1,4 +1,3 @@
-
 import traceback
 from qwikidata.sparql import return_sparql_query_results
 
@@ -7,6 +6,7 @@ import np
 
 from datasource.models.datasource import Datasource
 from .pycountry_util import find_country
+
 
 class Wikidata(Datasource):
     """
@@ -28,32 +28,33 @@ class Wikidata(Datasource):
             df = pd.read_csv("./datasource/local/wikidata/wikidata.csv")
         else:
             print("Loading Wikidata data from API...")
-            with open('./datasource/models/wikidata/query.sparql') as query_file:
+            with open("./datasource/models/wikidata/query.sparql") as query_file:
                 myquery = query_file.read()
             res = return_sparql_query_results(myquery)
-            df = pd.json_normalize(res['results']['bindings'])
-            df.to_csv('./datasource/local/wikidata/wikidata.csv')
-        
+            df = pd.json_normalize(res["results"]["bindings"])
+            df.to_csv("./datasource/local/wikidata/wikidata.csv")
+
         return cls._create(df)
-    
+
     @classmethod
     def _create(cls, df):
         # remove all parent/subsidiary_of relationships that are not banks.
-        bank_values = set(df['bank.value'])
+        bank_values = set(df["bank.value"])
 
         def only_allowed(val):
             if val in bank_values:
                 return val
             return np.nan
-        df['parent.value'] = df['parent.value'].apply(only_allowed)
+
+        df["parent.value"] = df["parent.value"].apply(only_allowed)
 
         # cycle through banks and add them, temporarily ignoring parent relationships
         existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
         num_created = 0
-        bank_values = set(df['bank.value'])
+        bank_values = set(df["bank.value"])
         for bank_value in bank_values:
-            bank_df = df[df['bank.value'] == bank_value]
+            bank_df = df[df["bank.value"] == bank_value]
 
             try:
                 num_created, existing_tags = cls._maybe_create_individual_instance(
@@ -65,10 +66,9 @@ class Wikidata(Datasource):
                 print(bank_df)
                 print(e)
                 traceback.print_exc()
-            
 
         def add_subsidiary(bank, parent):
-            print(f'adding parent {parent.tag} to child {bank.tag}')
+            print(f"adding parent {parent.tag} to child {bank.tag}")
             if not bank.subsidiary_of_1:
                 bank.subsidiary_of_1 = parent
                 bank.subsidiary_of_1_pct = 100
@@ -87,8 +87,9 @@ class Wikidata(Datasource):
                 return bank.save()
 
         for bank_obj in Wikidata.objects.all():
-            bank_df = df[df['bank.value'] == bank_obj.source_id]
-            parent_links = {x for x in set(bank_df['parent.value']) if x == x}
+            # also include "owner" column in this
+            bank_df = df[df["bank.value"] == bank_obj.source_id]
+            parent_links = {x for x in set(bank_df["parent.value"]) if x == x}
             for parent_link in parent_links:
                 parent_objs = Wikidata.objects.filter(source_id=parent_link)
                 if parent_objs.exists():
@@ -115,14 +116,14 @@ class Wikidata(Datasource):
     @classmethod
     def _random_element_or_none(cls, df):
         """given a dataframe, discard nan.
-           Return a random item of the dataframe or None if it is is empty"""
+        Return a random item of the dataframe or None if it is is empty"""
         aset = {x for x in set(df) if x == x}
 
         res = None
         if len(aset) > 0:
             res = list(aset)[0]
         return res
-    
+
     @classmethod
     def _maybe_create_individual_instance(cls, existing_tags, banks, num_created, df):
         """
@@ -130,39 +131,38 @@ class Wikidata(Datasource):
         if the bank is probably a modern one.
         """
         # get a single name for the bank
-        name = cls._random_element_or_none(df['bankLabel.value'])
+        name = cls._random_element_or_none(df["bankLabel.value"])
         if name is None:
-            print(f'skipping {link} because it has no name')
+            print(f"skipping {link} because it has no name")
             return num_created, existing_tags
 
         wd_tag = name.lower().strip().replace(" ", "_")
 
         # generate tag
-        tag = cls._generate_tag(wd_tag = wd_tag, existing_tags = existing_tags)
+        tag = cls._generate_tag(wd_tag=wd_tag, existing_tags=existing_tags)
 
         # get the languages of the name
-        language = cls._random_element_or_none(df['bankLabel.xml:lang'])
-        website = cls._random_element_or_none(df['website.value'])
+        language = cls._random_element_or_none(df["bankLabel.xml:lang"])
+        website = cls._random_element_or_none(df["website.value"])
 
-        countries = set(df['countryLabel.value'])
+        countries = set(df["countryLabel.value"])
         countries = {x for x in countries if x == x}
 
         # get the identifiers
-        permid = cls._random_element_or_none(df['permid.value'])
-        isin = cls._random_element_or_none(df['isin.value'])
-        viafid = cls._random_element_or_none(df['viafid.value'])
-        lei = cls._random_element_or_none(df['lei.value'])
+        permid = cls._random_element_or_none(df["permid.value"])
+        isin = cls._random_element_or_none(df["isin.value"])
+        viafid = cls._random_element_or_none(df["viafid.value"])
+        lei = cls._random_element_or_none(df["lei.value"])
         # unclear why, but qwikidata falls over when using ?googleid as a parm. use gid instead.
-        googleid = cls._random_element_or_none(df['gid.value'])
+        googleid = cls._random_element_or_none(df["gid.value"])
 
         # get random description
-        description = cls._random_element_or_none(
-            df['bankDescription.value'])
+        description = cls._random_element_or_none(df["bankDescription.value"])
 
-        link = cls._random_element_or_none(df['bank.value'])
+        link = cls._random_element_or_none(df["bank.value"])
 
         # used only for excluding banks that have been closed
-        closing_year = (df['deathyear.value'])
+        closing_year = df["deathyear.value"]
         closing_year = {x for x in closing_year if x == x}
 
         # is the bank's country current or historical?
@@ -171,14 +171,16 @@ class Wikidata(Datasource):
 
         modern_country = True
         for mytup in country_tuples:
-            if mytup[0] == 'failure':
+            if mytup[0] == "failure":
                 modern_country = False
 
         countries = [x[1] for x in country_tuples]
 
         # if the country is not modern, has a closing year or does not have a language
         if not modern_country or len(closing_year) >= 1 or language is None:
-            print(f'skipping {link} because it is closed, has no language, or is not in a modern country')
+            print(
+                f"skipping {link} because it is closed, has no language, or is not in a modern country"
+            )
             return num_created, existing_tags
 
         defaults = {
@@ -191,13 +193,13 @@ class Wikidata(Datasource):
             "isin": isin,
             "viafid": viafid,
             "lei": lei,
-            "googleid": googleid
+            "googleid": googleid,
         }
 
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
-        print(f'updating or creating {link}')
-        bank, created = Wikidata.objects.update_or_create(source_id = link, defaults=defaults )
+        print(f"updating or creating {link}")
+        bank, created = Wikidata.objects.update_or_create(source_id=link, defaults=defaults)
         if created:
             bank.tag = tag
             bank.save()

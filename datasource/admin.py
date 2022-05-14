@@ -132,6 +132,7 @@ class SwitchitAdmin(BanktrackAdmin, admin.ModelAdmin):
 class UsnicAdmin(BanktrackAdmin, admin.ModelAdmin):
     pass
 
+
 @admin.register(Wikidata)
 class WikidataAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
