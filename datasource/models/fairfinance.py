@@ -58,7 +58,7 @@ class Fairfinance(Datasource):
         #     print(da, da.name, da.source_id, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
 
         defaults = {
-            "date_updated": datetime.now(),
+            "date_updated": datetime.now().replace(tzinfo=timezone.utc),
             "name": row.Bank,
             "countries": pycountries.get(row.Countries.lower(), None),
         }

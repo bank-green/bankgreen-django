@@ -135,6 +135,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# This is used to delete this many objects at once
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+
 
 USERNAME = os.environ.get("USERNAME")
 TOKEN = os.environ.get("TOKEN")

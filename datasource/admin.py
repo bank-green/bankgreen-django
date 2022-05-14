@@ -34,16 +34,19 @@ from .models import (
 #         ("brand", admin.EmptyFieldListFilter),
 #     )
 
-
 @admin.register(Banktrack)
 class BanktrackAdmin(admin.ModelAdmin):
     list_display = ["name", "tag", "website", "brand"]
     search_fields = ["name", "tag", "website"]
+    # raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4", "brand"]
+    # autocomplete_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4", "brand"]
+
     list_filter = (
         "date_added",
         ("countries", ChoiceDropdownFilter),
         ("brand", admin.EmptyFieldListFilter),
     )
+    exclude = ["graphql_country"]
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """
@@ -120,8 +123,6 @@ class UsnicAdmin(BanktrackAdmin, admin.ModelAdmin):
     pass
 
 
-#
-#
 # @admin.register(Wikidata)
 # class WikidataAdmin(BanktrackAdmin, admin.ModelAdmin):
 #     pass

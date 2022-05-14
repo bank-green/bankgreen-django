@@ -9,8 +9,6 @@ from django.db import models
 import pandas as pd
 import requests
 
-from brand.models.brand import Brand
-
 # from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 from datasource.models.datasource import Datasource, classproperty
 from datasource.pycountry_utils import pycountries

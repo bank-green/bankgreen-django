@@ -41,7 +41,7 @@ class Gabv(Datasource):
 
         country = pycountries.get(row.country.lower(), None)
         defaults = {
-            "date_updated": datetime.now(),
+            "date_updated": datetime.now().replace(tzinfo=timezone.utc),
             "description": row.description,
             "countries": country,
             "name": row.company_name,

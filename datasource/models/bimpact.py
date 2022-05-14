@@ -1,14 +1,10 @@
 import json
-import logging.config
 from datetime import datetime, timezone
 
 from django.conf import settings
-from django.db import models
 
 import pandas as pd
 import requests
-
-from brand.models.brand import Brand
 
 # from datasource.local.banktrack.secret import TOKEN, USERNAME
 from datasource.models.datasource import Datasource, classproperty
