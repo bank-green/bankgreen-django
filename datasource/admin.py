@@ -133,6 +133,6 @@ class UsnicAdmin(BanktrackAdmin, admin.ModelAdmin):
     pass
 
 
-# @admin.register(Wikidata)
-# class WikidataAdmin(BanktrackAdmin, admin.ModelAdmin):
-#     pass
+@admin.register(Wikidata)
+class WikidataAdmin(DatasourceAdmin, admin.ModelAdmin):
+    pass

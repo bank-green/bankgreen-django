@@ -1,5 +1,5 @@
 airtable==0.4.8
-black==22.1.0
+black==22.3.0
 isort==5.10.1
 celery==4.0.0
 django==3.2.12
@@ -25,3 +25,4 @@ django-admin-list-filter-dropdown==1.0.3
 python-Levenshtein==0.12.2
 graphene-django==2.15.0
 django-filter==21.1
+np==1.0.2
