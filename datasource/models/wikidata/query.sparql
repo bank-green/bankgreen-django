@@ -1,0 +1,30 @@
+SELECT ?bank ?bankLabel ?bankDescription ?bankAltLabel ?countryLabel ?instanceLabel ?website ?twitter ?permid ?isin ?viafid ?lei ?gid ?parent (year(?dissolveddate) as ?deathyear)
+WHERE 
+{
+{?bank wdt:P31 wd:Q22687 .} # subclass of bank
+UNION
+{?bank wdt:p31 wd:Q449067 .} # subclass of building society
+UNION
+{?bank wdt:p31 wd:Q157963 .} #subclass of savings bank
+UNION
+{?bank wdt:p31 wd:Q3277997 .} #subclass of cooperative bank
+UNION
+{?bank wdt:p31 wd:Q745877 .} # subclass of credit union
+
+?bank wdt:P31 ?instance .
+?bank wdt:P17 ?country .
+
+OPTIONAL{?bank wdt:P576 ?dissolveddate .}
+OPTIONAL {?bank wdt:P856 ?website .}
+OPTIONAL {?bank wdt:P2002 ?twitter .}
+OPTIONAL {?bank wdt:P3347 ?permid .}
+OPTIONAL {?bank wdt:P946 ?isin .}
+OPTIONAL {?bank wdt:P214 ?viafid .}
+OPTIONAL {?bank wdt:P1278 ?lei .}
+OPTIONAL {?bank wdt:P2671 ?gid .}
+OPTIONAL {?bank wdt:P749 ?parent .}
+
+filter not exists { ?country wdt:P31 wd:Q3024240} # country is not historical
+
+SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en,fr,de,es,it". }
+}

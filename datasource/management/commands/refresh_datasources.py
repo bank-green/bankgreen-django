@@ -10,6 +10,7 @@ from datasource.models import (
     Marketforces,
     Switchit,
     Usnic,
+    Wikidata
 )
 
 
@@ -49,6 +50,9 @@ class Command(BaseCommand):
 
         if "all" in datasources or "usnic" in datasources:
             self.refresh_usnic()
+        
+        if "all" in datasources or "wikidata" in datasources:
+            self.refresh_wikidata(options)
 
     def refresh_bimpact(self, options):
         load_from_api = False if options["local"] and "all" in options["local"] else True
@@ -80,6 +84,20 @@ class Command(BaseCommand):
 
         brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
         self.output_brand_creation(brands_created, brands_updated, Banktrack)
+
+    def refresh_wikidata(self, options):
+        load_from_api = False if options["local"] and "all" in options["local"] else True
+        if options["local"] and "wikidata" in options["local"]:
+            load_from_api = False
+        banks, num_created = Wikidata.load_and_create(load_from_api=load_from_api)
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Successfully refreshed {len(banks)} wikidata records, creating {num_created} new records\n"
+            )
+        )
+
+        brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
+        self.output_brand_creation(brands_created, brands_updated, Wikidata)
 
     def refresh_fairfinance(self, options):
         load_from_api = False if options["local"] and "all" in options["local"] else True
