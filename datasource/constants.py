@@ -38,7 +38,6 @@ model_names = [
     "banktrack",
     "bimpact",
     "bocc",
-    "datasource",
     "fairfinance",
     "gabv",
     "marketforces",
@@ -47,4 +46,4 @@ model_names = [
     "wikidata",
 ]
 
-lev_distance = 10
+lev_distance = 3

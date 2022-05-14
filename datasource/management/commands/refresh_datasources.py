@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand
 
 from brand.models import Brand
+
+from datasource.constants import model_names
 from datasource.models import (
     Banktrack,
     Bimpact,
@@ -53,6 +55,10 @@ class Command(BaseCommand):
 
         if "all" in datasources or "wikidata" in datasources:
             self.refresh_wikidata(options)
+
+        for x in datasources:
+            if x.lower() not in model_names:
+                raise NotImplementedError(f"{x.lower()} is not in known models: {model_names}")
 
     def refresh_bimpact(self, options):
         load_from_api = False if options["local"] and "all" in options["local"] else True

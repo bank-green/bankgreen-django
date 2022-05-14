@@ -4,7 +4,6 @@ from typing import List, Tuple
 from django.db import models
 from django.utils import timezone
 
-import unidecode
 from django_countries.fields import CountryField
 from Levenshtein import distance as lev
 
@@ -117,7 +116,6 @@ class Brand(models.Model):
     date_updated = models.DateTimeField(
         "Time of last update", default=timezone.now, null=False, editable=True
     )
-    suggested_datasource = models.TextField(blank=True, null=True, default="-blank-")
     graphql_country = models.CharField(max_length=150, blank=True, null=True)
 
     def __str__(self):
@@ -197,17 +195,20 @@ class Brand(models.Model):
         if countries:
             self.refresh_countries()
 
-    @classmethod
-    def suggest_tag(self):
-        """
-        using the bank name replace spaces with underscores.
-        convert accented characters to non accented. Remove special characters.
+    def subclass(self):
+        """returns the subclass (i.e. banktrack) that a brand is."""
+        if hasattr(self, "datasource"):
+            self = self.datasource
+            for model_name in model_names:
+                if hasattr(self, model_name):
+                    return getattr(self, model_name)
 
-        tag is set in the bank model
-        """
-        mystr = unidecode.unidecode(self.name).lower().rstrip().lstrip().replace(" ", "_")
-        mystr = re.sub("[\W]", "", mystr)
-        return mystr
+        if self.__class__ == Brand:
+            return self
+
+        raise NotImplementedError(
+            f"{self} is not a Brand and does not have subclass listed in model_names"
+        )
 
     @classmethod
     def create_brand_from_datasource(self, banks: List) -> Tuple[List, List]:
@@ -231,42 +232,38 @@ class Brand(models.Model):
 
         return (brands_created, brands_updated)
 
-    def datasource_suggestions(self):
-        """Suggestion of data sources based on Levenshtein distance"""
-        brand_list = []
-        datasource_tags_without_model_names = []
-        datasource_tags = dsm.Datasource.objects.all().values_list("tag", flat=True)
-        for tag in datasource_tags:
-            if tag.startswith(model_names[0]):
-                tag = tag[len(model_names[0]) + 1 :]
-            elif tag.startswith(model_names[1]):
-                tag = tag[len(model_names[1]) + 1 :]
-            elif tag.startswith(model_names[2]):
-                tag = tag[len(model_names[2]) + 1 :]
-            elif tag.startswith(model_names[3]):
-                tag = tag[len(model_names[3]) + 1 :]
-            elif tag.startswith(model_names[4]):
-                tag = tag[len(model_names[4]) + 1 :]
-            elif tag.startswith(model_names[5]):
-                tag = tag[len(model_names[5]) + 1 :]
-            elif tag.startswith(model_names[6]):
-                tag = tag[len(model_names[6]) + 1 :]
-            elif tag.startswith(model_names[7]):
-                tag = tag[len(model_names[7]) + 1 :]
-            elif tag.startswith(model_names[8]):
-                tag = tag[len(model_names[8]) + 1 :]
-            elif tag.startswith(model_names[9]):
-                tag = tag[len(model_names[9]) + 1 :]
-            datasource_tags_without_model_names.append(tag)
+    def return_suggested_brands_or_datasources(self):
+        """
+        Suggestion of data sources based on Levenshtein distance
+        Returns a list of records of datasource subclasses
+        """
+        # subclass self in case it was passed as a datasource
+        self = self.subclass()
+        suggested_brands_or_datasources = []
+        brands_or_datasources = Brand.objects.all()
+        current_name = re.sub("[^0-9a-zA-Z]+", "", self.name.lower())
 
-        for tag in datasource_tags_without_model_names:
-            # get rid of the one that is equal to self
-            if self.tag != tag:
-                num = lev(self.tag, tag)
-                if num <= lev_distance:
-                    brand_list.append(tag)
-        brands = ", ".join(brand_list)
-        return brands
+        for bods in brands_or_datasources:
+            bods = bods.subclass()
+
+            # bods of one class cannot recommend the same class
+            if self.__class__ == bods.__class__:
+                continue
+
+            # get rid of datasources that are already associated with the brand.
+            # In this case, self is a datasource
+            if hasattr(self, "brand") and self.brand == bods:
+                continue
+
+            # get rids of brands that are already associated with the datasource
+            # in this case, self is a brand
+            if hasattr(bods, "brand") and bods.brand == self:
+                continue
+
+            bods_name = re.sub("[^0-9a-zA-Z]+", "*", bods.name.lower())
+            if lev(bods_name, current_name) <= lev_distance:
+                suggested_brands_or_datasources.append(bods)
+        return suggested_brands_or_datasources
 
     def define_graphql_country(self):
         countries = []
@@ -278,7 +275,5 @@ class Brand(models.Model):
         self.graphql_country = countries
 
     def save(self, *args, **kwargs):
-        self.suggested_datasource = self.datasource_suggestions()
         self.define_graphql_country()
-
         super(Brand, self).save()

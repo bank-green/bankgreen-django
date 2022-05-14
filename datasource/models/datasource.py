@@ -40,7 +40,7 @@ class Datasource(Brand):
         editable=True,
         help_text="the original identifier used by the datasource. i.e wikiid, or banktrack tag",
     )
-    suggested_brands = models.TextField(blank=True, null=True, default="-blank-")
+    suggested_brands = models.ManyToManyField(Brand, related_name="suggested_brands")
 
     def get_data(self, url, params=None):
         """
@@ -50,28 +50,7 @@ class Datasource(Brand):
 
     @classproperty
     def tag_prepend_str(cls):
-        return cls.__name__.lower() + "_"
-
-    def brand_suggestions(self):
-        """Suggestion of brands based on Levenshtein distance"""
-        brand_list = []
-        tag_without_cls_name = self.tag[len(self.tag_prepend_str) :]
-        brand_tags = (
-            Brand.objects.filter(datasource__isnull=True)
-            .exclude(tag=tag_without_cls_name)
-            .values_list("tag", flat=True)
-        )
-        # print(len(brand_tags), brand_tags)
-        for tag in brand_tags:
-            num = lev(self.tag, tag)
-            if num <= lev_distance:
-                # this returns all tags, even datasource tags.
-                if any(tag.startswith(model) for model in model_names):
-                    continue
-                brand_list.append(tag)
-        brands = ", ".join(brand_list)
-        return brands
+        raise NotImplementedError
 
     def save(self, *args, **kwargs):
-        self.suggested_brands = self.brand_suggestions()
         super(Datasource, self).save()

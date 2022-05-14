@@ -10,11 +10,15 @@ import pandas as pd
 import requests
 
 # from datasource.local.banktrack.secret import PASSWORD as banktrack_password
-from datasource.models.datasource import Datasource
+from datasource.models.datasource import Datasource, classproperty
 from datasource.pycountry_utils import pycountries
 
 
 class Banktrack(Datasource):
+    @classproperty
+    def tag_prepend_str(cls):
+        return cls.__name__.lower() + "_"
+
     @classmethod
     def load_and_create(cls, load_from_api=False):
 

@@ -4,7 +4,7 @@ from qwikidata.sparql import return_sparql_query_results
 import pandas as pd
 import np
 
-from datasource.models.datasource import Datasource
+from datasource.models.datasource import Datasource, classproperty
 from .pycountry_util import find_country
 
 
@@ -18,6 +18,10 @@ class Wikidata(Datasource):
     - Permanent ID
     These ID's are used for de-duplication of banks.
     """
+
+    @classproperty
+    def tag_prepend_str(cls):
+        return cls.__name__.lower() + "_"
 
     @classmethod
     def load_and_create(cls, load_from_api=False):

@@ -1,8 +1,8 @@
 from django.contrib import admin
-from django.forms import ModelForm
 from django.urls import reverse
-from django.utils.html import format_html
+from django.utils.html import escape, format_html
 
+from datasource.constants import model_names
 from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary
@@ -55,21 +55,50 @@ class CommentaryInline(admin.StackedInline):
     )
 
 
-class DatasourceInline(admin.TabularInline):
+# @admin.display(description='Name')
+# def upper_case_name(obj):
+#     return obj.name.upper()
+
+
+# TODO make this a series of dropdowns
+class DatasourceInline(admin.StackedInline):
     model = Datasource
     extra = 0
-    raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
+    # raw_id_fields = ["subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
+    readonly_fields = ("name", "tag", "source_id")
+    fields = [readonly_fields]
+
     fk_name = "brand"
     show_change_link = True
 
 
+def link_datasources(datasources, datasource_str):
+    links = []
+    filtered_datasources = [x for x in datasources if hasattr(x, datasource_str)]
+    for ds in filtered_datasources:
+        url = reverse("admin:%s_%s_change" % ("datasource", "banktrack"), args=(ds.id,))
+        string_to_show = escape(f"{datasource_str} - . - . - {ds.tag} - . - . - {ds.name}")
+        link = format_html(f'<a href="{url}" />{string_to_show}</a>')
+        links.append(link)
+    return links
+
+
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
+    @admin.display(description="related_datasources")
+    def related_datasources(self, obj):
+        datasources = Datasource.objects.filter(brand=obj)
+        links = []
+        for model in model_names:
+            links += link_datasources(datasources, model)
+        return format_html("<br />".join(links))
+
     raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
     list_display = ["name", "tag", "number_of_related_datasources", "website"]
     search_fields = ["name", "tag", "website"]
+    readonly_fields = ["related_datasources"]
     fields = (
-        ("name", "tag"),
+        ("name", "tag", "related_datasources"),
         "description",
         "website",
         "countries",
@@ -77,7 +106,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("subsidiary_of_2", "subsidiary_of_2_pct"),
         ("subsidiary_of_3", "subsidiary_of_3_pct"),
         ("subsidiary_of_4", "subsidiary_of_4_pct"),
-        "suggested_datasource",
+        # "suggested_datasource",
         ("date_added", "date_updated"),
     )
 

@@ -99,37 +99,37 @@ class BanktrackAdmin(admin.ModelAdmin):
 
 
 @admin.register(Bimpact)
-class BimpactAdmin(BanktrackAdmin, admin.ModelAdmin):
+class BimpactAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Bocc)
-class BoccAdmin(BanktrackAdmin, admin.ModelAdmin):
+class BoccAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Fairfinance)
-class FairfinanceAdmin(BanktrackAdmin, admin.ModelAdmin):
+class FairfinanceAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Gabv)
-class GabvAdmin(BanktrackAdmin, admin.ModelAdmin):
+class GabvAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Marketforces)
-class MarketforcesAdmin(BanktrackAdmin, admin.ModelAdmin):
+class MarketforcesAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Switchit)
-class SwitchitAdmin(BanktrackAdmin, admin.ModelAdmin):
+class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
 @admin.register(Usnic)
-class UsnicAdmin(BanktrackAdmin, admin.ModelAdmin):
+class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     pass
 
 
