@@ -30,10 +30,7 @@ from .models import (
 class DatasourceAdmin(admin.ModelAdmin):
     list_display = ["name", "source_id"]
     search_fields = ["name", "source_id"]
-    list_filter = (
-        "created",
-        "modified"
-    )
+    list_filter = ("created", "modified")
     exclude = ["graphql_country"]
 
 

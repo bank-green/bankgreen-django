@@ -20,9 +20,7 @@ class Switchit(Datasource):
         num_created = 0
         for row in data["bank_providers"]:
             try:
-                num_created = cls._load_or_create_individual_instance(
-                    banks, num_created, row
-                )
+                num_created = cls._load_or_create_individual_instance(banks, num_created, row)
             except Exception as e:
                 print("\n\n===Banktrack failed creation or updating===\n\n")
                 print(row)
@@ -33,10 +31,7 @@ class Switchit(Datasource):
     def _load_or_create_individual_instance(cls, banks, num_created, row):
         source_id = row["name"].lower().strip().replace(" ", "_")
 
-        defaults = {
-            "name": row["name"],
-            "website": row["url"],
-        }
+        defaults = {"name": row["name"], "website": row["url"]}
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
 
@@ -48,7 +43,7 @@ class Switchit(Datasource):
         banks.append(bank)
         num_created += 1 if created else 0
         return num_created
-    
+
     website = models.URLField(
         "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
     )

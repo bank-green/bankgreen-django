@@ -8,6 +8,7 @@ from datasource.models.datasource import Datasource, classproperty
 
 class Marketforces(Datasource):
     """ """
+
     @classmethod
     def load_and_create(cls, load_from_api=False):
 
@@ -32,9 +33,7 @@ class Marketforces(Datasource):
         num_created = 0
         for i, row in df.iterrows():
             try:
-                num_created = cls._load_or_create_individual_instance(
-                    banks, num_created, row
-                )
+                num_created = cls._load_or_create_individual_instance(banks, num_created, row)
             except Exception as e:
                 print("\n\n===Banktrack failed creation or updating===\n\n")
                 print(row)

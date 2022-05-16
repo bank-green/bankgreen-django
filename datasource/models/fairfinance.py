@@ -8,7 +8,6 @@ from datasource.pycountry_utils import pycountries
 from django_countries.fields import CountryField
 
 
-
 class Fairfinance(Datasource):
     """ """
 
@@ -36,9 +35,7 @@ class Fairfinance(Datasource):
         num_created = 0
         for i, row in df.iterrows():
             try:
-                num_created = cls._load_or_create_individual_instance(
-                     banks, num_created, row
-                )
+                num_created = cls._load_or_create_individual_instance(banks, num_created, row)
             except Exception as e:
                 print("\n\n===Banktrack failed creation or updating===\n\n")
                 print(row)
@@ -53,10 +50,7 @@ class Fairfinance(Datasource):
         # for da in datasources:
         #     print(da, da.name, da.source_id, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
 
-        defaults = {
-            "name": row.Bank,
-            "countries": pycountries.get(row.Countries.lower(), None),
-        }
+        defaults = {"name": row.Bank, "countries": pycountries.get(row.Countries.lower(), None)}
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
 
@@ -68,8 +62,7 @@ class Fairfinance(Datasource):
         banks.append(bank)
         num_created += 1 if created else 0
         return num_created
-    
+
     countries = CountryField(
         multiple=True, help_text="Where the bank offers retails services", blank=True
     )
-

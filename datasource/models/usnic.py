@@ -10,6 +10,7 @@ from datasource.pycountry_utils import pycountries
 
 class Usnic(Datasource):
     """ """
+
     @classmethod
     def load_and_create(cls, load_from_api=False):
 
@@ -26,9 +27,7 @@ class Usnic(Datasource):
         num_created = 0
         for i, row in df.iterrows():
             try:
-                num_created = cls._load_or_create_individual_instance(
-                     banks, num_created, row
-                )
+                num_created = cls._load_or_create_individual_instance(banks, num_created, row)
             except Exception as e:
                 print("\n\n===Usnic failed creation or updating===\n\n")
                 print(row)
@@ -98,7 +97,6 @@ class Usnic(Datasource):
                     pass
                 child.save()
 
-    
     rssd = models.CharField(max_length=15, blank=True)
     rssd_hd = models.CharField(max_length=15, blank=True)
     cusip = models.CharField(max_length=15, blank=True)

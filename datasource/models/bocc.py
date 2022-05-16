@@ -9,8 +9,6 @@ from django_countries.fields import CountryField
 from django.db import models
 
 
-
-
 class Bocc(Datasource):
     """
     Data from the Banking on Climate Change report published by the Rainforest Action Network
@@ -29,9 +27,7 @@ class Bocc(Datasource):
         num_created = 0
         for i, row in df.iterrows():
             try:
-                num_created = cls._load_or_create_individual_instance(
-                    banks, num_created, row
-                )
+                num_created = cls._load_or_create_individual_instance(banks, num_created, row)
             except Exception as e:
                 print("\n\n===BOCC failed creation or updating===\n\n")
                 print(row)
@@ -42,10 +38,7 @@ class Bocc(Datasource):
     def _load_or_create_individual_instance(cls, banks, num_created, row):
         source_id = row.Bank.lower().strip().replace(" ", "_")
 
-        defaults = {
-            "name": row.Bank,
-            "countries": row.Country,
-        }
+        defaults = {"name": row.Bank, "countries": row.Country}
 
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}

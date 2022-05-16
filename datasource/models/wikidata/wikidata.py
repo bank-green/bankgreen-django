@@ -4,7 +4,6 @@ from django.db import models
 from django_countries.fields import CountryField
 
 
-
 import pandas as pd
 import np
 
@@ -60,9 +59,7 @@ class Wikidata(Datasource):
             bank_df = df[df["bank.value"] == bank_value]
 
             try:
-                num_created = cls._maybe_create_individual_instance(
-                    banks, num_created, bank_df
-                )
+                num_created = cls._maybe_create_individual_instance(banks, num_created, bank_df)
             except Exception as e:
                 print("\n\n===Wikidata failed creation or updating===\n\n")
                 print(bank_value)
@@ -209,5 +206,3 @@ class Wikidata(Datasource):
     website = models.URLField(
         "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
     )
-
-

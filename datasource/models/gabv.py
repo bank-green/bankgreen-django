@@ -10,7 +10,6 @@ from datasource.models.datasource import Datasource, classproperty
 from datasource.pycountry_utils import pycountries
 
 
-
 class Gabv(Datasource):
     @classmethod
     def load_and_create(cls):
@@ -21,9 +20,7 @@ class Gabv(Datasource):
         num_created = 0
         for i, row in df.iterrows():
             try:
-                num_created = cls._load_or_create_individual_instance(
-                    banks, num_created, row
-                )
+                num_created = cls._load_or_create_individual_instance(banks, num_created, row)
             except Exception as e:
                 print("\n\n===Bimpact failed creation or updating===\n\n")
                 print(row)
@@ -52,7 +49,7 @@ class Gabv(Datasource):
         banks.append(bank)
         num_created += 1 if created else 0
         return num_created
-    
+
     description = models.TextField(
         "Description of this instance of this brand/data source",
         null=True,

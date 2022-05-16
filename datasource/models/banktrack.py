@@ -96,7 +96,6 @@ class Banktrack(Datasource):
             return bt_tag
         else:
             return cls._generate_tag(og_tag, increment=increment + 1, existing_tags=existing_tags)
-    
 
     countries = CountryField(
         multiple=True, help_text="Where the bank offers retails services", blank=True
@@ -108,9 +107,7 @@ class Banktrack(Datasource):
         blank=False,
         editable=True,
         unique=True,
-        help_text=(
-            "Banktrack's own tag, has format bank_of_america",
-        ),
+        help_text=("Banktrack's own tag, has format bank_of_america",),
     )
 
     website = models.URLField(
@@ -118,8 +115,5 @@ class Banktrack(Datasource):
     )
 
     description = models.TextField(
-        "Description of this entry",
-        null=True,
-        blank=True,
-        default="-blank-",
+        "Description of this entry", null=True, blank=True, default="-blank-"
     )

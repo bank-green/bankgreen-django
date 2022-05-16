@@ -34,11 +34,7 @@ class Datasource(TimeStampedModel):
     )
 
     name = models.CharField(
-        "Name of this data source",
-        max_length=200,
-        null=False,
-        blank=False,
-        default="-unnamed-",
+        "Name of this data source", max_length=200, null=False, blank=False, default="-unnamed-"
     )
 
     # used to identify duplicates on refresh

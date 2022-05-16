@@ -68,7 +68,6 @@ class Brand(models.Model):
     fdic_cert = models.CharField(max_length=15, blank=True)
     occ = models.CharField(max_length=15, blank=True)
     ein = models.CharField(max_length=15, blank=True)
-    
 
     # subsidiary information. Subsidiaries should be listed in descending order of ownership
     # i.e. a DataSource A wholly owned by DataSource B would have subsidiary_of_1 set to B, and
