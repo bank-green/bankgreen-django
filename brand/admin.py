@@ -65,7 +65,7 @@ class DatasourceInline(admin.StackedInline):
     model = Datasource
     extra = 0
     # raw_id_fields = ["subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
-    readonly_fields = ("name", "tag", "source_id")
+    readonly_fields = ("name", "source_id")
     fields = [readonly_fields]
 
     fk_name = "brand"
@@ -114,7 +114,7 @@ class BrandAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         # filter out all but base class
-        qs = super(BrandAdmin, self).get_queryset(request).filter(datasource__isnull=True)
+        qs = super(BrandAdmin, self).get_queryset(request)
         return qs
 
     def number_of_related_datasources(self, obj):

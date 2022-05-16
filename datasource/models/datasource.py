@@ -1,4 +1,5 @@
 from django.db import models
+from model_utils.models import TimeStampedModel
 
 from django_countries.fields import CountryField
 from Levenshtein import distance as lev
@@ -19,7 +20,7 @@ class classproperty(property):
         super(classproperty, self).__delete__(type(obj))
 
 
-class Datasource(Brand):
+class Datasource(TimeStampedModel):
     """
     Datasource is the parent of various individual datasources.
     A "Datasource" is never instantiated directly - only as an instance of data from a data provider.
@@ -32,6 +33,14 @@ class Datasource(Brand):
         Brand, related_name="bank_brand", null=True, blank=True, on_delete=models.SET_NULL
     )
 
+    name = models.CharField(
+        "Name of this data source",
+        max_length=200,
+        null=False,
+        blank=False,
+        default="-unnamed-",
+    )
+
     # used to identify duplicates on refresh
     source_id = models.CharField(
         max_length=100,
@@ -40,17 +49,19 @@ class Datasource(Brand):
         editable=True,
         help_text="the original identifier used by the datasource. i.e wikiid, or banktrack tag",
     )
-    suggested_brands = models.ManyToManyField(Brand, related_name="suggested_brands")
+
+    source_link = models.URLField(
+        "Link to the data source's webpage. i.e. the banktrack.org or b-impact webpage for the bank",
+        editable=True,
+        null=True,
+        blank=True,
+    )
 
     def get_data(self, url, params=None):
         """
         get_data is a generic method that can be used to get data from any data source.
         It is not intended to be used directly.
         """
-
-    @classproperty
-    def tag_prepend_str(cls):
-        raise NotImplementedError
 
     def save(self, *args, **kwargs):
         super(Datasource, self).save()

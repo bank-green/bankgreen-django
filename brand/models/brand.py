@@ -68,12 +68,7 @@ class Brand(models.Model):
     fdic_cert = models.CharField(max_length=15, blank=True)
     occ = models.CharField(max_length=15, blank=True)
     ein = models.CharField(max_length=15, blank=True)
-    source_link = models.URLField(
-        "Link to the data source's webpage. i.e. the banktrack.org or b-impact webpage for the bank",
-        editable=True,
-        null=True,
-        blank=True,
-    )
+    
 
     # subsidiary information. Subsidiaries should be listed in descending order of ownership
     # i.e. a DataSource A wholly owned by DataSource B would have subsidiary_of_1 set to B, and
@@ -194,21 +189,6 @@ class Brand(models.Model):
             self.refresh_description(overwrite_existing)
         if countries:
             self.refresh_countries()
-
-    def subclass(self):
-        """returns the subclass (i.e. banktrack) that a brand is."""
-        if hasattr(self, "datasource"):
-            self = self.datasource
-            for model_name in model_names:
-                if hasattr(self, model_name):
-                    return getattr(self, model_name)
-
-        if self.__class__ == Brand:
-            return self
-
-        raise NotImplementedError(
-            f"{self} is not a Brand and does not have subclass listed in model_names"
-        )
 
     @classmethod
     def create_brand_from_datasource(self, banks: List) -> Tuple[List, List]:

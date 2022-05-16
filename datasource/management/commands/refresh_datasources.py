@@ -158,7 +158,8 @@ class Command(BaseCommand):
             )
         )
         # After we create all objects, open the other file and create relations between objects
-        Usnic.link_parents()
+        # don't do this at this time
+        # Usnic.link_parents()
 
     def output_brand_creation(self, brands_created, brands_updated, datasource_class):
         self.stdout.write(
