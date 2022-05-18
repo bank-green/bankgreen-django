@@ -61,3 +61,17 @@ class Datasource(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         super(Datasource, self).save()
+
+    def subclass(self):
+        """returns the subclass (i.e. banktrack) that a datasource is."""
+        if self.__class__ == Datasource:
+            return self
+        for model_name in model_names:
+            if hasattr(self, model_name):
+                return getattr(self, model_name)
+
+        
+
+        raise NotImplementedError(
+            f"{self} is not a Datasource and does not have subclass listed in model_names"
+        )

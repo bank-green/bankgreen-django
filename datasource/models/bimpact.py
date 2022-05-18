@@ -15,10 +15,6 @@ from datasource.pycountry_utils import pycountries
 
 
 class Bimpact(Datasource):
-    @classproperty
-    def tag_prepend_str(cls):
-        return cls.__name__.lower() + "_"
-
     @classmethod
     def load_and_create(cls, load_from_api=False):
         df = None

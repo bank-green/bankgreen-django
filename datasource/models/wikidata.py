@@ -8,7 +8,7 @@ import pandas as pd
 import np
 
 from datasource.models.datasource import Datasource, classproperty
-from .pycountry_util import find_country
+from datasource.local.wikidata.pycountry_util import find_country
 
 
 class Wikidata(Datasource):
@@ -31,7 +31,7 @@ class Wikidata(Datasource):
             df = pd.read_csv("./datasource/local/wikidata/wikidata.csv")
         else:
             print("Loading Wikidata data from API...")
-            with open("./datasource/models/wikidata/query.sparql") as query_file:
+            with open("./datasource/local/wikidata/query.sparql") as query_file:
                 myquery = query_file.read()
             res = return_sparql_query_results(myquery)
             df = pd.json_normalize(res["results"]["bindings"])
@@ -67,24 +67,24 @@ class Wikidata(Datasource):
                 print(e)
                 traceback.print_exc()
 
-        def add_subsidiary(bank, parent):
-            print(f"adding parent {parent.name} to child {bank.name}")
-            if not bank.subsidiary_of_1:
-                bank.subsidiary_of_1 = parent
-                bank.subsidiary_of_1_pct = 100
-                return bank.save()
-            if not bank.subsidiary_of_2:
-                bank.subsidiary_of_2 = parent
-                bank.subsidiary_of_2_pct = 100
-                return bank.save()
-            if not bank.subsidiary_of_3:
-                bank.subsidiary_of_3 = parent
-                bank.subsidiary_of_3_pct = 100
-                return bank.save()
-            if not bank.subsidiary_of_4:
-                bank.subsidiary_of_4 = parent
-                bank.subsidiary_of_4_pct = 100
-                return bank.save()
+        # def add_subsidiary(bank, parent):
+        #     print(f"adding parent {parent.name} to child {bank.name}")
+        #     if not bank.subsidiary_of_1:
+        #         bank.subsidiary_of_1 = parent
+        #         bank.subsidiary_of_1_pct = 100
+        #         return bank.save()
+        #     if not bank.subsidiary_of_2:
+        #         bank.subsidiary_of_2 = parent
+        #         bank.subsidiary_of_2_pct = 100
+        #         return bank.save()
+        #     if not bank.subsidiary_of_3:
+        #         bank.subsidiary_of_3 = parent
+        #         bank.subsidiary_of_3_pct = 100
+        #         return bank.save()
+        #     if not bank.subsidiary_of_4:
+        #         bank.subsidiary_of_4 = parent
+        #         bank.subsidiary_of_4_pct = 100
+        #         return bank.save()
 
         # not doing subsidiaries for now
         # for bank_obj in Wikidata.objects.all():

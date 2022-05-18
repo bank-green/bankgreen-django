@@ -211,38 +211,40 @@ class Brand(models.Model):
 
         return (brands_created, brands_updated)
 
-    def return_suggested_brands_or_datasources(self):
-        """
-        Suggestion of data sources based on Levenshtein distance
-        Returns a list of records of datasource subclasses
-        """
-        # subclass self in case it was passed as a datasource
-        self = self.subclass()
-        suggested_brands_or_datasources = []
-        brands_or_datasources = Brand.objects.all()
-        current_name = re.sub("[^0-9a-zA-Z]+", "", self.name.lower())
+    # commented out until we finish reworking the brand-datasource association
+    #
+    # def return_suggested_brands_or_datasources(self):
+    #     """
+    #     Suggestion of data sources based on Levenshtein distance
+    #     Returns a list of records of datasource subclasses
+    #     """
+    #     # subclass self in case it was passed as a datasource
+    #     self = self.subclass()
+    #     suggested_brands_or_datasources = []
+    #     brands_or_datasources = Brand.objects.all()
+    #     current_name = re.sub("[^0-9a-zA-Z]+", "", self.name.lower())
 
-        for bods in brands_or_datasources:
-            bods = bods.subclass()
+    #     for bods in brands_or_datasources:
+    #         bods = bods.subclass()
 
-            # bods of one class cannot recommend the same class
-            if self.__class__ == bods.__class__:
-                continue
+    #         # bods of one class cannot recommend the same class
+    #         if self.__class__ == bods.__class__:
+    #             continue
 
-            # get rid of datasources that are already associated with the brand.
-            # In this case, self is a datasource
-            if hasattr(self, "brand") and self.brand == bods:
-                continue
+    #         # get rid of datasources that are already associated with the brand.
+    #         # In this case, self is a datasource
+    #         if hasattr(self, "brand") and self.brand == bods:
+    #             continue
 
-            # get rids of brands that are already associated with the datasource
-            # in this case, self is a brand
-            if hasattr(bods, "brand") and bods.brand == self:
-                continue
+    #         # get rids of brands that are already associated with the datasource
+    #         # in this case, self is a brand
+    #         if hasattr(bods, "brand") and bods.brand == self:
+    #             continue
 
-            bods_name = re.sub("[^0-9a-zA-Z]+", "*", bods.name.lower())
-            if lev(bods_name, current_name) <= lev_distance:
-                suggested_brands_or_datasources.append(bods)
-        return suggested_brands_or_datasources
+    #         bods_name = re.sub("[^0-9a-zA-Z]+", "*", bods.name.lower())
+    #         if lev(bods_name, current_name) <= lev_distance:
+    #             suggested_brands_or_datasources.append(bods)
+    #     return suggested_brands_or_datasources
 
     def define_graphql_country(self):
         countries = []
