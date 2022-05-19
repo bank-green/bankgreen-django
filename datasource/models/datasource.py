@@ -70,8 +70,6 @@ class Datasource(TimeStampedModel):
             if hasattr(self, model_name):
                 return getattr(self, model_name)
 
-        
-
         raise NotImplementedError(
             f"{self} is not a Datasource and does not have subclass listed in model_names"
         )

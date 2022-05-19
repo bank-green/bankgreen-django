@@ -18,6 +18,7 @@ class BrandTestCase(TestCase):
             tag=Banktrack.tag_prepend_str + "unique_source_id",
         )
 
+
 #     commented out until we change brand-datasource association
 #
 #     def test_create_brand_from_datasource(self):

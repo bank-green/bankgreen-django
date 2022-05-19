@@ -64,6 +64,7 @@ class BanktrackTestCase(TestCase):
 
         self.assertEqual(bank.subclass().__class__, Banktrack)
 
+
 class BimpactTestCase(TestCase):
     def setUp(self):
         pass
@@ -193,9 +194,7 @@ class WikidataTestCase(TestCase):
             banks=banks, num_created=num_created, df=first
         )
 
-        Wikidata._maybe_create_individual_instance(
-            banks=banks, num_created=num_created, df=second
-        )
+        Wikidata._maybe_create_individual_instance(banks=banks, num_created=num_created, df=second)
 
         self.assertEqual(len(Wikidata.objects.all()), 1)
 
