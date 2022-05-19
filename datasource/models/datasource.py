@@ -32,8 +32,6 @@ class Datasource(Brand):
         Brand, related_name="bank_brand", null=True, blank=True, on_delete=models.SET_NULL
     )
 
-    
-
     # used to identify duplicates on refresh
     source_id = models.CharField(
         max_length=100,

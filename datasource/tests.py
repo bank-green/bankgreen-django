@@ -61,7 +61,7 @@ class BanktrackTestCase(TestCase):
         self.assertEqual(bank.source_id, "unique_tag")
         self.assertEqual(bank.website, "https://newuri")
         self.assertEqual(bank.countries[0].code, "TW")
-        self.assertEqual(bank.source_link, "https://newuri")
+        self.assertEqual(bank.source_link, "https://newuriBAD")
 
     def test_tag_prepend_str_when_accessed_via_a_datasource_banktrack(self):
         bt = Banktrack.objects.create(
