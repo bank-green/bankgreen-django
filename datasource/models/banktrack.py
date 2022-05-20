@@ -5,6 +5,8 @@ from re import I
 
 from django.conf import settings
 from django.db import models
+from django_countries.fields import CountryField
+
 
 import pandas as pd
 import requests
@@ -58,9 +60,6 @@ class Banktrack(Datasource):
         source_id = row.tag
 
         defaults = {
-            "date_updated": datetime.strptime(row.updated_at, "%Y-%m-%d %H:%M:%S").replace(
-                tzinfo=timezone.utc
-            ),
             "source_link": row.link,
             "name": row.title,
             "countries": pycountries.get(row.country.lower(), None),
@@ -97,3 +96,24 @@ class Banktrack(Datasource):
             return bt_tag
         else:
             return cls._generate_tag(og_tag, increment=increment + 1, existing_tags=existing_tags)
+
+    countries = CountryField(
+        multiple=True, help_text="Where the bank offers retails services", blank=True
+    )
+
+    tag = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        editable=True,
+        unique=True,
+        help_text=("Banktrack's own tag, has format bank_of_america",),
+    )
+
+    website = models.URLField(
+        "Website of this entry. i.e. bankofamerica.com", null=True, blank=True
+    )
+
+    description = models.TextField(
+        "Description of this entry", null=True, blank=True, default="-blank-"
+    )

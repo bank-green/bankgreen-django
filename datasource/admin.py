@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db import models
 
+
 from django_admin_listfilter_dropdown.filters import (
     ChoiceDropdownFilter,
     DropdownFilter,
@@ -27,32 +28,21 @@ from .models import (
 
 @admin.register(Datasource)
 class DatasourceAdmin(admin.ModelAdmin):
-    list_display = ["name", "tag", "website", "brand"]
-    search_fields = ["name", "tag", "website"]
-    raw_id_fields = [
-        "subsidiary_of_1",
-        "subsidiary_of_2",
-        "subsidiary_of_3",
-        "subsidiary_of_4",
-        "brand",
-    ]
-    list_filter = (
-        "date_added",
-        ("countries", ChoiceDropdownFilter),
-        ("brand", admin.EmptyFieldListFilter),
-    )
+    list_display = ["name", "source_id"]
+    search_fields = ["name", "source_id"]
+    list_filter = ("created", "modified")
     exclude = ["graphql_country"]
 
 
 @admin.register(Banktrack)
 class BanktrackAdmin(admin.ModelAdmin):
-    list_display = ["name", "tag", "website", "brand"]
+    list_display = ["name", "tag", "website"]
     search_fields = ["name", "tag", "website"]
     # raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4", "brand"]
     # autocomplete_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4", "brand"]
 
     list_filter = (
-        "date_added",
+        "created",
         ("countries", ChoiceDropdownFilter),
         ("brand", admin.EmptyFieldListFilter),
     )
@@ -82,7 +72,7 @@ class BanktrackAdmin(admin.ModelAdmin):
         """
         DateTimeField is not completely disabled by get_form(), so we use this method.
         """
-        return ["date_added", "date_updated"]
+        return ["created", "modified"]
 
     def get_form(self, request, obj=None, **kwargs):
         """

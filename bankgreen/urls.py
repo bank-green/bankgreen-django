@@ -18,7 +18,7 @@ from django.urls import include, path
 
 from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
-from brand.schema import schema
+from schema import schema
 
 
 urlpatterns = [

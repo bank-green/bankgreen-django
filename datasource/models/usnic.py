@@ -1,4 +1,6 @@
 from datetime import datetime, timezone
+from django.db import models
+
 
 import pandas as pd
 
@@ -8,10 +10,6 @@ from datasource.pycountry_utils import pycountries
 
 class Usnic(Datasource):
     """ """
-
-    @classproperty
-    def tag_prepend_str(cls):
-        return cls.__name__.lower() + "_"
 
     @classmethod
     def load_and_create(cls, load_from_api=False):
@@ -25,14 +23,11 @@ class Usnic(Datasource):
             print("Loading Usnic data from API...")
             df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV")
 
-        existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
         num_created = 0
         for i, row in df.iterrows():
             try:
-                num_created, existing_tags = cls._load_or_create_individual_instance(
-                    existing_tags, banks, num_created, row
-                )
+                num_created = cls._load_or_create_individual_instance(banks, num_created, row)
             except Exception as e:
                 print("\n\n===Usnic failed creation or updating===\n\n")
                 print(row)
@@ -40,14 +35,10 @@ class Usnic(Datasource):
         return banks, num_created
 
     @classmethod
-    def _load_or_create_individual_instance(cls, existing_tags, banks, num_created, row):
-        # tag = cls._generate_tag(bt_tag=row.NM_SHORT, existing_tags=existing_tags)
-        tag = cls._generate_tag(og_tag=None, existing_tags=existing_tags, bank=row.NM_LGL)
-
+    def _load_or_create_individual_instance(cls, banks, num_created, row):
         source_id = row.NM_SHORT.lower().strip().replace(" ", "_")
 
         defaults = {
-            "date_updated": datetime.now().replace(tzinfo=timezone.utc),
             # "source_link": row.link,
             "name": row.NM_SHORT,
             "countries": pycountries.get(row.CNTRY_NM.lower(), None),
@@ -70,33 +61,11 @@ class Usnic(Datasource):
         bank, created = Usnic.objects.update_or_create(source_id=source_id, defaults=defaults)
 
         if created:
-            bank.tag = tag
             bank.save()
 
         banks.append(bank)
         num_created += 1 if created else 0
-        existing_tags.add(tag)
-        return num_created, existing_tags
-
-    @classmethod
-    def _generate_tag(cls, og_tag=None, increment=0, existing_tags=None, bank=None):
-
-        if bank:
-            og_tag = bank.lower().strip().replace(" ", "_")
-
-        # memoize existing tags for faster recursion
-        if not existing_tags:
-            existing_tags = {x.tag for x in cls.objects.all()}
-
-        if increment < 1:
-            bt_tag = cls.tag_prepend_str + og_tag
-        else:
-            bt_tag = cls.tag_prepend_str + og_tag + "_" + str(increment).zfill(2)
-
-        if bt_tag not in existing_tags:
-            return bt_tag
-        else:
-            return cls._generate_tag(og_tag, increment=increment + 1, existing_tags=existing_tags)
+        return num_created
 
     @classmethod
     def link_parents(cls):
@@ -127,3 +96,18 @@ class Usnic(Datasource):
                 else:
                     pass
                 child.save()
+
+    rssd = models.CharField(max_length=15, blank=True)
+    rssd_hd = models.CharField(max_length=15, blank=True)
+    cusip = models.CharField(max_length=15, blank=True)
+    thrift = models.CharField(max_length=15, blank=True)
+    thrift_hc = models.CharField(max_length=15, blank=True)
+    aba_prim = models.CharField(max_length=15, blank=True)
+    ncua = models.CharField(max_length=15, blank=True)
+    fdic_cert = models.CharField(max_length=15, blank=True)
+    occ = models.CharField(max_length=15, blank=True)
+    ein = models.CharField(max_length=15, blank=True)
+    lei = models.CharField(max_length=15, blank=True)
+    website = models.URLField(
+        "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
+    )

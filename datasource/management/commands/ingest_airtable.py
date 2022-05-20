@@ -36,10 +36,7 @@ class Command(BaseCommand):
                 continue
 
             # create brands
-            source_link = (
-                f"https://api.airtable.com/v0/{settings.AIRTABLE_BASE_ID}/{table_name}/{row.name}"
-            )
-            brand, brand_created = self.create_brand_from_airtable_row(row, source_link)
+            brand, brand_created = self.create_brand_from_airtable_row(row)
             if brand_created:
                 new_brands.append(brand)
             else:
@@ -159,7 +156,7 @@ class Command(BaseCommand):
             )
         )
 
-    def create_brand_from_airtable_row(self, row, source_link):
+    def create_brand_from_airtable_row(self, row):
 
         defaults = {
             "date_updated": datetime.now().replace(tzinfo=timezone.utc),
@@ -167,7 +164,6 @@ class Command(BaseCommand):
             "countries": row.country,
             "description": row.description,
             "website": row.website,
-            "source_link": source_link,
         }
         # remove any NaN default values (NaN != NaN)
         defaults = {k: v for k, v in defaults.items() if v == v}

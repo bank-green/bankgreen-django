@@ -1,11 +1,14 @@
 import traceback
 from qwikidata.sparql import return_sparql_query_results
+from django.db import models
+from django_countries.fields import CountryField
+
 
 import pandas as pd
 import np
 
 from datasource.models.datasource import Datasource, classproperty
-from .pycountry_util import find_country
+from datasource.local.wikidata.pycountry_util import find_country
 
 
 class Wikidata(Datasource):
@@ -19,10 +22,6 @@ class Wikidata(Datasource):
     These ID's are used for de-duplication of banks.
     """
 
-    @classproperty
-    def tag_prepend_str(cls):
-        return cls.__name__.lower() + "_"
-
     @classmethod
     def load_and_create(cls, load_from_api=False):
         # load from api or from local disk.
@@ -32,7 +31,7 @@ class Wikidata(Datasource):
             df = pd.read_csv("./datasource/local/wikidata/wikidata.csv")
         else:
             print("Loading Wikidata data from API...")
-            with open("./datasource/models/wikidata/query.sparql") as query_file:
+            with open("./datasource/local/wikidata/query.sparql") as query_file:
                 myquery = query_file.read()
             res = return_sparql_query_results(myquery)
             df = pd.json_normalize(res["results"]["bindings"])
@@ -53,7 +52,6 @@ class Wikidata(Datasource):
         df["parent.value"] = df["parent.value"].apply(only_allowed)
 
         # cycle through banks and add them, temporarily ignoring parent relationships
-        existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
         num_created = 0
         bank_values = set(df["bank.value"])
@@ -61,9 +59,7 @@ class Wikidata(Datasource):
             bank_df = df[df["bank.value"] == bank_value]
 
             try:
-                num_created, existing_tags = cls._maybe_create_individual_instance(
-                    existing_tags, banks, num_created, bank_df
-                )
+                num_created = cls._maybe_create_individual_instance(banks, num_created, bank_df)
             except Exception as e:
                 print("\n\n===Wikidata failed creation or updating===\n\n")
                 print(bank_value)
@@ -71,51 +67,35 @@ class Wikidata(Datasource):
                 print(e)
                 traceback.print_exc()
 
-        def add_subsidiary(bank, parent):
-            print(f"adding parent {parent.tag} to child {bank.tag}")
-            if not bank.subsidiary_of_1:
-                bank.subsidiary_of_1 = parent
-                bank.subsidiary_of_1_pct = 100
-                return bank.save()
-            if not bank.subsidiary_of_2:
-                bank.subsidiary_of_2 = parent
-                bank.subsidiary_of_2_pct = 100
-                return bank.save()
-            if not bank.subsidiary_of_3:
-                bank.subsidiary_of_3 = parent
-                bank.subsidiary_of_3_pct = 100
-                return bank.save()
-            if not bank.subsidiary_of_4:
-                bank.subsidiary_of_4 = parent
-                bank.subsidiary_of_4_pct = 100
-                return bank.save()
+        # def add_subsidiary(bank, parent):
+        #     print(f"adding parent {parent.name} to child {bank.name}")
+        #     if not bank.subsidiary_of_1:
+        #         bank.subsidiary_of_1 = parent
+        #         bank.subsidiary_of_1_pct = 100
+        #         return bank.save()
+        #     if not bank.subsidiary_of_2:
+        #         bank.subsidiary_of_2 = parent
+        #         bank.subsidiary_of_2_pct = 100
+        #         return bank.save()
+        #     if not bank.subsidiary_of_3:
+        #         bank.subsidiary_of_3 = parent
+        #         bank.subsidiary_of_3_pct = 100
+        #         return bank.save()
+        #     if not bank.subsidiary_of_4:
+        #         bank.subsidiary_of_4 = parent
+        #         bank.subsidiary_of_4_pct = 100
+        #         return bank.save()
 
-        for bank_obj in Wikidata.objects.all():
-            # also include "owner" column in this
-            bank_df = df[df["bank.value"] == bank_obj.source_id]
-            parent_links = {x for x in set(bank_df["parent.value"]) if x == x}
-            for parent_link in parent_links:
-                parent_objs = Wikidata.objects.filter(source_id=parent_link)
-                if parent_objs.exists():
-                    add_subsidiary(bank_obj, parent_objs[0])
+        # not doing subsidiaries for now
+        # for bank_obj in Wikidata.objects.all():
+        #     # also include "owner" column in this
+        #     bank_df = df[df["bank.value"] == bank_obj.source_id]
+        #     parent_links = {x for x in set(bank_df["parent.value"]) if x == x}
+        #     for parent_link in parent_links:
+        #         parent_objs = Wikidata.objects.filter(source_id=parent_link)
+        #         if parent_objs.exists():
+        #             add_subsidiary(bank_obj, parent_objs[0])
         return banks, num_created
-
-    @classmethod
-    def _generate_tag(cls, wd_tag, increment=0, existing_tags=None):
-        og_tag = wd_tag
-
-        # memoize existing tags for faster recursion
-        if not existing_tags:
-            existing_tags = {x.tag for x in cls.objects.all()}
-        if increment < 1:
-            bt_tag = cls.tag_prepend_str + og_tag
-        else:
-            bt_tag = cls.tag_prepend_str + og_tag + "_" + str(increment).zfill(2)
-
-        if bt_tag not in existing_tags:
-            return bt_tag
-        else:
-            return cls._generate_tag(og_tag, increment=increment + 1, existing_tags=existing_tags)
 
     @classmethod
     def _random_element_or_none(cls, df):
@@ -129,7 +109,7 @@ class Wikidata(Datasource):
         return res
 
     @classmethod
-    def _maybe_create_individual_instance(cls, existing_tags, banks, num_created, df):
+    def _maybe_create_individual_instance(cls, banks, num_created, df):
         """
         Parse a dataframe looking for the bank uri. Extract values from it and instantiate a bank
         if the bank is probably a modern one.
@@ -138,12 +118,7 @@ class Wikidata(Datasource):
         name = cls._random_element_or_none(df["bankLabel.value"])
         if name is None:
             print(f"skipping {link} because it has no name")
-            return num_created, existing_tags
-
-        wd_tag = name.lower().strip().replace(" ", "_")
-
-        # generate tag
-        tag = cls._generate_tag(wd_tag=wd_tag, existing_tags=existing_tags)
+            return num_created
 
         # get the languages of the name
         language = cls._random_element_or_none(df["bankLabel.xml:lang"])
@@ -185,7 +160,7 @@ class Wikidata(Datasource):
             print(
                 f"skipping {link} because it is closed, has no language, or is not in a modern country"
             )
-            return num_created, existing_tags
+            return num_created
 
         defaults = {
             "source_link": link,
@@ -205,10 +180,29 @@ class Wikidata(Datasource):
         print(f"updating or creating {link}")
         bank, created = Wikidata.objects.update_or_create(source_id=link, defaults=defaults)
         if created:
-            bank.tag = tag
             bank.save()
 
         banks.append(bank)
         num_created += 1 if created else 0
-        existing_tags.add(tag)
-        return num_created, existing_tags
+        return num_created
+
+    permid = models.CharField(max_length=15, blank=True)
+    isin = models.CharField(max_length=15, blank=True)
+    viafid = models.CharField(max_length=15, blank=True)
+    lei = models.CharField(max_length=15, blank=True)
+    googleid = models.CharField(max_length=15, blank=True)
+
+    countries = CountryField(
+        multiple=True, help_text="Where the brand offers retails services", blank=True
+    )
+
+    description = models.TextField(
+        "Description of this instance of this brand/data source",
+        null=True,
+        blank=True,
+        default="-blank-",
+    )
+
+    website = models.URLField(
+        "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
+    )

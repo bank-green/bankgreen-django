@@ -5,14 +5,11 @@ import pandas as pd
 
 from datasource.models.datasource import Datasource, classproperty
 from datasource.pycountry_utils import pycountries
+from django_countries.fields import CountryField
 
 
 class Fairfinance(Datasource):
     """ """
-
-    @classproperty
-    def tag_prepend_str(cls):
-        return cls.__name__.lower() + "_"
 
     @classmethod
     def load_and_create(cls, load_from_api=False):
@@ -34,14 +31,11 @@ class Fairfinance(Datasource):
             # df = pd.DataFrame(res["bankprofiles"])
             # df.to_csv("./datasource/local/fairfinance/fairfinance.csv")
 
-        existing_tags = {x.tag for x in cls.objects.all()}
         banks = []
         num_created = 0
         for i, row in df.iterrows():
             try:
-                num_created, existing_tags = cls._load_or_create_individual_instance(
-                    existing_tags, banks, num_created, row
-                )
+                num_created = cls._load_or_create_individual_instance(banks, num_created, row)
             except Exception as e:
                 print("\n\n===Banktrack failed creation or updating===\n\n")
                 print(row)
@@ -49,49 +43,26 @@ class Fairfinance(Datasource):
         return banks, num_created
 
     @classmethod
-    def _load_or_create_individual_instance(cls, existing_tags, banks, num_created, row):
-        tag = cls._generate_tag(og_tag=None, existing_tags=existing_tags, bank=row.Bank)
+    def _load_or_create_individual_instance(cls, banks, num_created, row):
         source_id = row.Bank.lower().strip().replace(" ", "_")
         # from .datasource import Datasource
         # datasources = Datasource.objects.filter(source_id=source_id)
         # for da in datasources:
         #     print(da, da.name, da.source_id, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
 
-        defaults = {
-            "date_updated": datetime.now().replace(tzinfo=timezone.utc),
-            "name": row.Bank,
-            "countries": pycountries.get(row.Countries.lower(), None),
-        }
+        defaults = {"name": row.Bank, "countries": pycountries.get(row.Countries.lower(), None)}
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
 
         bank, created = Fairfinance.objects.update_or_create(source_id=source_id, defaults=defaults)
 
         if created:
-            bank.tag = tag
             bank.save()
 
         banks.append(bank)
         num_created += 1 if created else 0
-        existing_tags.add(tag)
-        return num_created, existing_tags
+        return num_created
 
-    @classmethod
-    def _generate_tag(cls, og_tag=None, increment=0, existing_tags=None, bank=None):
-
-        if bank:
-            og_tag = bank.lower().strip().replace(" ", "_")
-
-        # memoize existing tags for faster recursion
-        if not existing_tags:
-            existing_tags = {x.tag for x in cls.objects.all()}
-
-        if increment < 1:
-            bt_tag = cls.tag_prepend_str + og_tag
-        else:
-            bt_tag = cls.tag_prepend_str + og_tag + "_" + str(increment).zfill(2)
-
-        if bt_tag not in existing_tags:
-            return bt_tag
-        else:
-            return cls._generate_tag(og_tag, increment=increment + 1, existing_tags=existing_tags)
+    countries = CountryField(
+        multiple=True, help_text="Where the bank offers retails services", blank=True
+    )
