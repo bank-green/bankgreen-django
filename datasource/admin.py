@@ -31,7 +31,6 @@ class DatasourceAdmin(admin.ModelAdmin):
     list_display = ["name", "source_id"]
     search_fields = ["name", "source_id"]
     list_filter = ("created", "modified")
-    exclude = ["graphql_country"]
 
 
 @admin.register(Banktrack)
@@ -46,7 +45,6 @@ class BanktrackAdmin(admin.ModelAdmin):
         ("countries", ChoiceDropdownFilter),
         ("brand", admin.EmptyFieldListFilter),
     )
-    exclude = ["graphql_country"]
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """

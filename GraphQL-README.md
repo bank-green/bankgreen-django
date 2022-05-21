@@ -29,19 +29,22 @@ query {
 ## Filter Brand objects by country
 ```
 query {
-  brands(graphqlCountry_Icontains: "In"){
+  brands(countries: "DE") {
     edges {
       node {
-        id,
-        name,
-        website,
+        name
+        countries {
+          name
+          code
+          alpha3
+          numeric
+          iocCode
+        }
       }
     }
   }
 }
 ```
-*There's a Brand field (graphql_country) to query the database with Graphql. Django-countries doesn't play well with GraphQL.
-You can filter ```graphqlCountry_Icontains``` or ```graphqlCountry_Exact```*
 
 ## Get one Brand object
 
