@@ -159,7 +159,6 @@ class Command(BaseCommand):
     def create_brand_from_airtable_row(self, row):
 
         defaults = {
-            "date_updated": datetime.now().replace(tzinfo=timezone.utc),
             "name": row["name"],
             "countries": row.country,
             "description": row.description,

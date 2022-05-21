@@ -96,7 +96,7 @@ class BrandAdmin(admin.ModelAdmin):
     raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
     list_display = ["name", "tag", "number_of_related_datasources", "website"]
     search_fields = ["name", "tag", "website"]
-    readonly_fields = ["related_datasources"]
+    readonly_fields = ["related_datasources", "created", "modified"]
     fields = (
         ("name", "tag", "related_datasources"),
         "description",
@@ -107,7 +107,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("subsidiary_of_3", "subsidiary_of_3_pct"),
         ("subsidiary_of_4", "subsidiary_of_4_pct"),
         # "suggested_datasource",
-        ("date_added", "date_updated"),
+        ("created", "modified"),
     )
 
     inlines = [DatasourceInline, CommentaryInline]
