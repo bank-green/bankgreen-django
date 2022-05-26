@@ -77,7 +77,7 @@ def link_datasources(datasources, datasource_str):
     filtered_datasources = [x for x in datasources if hasattr(x, datasource_str)]
     for ds in filtered_datasources:
         url = reverse("admin:%s_%s_change" % ("datasource", "banktrack"), args=(ds.id,))
-        string_to_show = escape(f"{datasource_str} - . - . - {ds.tag} - . - . - {ds.name}")
+        string_to_show = escape(f"{datasource_str} - . - . - {ds.name}")
         link = format_html(f'<a href="{url}" />{string_to_show}</a>')
         links.append(link)
     return links
@@ -87,7 +87,7 @@ def link_datasources(datasources, datasource_str):
 class BrandAdmin(admin.ModelAdmin):
     @admin.display(description="related_datasources")
     def related_datasources(self, obj):
-        datasources = Datasource.objects.filter(brand=obj)
+        datasources = obj.datasources.all()
         links = []
         for model in model_names:
             links += link_datasources(datasources, model)
@@ -96,7 +96,7 @@ class BrandAdmin(admin.ModelAdmin):
     raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
     list_display = ["name", "tag", "number_of_related_datasources", "website"]
     search_fields = ["name", "tag", "website"]
-    readonly_fields = ["related_datasources"]
+    readonly_fields = ["related_datasources", "created", "modified"]
     fields = (
         ("name", "tag", "related_datasources"),
         "description",
@@ -107,7 +107,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("subsidiary_of_3", "subsidiary_of_3_pct"),
         ("subsidiary_of_4", "subsidiary_of_4_pct"),
         # "suggested_datasource",
-        ("date_added", "date_updated"),
+        ("created", "modified"),
     )
 
     inlines = [DatasourceInline, CommentaryInline]
@@ -121,7 +121,7 @@ class BrandAdmin(admin.ModelAdmin):
         """
         Counting the number of data sources is related to.
         """
-        related_datasources = obj.bank_brand.all().count()
+        related_datasources = obj.datasources.all().count()
         return related_datasources
 
     number_of_related_datasources.short_description = "Nr. Dts"

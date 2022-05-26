@@ -3,6 +3,8 @@ from typing import List, Tuple
 
 from django.db import models
 from django.utils import timezone
+from model_utils.models import TimeStampedModel
+
 
 from django_countries.fields import CountryField
 from Levenshtein import distance as lev
@@ -11,7 +13,7 @@ import datasource.models as dsm
 from datasource.constants import lev_distance, model_names
 
 
-class Brand(models.Model):
+class Brand(TimeStampedModel):
     """
     A "Brand" is the instance shown to the end user.
     Multiple Datasources may be associated with a single brand.
@@ -104,12 +106,6 @@ class Brand(models.Model):
         blank=True,
     )
     subsidiary_of_4_pct = models.IntegerField("percentage owned by subsidiary 4", default=0)
-
-    # metadata
-    date_added = models.DateTimeField(default=timezone.now)
-    date_updated = models.DateTimeField(
-        "Time of last update", default=timezone.now, null=False, editable=True
-    )
 
     def __str__(self):
         return self.tag

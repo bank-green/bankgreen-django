@@ -28,9 +28,8 @@ class Datasource(TimeStampedModel):
     """
 
     # Relationships to brand
-    # TODO: Read Docs on on_delete and adjust models accordingly
     brand = models.ForeignKey(
-        Brand, related_name="bank_brand", null=True, blank=True, on_delete=models.SET_NULL
+        Brand, related_name="datasources", null=True, blank=True, on_delete=models.SET_NULL
     )
 
     name = models.CharField(

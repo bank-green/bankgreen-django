@@ -27,9 +27,8 @@ read_only_fields = {
     "subsidiary_of_3_pct",
     "subsidiary_of_4",
     "subsidiary_of_4_pct",
-    "source_link",
-    "date_added",
-    "date_updated",
+    "created",
+    "modified",
     "brand",
     # "suggested_brands",
 }
