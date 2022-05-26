@@ -6,8 +6,9 @@ from graphene_django.filter import DjangoFilterConnectionField
 from django_countries.graphql.types import Country
 from graphene_django import DjangoListField
 import django_filters
-from django_filters import CharFilter, FilterSet, ChoiceFilter
+from django_filters import CharFilter, FilterSet, ChoiceFilter, BooleanFilter, MultipleChoiceFilter
 from django_countries import countries
+from brand.models.commentary import RatingChoice
 
 from datasource.models.datasource import Datasource
 
@@ -23,21 +24,19 @@ class DatasourceType(DjangoObjectType):
 class BrandFilter(FilterSet):
     choices = tuple(countries)
 
-    countries = ChoiceFilter(field_name="countries", choices=choices, method="filter_countries")
-    headline = CharFilter(field_name="commentary_brand__headline", lookup_expr='contains', method="filter_headline")
-
-    def filter_headline(self, queryset, name, value):
-        print(value)
-        return queryset.filter(commentary_brand__headline__contains=value)
+    country = ChoiceFilter(choices=choices, method="filter_countries")
 
     def filter_countries(self, queryset, name, value):
         print(value)
         return queryset.filter(countries__contains=value)
 
-    
+    rating = MultipleChoiceFilter(field_name="commentary__rating", choices=RatingChoice.choices)
+    top_three_ethical = BooleanFilter(field_name="commentary__top_three_ethical", )
+
+
     class Meta:
         model = Brand
-        fields = ["countries", "headline"]
+        fields = []
 
 
 class BrandType(DjangoObjectType):
