@@ -9,7 +9,6 @@ class BrandTestCase(TestCase):
     def setUp(self):
         self.test_bank = Banktrack.objects.create(
             source_id="unique_source_id",
-            # date_updated=datetime.now(),
             source_link="abc",
             name="test_bank",
             description="test_description",
@@ -45,7 +44,6 @@ class BrandTestCase(TestCase):
 #     def setUp(self):
 #         self.kinged_fred = Banktrack.objects.create(
 #             source_id="kinged_fred",
-#             # date_updated=datetime.now(),
 #             source_link="abc",
 #             name="matched_banktrack",
 #             description="test_description",
