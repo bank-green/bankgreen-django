@@ -107,9 +107,6 @@ class Brand(TimeStampedModel):
     )
     subsidiary_of_4_pct = models.IntegerField("percentage owned by subsidiary 4", default=0)
 
-    # metadata
-    graphql_country = models.CharField(max_length=150, blank=True, null=True)
-
     def __str__(self):
         return self.tag
 
@@ -243,16 +240,3 @@ class Brand(TimeStampedModel):
     #         if lev(bods_name, current_name) <= lev_distance:
     #             suggested_brands_or_datasources.append(bods)
     #     return suggested_brands_or_datasources
-
-    def define_graphql_country(self):
-        countries = []
-        if self.countries:
-            for country in self.countries:
-                countries.append(country.name)
-        else:
-            pass
-        self.graphql_country = countries
-
-    def save(self, *args, **kwargs):
-        self.define_graphql_country()
-        super(Brand, self).save()

@@ -3,6 +3,11 @@ from django_countries.graphql.types import Country
 from graphene import relay
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
+from django_countries.graphql.types import Country
+from graphene_django import DjangoListField
+import django_filters
+from django_filters import CharFilter, FilterSet, ChoiceFilter
+from django_countries import countries
 
 from datasource.models.datasource import Datasource
 
@@ -15,17 +20,31 @@ class DatasourceType(DjangoObjectType):
         interfaces = (relay.Node,)
 
 
-class BrandType(DjangoObjectType):
-    """
-    Don't query countries field when queried with Graphql,
-    instead of it query on graphql_country, this will be a list of Brand countries
-    """
+class BrandFilter(FilterSet):
+    choices = tuple(countries)
+
+    # countries = CharFilter(field_name='countries', method='filter_countries')
+    countries = ChoiceFilter(field_name="countries", choices=choices, method="filter_countries")
+
+    def filter_countries(self, queryset, name, value):
+        print(value)
+        return queryset.filter(countries__contains=value)
 
     class Meta:
         model = Brand
-        exclude = ["countries"]
-        filter_fields = {"graphql_country": ["exact", "icontains"]}
+        fields = ["countries"]
+
+
+class BrandType(DjangoObjectType):
+    """ """
+
+    countries = graphene.List(Country)
+
+    class Meta:
+        model = Brand
+        exclude = []
         interfaces = (relay.Node,)
+        filterset_class = BrandFilter
 
 
 class CommentaryType(DjangoObjectType):
