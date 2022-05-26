@@ -23,16 +23,21 @@ class DatasourceType(DjangoObjectType):
 class BrandFilter(FilterSet):
     choices = tuple(countries)
 
-    # countries = CharFilter(field_name='countries', method='filter_countries')
     countries = ChoiceFilter(field_name="countries", choices=choices, method="filter_countries")
+    headline = CharFilter(field_name="commentary_brand__headline", lookup_expr='contains', method="filter_headline")
+
+    def filter_headline(self, queryset, name, value):
+        print(value)
+        return queryset.filter(commentary_brand__headline__contains=value)
 
     def filter_countries(self, queryset, name, value):
         print(value)
         return queryset.filter(countries__contains=value)
 
+    
     class Meta:
         model = Brand
-        fields = ["countries"]
+        fields = ["countries", "headline"]
 
 
 class BrandType(DjangoObjectType):

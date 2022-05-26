@@ -19,7 +19,7 @@ class Commentary(models.Model):
     # Metadata
     brand = models.OneToOneField(
         Brand,
-        related_name="commentary_brand",
+        related_name="commentary",
         help_text="What brand is this comment associated with?",
         on_delete=models.CASCADE,
     )
