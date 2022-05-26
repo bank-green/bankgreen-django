@@ -35,7 +35,7 @@ class BrandFilter(FilterSet):
 
     class Meta:
         model = Brand
-        fields = []
+        fields = ["tag"]
 
 
 class BrandType(DjangoObjectType):
