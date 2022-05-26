@@ -94,14 +94,16 @@ class BrandAdmin(admin.ModelAdmin):
         return format_html("<br />".join(links))
 
     raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
-    list_display = ["name", "tag", "number_of_related_datasources", "website"]
+    # list_display = ["name", "tag", "number_of_related_datasources", "website"]
     search_fields = ["name", "tag", "website"]
     readonly_fields = ["related_datasources", "created", "modified"]
     fields = (
-        ("name", "tag", "related_datasources"),
-        "description",
-        "website",
-        "countries",
+        ("name", "name_locked"),
+        ("tag", "tag_locked"),
+        ("related_datasources"),
+        ("description", "description_locked"),
+        ("website", "website_locked"),
+        ("countries", "countries_locked"),
         ("subsidiary_of_1", "subsidiary_of_1_pct"),
         ("subsidiary_of_2", "subsidiary_of_2_pct"),
         ("subsidiary_of_3", "subsidiary_of_3_pct"),

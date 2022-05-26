@@ -22,24 +22,28 @@ class Brand(TimeStampedModel):
     """
 
     name = models.CharField(
-        "Name of this brand/data source",
+        "Name of this brand",
         max_length=200,
         null=False,
         blank=False,
         default="-unnamed-",
     )
+    name_locked = models.BooleanField(default=False)
     description = models.TextField(
-        "Description of this instance of this brand/data source",
+        "Description of this instance of this brand",
         null=True,
         blank=True,
         default="-blank-",
     )
+    description_locked = models.BooleanField(default=False)
     website = models.URLField(
-        "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
+        "Website of this brand. i.e. bankofamerica.com", null=True, blank=True
     )
+    website_locked = models.BooleanField(default=False)
     countries = CountryField(
         multiple=True, help_text="Where the brand offers retails services", blank=True
     )
+    countries_locked = models.BooleanField(default=False)
     tag = models.CharField(
         max_length=100,
         null=False,
@@ -47,29 +51,43 @@ class Brand(TimeStampedModel):
         editable=True,
         unique=True,
         help_text=(
-            "the tag we use or this brand/datasource record at Bank.Green. ",
-            "Prepend this with the relevant datasource. i.e. banktrack_bank_of_america. "
-            "for brands, prepend with nothing at all i.e. bank_of_america",
+            "the tag we use or this brand record at Bank.Green. ",
         ),
     )
+    tag_locked = models.BooleanField(default=False)
 
     # unique identifiers
     # These are all institutional identifiers of this entity
     permid = models.CharField(max_length=15, blank=True)
+    permid_locked = models.BooleanField(default=False)
     isin = models.CharField(max_length=15, blank=True)
+    isin_locked = models.BooleanField(default=False)
     viafid = models.CharField(max_length=15, blank=True)
+    viafid_locked = models.BooleanField(default=False)
     lei = models.CharField(max_length=15, blank=True)
+    lei_locked = models.BooleanField(default=False)
     googleid = models.CharField(max_length=15, blank=True)
+    googleid_locked = models.BooleanField(default=False)
     rssd = models.CharField(max_length=15, blank=True)
+    rssd_locked = models.BooleanField(default=False)
     rssd_hd = models.CharField(max_length=15, blank=True)
+    rssd_hd_locked = models.BooleanField(default=False)
     cusip = models.CharField(max_length=15, blank=True)
+    cusip_locked = models.BooleanField(default=False)
     thrift = models.CharField(max_length=15, blank=True)
+    thrift_locked = models.BooleanField(default=False)
     thrift_hc = models.CharField(max_length=15, blank=True)
+    thrift_hc_locked = models.BooleanField(default=False)
     aba_prim = models.CharField(max_length=15, blank=True)
+    aba_prim_locked = models.BooleanField(default=False)
     ncua = models.CharField(max_length=15, blank=True)
+    ncua_locked = models.BooleanField(default=False)
     fdic_cert = models.CharField(max_length=15, blank=True)
+    fdic_cert_locked = models.BooleanField(default=False)
     occ = models.CharField(max_length=15, blank=True)
+    occ_locked = models.BooleanField(default=False)
     ein = models.CharField(max_length=15, blank=True)
+    ein_locked = models.BooleanField(default=False)
 
     # subsidiary information. Subsidiaries should be listed in descending order of ownership
     # i.e. a DataSource A wholly owned by DataSource B would have subsidiary_of_1 set to B, and
