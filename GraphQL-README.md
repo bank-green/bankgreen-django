@@ -11,14 +11,9 @@ query {
         id,
         name,
         tag,
-        commentaryBrand {
+        commentary {
           id,
           rating
-        },
-        datasource {
-          id,
-          name,
-          tag
         }
       }
     }
