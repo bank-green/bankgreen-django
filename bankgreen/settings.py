@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
     # my apps
     "datasource",
     "brand",
@@ -61,7 +60,7 @@ INSTALLED_APPS = [
     "django_countries",
     "django_admin_listfilter_dropdown",
     "django_filters",
-    "corsheaders"
+    "corsheaders",
 ]
 
 MIDDLEWARE = [

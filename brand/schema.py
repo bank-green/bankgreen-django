@@ -31,8 +31,7 @@ class BrandFilter(FilterSet):
         return queryset.filter(countries__contains=value)
 
     rating = MultipleChoiceFilter(field_name="commentary__rating", choices=RatingChoice.choices)
-    top_three_ethical = BooleanFilter(field_name="commentary__top_three_ethical", )
-
+    top_three_ethical = BooleanFilter(field_name="commentary__top_three_ethical")
 
     class Meta:
         model = Brand
