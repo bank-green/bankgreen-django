@@ -46,7 +46,7 @@ class BrandType(DjangoObjectType):
 
     class Meta:
         model = Brand
-        exclude = []
+        fields = ["tag", "name", "website", "countries", "commentary"]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
 
