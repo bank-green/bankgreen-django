@@ -33,7 +33,10 @@ class BrandFilter(FilterSet):
     recommended_only = BooleanFilter(method="filter_recommended_only")
 
     def filter_recommended_only(self, queryset, name, value):
-        return queryset.filter(commentary__top_three_ethical=value).order_by("commentary__recommended_order")
+        return queryset.filter(commentary__top_three_ethical=value).order_by(
+            "commentary__recommended_order"
+        )
+
     class Meta:
         model = Brand
         fields = []
@@ -50,20 +53,22 @@ class BrandNodeType(DjangoObjectType):
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
 
+
 class BrandType(DjangoObjectType):
-    """" """
+    """ " """
+
     countries = graphene.List(Country)
 
     class Meta:
         model = Brand
         # filter_fields = ["tag"]
         fields = ("tag", "name", "website", "countries", "commentary")
-    
 
 
 class CommentaryType(DjangoObjectType):
 
     recommended_in = graphene.List(Country)
+
     class Meta:
         model = Commentary
         filter_fields = [
@@ -81,14 +86,16 @@ class CommentaryType(DjangoObjectType):
         ]
         interfaces = (relay.Node,)
 
+
 class Query(graphene.ObjectType):
     commentary = relay.Node.Field(CommentaryType)
     commentaries = DjangoFilterConnectionField(CommentaryType)
 
     brand = graphene.Field(BrandType, tag=graphene.String())
+
     def resolve_brand(root, info, tag):
         return Brand.objects.get(tag=tag)
-    
+
     brands = DjangoFilterConnectionField(BrandNodeType)
 
 
