@@ -49,7 +49,7 @@ query {
     id,
     name,
     tag,
-    commentaryBrand {
+    commentary {
       id,
       rating
     }
