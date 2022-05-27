@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 from brand.models import Brand, Commentary, RatingChoice
 from datasource.pycountry_utils import pycountries
 
-
 load_dotenv()
 
 
@@ -112,8 +111,8 @@ class Command(BaseCommand):
             "free_checking": row["Free Checking Account Available"],  # bool
             "free_checking_details": row["Free Checking Account Available custom"],
             "interest_rates": row["Interest Rates"],  # str
-            "free_atm_withdrawl": row["Free ATM Withdrawals"],  # bool
-            "free_atm_withdrawl_details": row["Free ATM Withdrawals custom"],  # str
+            "free_atm_withdrawal": row["Free ATM Withdrawals"],  # bool
+            "free_atm_withdrawal_details": row["Free ATM Withdrawals custom"],  # str
             "online_banking": row["Mobile & Online Banking"],  # bool
             "local_branches": row["Branches Available"],  # bool
             "local_branches_details": row["Branches Available custom"],  # str
@@ -169,7 +168,8 @@ class Command(BaseCommand):
 
         # resolve countries
         if defaults.get("countries"):
-            defaults["countries"] = [pycountries.get(country.lower()) for country in row.country]
+            ar = [c[1:-1] for c in row.country[1:-1].split(',')] # parse a string of format ['Denmark','Germany']
+            defaults["countries"] = [pycountries.get(country.lower()) for country in ar]
 
         brand, created = Brand.objects.update_or_create(tag=row.tag, defaults=defaults)
         brand.save()

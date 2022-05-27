@@ -46,7 +46,7 @@ class BrandNodeType(DjangoObjectType):
 
     class Meta:
         model = Brand
-        fields = ["tag", "name", "website", "countries"]
+        fields = ["tag", "name", "website", "countries", "commentary"]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
 
@@ -62,6 +62,8 @@ class BrandType(DjangoObjectType):
 
 
 class CommentaryType(DjangoObjectType):
+
+    recommended_in = graphene.List(Country)
     class Meta:
         model = Commentary
         filter_fields = [
@@ -70,7 +72,7 @@ class CommentaryType(DjangoObjectType):
             "top_three_ethical",
             "checking_saving",
             "free_checking",
-            "free_atm_withdrawl",
+            "free_atm_withdrawal",
             "online_banking",
             "local_branches",
             "mortgage_or_loan",

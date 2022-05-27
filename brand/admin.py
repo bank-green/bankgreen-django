@@ -43,7 +43,7 @@ class CommentaryInline(admin.StackedInline):
                     ("checking_saving_details", "checking_saving"),
                     ("free_checking_details", "free_checking"),
                     ("interest_rates",),
-                    ("free_atm_withdrawl_details", "free_atm_withdrawl"),
+                    ("free_atm_withdrawal_details", "free_atm_withdrawal"),
                     ("local_branches_details", "local_branches", "online_banking"),
                     ("mortgage_or_loan", "deposit_protection"),
                     ("credit_cards_details", "credit_cards"),
