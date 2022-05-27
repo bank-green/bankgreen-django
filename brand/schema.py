@@ -57,7 +57,7 @@ class BrandType(DjangoObjectType):
     class Meta:
         model = Brand
         # filter_fields = ["tag"]
-        fields = ("tag", "name", "countries")
+        fields = ("tag", "name", "website", "countries", "commentary")
     
 
 
