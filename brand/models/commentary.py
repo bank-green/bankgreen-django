@@ -19,7 +19,7 @@ class Commentary(models.Model):
     # Metadata
     brand = models.OneToOneField(
         Brand,
-        related_name="commentary_brand",
+        related_name="commentary",
         help_text="What brand is this comment associated with?",
         on_delete=models.CASCADE,
     )
@@ -132,10 +132,10 @@ class Commentary(models.Model):
         blank=True,
     )
 
-    free_atm_withdrawl = models.BooleanField(
+    free_atm_withdrawal = models.BooleanField(
         help_text="Positive. does the bank offer free ATM withdrawals?", default=False
     )
-    free_atm_withdrawl_details = models.CharField(
+    free_atm_withdrawal_details = models.CharField(
         help_text="Positive. Details on available free ATM withdrawals",
         max_length=50,
         blank=True,
