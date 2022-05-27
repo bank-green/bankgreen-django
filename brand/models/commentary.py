@@ -15,7 +15,7 @@ class RatingChoice(models.TextChoices):
     UNKNOWN = "unknown"
 
 
-class Commentary(models.Model):
+class BrandCommentary(models.Model):
     # Metadata
     brand = models.OneToOneField(
         Brand,
