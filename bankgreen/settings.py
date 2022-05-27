@@ -145,4 +145,6 @@ USERNAME = os.environ.get("USERNAME")
 TOKEN = os.environ.get("TOKEN")
 PASSWORD = os.environ.get("PASSWORD")
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = (
+    os.environ.get("CORS_ALLOWED_ORIGINS").split(" ") if os.environ.get("CORS_ALLOWED_ORIGINS") else []
+)
