@@ -45,7 +45,7 @@ query {
 
 ```
 query {
-  brand(id: "id_of_brand"){
+  brand(tag: "tag_of_brand"){
     id,
     name,
     tag,

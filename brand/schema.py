@@ -27,27 +27,38 @@ class BrandFilter(FilterSet):
     country = ChoiceFilter(choices=choices, method="filter_countries")
 
     def filter_countries(self, queryset, name, value):
-        print(value)
         return queryset.filter(countries__contains=value)
 
     rating = MultipleChoiceFilter(field_name="commentary__rating", choices=RatingChoice.choices)
-    recommended_only = BooleanFilter(field_name="commentary__top_three_ethical")
+    recommended_only = BooleanFilter(method="filter_recommended_only")
 
+    def filter_recommended_only(self, queryset, name, value):
+        return queryset.filter(commentary__top_three_ethical=value).order_by("commentary__recommended_order")
     class Meta:
         model = Brand
-        fields = ["tag"]
+        fields = []
 
 
-class BrandType(DjangoObjectType):
+class BrandNodeType(DjangoObjectType):
     """ """
 
     countries = graphene.List(Country)
 
     class Meta:
         model = Brand
-        fields = ["tag", "name", "website", "countries", "commentary"]
+        fields = ["tag", "name", "website", "countries"]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
+
+class BrandType(DjangoObjectType):
+    """" """
+    countries = graphene.List(Country)
+
+    class Meta:
+        model = Brand
+        # filter_fields = ["tag"]
+        fields = ("tag", "name", "countries")
+    
 
 
 class CommentaryType(DjangoObjectType):
@@ -68,13 +79,15 @@ class CommentaryType(DjangoObjectType):
         ]
         interfaces = (relay.Node,)
 
-
 class Query(graphene.ObjectType):
     commentary = relay.Node.Field(CommentaryType)
     commentaries = DjangoFilterConnectionField(CommentaryType)
 
-    brand = relay.Node.Field(BrandType)
-    brands = DjangoFilterConnectionField(BrandType)
+    brand = graphene.Field(BrandType, tag=graphene.String())
+    def resolve_brand(root, info, tag):
+        return Brand.objects.get(tag=tag)
+    
+    brands = DjangoFilterConnectionField(BrandNodeType)
 
 
 schema = graphene.Schema(query=Query)
