@@ -22,18 +22,11 @@ class Brand(TimeStampedModel):
     """
 
     name = models.CharField(
-        "Name of this brand",
-        max_length=200,
-        null=False,
-        blank=False,
-        default="-unnamed-",
+        "Name of this brand", max_length=200, null=False, blank=False, default="-unnamed-"
     )
     name_locked = models.BooleanField(default=False)
     description = models.TextField(
-        "Description of this instance of this brand",
-        null=True,
-        blank=True,
-        default="-blank-",
+        "Description of this instance of this brand", null=True, blank=True, default="-blank-"
     )
     description_locked = models.BooleanField(default=False)
     website = models.URLField(
@@ -50,9 +43,7 @@ class Brand(TimeStampedModel):
         blank=False,
         editable=True,
         unique=True,
-        help_text=(
-            "the tag we use or this brand record at Bank.Green. ",
-        ),
+        help_text=("the tag we use or this brand record at Bank.Green. ",),
     )
     tag_locked = models.BooleanField(default=False)
 
