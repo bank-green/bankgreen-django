@@ -146,5 +146,7 @@ TOKEN = os.environ.get("TOKEN")
 PASSWORD = os.environ.get("PASSWORD")
 
 CORS_ALLOWED_ORIGINS = (
-    os.environ.get("CORS_ALLOWED_ORIGINS").split(" ") if os.environ.get("CORS_ALLOWED_ORIGINS") else []
+    os.environ.get("CORS_ALLOWED_ORIGINS").split(" ")
+    if os.environ.get("CORS_ALLOWED_ORIGINS")
+    else []
 )
