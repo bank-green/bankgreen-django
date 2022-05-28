@@ -36,7 +36,6 @@ class Brand(TimeStampedModel):
     countries = CountryField(
         multiple=True, help_text="Where the brand offers retails services", blank=True
     )
-    countries_locked = models.BooleanField(default=False)
     tag = models.CharField(
         max_length=100,
         null=False,
@@ -45,7 +44,7 @@ class Brand(TimeStampedModel):
         unique=True,
         help_text=("the tag we use or this brand record at Bank.Green. ",),
     )
-    tag_locked = models.BooleanField(default=False)
+    tag_locked = models.BooleanField(default=True)
 
     # unique identifiers
     # These are all institutional identifiers of this entity
