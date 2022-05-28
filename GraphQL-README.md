@@ -11,14 +11,9 @@ query {
         id,
         name,
         tag,
-        commentaryBrand {
+        commentary {
           id,
           rating
-        },
-        datasource {
-          id,
-          name,
-          tag
         }
       }
     }
@@ -50,11 +45,11 @@ query {
 
 ```
 query {
-  brand(id: "id_of_brand"){
+  brand(tag: "tag_of_brand"){
     id,
     name,
     tag,
-    commentaryBrand {
+    commentary {
       id,
       rating
     }

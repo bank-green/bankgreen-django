@@ -60,9 +60,11 @@ INSTALLED_APPS = [
     "django_countries",
     "django_admin_listfilter_dropdown",
     "django_filters",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -142,3 +144,9 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 USERNAME = os.environ.get("USERNAME")
 TOKEN = os.environ.get("TOKEN")
 PASSWORD = os.environ.get("PASSWORD")
+
+CORS_ALLOWED_ORIGINS = (
+    os.environ.get("CORS_ALLOWED_ORIGINS").split(" ")
+    if os.environ.get("CORS_ALLOWED_ORIGINS")
+    else []
+)
