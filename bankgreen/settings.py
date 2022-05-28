@@ -65,6 +65,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -72,6 +73,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.cache.FetchFromCacheMiddleware"
 ]
 
 ROOT_URLCONF = "bankgreen.urls"
@@ -150,3 +152,5 @@ CORS_ALLOWED_ORIGINS = (
     if os.environ.get("CORS_ALLOWED_ORIGINS")
     else []
 )
+
+CACHE_MIDDLEWARE_SECONDS = 37
