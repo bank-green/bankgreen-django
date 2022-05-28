@@ -103,7 +103,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("related_datasources"),
         ("description", "description_locked"),
         ("website", "website_locked"),
-        ("countries", "countries_locked"),
+        ("countries"),
         ("subsidiary_of_1", "subsidiary_of_1_pct"),
         ("subsidiary_of_2", "subsidiary_of_2_pct"),
         ("subsidiary_of_3", "subsidiary_of_3_pct"),
