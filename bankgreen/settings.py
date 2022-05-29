@@ -150,3 +150,5 @@ CORS_ALLOWED_ORIGINS = (
     if os.environ.get("CORS_ALLOWED_ORIGINS")
     else []
 )
+
+CACHE_MAX_AGE = os.environ.get("CACHE_MAX_AGE")
