@@ -23,5 +23,10 @@ from django.conf import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("graphql", cache_control(max_age=settings.CACHE_MAX_AGE)(GraphQLView.as_view(graphiql=True, schema=schema))),
+    path(
+        "graphql",
+        cache_control(max_age=settings.CACHE_MAX_AGE)(
+            GraphQLView.as_view(graphiql=True, schema=schema)
+        ),
+    ),
 ]
