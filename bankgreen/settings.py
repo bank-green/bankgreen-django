@@ -12,8 +12,14 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
+import django
+from django.utils.encoding import force_str
+
 from dotenv import load_dotenv
 
+
+# this hack is necessary because force_text is removed from django4, but graphene < 3 requires it
+django.utils.encoding.force_text = force_str
 
 """
 The .env file should be on the same dir as this file, that is loaded through load_dotenv().
