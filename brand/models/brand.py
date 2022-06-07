@@ -25,6 +25,12 @@ class Brand(TimeStampedModel):
         "Name of this brand", max_length=200, null=False, blank=False, default="-unnamed-"
     )
     name_locked = models.BooleanField(default=False)
+    aliases = models.CharField(
+        help_text="Other names for the brand, used for search. comma seperated. i.e. BOFA, BOA",
+        max_length=200,
+        null=True,
+        blank=True,
+    )
     description = models.TextField(
         "Description of this instance of this brand", null=True, blank=True, default="-blank-"
     )

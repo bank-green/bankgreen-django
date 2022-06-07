@@ -15,6 +15,9 @@ query {
           id,
           rating
         }
+        features {
+          onlineBanking
+        }
       }
     }
   }
@@ -52,6 +55,9 @@ query {
     commentary {
       id,
       rating
+    }
+    features {
+      onlineBanking
     }
   }
 }
