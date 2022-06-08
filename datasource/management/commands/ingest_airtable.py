@@ -8,6 +8,7 @@ from airtable import Airtable
 from dotenv import load_dotenv
 
 from brand.models import Brand, Commentary, RatingChoice
+from brand.models.features import Features
 from datasource.pycountry_utils import pycountries
 
 load_dotenv()
@@ -27,6 +28,7 @@ class Command(BaseCommand):
         df = self.return_local_or_remote_df(options, table_name)
         new_brands, updated_brands = [], []
         new_commentary, updated_comentary = [], []
+        new_features, updated_features = [], []
 
         for i, row in df.iterrows():
             # for panda reasons, name has to be accessed as a dict. Dot notation will return something else
@@ -48,8 +50,16 @@ class Command(BaseCommand):
             else:
                 updated_comentary.append(commentary)
 
+            # create and associate features
+            features, features_created = self.create_features_from_airtable_row(row, brand)
+            if features_created:
+                new_features.append(features)
+            else:
+                updated_features.append(features)
+
         self.output_creation_or_update(new_brands, updated_brands, Brand)
         self.output_creation_or_update(new_commentary, updated_comentary, Commentary)
+        self.output_creation_or_update(new_features, updated_features, Features)
 
     def return_local_or_remote_df(self, options, table_name):
         load_from_api = True
@@ -72,7 +82,6 @@ class Command(BaseCommand):
         return df
 
     def create_commentary_from_airtable_row(self, row, brand):
-
         rating = row["rating"]
         if rating != rating:
             rating = "unknown"
@@ -91,7 +100,6 @@ class Command(BaseCommand):
             rating = RatingChoice.UNKNOWN
 
         defaults = {
-            "aliases": row.aliases,
             "display_on_website": True,
             "comment": row.Notes,
             "rating": rating,
@@ -106,6 +114,23 @@ class Command(BaseCommand):
             "recommended_order": row["recommended_order"],  # int
             "recommended_in": row["recommended_in"],  # country
             "from_the_website": row["From the website"],  # str
+        }
+        # remove any NaN default values (NaN != NaN)
+        defaults = {k: v for k, v in defaults.items() if v == v}
+
+        # resolve countries
+        if defaults.get("recommended_in"):
+            defaults["recommended_in"] = [
+                pycountries.get(country.lower()) for country in row.country
+            ]
+
+        commentary, created = Commentary.objects.update_or_create(brand=brand, defaults=defaults)
+        commentary.save()
+
+        return commentary, created
+
+    def create_features_from_airtable_row(self, row, brand):
+        defaults = {
             "checking_saving": row["Checking & Savings Accounts"],  # bool
             "checking_saving_details": row["Checking & Savings Accounts custom"],
             "free_checking": row["Free Checking Account Available"],  # bool
@@ -127,20 +152,10 @@ class Command(BaseCommand):
         # remove any NaN default values (NaN != NaN)
         defaults = {k: v for k, v in defaults.items() if v == v}
 
-        # lowercase aliases
-        if aliases := defaults.get("aliases"):
-            defaults["aliases"] = aliases.lower()
+        features, created = Features.objects.update_or_create(brand=brand, defaults=defaults)
+        features.save()
 
-        # resolve countries
-        if defaults.get("recommended_in"):
-            defaults["recommended_in"] = [
-                pycountries.get(country.lower()) for country in row.country
-            ]
-
-        commentary, created = Commentary.objects.update_or_create(brand=brand, defaults=defaults)
-        commentary.save()
-
-        return commentary, created
+        return features, created
 
     def output_creation_or_update(self, new_brands, updated_brands, model_type):
 
@@ -159,12 +174,18 @@ class Command(BaseCommand):
 
         defaults = {
             "name": row["name"],
+            "aliases": row.aliases,
             "countries": row.country,
             "description": row.description,
             "website": row.website,
         }
+
         # remove any NaN default values (NaN != NaN)
         defaults = {k: v for k, v in defaults.items() if v == v}
+
+        # lowercase aliases
+        if aliases := defaults.get("aliases"):
+            defaults["aliases"] = aliases.lower()
 
         # resolve countries
         if defaults.get("countries"):

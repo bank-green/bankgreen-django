@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import escape, format_html
+from brand.models.features import Features
 
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource
@@ -15,7 +16,7 @@ class CommentaryInline(admin.StackedInline):
             "Display Configuration",
             {
                 "fields": (
-                    ("display_on_website", "aliases"),
+                    ("display_on_website",),
                     ("rating", "top_three_ethical"),
                     ("recommended_in", "recommended_order"),
                 )
@@ -35,23 +36,22 @@ class CommentaryInline(admin.StackedInline):
                 )
             },
         ),
-        (
-            "Text used for positively rated banks",
-            {
-                "fields": (
-                    ("from_the_website",),
-                    ("checking_saving_details", "checking_saving"),
-                    ("free_checking_details", "free_checking"),
-                    ("interest_rates",),
-                    ("free_atm_withdrawal_details", "free_atm_withdrawal"),
-                    ("local_branches_details", "local_branches", "online_banking"),
-                    ("mortgage_or_loan", "deposit_protection"),
-                    ("credit_cards_details", "credit_cards"),
-                    ("free_international_card_payment",),
-                )
-            },
-        ),
+        ("Text used for positively rated banks", {"fields": (("from_the_website",),)}),
         ("Meta", {"fields": ("comment",)}),
+    )
+
+
+class FeaturesInline(admin.StackedInline):
+    model = Features
+    fields = (
+        ("checking_saving_details", "checking_saving"),
+        ("free_checking_details", "free_checking"),
+        ("interest_rates",),
+        ("free_atm_withdrawal_details", "free_atm_withdrawal"),
+        ("local_branches_details", "local_branches", "online_banking"),
+        ("mortgage_or_loan", "deposit_protection"),
+        ("credit_cards_details", "credit_cards"),
+        ("free_international_card_payment",),
     )
 
 
@@ -100,6 +100,7 @@ class BrandAdmin(admin.ModelAdmin):
     fields = (
         ("name", "name_locked"),
         ("tag", "tag_locked"),
+        ("aliases"),
         ("related_datasources"),
         ("description", "description_locked"),
         ("website", "website_locked"),
@@ -112,7 +113,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("created", "modified"),
     )
 
-    inlines = [DatasourceInline, CommentaryInline]
+    inlines = [DatasourceInline, CommentaryInline, FeaturesInline]
 
     def get_queryset(self, request):
         # filter out all but base class
