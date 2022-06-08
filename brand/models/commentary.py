@@ -94,7 +94,7 @@ class Commentary(models.Model):
         blank=True,
     )
     recommended_in = CountryField(
-        multiple=True, help_text="Positive. what countries will this bank be recommended in?"
+        multiple=True, help_text="Positive. what countries will this bank be recommended in?", blank=True
     )
     from_the_website = models.TextField(
         help_text="Positive. used to to describe green banks in their own words", blank=True
