@@ -36,7 +36,10 @@ class CommentaryInline(admin.StackedInline):
                 )
             },
         ),
-        ("Text used for positively rated banks", {"fields": (("from_the_website",),)}),
+        (
+            "Text used for positively rated banks",
+            {"fields": (("from_the_website",), ("our_take",))},
+        ),
         ("Meta", {"fields": ("comment",)}),
     )
 

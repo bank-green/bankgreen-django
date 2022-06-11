@@ -102,6 +102,10 @@ class Commentary(models.Model):
         help_text="Positive. used to to describe green banks in their own words", blank=True
     )
 
+    our_take = models.TextField(
+        help_text="Positive. used to to give our take on green banks", blank=True
+    )
+
     def __repr__(self):
         return f"Commentary: {self.brand.tag}"
 
