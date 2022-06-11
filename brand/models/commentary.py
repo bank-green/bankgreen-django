@@ -51,7 +51,7 @@ class Commentary(models.Model):
     )
     top_blurb_subheadline = models.CharField(
         help_text="Positive/Negative. i.e. According to the latest research*, in 2020 your bank was the 4th largest funder...",
-        max_length=300,
+        max_length=500,
         blank=True,
     )
 
@@ -94,7 +94,9 @@ class Commentary(models.Model):
         blank=True,
     )
     recommended_in = CountryField(
-        multiple=True, help_text="Positive. what countries will this bank be recommended in?", blank=True
+        multiple=True,
+        help_text="Positive. what countries will this bank be recommended in?",
+        blank=True,
     )
     from_the_website = models.TextField(
         help_text="Positive. used to to describe green banks in their own words", blank=True
