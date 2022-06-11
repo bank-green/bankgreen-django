@@ -32,6 +32,8 @@ class BrandFilter(FilterSet):
     rating = MultipleChoiceFilter(field_name="commentary__rating", choices=RatingChoice.choices)
     recommended_only = BooleanFilter(method="filter_recommended_only")
 
+    display_on_website = BooleanFilter(field_name="commentary__display_on_website")
+
     def filter_recommended_only(self, queryset, name, value):
         return queryset.filter(commentary__top_three_ethical=value).order_by(
             "commentary__recommended_order"
