@@ -2,7 +2,7 @@ airtable==0.4.8
 black==22.3.0
 isort==5.10.1
 celery==4.0.0
-django==3.2.12
+django==4.0.5
 django-braces==1.15.0
 django-cryptography==1.0
 django-celery-beat==2.0.0
@@ -13,7 +13,7 @@ django-model-utils==4.2.0
 djangorestframework==3.13.1
 django-cors-headers==3.12.0
 networkx==2.5.1
-pandas==1.1.5
+pandas==1.4.2
 pycountry==22.1.10
 python-dotenv==0.19.2
 qwikidata==0.4.0
@@ -24,6 +24,7 @@ django-countries==7.2.1
 gunicorn==20.1.0
 django-admin-list-filter-dropdown==1.0.3
 python-Levenshtein==0.12.2
+graphene==2.1.9
 graphene-django==2.15.0
 django-filter==21.1
 np==1.0.2
