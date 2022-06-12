@@ -1,6 +1,6 @@
 import graphene
 from django_countries.graphql.types import Country
-from graphene import relay
+from graphene import Scalar, relay
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from django_countries.graphql.types import Country
@@ -13,6 +13,8 @@ from brand.models.commentary import RatingChoice
 from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary, Features
+
+from markdown import markdown
 
 
 class DatasourceType(DjangoObjectType):
@@ -65,9 +67,23 @@ class BrandType(DjangoObjectType):
         fields = ("tag", "name", "website", "countries", "commentary", "features")
 
 
+class HtmlFromMarkdown(Scalar):
+    """Markdown parsed into HTML"""
+
+    @staticmethod
+    def serialize(md):
+        extensions = ["markdown_link_attr_modifier"]
+        extension_configs = {"markdown_link_attr_modifier": {"new_tab": "external_only"}}
+        return markdown(md, extensions=extensions, extension_configs=extension_configs)
+
+
 class CommentaryType(DjangoObjectType):
 
     recommended_in = graphene.List(Country)
+    top_blurb_subheadline = HtmlFromMarkdown()
+    snippet_1 = HtmlFromMarkdown()
+    snippet_2 = HtmlFromMarkdown()
+    snippet_3 = HtmlFromMarkdown()
 
     class Meta:
         model = Commentary
