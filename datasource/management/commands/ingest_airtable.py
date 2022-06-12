@@ -114,6 +114,7 @@ class Command(BaseCommand):
             "recommended_in": row["recommended_in"],  # country
             "from_the_website": row["From the website"],  # str
             "our_take": row["Our Take"],
+            "result_page_variation": row["result_page_variation"],
         }
         # remove any NaN default values (NaN != NaN)
         defaults = {k: v for k, v in defaults.items() if v == v}
