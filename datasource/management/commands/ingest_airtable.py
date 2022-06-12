@@ -111,7 +111,6 @@ class Command(BaseCommand):
             "snippet_1_link": row["dirty deals link"],
             "snippet_2": row["dirty deal 2"],
             "top_three_ethical": row["Top 3 Ethical"],  # bool
-            "recommended_order": row["recommended_order"],  # int
             "recommended_in": row["recommended_in"],  # country
             "from_the_website": row["From the website"],  # str
             "our_take": row["Our Take"],

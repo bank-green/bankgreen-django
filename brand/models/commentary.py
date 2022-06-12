@@ -88,11 +88,6 @@ class Commentary(models.Model):
     top_three_ethical = models.BooleanField(
         help_text="Positive. Is this bank recommended best banks of a country page?", default=False
     )
-    recommended_order = models.IntegerField(
-        help_text="Positive. in case there are more recommended banks than can fit on the page, lower numbers are given priority",
-        null=True,
-        blank=True,
-    )
     recommended_in = CountryField(
         multiple=True,
         help_text="Positive. what countries will this bank be recommended in?",
