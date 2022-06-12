@@ -6,7 +6,14 @@ from graphene_django.filter import DjangoFilterConnectionField
 from django_countries.graphql.types import Country
 from graphene_django import DjangoListField
 import django_filters
-from django_filters import CharFilter, FilterSet, ChoiceFilter, BooleanFilter, MultipleChoiceFilter
+from django_filters import (
+    CharFilter,
+    FilterSet,
+    ChoiceFilter,
+    BooleanFilter,
+    MultipleChoiceFilter,
+    OrderingFilter,
+)
 from django_countries import countries
 from brand.models.commentary import RatingChoice
 
@@ -29,7 +36,7 @@ class BrandFilter(FilterSet):
     country = ChoiceFilter(choices=choices, method="filter_countries")
 
     def filter_countries(self, queryset, name, value):
-        return queryset.filter(countries__contains=value)
+        return queryset.filter(countries__contains=value).order_by("name")
 
     rating = MultipleChoiceFilter(field_name="commentary__rating", choices=RatingChoice.choices)
     recommended_only = BooleanFilter(field_name="commentary__top_three_ethical")
