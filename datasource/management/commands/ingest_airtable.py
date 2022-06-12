@@ -190,11 +190,12 @@ class Command(BaseCommand):
 
         # resolve countries
         if ar := defaults.get("countries"):
+            print(ar)
             ar = [
-                c[1:-1] for c in row.country[1:-1].split(",")
+                c[1:-1] for c in row.country[1:-1].split(", ")
             ]  # parse a string of format ['Denmark','Germany']
+            print(ar)
             defaults["countries"] = [pycountries.get(country.lower()) for country in ar]
-            # defaults["countries"] = [pycountries.get(country.lower()) for country in ar]
 
         brand, created = Brand.objects.update_or_create(tag=row.tag, defaults=defaults)
         brand.save()
