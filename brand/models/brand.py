@@ -32,7 +32,7 @@ class Brand(TimeStampedModel):
         blank=True,
     )
     description = models.TextField(
-        "Description of this instance of this brand", null=True, blank=True, default="-blank-"
+        "Description of this instance of this brand", null=True, blank=True, default=""
     )
     description_locked = models.BooleanField(default=False)
     website = models.URLField(

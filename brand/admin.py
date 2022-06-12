@@ -18,7 +18,8 @@ class CommentaryInline(admin.StackedInline):
                 "fields": (
                     ("display_on_website",),
                     ("rating", "top_three_ethical"),
-                    ("recommended_in", "recommended_order"),
+                    ("recommended_in"),
+                    ("result_page_variation"),
                 )
             },
         ),
@@ -36,7 +37,10 @@ class CommentaryInline(admin.StackedInline):
                 )
             },
         ),
-        ("Text used for positively rated banks", {"fields": (("from_the_website",),)}),
+        (
+            "Text used for positively rated banks",
+            {"fields": (("from_the_website",), ("our_take",))},
+        ),
         ("Meta", {"fields": ("comment",)}),
     )
 

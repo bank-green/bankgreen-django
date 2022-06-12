@@ -111,9 +111,10 @@ class Command(BaseCommand):
             "snippet_1_link": row["dirty deals link"],
             "snippet_2": row["dirty deal 2"],
             "top_three_ethical": row["Top 3 Ethical"],  # bool
-            "recommended_order": row["recommended_order"],  # int
             "recommended_in": row["recommended_in"],  # country
             "from_the_website": row["From the website"],  # str
+            "our_take": row["Our Take"],
+            "result_page_variation": row["result page variation"],
         }
         # remove any NaN default values (NaN != NaN)
         defaults = {k: v for k, v in defaults.items() if v == v}
@@ -188,11 +189,12 @@ class Command(BaseCommand):
             defaults["aliases"] = aliases.lower()
 
         # resolve countries
-        if defaults.get("countries"):
+        if ar := defaults.get("countries"):
             ar = [
                 c[1:-1] for c in row.country[1:-1].split(",")
             ]  # parse a string of format ['Denmark','Germany']
             defaults["countries"] = [pycountries.get(country.lower()) for country in ar]
+            # defaults["countries"] = [pycountries.get(country.lower()) for country in ar]
 
         brand, created = Brand.objects.update_or_create(tag=row.tag, defaults=defaults)
         brand.save()
