@@ -18,7 +18,8 @@ class CommentaryInline(admin.StackedInline):
                 "fields": (
                     ("display_on_website",),
                     ("rating", "top_three_ethical"),
-                    ("recommended_in", "recommended_order"),
+                    ("recommended_in"),
+                    ("result_page_variation"),
                 )
             },
         ),
