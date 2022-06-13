@@ -8,6 +8,7 @@ from airtable import Airtable
 from dotenv import load_dotenv
 
 from brand.models import Brand, Commentary, RatingChoice
+from brand.models.commentary import ResultPageVariationChoice
 from brand.models.features import Features
 from datasource.pycountry_utils import pycountries
 
@@ -99,6 +100,21 @@ class Command(BaseCommand):
         else:
             rating = RatingChoice.UNKNOWN
 
+        result_page_variation = ""
+        airtable_result_page_variation = (
+            ""
+            if row["result page variation"] != row["result page variation"]
+            else str(row["result page variation"])
+        )
+        if "ran" in airtable_result_page_variation:
+            result_page_variation = ResultPageVariationChoice.RAN
+        elif "bimpact" in airtable_result_page_variation:
+            result_page_variation = ResultPageVariationChoice.BIMPACT
+        elif "fairfinance" in airtable_result_page_variation:
+            result_page_variation = ResultPageVariationChoice.FAIRFINANCE
+        elif "gabv" in airtable_result_page_variation:
+            result_page_variation = ResultPageVariationChoice.GABV
+
         defaults = {
             "display_on_website": True,
             "comment": row.Notes,
@@ -114,7 +130,7 @@ class Command(BaseCommand):
             "recommended_in": row["recommended_in"],  # country
             "from_the_website": row["From the website"],  # str
             "our_take": row["Our Take"],
-            "result_page_variation": row["result page variation"],
+            "result_page_variation": result_page_variation,
         }
         # remove any NaN default values (NaN != NaN)
         defaults = {k: v for k, v in defaults.items() if v == v}
@@ -190,9 +206,9 @@ class Command(BaseCommand):
 
         # resolve countries
         if ar := defaults.get("countries"):
-            ar = [
-                c[1:-1] for c in row.country[1:-1].split(", ")
-            ]  # parse a string of format ['Denmark','Germany']
+            # ar = [
+            #     c[1:-1] for c in row.country[1:-1].split(", ")
+            # ]  # parse a string of format ['Denmark','Germany']
             defaults["countries"] = [pycountries.get(country.lower()) for country in ar]
 
         brand, created = Brand.objects.update_or_create(tag=row.tag, defaults=defaults)

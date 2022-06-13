@@ -15,6 +15,14 @@ class RatingChoice(models.TextChoices):
     UNKNOWN = "unknown"
 
 
+class ResultPageVariationChoice(models.TextChoices):
+    RAN = "ran"
+    BIMPACT = "bimpact"
+    FAIRFINANCE = "fairfinance"
+    GABV = "gabv"
+    BLANK = ""
+
+
 class Commentary(models.Model):
     # Metadata
     brand = models.OneToOneField(
@@ -104,7 +112,8 @@ class Commentary(models.Model):
         max_length=20,
         help_text="Used to customize how we display the brand result page on the frontend",
         blank=True,
-        default="",
+        choices=ResultPageVariationChoice.choices,
+        default=ResultPageVariationChoice.BLANK,
     )
 
     def __repr__(self):
