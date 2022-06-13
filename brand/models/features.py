@@ -14,7 +14,7 @@ class Features(models.Model):
     )
     checking_saving_details = models.CharField(
         help_text="Positive. Details on available checkings and savings accounts",
-        max_length=50,
+        max_length=100,
         blank=True,
         default="",
     )
@@ -24,14 +24,14 @@ class Features(models.Model):
     )
     free_checking_details = models.CharField(
         help_text="Positive. Details on available free checkings",
-        max_length=50,
+        max_length=100,
         blank=True,
         default="",
     )
 
     interest_rates = models.CharField(
         help_text="Positive. Details about offered interest rates",
-        max_length=50,
+        max_length=100,
         null=True,
         blank=True,
     )
@@ -41,7 +41,7 @@ class Features(models.Model):
     )
     free_atm_withdrawal_details = models.CharField(
         help_text="Positive. Details on available free ATM withdrawals",
-        max_length=50,
+        max_length=100,
         blank=True,
         default="",
     )
@@ -53,21 +53,21 @@ class Features(models.Model):
         help_text="Positive. does the bank offer local branches?", default=False
     )
     local_branches_details = models.CharField(
-        help_text="Positive. Details on local branches", max_length=50, null=True, blank=True
+        help_text="Positive. Details on local branches", max_length=100, null=True, blank=True
     )
 
     mortgage_or_loan = models.BooleanField(
         help_text="Positive. does the bank offer mortgage or loans?", default=False
     )
     deposit_protection = models.CharField(
-        help_text="Positive. Details on deposit protection", max_length=50, null=True, blank=True
+        help_text="Positive. Details on deposit protection", max_length=100, null=True, blank=True
     )
 
     credit_cards = models.BooleanField(
         help_text="Positive. does the bank offer credit cards?", default=False
     )
     credit_cards_details = models.CharField(
-        help_text="Positive. Details on credit cards", max_length=50, null=True, blank=True
+        help_text="Positive. Details on credit cards", max_length=100, null=True, blank=True
     )
 
     free_international_card_payment = models.BooleanField(
@@ -75,7 +75,7 @@ class Features(models.Model):
     )
     free_international_card_payment_details = models.CharField(
         help_text="Positive. Details on free international card payments",
-        max_length=50,
+        max_length=100,
         null=True,
         blank=True,
     )

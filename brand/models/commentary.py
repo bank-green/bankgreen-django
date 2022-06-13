@@ -15,6 +15,14 @@ class RatingChoice(models.TextChoices):
     UNKNOWN = "unknown"
 
 
+class ResultPageVariationChoice(models.TextChoices):
+    RAN = "ran"
+    BIMPACT = "bimpact"
+    FAIRFINANCE = "fairfinance"
+    GABV = "gabv"
+    BLANK = ""
+
+
 class Commentary(models.Model):
     # Metadata
     brand = models.OneToOneField(
@@ -24,7 +32,7 @@ class Commentary(models.Model):
         on_delete=models.CASCADE,
     )
     display_on_website = models.BooleanField(default=False)
-    comment = models.TextField(help_text="Meta. Comments for staff and/or editors")
+    comment = models.TextField(help_text="Meta. Comments for staff and/or editors", blank=True)
     rating = models.CharField(
         max_length=8,
         null=False,
@@ -47,10 +55,12 @@ class Commentary(models.Model):
     top_blurb_headline = models.CharField(
         help_text="Positive/Negative. i.e. Your money is being used to fund the climate crisis at an alarming rate.",
         max_length=200,
+        blank=True,
     )
     top_blurb_subheadline = models.CharField(
         help_text="Positive/Negative. i.e. According to the latest research*, in 2020 your bank was the 4th largest funder...",
-        max_length=300,
+        max_length=500,
+        blank=True,
     )
 
     # Negative Commentary
@@ -86,16 +96,24 @@ class Commentary(models.Model):
     top_three_ethical = models.BooleanField(
         help_text="Positive. Is this bank recommended best banks of a country page?", default=False
     )
-    recommended_order = models.IntegerField(
-        help_text="Positive. in case there are more recommended banks than can fit on the page, lower numbers are given priority",
-        null=True,
+    recommended_in = CountryField(
+        multiple=True,
+        help_text="Positive. what countries will this bank be recommended in?",
         blank=True,
     )
-    recommended_in = CountryField(
-        multiple=True, help_text="Positive. what countries will this bank be recommended in?"
-    )
     from_the_website = models.TextField(
-        help_text="Positive. used to to describe green banks in their own words"
+        help_text="Positive. used to to describe green banks in their own words", blank=True
+    )
+
+    our_take = models.TextField(
+        help_text="Positive. used to to give our take on green banks", blank=True
+    )
+    result_page_variation = models.CharField(
+        max_length=20,
+        help_text="Used to customize how we display the brand result page on the frontend",
+        blank=True,
+        choices=ResultPageVariationChoice.choices,
+        default=ResultPageVariationChoice.BLANK,
     )
 
     def __repr__(self):

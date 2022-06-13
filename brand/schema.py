@@ -1,18 +1,27 @@
 import graphene
 from django_countries.graphql.types import Country
-from graphene import relay
+from graphene import Scalar, relay
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from django_countries.graphql.types import Country
 from graphene_django import DjangoListField
 import django_filters
-from django_filters import CharFilter, FilterSet, ChoiceFilter, BooleanFilter, MultipleChoiceFilter
+from django_filters import (
+    CharFilter,
+    FilterSet,
+    ChoiceFilter,
+    BooleanFilter,
+    MultipleChoiceFilter,
+    OrderingFilter,
+)
 from django_countries import countries
 from brand.models.commentary import RatingChoice
 
 from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary, Features
+
+from markdown import markdown
 
 
 class DatasourceType(DjangoObjectType):
@@ -27,15 +36,12 @@ class BrandFilter(FilterSet):
     country = ChoiceFilter(choices=choices, method="filter_countries")
 
     def filter_countries(self, queryset, name, value):
-        return queryset.filter(countries__contains=value)
+        return queryset.filter(countries__contains=value).order_by("name")
 
     rating = MultipleChoiceFilter(field_name="commentary__rating", choices=RatingChoice.choices)
-    recommended_only = BooleanFilter(method="filter_recommended_only")
+    recommended_only = BooleanFilter(field_name="commentary__top_three_ethical")
 
-    def filter_recommended_only(self, queryset, name, value):
-        return queryset.filter(commentary__top_three_ethical=value).order_by(
-            "commentary__recommended_order"
-        )
+    display_on_website = BooleanFilter(field_name="commentary__display_on_website")
 
     class Meta:
         model = Brand
@@ -65,9 +71,23 @@ class BrandType(DjangoObjectType):
         fields = ("tag", "name", "website", "countries", "commentary", "features")
 
 
+class HtmlFromMarkdown(Scalar):
+    """Markdown parsed into HTML"""
+
+    @staticmethod
+    def serialize(md):
+        extensions = ["markdown_link_attr_modifier"]
+        extension_configs = {"markdown_link_attr_modifier": {"new_tab": "external_only"}}
+        return markdown(md, extensions=extensions, extension_configs=extension_configs)
+
+
 class CommentaryType(DjangoObjectType):
 
     recommended_in = graphene.List(Country)
+    top_blurb_subheadline = HtmlFromMarkdown()
+    snippet_1 = HtmlFromMarkdown()
+    snippet_2 = HtmlFromMarkdown()
+    snippet_3 = HtmlFromMarkdown()
 
     class Meta:
         model = Commentary
