@@ -158,3 +158,6 @@ CORS_ALLOWED_ORIGINS = (
 )
 
 CACHE_MAX_AGE = os.environ.get("CACHE_MAX_AGE")
+
+# lets us pull all banks at once without pagination
+GRAPHENE = {"RELAY_CONNECTION_MAX_LIMIT": 10000}
