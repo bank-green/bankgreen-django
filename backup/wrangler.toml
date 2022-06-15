@@ -1,0 +1,12 @@
+main = "index.js"
+name = "backup"
+compatibility_date = "2022-06-14"
+
+account_id = "da91c829ac8af580f94d51a6fbdc725b"
+workers_dev = true
+
+
+[[r2_buckets]]
+binding = 'BACKUPS' # <~ valid JavaScript variable name
+bucket_name = 'backups'
+preview_bucket_name = 'preview-backups'
