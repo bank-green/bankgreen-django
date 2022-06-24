@@ -16,7 +16,7 @@ class CommentaryInline(admin.StackedInline):
             "Display Configuration",
             {
                 "fields": (
-                    ("display_on_website",),
+                    ("display_on_website", "fossil_free_alliance"),
                     ("rating", "top_three_ethical"),
                     ("recommended_in"),
                     ("result_page_variation"),
