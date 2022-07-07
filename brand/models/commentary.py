@@ -40,6 +40,9 @@ class Commentary(models.Model):
         choices=RatingChoice.choices,
         default=RatingChoice.UNKNOWN,
     )
+    fossil_free_alliance = models.BooleanField(
+        default=False, help_text="Is this brand in the fossil free alliance?"
+    )
 
     # Neutral Commentary
     unique_statement = models.CharField(
