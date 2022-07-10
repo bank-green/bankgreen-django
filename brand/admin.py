@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import escape, format_html
-from brand.models.features import Features
+from brand.models.features import BrandFeature, FeatureType
 
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource
@@ -45,18 +45,9 @@ class CommentaryInline(admin.StackedInline):
     )
 
 
-class FeaturesInline(admin.StackedInline):
-    model = Features
-    fields = (
-        ("checking_saving_details", "checking_saving"),
-        ("free_checking_details", "free_checking"),
-        ("interest_rates",),
-        ("free_atm_withdrawal_details", "free_atm_withdrawal"),
-        ("local_branches_details", "local_branches", "online_banking"),
-        ("mortgage_or_loan", "deposit_protection"),
-        ("credit_cards_details", "credit_cards"),
-        ("free_international_card_payment",),
-    )
+class BrandFeaturesInline(admin.StackedInline):
+    model = BrandFeature
+    fields = (("feature", "offered", "details", "applicable_countries"),)
 
 
 # @admin.display(description='Name')
@@ -85,6 +76,12 @@ def link_datasources(datasources, datasource_str):
         link = format_html(f'<a href="{url}" />{string_to_show}</a>')
         links.append(link)
     return links
+
+
+@admin.register(FeatureType)
+class BrandFeatureAdmin(admin.ModelAdmin):
+    search_fields = ("name", "description")
+    list_display = ("name", "description")
 
 
 @admin.register(Brand)
@@ -117,7 +114,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("created", "modified"),
     )
 
-    inlines = [DatasourceInline, CommentaryInline, FeaturesInline]
+    inlines = [DatasourceInline, CommentaryInline, BrandFeaturesInline]
 
     def get_queryset(self, request):
         # filter out all but base class
