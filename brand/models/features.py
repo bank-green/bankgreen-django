@@ -1,8 +1,11 @@
 from django.db import models
 from brand.models import Brand
+from django_countries.fields import CountryField
 
 
 class Features(models.Model):
+    """DEPRECATED. SHOULD BE REMOVED IN NEXT MIGRATION"""
+
     brand = models.OneToOneField(
         Brand,
         related_name="features",
@@ -77,5 +80,51 @@ class Features(models.Model):
         help_text="Positive. Details on free international card payments",
         max_length=100,
         null=True,
+        blank=True,
+    )
+
+
+class FeatureType(models.Model):
+    name = models.CharField(
+        max_length=40, help_text="i.e. Free Checking account, Credit Card, etc."
+    )
+    description = models.TextField(help_text="Description about this feature type")
+
+    def __str__(self):
+        return self.name
+
+
+class FeatureAvailabilityChoice(models.TextChoices):
+    YES = ("Yes",)
+    NO = ("NO",)
+    SOMEWHAT = ("Somewhat",)
+    MAYBE = ("Maybe",)
+    UNKNOWN = ("Unknown",)
+    NOT_APPLICABLE = ("N/A",)
+
+
+class BrandFeature(models.Model):
+    brand = models.ForeignKey(
+        Brand, related_name="bank_features", null=False, blank=False, on_delete=models.CASCADE
+    )
+
+    feature = models.ForeignKey(
+        FeatureType, related_name="feature_type", null=False, blank=False, on_delete=models.CASCADE
+    )
+
+    offered = models.CharField(
+        max_length=16,
+        choices=FeatureAvailabilityChoice.choices,
+        default=FeatureAvailabilityChoice.NOT_APPLICABLE,
+        help_text="Is the feature offered?",
+    )
+
+    details = models.CharField(
+        max_length=100, null=True, blank=True, help_text="Details about the feature"
+    )
+
+    applicable_countries = CountryField(
+        multiple=True,
+        help_text="In what countries is this feature and description relevant?",
         blank=True,
     )
