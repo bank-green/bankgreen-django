@@ -95,12 +95,10 @@ class FeatureType(models.Model):
 
 
 class FeatureAvailabilityChoice(models.TextChoices):
-    YES = ("Yes",)
-    NO = ("NO",)
-    SOMEWHAT = ("Somewhat",)
-    MAYBE = ("Maybe",)
-    UNKNOWN = ("Unknown",)
-    NOT_APPLICABLE = ("N/A",)
+    YES = "Yes"
+    NO = "No"
+    MAYBE = "Maybe"
+    NOT_APPLICABLE = "N/A"
 
 
 class BrandFeature(models.Model):
@@ -121,10 +119,4 @@ class BrandFeature(models.Model):
 
     details = models.CharField(
         max_length=100, null=True, blank=True, help_text="Details about the feature"
-    )
-
-    applicable_countries = CountryField(
-        multiple=True,
-        help_text="In what countries is this feature and description relevant?",
-        blank=True,
     )

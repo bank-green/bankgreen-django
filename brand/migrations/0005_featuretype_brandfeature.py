@@ -78,7 +78,7 @@ def migrate_existing_feature_data(apps, schema_editor):
                 brand=feature.brand,
                 applicable_countries=brand.countries,
                 feature=ft_free_checking,
-                offered=FeatureAvailabilityChoice.SOMEWHAT,
+                offered=FeatureAvailabilityChoice.MAYBE,
                 details=feature.free_checking_details,
             )
 
@@ -174,9 +174,8 @@ class Migration(migrations.Migration):
             name='BrandFeature',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('offered', models.CharField(choices=[('Yes', 'Yes'), ('NO', 'No'), ('Somewhat', 'Somewhat'), ('Maybe', 'Maybe'), ('Unknown', 'Unknown'), ('N/A', 'Not Applicable')], default='N/A', help_text='Is the feature offered?', max_length=16)),
+                ('offered', models.CharField(choices=[('Yes', 'Yes'), ('No', 'No'), ('Maybe', 'Maybe'), ('N/A', 'Not Applicable')], default='N/A', help_text='Is the feature offered?', max_length=16)),
                 ('details', models.CharField(blank=True, help_text='Details about the feature', max_length=100, null=True)),
-                ('applicable_countries', django_countries.fields.CountryField(blank=True, help_text='In what countries is this feature and description relevant?', max_length=746, multiple=True)),
                 ('brand', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bank_features', to='brand.brand')),
                 ('feature', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='feature_type', to='brand.featuretype')),
             ],
