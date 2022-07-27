@@ -8,11 +8,16 @@ import django_countries.fields
 
 def migrate_existing_feature_data(apps, schema_editor):
     try:
-        from brand.models.features import (BrandFeature,
-                                           FeatureAvailabilityChoice, Features,
-                                           FeatureType)
+        from brand.models.features import (
+            BrandFeature,
+            FeatureAvailabilityChoice,
+            Features,
+            FeatureType,
+        )
     except (ImportError, ModuleNotFoundError):
-        print("Could not import required models for feature migration. Migrating models but not data.")
+        print(
+            "Could not import required models for feature migration. Migrating models but not data."
+        )
         return None
 
     ft_checking = FeatureType.objects.get_or_create(
@@ -59,7 +64,6 @@ def migrate_existing_feature_data(apps, schema_editor):
         if feature.checking_saving:
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_checking,
                 offered=FeatureAvailabilityChoice.YES,
                 details=feature.checking_saving_details,
@@ -67,7 +71,6 @@ def migrate_existing_feature_data(apps, schema_editor):
 
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_saving,
                 offered=FeatureAvailabilityChoice.YES,
                 details=feature.checking_saving_details,
@@ -76,7 +79,6 @@ def migrate_existing_feature_data(apps, schema_editor):
         if feature.free_checking:
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_free_checking,
                 offered=FeatureAvailabilityChoice.MAYBE,
                 details=feature.free_checking_details,
@@ -85,7 +87,6 @@ def migrate_existing_feature_data(apps, schema_editor):
         if feature.interest_rates != "":
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_interest_rates,
                 offered=FeatureAvailabilityChoice.NOT_APPLICABLE,
                 details=feature.interest_rates,
@@ -94,7 +95,6 @@ def migrate_existing_feature_data(apps, schema_editor):
         if feature.free_atm_withdrawal:
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_free_atm_withdrawal,
                 offered=FeatureAvailabilityChoice.YES,
                 details=feature.free_atm_withdrawal_details,
@@ -103,7 +103,6 @@ def migrate_existing_feature_data(apps, schema_editor):
         if feature.online_banking:
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_online_banking,
                 offered=FeatureAvailabilityChoice.YES,
                 details="",
@@ -112,7 +111,6 @@ def migrate_existing_feature_data(apps, schema_editor):
         if feature.local_branches:
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_local_branches,
                 offered=FeatureAvailabilityChoice.YES,
                 details=feature.local_branches_details,
@@ -121,34 +119,30 @@ def migrate_existing_feature_data(apps, schema_editor):
         if feature.mortgage_or_loan:
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_mortgage_or_loans,
                 offered=FeatureAvailabilityChoice.YES,
                 details="",
             )
-        
+
         if feature.deposit_protection != "":
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_deposit_protection,
                 offered=FeatureAvailabilityChoice.YES,
                 details=feature.deposit_protection,
             )
-        
+
         if feature.credit_cards != "":
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_credit_cards,
                 offered=FeatureAvailabilityChoice.YES,
                 details=feature.credit_cards_details,
             )
-        
+
         if feature.free_international_card_payment:
             BrandFeature.objects.get_or_create(
                 brand=feature.brand,
-                applicable_countries=brand.countries,
                 feature=ft_international_card_payment,
                 offered=FeatureAvailabilityChoice.YES,
                 details=feature.free_international_card_payment_details,
@@ -157,27 +151,72 @@ def migrate_existing_feature_data(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('brand', '0004_commentary_fossil_free_alliance'),
-    ]
+    dependencies = [("brand", "0004_commentary_fossil_free_alliance")]
 
     operations = [
         migrations.CreateModel(
-            name='FeatureType',
+            name="FeatureType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='i.e. Free Checking account, Credit Card, etc.', max_length=40)),
-                ('description', models.TextField(help_text='Description about this feature type')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        help_text="i.e. Free Checking account, Credit Card, etc.", max_length=40
+                    ),
+                ),
+                ("description", models.TextField(help_text="Description about this feature type")),
             ],
         ),
         migrations.CreateModel(
-            name='BrandFeature',
+            name="BrandFeature",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('offered', models.CharField(choices=[('Yes', 'Yes'), ('No', 'No'), ('Maybe', 'Maybe'), ('N/A', 'Not Applicable')], default='N/A', help_text='Is the feature offered?', max_length=16)),
-                ('details', models.CharField(blank=True, help_text='Details about the feature', max_length=100, null=True)),
-                ('brand', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bank_features', to='brand.brand')),
-                ('feature', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='feature_type', to='brand.featuretype')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "offered",
+                    models.CharField(
+                        choices=[
+                            ("Yes", "Yes"),
+                            ("No", "No"),
+                            ("Maybe", "Maybe"),
+                            ("N/A", "Not Applicable"),
+                        ],
+                        default="N/A",
+                        help_text="Is the feature offered?",
+                        max_length=16,
+                    ),
+                ),
+                (
+                    "details",
+                    models.CharField(
+                        blank=True, help_text="Details about the feature", max_length=100, null=True
+                    ),
+                ),
+                (
+                    "brand",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="bank_features",
+                        to="brand.brand",
+                    ),
+                ),
+                (
+                    "feature",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="feature_type",
+                        to="brand.featuretype",
+                    ),
+                ),
             ],
         ),
         migrations.RunPython(code=migrate_existing_feature_data),
