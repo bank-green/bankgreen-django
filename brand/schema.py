@@ -55,7 +55,7 @@ class BrandNodeType(DjangoObjectType):
 
     class Meta:
         model = Brand
-        fields = ["tag", "name", "website", "countries", "commentary", "bank_features"]
+        fields = ["tag", "name", "website", "countries", "commentary", "features", "bank_features"]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
 
