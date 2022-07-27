@@ -19,7 +19,7 @@ from brand.models.commentary import RatingChoice
 
 from datasource.models.datasource import Datasource
 
-from .models import Brand, Commentary, Features
+from .models import Brand, Commentary, Features, BrandFeature, FeatureType
 
 from markdown import markdown
 
@@ -55,7 +55,7 @@ class BrandNodeType(DjangoObjectType):
 
     class Meta:
         model = Brand
-        fields = ["tag", "name", "website", "countries", "commentary", "features"]
+        fields = ["tag", "name", "website", "countries", "commentary", "bank_features"]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
 
@@ -68,7 +68,7 @@ class BrandType(DjangoObjectType):
     class Meta:
         model = Brand
         # filter_fields = ["tag"]
-        fields = ("tag", "name", "website", "countries", "commentary", "features")
+        fields = ("tag", "name", "website", "countries", "commentary", "features", "bank_features")
 
 
 class HtmlFromMarkdown(Scalar):
@@ -109,6 +109,18 @@ class FeaturesType(DjangoObjectType):
             "free_international_card_payment",
         ]
         interfaces = (relay.Node,)
+
+
+class FeatureTypeType(DjangoObjectType):
+    class Meta:
+        model = FeatureType
+        fields = "__all__"
+
+
+class BrandFeatureType(DjangoObjectType):
+    class Meta:
+        model = BrandFeature
+        fields = "__all__"
 
 
 class Query(graphene.ObjectType):
