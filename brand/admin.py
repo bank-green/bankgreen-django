@@ -47,7 +47,7 @@ class CommentaryInline(admin.StackedInline):
 
 class BrandFeaturesInline(admin.StackedInline):
     model = BrandFeature
-    fields = (("feature", "offered", "details", "applicable_countries"),)
+    fields = (("feature", "offered", "details"),)
 
 
 # @admin.display(description='Name')
