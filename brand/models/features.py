@@ -106,9 +106,7 @@ class BrandFeature(models.Model):
         Brand, related_name="bank_features", null=False, blank=False, on_delete=models.CASCADE
     )
 
-    feature = models.ForeignKey(
-        FeatureType, related_name="feature_type", null=False, blank=False, on_delete=models.CASCADE
-    )
+    feature = models.ForeignKey(FeatureType, null=False, blank=False, on_delete=models.CASCADE)
 
     offered = models.CharField(
         max_length=16,
@@ -120,3 +118,10 @@ class BrandFeature(models.Model):
     details = models.CharField(
         max_length=100, null=True, blank=True, help_text="Details about the feature"
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["feature", "brand"], name="unique_feature_implementation_per_bank"
+            )
+        ]
