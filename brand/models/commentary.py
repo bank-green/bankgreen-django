@@ -1,5 +1,6 @@
 from enum import Enum
 
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from django_countries.fields import CountryField
@@ -32,6 +33,7 @@ class Commentary(models.Model):
         on_delete=models.CASCADE,
     )
     display_on_website = models.BooleanField(default=False)
+    number_of_requests = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     comment = models.TextField(help_text="Meta. Comments for staff and/or editors", blank=True)
     rating = models.CharField(
         max_length=8,
