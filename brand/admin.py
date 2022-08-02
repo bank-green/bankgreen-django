@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import escape, format_html
@@ -7,6 +8,11 @@ from datasource.constants import model_names
 from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary
+
+from django_countries import fields
+from django.contrib.admin.widgets import FilteredSelectMultiple
+
+from django.db import models
 
 
 class CommentaryInline(admin.StackedInline):
@@ -84,8 +90,15 @@ class BrandFeatureAdmin(admin.ModelAdmin):
     list_display = ("name", "description")
 
 
+class CountriesWidgetOverrideForm(forms.ModelForm):
+    class Meta:
+        widgets = {"countries": FilteredSelectMultiple("countries", is_stacked=False)}
+
+
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
+    form = CountriesWidgetOverrideForm
+
     @admin.display(description="related_datasources")
     def related_datasources(self, obj):
         datasources = obj.datasources.all()
