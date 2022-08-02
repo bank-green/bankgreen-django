@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import escape, format_html
@@ -8,9 +9,19 @@ from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary
 
+from django.contrib.admin.widgets import FilteredSelectMultiple
+
+from django.db import models
+
+
+class RecommendedInOverrideForm(forms.ModelForm):
+    class Meta:
+        widgets = {"recommended_in": FilteredSelectMultiple("recommended_in", is_stacked=False)}
+
 
 class CommentaryInline(admin.StackedInline):
     model = Commentary
+    form = RecommendedInOverrideForm
     fieldsets = (
         (
             "Display Configuration",
@@ -80,12 +91,20 @@ def link_datasources(datasources, datasource_str):
 
 @admin.register(FeatureType)
 class BrandFeatureAdmin(admin.ModelAdmin):
+
     search_fields = ("name", "description")
     list_display = ("name", "description")
 
 
+class CountriesWidgetOverrideForm(forms.ModelForm):
+    class Meta:
+        widgets = {"countries": FilteredSelectMultiple("countries", is_stacked=False)}
+
+
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
+    form = CountriesWidgetOverrideForm
+
     @admin.display(description="related_datasources")
     def related_datasources(self, obj):
         datasources = obj.datasources.all()
