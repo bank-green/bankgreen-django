@@ -9,7 +9,6 @@ from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary
 
-from django_countries import fields
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from django.db import models
