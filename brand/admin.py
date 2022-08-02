@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import escape, format_html
-from brand.models.features import BrandFeature, FeatureType
 
+from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource
 
@@ -16,7 +16,7 @@ class CommentaryInline(admin.StackedInline):
             "Display Configuration",
             {
                 "fields": (
-                    ("display_on_website", "fossil_free_alliance"),
+                    ("display_on_website", "fossil_free_alliance", "number_of_requests"),
                     ("rating", "top_three_ethical"),
                     ("recommended_in"),
                     ("result_page_variation"),
@@ -113,6 +113,14 @@ class BrandAdmin(admin.ModelAdmin):
         # "suggested_datasource",
         ("created", "modified"),
     )
+    list_filter = (
+        "commentary__display_on_website",
+        "commentary__rating",
+        "commentary__number_of_requests",
+        "commentary__top_three_ethical",
+    )
+    list_display = ("short_name", "short_tag", "website")
+    list_per_page = 800
 
     inlines = [DatasourceInline, CommentaryInline, BrandFeaturesInline]
 

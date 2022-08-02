@@ -1,16 +1,17 @@
-import re
 from typing import List, Tuple
 
 from django.db import models
+from django.template.defaultfilters import truncatechars
 from django.utils import timezone
-from model_utils.models import TimeStampedModel
-
 
 from django_countries.fields import CountryField
-from Levenshtein import distance as lev
+from model_utils.models import TimeStampedModel
 
 import datasource.models as dsm
 from datasource.constants import lev_distance, model_names
+
+
+# from Levenshtein import distance as lev
 
 
 class Brand(TimeStampedModel):
@@ -24,6 +25,15 @@ class Brand(TimeStampedModel):
     name = models.CharField(
         "Name of this brand", max_length=200, null=False, blank=False, default="-unnamed-"
     )
+
+    @property
+    def short_name(self):
+        return truncatechars(self.name, 50)
+
+    @property
+    def short_tag(self):
+        return truncatechars(self.tag, 50)
+
     name_locked = models.BooleanField(default=False)
     aliases = models.CharField(
         help_text="Other names for the brand, used for search. comma seperated. i.e. BOFA, BOA",
