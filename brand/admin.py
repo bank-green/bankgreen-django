@@ -15,8 +15,14 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db import models
 
 
+class RecommendedInOverrideForm(forms.ModelForm):
+    class Meta:
+        widgets = {"recommended_in": FilteredSelectMultiple("recommended_in", is_stacked=False)}
+
+
 class CommentaryInline(admin.StackedInline):
     model = Commentary
+    form = RecommendedInOverrideForm
     fieldsets = (
         (
             "Display Configuration",
@@ -86,6 +92,7 @@ def link_datasources(datasources, datasource_str):
 
 @admin.register(FeatureType)
 class BrandFeatureAdmin(admin.ModelAdmin):
+
     search_fields = ("name", "description")
     list_display = ("name", "description")
 
