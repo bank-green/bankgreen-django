@@ -45,6 +45,7 @@ class CommentaryInline(admin.StackedInline):
                     ("snippet_1", "snippet_1_link"),
                     ("snippet_2", "snippet_2_link"),
                     ("snippet_3", "snippet_3_link"),
+                    ("amount_financed_since_2016"),
                 )
             },
         ),
