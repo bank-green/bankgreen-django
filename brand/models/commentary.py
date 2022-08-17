@@ -97,6 +97,14 @@ class Commentary(models.Model):
         help_text="link to dirty deal 3 detauls", blank=True, default=""
     )
 
+    amount_financed_since_2016 = models.CharField(
+        max_length=150,
+        help_text="Negative. Amount of fossil fuel investment the brand has financed since the paris accord, i.e. $382 billion USD",
+        blank=True,
+        null=True,
+        default=None,
+    )
+
     # Positive Commentary
     top_three_ethical = models.BooleanField(
         help_text="Positive. Is this bank recommended best banks of a country page?", default=False
