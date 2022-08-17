@@ -13,6 +13,8 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from django.db import models
 
+from cities_light.forms import RegionForm
+from cities_light.models import Country
 
 class RecommendedInOverrideForm(forms.ModelForm):
     class Meta:
@@ -96,11 +98,18 @@ class BrandFeatureAdmin(admin.ModelAdmin):
     search_fields = ("name", "description")
     list_display = ("name", "description")
 
-
 class CountriesWidgetOverrideForm(forms.ModelForm):
     class Meta:
-        widgets = {"countries": FilteredSelectMultiple("countries", is_stacked=False)}
-
+        widgets = {
+            "countries": FilteredSelectMultiple("countries", is_stacked=False),
+            # Selecting for Canada here for now, need to figure out how to 
+            # dyanmically limit the list of regions based on value(s) of 
+            # countries atribute
+            "regions": FilteredSelectMultiple(
+                "regions", is_stacked=False, 
+                choices=Country.objects.get(name='Canada').region_set
+            )
+        }
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
@@ -126,6 +135,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("description"),
         ("website"),
         ("countries"),
+        ("regions"),
         ("subsidiary_of_1", "subsidiary_of_1_pct"),
         ("subsidiary_of_2", "subsidiary_of_2_pct"),
         ("subsidiary_of_3", "subsidiary_of_3_pct"),

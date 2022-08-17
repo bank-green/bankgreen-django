@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "django_admin_listfilter_dropdown",
     "django_filters",
     "corsheaders",
+    "cities_light"
 ]
 
 MIDDLEWARE = [
@@ -161,3 +162,5 @@ CACHE_MAX_AGE = os.environ.get("CACHE_MAX_AGE")
 
 # lets us pull all banks at once without pagination
 GRAPHENE = {"RELAY_CONNECTION_MAX_LIMIT": 10000}
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['en']

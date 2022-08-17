@@ -35,6 +35,8 @@ You should *call* them in settings.py and then import them like settings.KEYWORD
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py collectstatic
+python manage.py refresh_datasources banktrack --local all
+python manage.py ingest_airtable --local all 
 python manage.py runserver
 ```
 
