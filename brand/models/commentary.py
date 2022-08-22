@@ -59,7 +59,7 @@ class Commentary(models.Model):
 
     top_blurb_headline = models.CharField(
         help_text="Positive/Negative. i.e. Your money is being used to fund the climate crisis at an alarming rate.",
-        max_length=200,
+        max_length=300,
         blank=True,
     )
     top_blurb_subheadline = models.CharField(
@@ -70,7 +70,7 @@ class Commentary(models.Model):
 
     # Negative Commentary
     snippet_1 = models.CharField(
-        max_length=150,
+        max_length=300,
         help_text="Negative. Custom fact about the brand. Used to fill in templates",
         blank=True,
         default="",
@@ -79,7 +79,7 @@ class Commentary(models.Model):
         help_text="link to dirty deal 1 detauls", blank=True, default=""
     )
     snippet_2 = models.CharField(
-        max_length=150,
+        max_length=300,
         help_text="Negative. Custom fact about the brand. Used to fill in templates",
         blank=True,
         default="",
@@ -88,7 +88,7 @@ class Commentary(models.Model):
         help_text="link to dirty deal 2 detauls", blank=True, default=""
     )
     snippet_3 = models.CharField(
-        max_length=150,
+        max_length=300,
         help_text="Negative. Custom fact about the brand. Used to fill in templates",
         blank=True,
         default="",
