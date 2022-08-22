@@ -12,9 +12,7 @@ def correct_feature_data_migration(apps, schema_editor):
             FeatureType,
         )
     except (ImportError, ModuleNotFoundError):
-        print(
-            "Could not import required models for feature migration. No corrections made"
-        )
+        print("Could not import required models for feature migration. No corrections made")
         return None
 
     ft_free_checking = FeatureType.objects.get(name="free_checking")
@@ -22,18 +20,12 @@ def correct_feature_data_migration(apps, schema_editor):
     for feature in Features.objects.all():
 
         if feature.free_checking:
-            brand_feature = BrandFeature.objects.get(
-                brand=feature.brand,
-                feature=ft_free_checking
-            )
+            brand_feature = BrandFeature.objects.get(brand=feature.brand, feature=ft_free_checking)
             brand_feature.offered = FeatureAvailabilityChoice.YES
-
 
 
 class Migration(migrations.Migration):
 
-    dependencies = [("brand", "0007_commentary_number_of_requests")]
+    dependencies = [("brand", "0011_remove_commentary_certified_fossil_free")]
 
-    operations = [
-        migrations.RunPython(code=correct_feature_data_migration)
-    ]
+    operations = [migrations.RunPython(code=correct_feature_data_migration)]
