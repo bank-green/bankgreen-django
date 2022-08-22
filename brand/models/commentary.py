@@ -129,6 +129,10 @@ class Commentary(models.Model):
         default=ResultPageVariationChoice.BLANK,
     )
 
+    certified_fossil_free = models.BooleanField(
+        help_text="Is this bank part of the Fossil Free Alliance?", default=False
+    )
+
     def __repr__(self):
         return f"Commentary: {self.brand.tag}"
 
