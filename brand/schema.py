@@ -19,7 +19,7 @@ from brand.models.commentary import RatingChoice
 
 from datasource.models.datasource import Datasource
 
-from .models import Brand, Commentary, Features, BrandFeature, FeatureType
+from .models import Brand, Commentary, BrandFeature, FeatureType
 
 from markdown import markdown
 
@@ -74,16 +74,7 @@ class BrandNodeType(DjangoObjectType):
 
     class Meta:
         model = Brand
-        fields = [
-            "tag",
-            "name",
-            "website",
-            "countries",
-            "commentary",
-            "features",
-            "bank_features",
-            "aliases",
-        ]
+        fields = ["tag", "name", "website", "countries", "commentary", "bank_features", "aliases"]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
 
@@ -96,7 +87,7 @@ class BrandType(DjangoObjectType):
     class Meta:
         model = Brand
         # filter_fields = ["tag"]
-        fields = ("tag", "name", "website", "countries", "commentary", "features", "bank_features")
+        fields = ("tag", "name", "website", "countries", "commentary", "bank_features")
 
 
 class HtmlFromMarkdown(Scalar):
@@ -120,22 +111,6 @@ class CommentaryType(DjangoObjectType):
     class Meta:
         model = Commentary
         filter_fields = ["rating", "display_on_website", "top_three_ethical"]
-        interfaces = (relay.Node,)
-
-
-class FeaturesType(DjangoObjectType):
-    class Meta:
-        model = Features
-        filter_fields = [
-            "checking_saving",
-            "free_checking",
-            "free_atm_withdrawal",
-            "online_banking",
-            "local_branches",
-            "mortgage_or_loan",
-            "credit_cards",
-            "free_international_card_payment",
-        ]
         interfaces = (relay.Node,)
 
 
@@ -163,7 +138,6 @@ class BrandFeatureType(DjangoObjectType):
 class Query(graphene.ObjectType):
     commentary = relay.Node.Field(CommentaryType)
     commentaries = DjangoFilterConnectionField(CommentaryType)
-    features = relay.Node.Field(FeaturesType)
 
     brand = graphene.Field(BrandType, tag=graphene.String())
 
