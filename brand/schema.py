@@ -50,6 +50,8 @@ class BrandFilter(FilterSet):
 
     features = FeaturesFilter(method="filter_features")
 
+    fossil_free_alliance = BooleanFilter(field_name="commentary__fossil_free_alliance")
+
     def filter_features(self, queryset, name, value):
         # return all brands that have "Yes" or "Maybe" for all given features
         return (
