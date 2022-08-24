@@ -5,14 +5,14 @@ from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from django_countries.graphql.types import Country
 from graphene_django import DjangoListField
-import django_filters
+from django.db.models import Count
 from django_filters import (
     CharFilter,
     FilterSet,
     ChoiceFilter,
     BooleanFilter,
     MultipleChoiceFilter,
-    OrderingFilter,
+    BaseInFilter,
 )
 from django_countries import countries
 from brand.models.commentary import RatingChoice
@@ -30,6 +30,11 @@ class DatasourceType(DjangoObjectType):
         interfaces = (relay.Node,)
 
 
+class FeaturesFilter(BaseInFilter, CharFilter):
+    # utility to indicate values should be comma-separated
+    pass
+
+
 class BrandFilter(FilterSet):
     choices = tuple(countries)
 
@@ -42,6 +47,18 @@ class BrandFilter(FilterSet):
     recommended_only = BooleanFilter(field_name="commentary__top_three_ethical")
 
     display_on_website = BooleanFilter(field_name="commentary__display_on_website")
+
+    features = FeaturesFilter(method="filter_features")
+
+    def filter_features(self, queryset, name, value):
+        # return all brands that have "Yes" or "Maybe" for all given features
+        return (
+            queryset.filter(
+                bank_features__feature__name__in=value, bank_features__offered__in=["Yes", "Maybe"]
+            )
+            .annotate(num_feats=Count("bank_features"))
+            .filter(num_feats=len(value))
+        )
 
     class Meta:
         model = Brand
@@ -127,6 +144,15 @@ class FeatureTypeType(DjangoObjectType):
 
 
 class BrandFeatureType(DjangoObjectType):
+    name = graphene.String()
+    description = graphene.String()
+
+    def resolve_name(obj, info):
+        return obj.feature.name
+
+    def resolve_description(obj, info):
+        return obj.feature.description
+
     class Meta:
         model = BrandFeature
         fields = "__all__"
