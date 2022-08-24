@@ -119,12 +119,12 @@ class BrandAdmin(admin.ModelAdmin):
     search_fields = ["name", "tag", "website"]
     readonly_fields = ["related_datasources", "created", "modified"]
     fields = (
-        ("name", "name_locked"),
-        ("tag", "tag_locked"),
+        ("name"),
+        ("tag"),
         ("aliases"),
         ("related_datasources"),
-        ("description", "description_locked"),
-        ("website", "website_locked"),
+        ("description"),
+        ("website"),
         ("countries"),
         ("subsidiary_of_1", "subsidiary_of_1_pct"),
         ("subsidiary_of_2", "subsidiary_of_2_pct"),
