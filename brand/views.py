@@ -1,12 +1,59 @@
 from unicodedata import name
-from django.shortcuts import render, get_object_or_404
+from uuid import uuid4
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from django.views import generic
+from django.views.generic import CreateView
+from django.forms.models import model_to_dict
+from django.forms import ModelForm, ModelMultipleChoiceField, inlineformset_factory
 
-from .models import Brand, BrandUpdate
+
+from .models import Brand, BrandUpdate, BrandFeature
 
 
-class CreateUpdateView(generic.CreateView):
+class CreateUpdateForm(ModelForm):
+    class Meta:
+        model = BrandUpdate
+        fields = ["name", "aliases", "website", "countries"]
+
+
+class CreateUpdateView(CreateView):
     template_name = "update.html"
-    model = BrandUpdate
-    fields = ["name", "description"]
+    form_class = CreateUpdateForm
+    success_url = "https://bank.green"
+
+    def form_valid(self, form):
+        """
+        If the form is valid, save the associated model.
+        """
+        brand_update = form.save(commit=False)
+        brand_update.update_tag = brand_update.tag
+        brand_update.tag = uuid4().__str__()
+        brand_update.save()
+        return redirect(self.success_url)
+
+    def get_initial(self):
+        if hasattr(self, "original"):  # ugly af
+            return model_to_dict(self.original)
+
+    def get_context_data(self, **kwargs):
+        tag = self.kwargs.get("tag")
+        original = Brand.objects.get(tag=tag)
+        self.original = original
+
+        context = super(CreateUpdateView, self).get_context_data(**kwargs)
+        initial = [
+            model_to_dict(feature, fields=["offered", "details", "feature"])
+            for feature in self.original.bank_features.all()
+        ]
+        BrandFeaturesFormSet = inlineformset_factory(
+            BrandUpdate,
+            BrandFeature,
+            fields=["offered", "details", "feature"],
+            extra=len(initial) + 3,
+        )
+
+        if self.request.POST:
+            context["features"] = BrandFeaturesFormSet(self.request.POST)
+        else:
+            context["features"] = BrandFeaturesFormSet(initial=initial)
+        return context
