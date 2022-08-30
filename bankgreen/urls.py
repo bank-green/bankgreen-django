@@ -24,6 +24,8 @@ from graphene_django.views import GraphQLView
 from schema import schema
 
 
+from brand import views
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", RedirectView.as_view(url=reverse_lazy("admin:index"))),
@@ -33,4 +35,5 @@ urlpatterns = [
             GraphQLView.as_view(graphiql=True, schema=schema)
         ),
     ),
+    path("update/<str:tag>/", views.CreateUpdateView.as_view(), name="update"),
 ]
