@@ -7,6 +7,8 @@ class BrandUpdate(Brand):
     A "BrandUpdate" is container for updates to an existing Brand submitted by a user
     """
 
+    UPDATE_FIELDS = ["name", "aliases", "website", "countries"]
+
     additional_info = models.TextField(
         "Add any additional information or explanation for this change",
         null=False,

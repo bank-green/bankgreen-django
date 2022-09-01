@@ -1,7 +1,10 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 
 <head>
+    <link rel='stylesheet' href="{% static 'update.css' %}">
 </head>
 
 <body>
@@ -11,6 +14,7 @@
 
     <form method="post">{% csrf_token %}
         {{ form.as_p }}
+        {{ features.management_form }}
         {% for feature in features %}
         <ol>
             <li>{{ feature.feature }} </li>

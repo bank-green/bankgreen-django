@@ -13,7 +13,7 @@ from .models import Brand, BrandUpdate, BrandFeature
 class CreateUpdateForm(ModelForm):
     class Meta:
         model = BrandUpdate
-        fields = ["name", "aliases", "website", "countries"]
+        fields = BrandUpdate.UPDATE_FIELDS
 
 
 class CreateUpdateView(CreateView):
@@ -26,9 +26,14 @@ class CreateUpdateView(CreateView):
         If the form is valid, save the associated model.
         """
         brand_update = form.save(commit=False)
-        brand_update.update_tag = brand_update.tag
+        context = self.get_context_data()
+        brand_update.update_tag = context["tag"]
+
         brand_update.tag = uuid4().__str__()
         brand_update.save()
+        features = context["features"]
+        features.instance = brand_update
+        features.save()
         return redirect(self.success_url)
 
     def get_initial(self):
@@ -50,10 +55,12 @@ class CreateUpdateView(CreateView):
             BrandFeature,
             fields=["offered", "details", "feature"],
             extra=len(initial) + 3,
+            can_delete=False,
         )
 
         if self.request.POST:
             context["features"] = BrandFeaturesFormSet(self.request.POST)
         else:
             context["features"] = BrandFeaturesFormSet(initial=initial)
+        context["tag"] = tag
         return context
