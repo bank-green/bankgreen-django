@@ -1,7 +1,9 @@
 from enum import Enum
 
-from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from django_countries.fields import CountryField
 
@@ -44,6 +46,14 @@ class Commentary(models.Model):
     )
     fossil_free_alliance = models.BooleanField(
         default=False, help_text="Is this brand in the fossil free alliance?"
+    )
+
+    fossil_free_alliance_rating = models.IntegerField(
+        blank=False,
+        null=False,
+        default=0,
+        help_text="the fossil free alliance rating. Out of 5",
+        validators=[MinValueValidator(0), MaxValueValidator(5)],
     )
 
     # Neutral Commentary
@@ -134,3 +144,14 @@ class Commentary(models.Model):
 
     def __str__(self):
         return f"Commentary: {self.brand.tag}"
+
+    def clean(self):
+        # Don't allow draft entries to have a pub_date.
+        if self.fossil_free_alliance and not (self.fossil_free_alliance_rating):
+            raise ValidationError(_("Brands in the Fossil Free Alliance must have FFA ratings."))
+        if not self.fossil_free_alliance and bool(self.fossil_free_alliance_rating):
+            raise ValidationError(
+                _(
+                    "Brands not in the Fossil Free Alliance must not have FFA ratings. Set the value to 0"
+                )
+            )
