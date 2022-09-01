@@ -2,10 +2,10 @@ from typing import List, Tuple
 
 from django.db import models
 from django.template.defaultfilters import truncatechars
-from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
-from django_countries.fields import CountryField
 from cities_light.models import Region
+from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
 
 import datasource.models as dsm
