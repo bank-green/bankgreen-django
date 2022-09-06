@@ -8,6 +8,12 @@ Data is harvested from a variety of "data sources." Datasources are then associa
 
 This project uses python 3.10. You will need to install "[pip](https://pip.pypa.io/en/stable/installation/)" (the python package management system) and "[virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)" (a python virtual environment manager) to your system. You can install virtualenv like: `sudo -H pip3 install virtualenv`
 
+
+In order to run the project, you will need to first migrate your database and then download a list of countries and regions:
+
+`python manage.py migrate`
+`python manage.py cities_light`
+
 ## Installing Packages
 
 `virtualenv <venv>`
@@ -35,6 +41,8 @@ You should *call* them in settings.py and then import them like settings.KEYWORD
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py collectstatic
+python manage.py refresh_datasources banktrack --local all
+python manage.py cities_light # refresh country/region database
 python manage.py runserver
 ```
 

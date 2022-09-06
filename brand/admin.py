@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.utils.html import escape, format_html
 
@@ -8,10 +10,6 @@ from datasource.constants import model_names
 from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary
-
-from django.contrib.admin.widgets import FilteredSelectMultiple
-
-from django.db import models
 
 
 class RecommendedInOverrideForm(forms.ModelForm):
@@ -99,7 +97,37 @@ class BrandFeatureAdmin(admin.ModelAdmin):
 
 class CountriesWidgetOverrideForm(forms.ModelForm):
     class Meta:
-        widgets = {"countries": FilteredSelectMultiple("countries", is_stacked=False)}
+        widgets = {
+            "countries": FilteredSelectMultiple("countries", is_stacked=False),
+            "regions": FilteredSelectMultiple("regions", is_stacked=False),
+        }
+
+    def clean(self):
+        """
+        Checks that all regions have countries associated.
+        """
+        from cities_light.models import Country, Region
+        from django_countries.fields import CountryField
+
+        regions_qs = self.cleaned_data.get("regions", Region.objects.none())
+        expected_country_ids = set([x["country_id"] for x in regions_qs.values()])
+        expected_country_iso2 = set(
+            [x.code2 for x in Country.objects.filter(id__in=expected_country_ids)]
+        )
+
+        actual_country_iso2 = set([x for x in self.cleaned_data.get("countries", [])])
+
+        if not expected_country_iso2.issubset(actual_country_iso2):
+            missing_country_codes = expected_country_iso2 - actual_country_iso2
+            missing_country_names = ", ".join(
+                [x.name for x in Country.objects.filter(code2__in=missing_country_codes)]
+            )
+
+            raise ValidationError(
+                f"All regions must have associated countries. The following countries are missing: {missing_country_names}"
+            )
+
+        return self.cleaned_data
 
 
 @admin.register(Brand)
@@ -126,6 +154,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("description"),
         ("website"),
         ("countries"),
+        ("regions"),
         ("subsidiary_of_1", "subsidiary_of_1_pct"),
         ("subsidiary_of_2", "subsidiary_of_2_pct"),
         ("subsidiary_of_3", "subsidiary_of_3_pct"),

@@ -2,8 +2,8 @@ from typing import List, Tuple
 
 from django.db import models
 from django.template.defaultfilters import truncatechars
-from django.utils import timezone
 
+from cities_light.models import Region
 from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
 
@@ -52,6 +52,7 @@ class Brand(TimeStampedModel):
     countries = CountryField(
         multiple=True, help_text="Where the brand offers retails services", blank=True
     )
+    regions = models.ManyToManyField(Region)
     tag = models.CharField(
         max_length=100,
         null=False,

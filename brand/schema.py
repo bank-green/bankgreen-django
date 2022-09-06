@@ -22,6 +22,7 @@ from datasource.models.datasource import Datasource
 from .models import Brand, Commentary, BrandFeature, FeatureType
 
 from markdown import markdown
+from cities_light.models import Region
 
 
 class DatasourceType(DjangoObjectType):
@@ -67,14 +68,29 @@ class BrandFilter(FilterSet):
         fields = []
 
 
+class RegionType(DjangoObjectType):
+    class Meta:
+        model = Region
+
+
 class BrandNodeType(DjangoObjectType):
     """ """
 
     countries = graphene.List(Country)
+    regions = RegionType
 
     class Meta:
         model = Brand
-        fields = ["tag", "name", "website", "countries", "commentary", "bank_features", "aliases"]
+        fields = [
+            "tag",
+            "name",
+            "website",
+            "countries",
+            "commentary",
+            "bank_features",
+            "aliases",
+            "regions",
+        ]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
 
@@ -83,11 +99,12 @@ class BrandType(DjangoObjectType):
     """ " """
 
     countries = graphene.List(Country)
+    regions = RegionType
 
     class Meta:
         model = Brand
         # filter_fields = ["tag"]
-        fields = ("tag", "name", "website", "countries", "commentary", "bank_features")
+        fields = ("tag", "name", "website", "countries", "commentary", "bank_features", "regions")
 
 
 class HtmlFromMarkdown(Scalar):
