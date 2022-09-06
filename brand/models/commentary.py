@@ -3,7 +3,6 @@ from enum import Enum
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 from django_countries.fields import CountryField
 
@@ -146,12 +145,9 @@ class Commentary(models.Model):
         return f"Commentary: {self.brand.tag}"
 
     def clean(self):
-        # Don't allow draft entries to have a pub_date.
         if self.fossil_free_alliance and not (self.fossil_free_alliance_rating):
-            raise ValidationError(_("Brands in the Fossil Free Alliance must have FFA ratings."))
+            raise ValidationError("Brands in the Fossil Free Alliance must have FFA ratings.")
         if not self.fossil_free_alliance and bool(self.fossil_free_alliance_rating):
             raise ValidationError(
-                _(
-                    "Brands not in the Fossil Free Alliance must not have FFA ratings. Set the value to 0"
-                )
+                "Brands not in the Fossil Free Alliance must not have FFA ratings. Set the value to 0"
             )
