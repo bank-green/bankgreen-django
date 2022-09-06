@@ -19,7 +19,7 @@ from brand.models.commentary import RatingChoice
 
 from datasource.models.datasource import Datasource
 
-from .models import Brand, Commentary, Features, BrandFeature, FeatureType
+from .models import Brand, Commentary, BrandFeature, FeatureType
 
 from markdown import markdown
 from cities_light.models import Region
@@ -131,22 +131,6 @@ class CommentaryType(DjangoObjectType):
         interfaces = (relay.Node,)
 
 
-class FeaturesType(DjangoObjectType):
-    class Meta:
-        model = Features
-        filter_fields = [
-            "checking_saving",
-            "free_checking",
-            "free_atm_withdrawal",
-            "online_banking",
-            "local_branches",
-            "mortgage_or_loan",
-            "credit_cards",
-            "free_international_card_payment",
-        ]
-        interfaces = (relay.Node,)
-
-
 class FeatureTypeType(DjangoObjectType):
     class Meta:
         model = FeatureType
@@ -171,7 +155,6 @@ class BrandFeatureType(DjangoObjectType):
 class Query(graphene.ObjectType):
     commentary = relay.Node.Field(CommentaryType)
     commentaries = DjangoFilterConnectionField(CommentaryType)
-    features = relay.Node.Field(FeaturesType)
 
     brand = graphene.Field(BrandType, tag=graphene.String())
 
