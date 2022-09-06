@@ -16,6 +16,11 @@ class BrandUpdate(Brand):
         default="",
     )
 
+    email = models.EmailField(
+        "Your email address", max_length=254, null=False, blank=True, default=""
+    )
+    consent = models.BooleanField("Can we reach out to you via email?", default=False, null=False)
+
     update_tag = models.CharField(
         max_length=100,
         null=False,

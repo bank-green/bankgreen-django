@@ -4,7 +4,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.views.generic import CreateView
 from django.forms.models import model_to_dict
-from django.forms import ModelForm, ModelMultipleChoiceField, inlineformset_factory
+from django.forms import (
+    ModelForm,
+    ModelMultipleChoiceField,
+    inlineformset_factory,
+    ModelChoiceField,
+    Form,
+)
+
+from brand.models import brand
 
 
 from .models import Brand, BrandUpdate, BrandFeature
@@ -13,7 +21,7 @@ from .models import Brand, BrandUpdate, BrandFeature
 class CreateUpdateForm(ModelForm):
     class Meta:
         model = BrandUpdate
-        fields = BrandUpdate.UPDATE_FIELDS
+        fields = BrandUpdate.UPDATE_FIELDS + ["additional_info", "email", "consent"]
 
 
 class CreateUpdateView(CreateView):
@@ -28,7 +36,6 @@ class CreateUpdateView(CreateView):
         brand_update = form.save(commit=False)
         context = self.get_context_data()
         brand_update.update_tag = context["tag"]
-
         brand_update.tag = uuid4().__str__()
         brand_update.save()
         features = context["features"]
@@ -41,11 +48,15 @@ class CreateUpdateView(CreateView):
             return model_to_dict(self.original)
 
     def get_context_data(self, **kwargs):
+
+        # set tag
         tag = self.kwargs.get("tag")
         original = Brand.objects.get(tag=tag)
         self.original = original
 
         context = super(CreateUpdateView, self).get_context_data(**kwargs)
+
+        # set features
         initial = [
             model_to_dict(feature, fields=["offered", "details", "feature"])
             for feature in self.original.bank_features.all()

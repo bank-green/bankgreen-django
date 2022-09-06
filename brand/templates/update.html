@@ -11,16 +11,15 @@
 
     <h1>Brand Update Creation</h1>
 
-
     <form method="post">{% csrf_token %}
         {{ form.as_p }}
         {{ features.management_form }}
         {% for feature in features %}
-        <ol>
+        <ul>
             <li>{{ feature.feature }} </li>
             <li>Offered: {{ feature.offered }} </li>
             <li>Details: {{ feature.details }} </li>
-        </ol>
+        </ul>
         {% endfor %}
 
         <input type="submit" value="Save">
