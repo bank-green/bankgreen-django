@@ -26,7 +26,7 @@ class CommentaryInline(admin.StackedInline):
             {
                 "fields": (
                     ("display_on_website", "fossil_free_alliance", "number_of_requests"),
-                    ("rating", "top_three_ethical"),
+                    ("rating", "fossil_free_alliance_rating", "top_three_ethical"),
                     ("recommended_in"),
                     ("result_page_variation"),
                 )
