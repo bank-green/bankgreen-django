@@ -87,7 +87,6 @@ class BrandNodeType(DjangoObjectType):
             "website",
             "countries",
             "commentary",
-            "features",
             "bank_features",
             "aliases",
             "regions",
@@ -105,16 +104,7 @@ class BrandType(DjangoObjectType):
     class Meta:
         model = Brand
         # filter_fields = ["tag"]
-        fields = (
-            "tag",
-            "name",
-            "website",
-            "countries",
-            "commentary",
-            "features",
-            "bank_features",
-            "regions",
-        )
+        fields = ("tag", "name", "website", "countries", "commentary", "bank_features", "regions")
 
 
 class HtmlFromMarkdown(Scalar):
