@@ -52,7 +52,7 @@ class Brand(TimeStampedModel):
     countries = CountryField(
         multiple=True, help_text="Where the brand offers retails services", blank=True
     )
-    regions = models.ManyToManyField(Region)
+    regions = models.ManyToManyField(Region, null=True, blank=True)
     tag = models.CharField(
         max_length=100,
         null=False,
