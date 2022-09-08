@@ -123,6 +123,9 @@ class Commentary(models.Model):
         help_text="Positive. what countries will this bank be recommended in?",
         blank=True,
     )
+    show_on_sustainable_banks_page = models.BooleanField(
+        help_text="Positive. Check if bank should be shown on sustainable banks page.", default=False
+    )
     from_the_website = models.TextField(
         help_text="Positive. used to to describe green banks in their own words", blank=True
     )
