@@ -127,7 +127,12 @@ class CommentaryType(DjangoObjectType):
 
     class Meta:
         model = Commentary
-        filter_fields = ["rating", "display_on_website", "top_three_ethical"]
+        filter_fields = [
+            "rating",
+            "display_on_website",
+            "top_three_ethical",
+            "show_on_sustainable_banks_page",
+        ]
         interfaces = (relay.Node,)
 
 
