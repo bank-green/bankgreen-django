@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='brand',
             name='regions',
-            field=models.ManyToManyField(blank=True, null=True, to='cities_light.region'),
+            field=models.ManyToManyField(blank=True, to='cities_light.region'),
         ),
         migrations.AddField(
             model_name='commentary',
