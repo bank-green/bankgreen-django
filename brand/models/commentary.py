@@ -124,7 +124,8 @@ class Commentary(models.Model):
         blank=True,
     )
     show_on_sustainable_banks_page = models.BooleanField(
-        help_text="Positive. Check if bank should be shown on sustainable banks page.", default=False
+        help_text="Positive. Check if bank should be shown on sustainable banks page.",
+        default=False,
     )
     from_the_website = models.TextField(
         help_text="Positive. used to to describe green banks in their own words", blank=True
