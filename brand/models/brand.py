@@ -52,14 +52,14 @@ class Brand(TimeStampedModel):
     countries = CountryField(
         multiple=True, help_text="Where the brand offers retails services", blank=True
     )
-    regions = models.ManyToManyField(Region)
+    regions = models.ManyToManyField(Region, blank=True)
     tag = models.CharField(
         max_length=100,
         null=False,
         blank=False,
         editable=True,
         unique=True,
-        help_text=("the tag we use or this brand record at Bank.Green. ",),
+        help_text="the tag we use or this brand record at Bank.Green. ",
     )
     tag_locked = models.BooleanField(default=True)
 
