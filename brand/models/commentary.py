@@ -142,6 +142,23 @@ class Commentary(models.Model):
         default=ResultPageVariationChoice.BLANK,
     )
 
+    subtitle = models.TextField(
+        help_text="Markdown. Displayed immediately under the bank name", blank=True
+    )
+
+    header = models.TextField(
+        help_text="Markdown. Displayed as the header to the summary on the first page of a bank's site.",
+        blank=True,
+    )
+    summary = models.TextField(
+        help_text="Markdown. Displayed as the first overview text on a bank's site.", blank=True
+    )
+
+    details = models.TextField(
+        help_text="Markdown. Displayed as the overview of a bank's activities once you scroll down to their second page.",
+        blank=True,
+    )
+
     def __repr__(self):
         return f"Commentary: {self.brand.tag}"
 
