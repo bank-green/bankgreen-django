@@ -23,7 +23,8 @@ from .models import Brand, Commentary, BrandFeature, FeatureType
 
 from django.db.models import Q
 from markdown import markdown
-from custom.footnotes import MyFootnoteExtension
+from markdown.extensions.footnotes import FootnoteExtension
+
 from cities_light.models import Region, SubRegion
 
 
@@ -155,7 +156,7 @@ class HtmlFromMarkdown(Scalar):
 
     @staticmethod
     def serialize(md):
-        extensions = ["markdown_link_attr_modifier", MyFootnoteExtension()]
+        extensions = ["markdown_link_attr_modifier", FootnoteExtension()]
         extension_configs = {"markdown_link_attr_modifier": {"new_tab": "external_only"}}
         return markdown(md, extensions=extensions, extension_configs=extension_configs)
 
