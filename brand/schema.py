@@ -21,6 +21,7 @@ from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary, BrandFeature, FeatureType
 
+from django.db.models import Q
 from markdown import markdown
 from cities_light.models import Region
 
@@ -36,6 +37,11 @@ class FeaturesFilter(BaseInFilter, CharFilter):
     pass
 
 
+class RegionsFilter(BaseInFilter, CharFilter):
+    # utility to indicate values should be comma-separated
+    pass
+
+
 class BrandFilter(FilterSet):
     choices = tuple(countries)
 
@@ -43,6 +49,13 @@ class BrandFilter(FilterSet):
 
     def filter_countries(self, queryset, name, value):
         return queryset.filter(countries__contains=value).order_by("name")
+
+    regions = RegionsFilter(method="filter_regions")
+
+    def filter_regions(self, queryset, name, value):
+        return queryset.filter(
+            Q(regions__name_ascii__in=value) | Q(regions__geoname_code__in=value)
+        )
 
     rating = MultipleChoiceFilter(field_name="commentary__rating", choices=RatingChoice.choices)
     recommended_only = BooleanFilter(field_name="commentary__top_three_ethical")
