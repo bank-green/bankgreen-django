@@ -23,7 +23,7 @@ from .models import Brand, Commentary, BrandFeature, FeatureType
 
 from django.db.models import Q
 from markdown import markdown
-from cities_light.models import Region
+from cities_light.models import Region, SubRegion
 
 
 class DatasourceType(DjangoObjectType):
@@ -42,6 +42,11 @@ class RegionsFilter(BaseInFilter, CharFilter):
     pass
 
 
+class SubregionFilter(BaseInFilter, CharFilter):
+    # utility to indicate values should be comma-separated
+    pass
+
+
 class BrandFilter(FilterSet):
     choices = tuple(countries)
 
@@ -55,6 +60,13 @@ class BrandFilter(FilterSet):
     def filter_regions(self, queryset, name, value):
         return queryset.filter(
             Q(regions__name_ascii__in=value) | Q(regions__geoname_code__in=value)
+        )
+
+    subregions = SubregionFilter(method="filter_subregions")
+
+    def filter_subregions(self, queryset, name, value):
+        return queryset.filter(
+            Q(subregions__name_ascii__in=value) | Q(subregions__geoname_code__in=value)
         )
 
     rating = MultipleChoiceFilter(field_name="commentary__rating", choices=RatingChoice.choices)
@@ -86,11 +98,17 @@ class RegionType(DjangoObjectType):
         model = Region
 
 
+class SubregionType(DjangoObjectType):
+    class Meta:
+        model = SubRegion
+
+
 class BrandNodeType(DjangoObjectType):
     """ """
 
     countries = graphene.List(Country)
     regions = RegionType
+    subregions = SubregionType
 
     class Meta:
         model = Brand
@@ -103,6 +121,7 @@ class BrandNodeType(DjangoObjectType):
             "bank_features",
             "aliases",
             "regions",
+            "subregions",
         ]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
@@ -113,11 +132,21 @@ class BrandType(DjangoObjectType):
 
     countries = graphene.List(Country)
     regions = RegionType
+    subregions = SubregionType
 
     class Meta:
         model = Brand
         # filter_fields = ["tag"]
-        fields = ("tag", "name", "website", "countries", "commentary", "bank_features", "regions")
+        fields = (
+            "tag",
+            "name",
+            "website",
+            "countries",
+            "commentary",
+            "bank_features",
+            "regions",
+            "subregions",
+        )
 
 
 class HtmlFromMarkdown(Scalar):
