@@ -50,9 +50,9 @@ class Commentary(models.Model):
     fossil_free_alliance_rating = models.IntegerField(
         blank=False,
         null=False,
-        default=0,
-        help_text="the fossil free alliance rating. Out of 5",
-        validators=[MinValueValidator(0), MaxValueValidator(5)],
+        default=-1,
+        help_text="the fossil free alliance rating. Values between -1 and 5. 0 for unknown rating. -1 for not FFA",
+        validators=[MinValueValidator(-1), MaxValueValidator(5)],
     )
 
     # Neutral Commentary
@@ -166,9 +166,13 @@ class Commentary(models.Model):
         return f"Commentary: {self.brand.tag}"
 
     def clean(self):
-        if self.fossil_free_alliance and not (self.fossil_free_alliance_rating):
-            raise ValidationError("Brands in the Fossil Free Alliance must have FFA ratings.")
-        if not self.fossil_free_alliance and bool(self.fossil_free_alliance_rating):
+        pass
+        
+        if self.fossil_free_alliance and self.fossil_free_alliance_rating <= -1:
+            raise ValidationError("Brands in the Fossil Free Alliance must have FFA ratings. Use 0 if rating is unknown")
+        
+        # this code is meant to be uncommented at a later time when the FFA ratings are finalized
+        if not self.fossil_free_alliance and self.fossil_free_alliance_rating > -1:
             raise ValidationError(
-                "Brands not in the Fossil Free Alliance must not have FFA ratings. Set the value to 0"
+                "Brands not in the Fossil Free Alliance must have ratings set to -1"
             )
