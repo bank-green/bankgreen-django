@@ -35,7 +35,7 @@ class CommentaryInline(admin.StackedInline):
         ),
         (
             "Text used for both positively and negatively rated banks",
-            {"fields": ("headline", "top_blurb_headline", "top_blurb_subheadline")},
+            {"fields": ("top_blurb_headline", "top_blurb_subheadline")},
         ),
         (
             "Text used for negatively rated banks",
