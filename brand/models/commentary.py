@@ -166,11 +166,11 @@ class Commentary(models.Model):
         return f"Commentary: {self.brand.tag}"
 
     def clean(self):
-        pass
-        
         if self.fossil_free_alliance and self.fossil_free_alliance_rating <= -1:
-            raise ValidationError("Brands in the Fossil Free Alliance must have FFA ratings. Use 0 if rating is unknown")
-        
+            raise ValidationError(
+                "Brands in the Fossil Free Alliance must have FFA ratings. Use 0 if rating is unknown"
+            )
+
         # this code is meant to be uncommented at a later time when the FFA ratings are finalized
         if not self.fossil_free_alliance and self.fossil_free_alliance_rating > -1:
             raise ValidationError(
