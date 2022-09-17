@@ -62,15 +62,19 @@ class Commentary(models.Model):
         max_length=300,
         blank=True,
     )
+
+    # Deprecated. DO NOT USE. Will be deleted later.
     headline = models.CharField(
         help_text="Positive/Negative. i.e. #1 in Coal", max_length=200, null=True, blank=True
     )
 
+    # Deprecated. DO NOT USE. Will be deleted later.
     top_blurb_headline = models.CharField(
         help_text="Positive/Negative. i.e. Your money is being used to fund the climate crisis at an alarming rate.",
         max_length=300,
         blank=True,
     )
+    # Deprecated. DO NOT USE. Will be deleted later.
     top_blurb_subheadline = models.CharField(
         help_text="Positive/Negative. i.e. According to the latest research*, in 2020 your bank was the 4th largest funder...",
         max_length=500,
@@ -115,9 +119,12 @@ class Commentary(models.Model):
     )
 
     # Positive Commentary
+
+    # Deprecated. DO NOT USE. Will be deleted later.
     top_three_ethical = models.BooleanField(
         help_text="Positive. Is this bank recommended best banks of a country page?", default=False
     )
+    # Deprecated. DO NOT USE. Will be deleted later.
     recommended_in = CountryField(
         multiple=True,
         help_text="Positive. what countries will this bank be recommended in?",
