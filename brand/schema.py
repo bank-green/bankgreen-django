@@ -23,6 +23,8 @@ from .models import Brand, Commentary, BrandFeature, FeatureType
 
 from django.db.models import Q
 from markdown import markdown
+from markdown.extensions.footnotes import FootnoteExtension
+
 from cities_light.models import Region, SubRegion
 
 
@@ -154,7 +156,7 @@ class HtmlFromMarkdown(Scalar):
 
     @staticmethod
     def serialize(md):
-        extensions = ["markdown_link_attr_modifier"]
+        extensions = ["markdown_link_attr_modifier", FootnoteExtension()]
         extension_configs = {"markdown_link_attr_modifier": {"new_tab": "external_only"}}
         return markdown(md, extensions=extensions, extension_configs=extension_configs)
 
@@ -166,6 +168,10 @@ class CommentaryType(DjangoObjectType):
     snippet_1 = HtmlFromMarkdown()
     snippet_2 = HtmlFromMarkdown()
     snippet_3 = HtmlFromMarkdown()
+    summary = HtmlFromMarkdown()
+    header = HtmlFromMarkdown()
+    details = HtmlFromMarkdown()
+    subtitle = HtmlFromMarkdown()
 
     class Meta:
         model = Commentary
