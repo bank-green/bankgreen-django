@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.utils.html import escape, format_html
 
+from cities_light.models import Country, Region, SubRegion
+
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource
@@ -26,13 +28,7 @@ class CommentaryInline(admin.StackedInline):
             {
                 "fields": (
                     ("display_on_website", "fossil_free_alliance", "number_of_requests"),
-                    (
-                        "rating",
-                        "fossil_free_alliance_rating",
-                        "show_on_sustainable_banks_page",
-                        "top_three_ethical",
-                    ),
-                    ("recommended_in"),
+                    ("rating", "fossil_free_alliance_rating", "show_on_sustainable_banks_page"),
                     ("result_page_variation"),
                 )
             },
@@ -105,34 +101,50 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
         widgets = {
             "countries": FilteredSelectMultiple("countries", is_stacked=False),
             "regions": FilteredSelectMultiple("regions", is_stacked=False),
+            "subregions": FilteredSelectMultiple("subregions", is_stacked=False),
         }
 
     def clean(self):
         """
         Checks that all regions have countries associated.
         """
-        from cities_light.models import Country, Region
-        from django_countries.fields import CountryField
-
-        regions_qs = self.cleaned_data.get("regions", Region.objects.none())
-        expected_country_ids = set([x["country_id"] for x in regions_qs.values()])
-        expected_country_iso2 = set(
-            [x.code2 for x in Country.objects.filter(id__in=expected_country_ids)]
-        )
-
-        actual_country_iso2 = set([x for x in self.cleaned_data.get("countries", [])])
-
-        if not expected_country_iso2.issubset(actual_country_iso2):
-            missing_country_codes = expected_country_iso2 - actual_country_iso2
-            missing_country_names = ", ".join(
-                [x.name for x in Country.objects.filter(code2__in=missing_country_codes)]
-            )
-
-            raise ValidationError(
-                f"All regions must have associated countries. The following countries are missing: {missing_country_names}"
-            )
+        raise_validation_error_for_missing_country(self)
+        raise_validation_error_for_missing_region(self)
 
         return self.cleaned_data
+
+
+def raise_validation_error_for_missing_country(self):
+    regions_qs = self.cleaned_data.get("regions", Region.objects.none())
+    expected_country_ids = set([x["country_id"] for x in regions_qs.values()])
+    expected_country_iso2 = set(
+        [x.code2 for x in Country.objects.filter(id__in=expected_country_ids)]
+    )
+    actual_country_iso2 = set([x for x in self.cleaned_data.get("countries", [])])
+
+    if not expected_country_iso2.issubset(actual_country_iso2):
+        missing_country_codes = expected_country_iso2 - actual_country_iso2
+        missing_country_names = ", ".join(
+            [x.name for x in Country.objects.filter(code2__in=missing_country_codes)]
+        )
+
+        raise ValidationError(
+            f"All regions must have associated countries. The following countries are missing: {missing_country_names}"
+        )
+
+
+def raise_validation_error_for_missing_region(self):
+    regions_qs = self.cleaned_data.get("regions", Region.objects.none())
+    subregions_qs = self.cleaned_data.get("subregions", SubRegion.objects.none())
+    expected_regions = set([x.region for x in subregions_qs])
+
+    if not expected_regions.issubset(set(regions_qs)):
+        missing_regions = expected_regions - set(regions_qs)
+        missing_region_names = " | ".join([x.display_name for x in missing_regions])
+
+        raise ValidationError(
+            f"All subregions must have associated regions. The following subregions are missing: {missing_region_names}"
+        )
 
 
 @admin.register(Brand)
@@ -160,6 +172,7 @@ class BrandAdmin(admin.ModelAdmin):
         ("website"),
         ("countries"),
         ("regions"),
+        ("subregions"),
         ("subsidiary_of_1", "subsidiary_of_1_pct"),
         ("subsidiary_of_2", "subsidiary_of_2_pct"),
         ("subsidiary_of_3", "subsidiary_of_3_pct"),
