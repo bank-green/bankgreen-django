@@ -32,7 +32,6 @@ class CommentaryInline(admin.StackedInline):
                 )
             },
         ),
-        (
             "READ ONLY text for negatively rated banks. This should be manually migrated to the description field.",
             {
                 "fields": (
