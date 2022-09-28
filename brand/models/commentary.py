@@ -17,14 +17,6 @@ class RatingChoice(models.TextChoices):
     UNKNOWN = "unknown"
 
 
-class ResultPageVariationChoice(models.TextChoices):
-    RAN = "ran"
-    BIMPACT = "bimpact"
-    FAIRFINANCE = "fairfinance"
-    GABV = "gabv"
-    BLANK = ""
-
-
 class Commentary(models.Model):
     # Metadata
     brand = models.OneToOneField(
@@ -142,13 +134,6 @@ class Commentary(models.Model):
 
     our_take = models.TextField(
         help_text="Positive. used to to give our take on green banks", blank=True
-    )
-    result_page_variation = models.CharField(
-        max_length=20,
-        help_text="Used to customize how we display the brand result page on the frontend",
-        blank=True,
-        choices=ResultPageVariationChoice.choices,
-        default=ResultPageVariationChoice.BLANK,
     )
 
     subtitle = models.TextField(

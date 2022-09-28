@@ -29,7 +29,6 @@ class CommentaryInline(admin.StackedInline):
                 "fields": (
                     ("display_on_website", "fossil_free_alliance", "number_of_requests"),
                     ("rating", "fossil_free_alliance_rating", "show_on_sustainable_banks_page"),
-                    ("result_page_variation"),
                 )
             },
         ),
