@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils.html import escape, format_html
 
 from cities_light.models import Country, Region, SubRegion
+from cities_light.admin import SubRegionAdmin
 
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
@@ -96,7 +97,6 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
         widgets = {
             "countries": FilteredSelectMultiple("countries", is_stacked=False),
             "regions": FilteredSelectMultiple("regions", is_stacked=False),
-            "subregions": FilteredSelectMultiple("subregions", is_stacked=False),
         }
 
     def clean(self):
@@ -142,6 +142,21 @@ def raise_validation_error_for_missing_region(self):
         )
 
 
+class SubRegionAdminOverride(SubRegionAdmin):
+    search_fields = SubRegionAdmin.search_fields + (
+        "country__name",
+        "country__name_ascii",
+        "country__geoname_id",
+        "region__name",
+        "region__name_ascii",
+        "region__geoname_id",
+    )
+
+
+admin.site.unregister(SubRegion)
+admin.site.register(SubRegion, SubRegionAdminOverride)
+
+
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
@@ -158,6 +173,7 @@ class BrandAdmin(admin.ModelAdmin):
     # list_display = ["name", "tag", "number_of_related_datasources", "website"]
     search_fields = ["name", "tag", "website"]
     readonly_fields = ["related_datasources", "created", "modified"]
+    autocomplete_fields = ["subregions"]
     fields = (
         ("name"),
         ("tag"),
