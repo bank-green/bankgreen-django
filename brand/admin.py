@@ -29,29 +29,16 @@ class CommentaryInline(admin.StackedInline):
                 "fields": (
                     ("display_on_website", "fossil_free_alliance", "number_of_requests"),
                     ("rating", "fossil_free_alliance_rating", "show_on_sustainable_banks_page"),
-                    ("result_page_variation"),
                 )
             },
         ),
         (
-            "Text used for both positively and negatively rated banks",
-            {
-                "fields": (
-                    "headline",
-                    "top_blurb_headline",
-                    "top_blurb_subheadline",
-                    "unique_statement",
-                )
-            },
-        ),
-        (
-            "Text used for negatively rated banks",
+            "READ ONLY text for negatively rated banks. This should be manually migrated to the description field.",
             {
                 "fields": (
                     ("snippet_1", "snippet_1_link"),
                     ("snippet_2", "snippet_2_link"),
                     ("snippet_3", "snippet_3_link"),
-                    ("amount_financed_since_2016"),
                 )
             },
         ),

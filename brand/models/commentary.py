@@ -17,14 +17,6 @@ class RatingChoice(models.TextChoices):
     UNKNOWN = "unknown"
 
 
-class ResultPageVariationChoice(models.TextChoices):
-    RAN = "ran"
-    BIMPACT = "bimpact"
-    FAIRFINANCE = "fairfinance"
-    GABV = "gabv"
-    BLANK = ""
-
-
 class Commentary(models.Model):
     # Metadata
     brand = models.OneToOneField(
@@ -56,21 +48,26 @@ class Commentary(models.Model):
     )
 
     # Neutral Commentary
+    # Deprecated. DO NOT USE. Will be deleted later.
     unique_statement = models.CharField(
         help_text="Positive/Negative. i.e. Despite introducing policies to restrict unconventional oil and gas finance, BNP Paribas recently ",
         null=True,
         max_length=300,
         blank=True,
     )
+
+    # Deprecated. DO NOT USE. Will be deleted later.
     headline = models.CharField(
         help_text="Positive/Negative. i.e. #1 in Coal", max_length=200, null=True, blank=True
     )
 
+    # Deprecated. DO NOT USE. Will be deleted later.
     top_blurb_headline = models.CharField(
         help_text="Positive/Negative. i.e. Your money is being used to fund the climate crisis at an alarming rate.",
         max_length=300,
         blank=True,
     )
+    # Deprecated. DO NOT USE. Will be deleted later.
     top_blurb_subheadline = models.CharField(
         help_text="Positive/Negative. i.e. According to the latest research*, in 2020 your bank was the 4th largest funder...",
         max_length=500,
@@ -106,6 +103,7 @@ class Commentary(models.Model):
         help_text="link to dirty deal 3 detauls", blank=True, default=""
     )
 
+    # Deprecated. DO NOT USE. Will be deleted later.
     amount_financed_since_2016 = models.CharField(
         max_length=150,
         help_text="Negative. Amount of fossil fuel investment the brand has financed since the paris accord, i.e. $382 billion USD",
@@ -115,9 +113,12 @@ class Commentary(models.Model):
     )
 
     # Positive Commentary
+
+    # Deprecated. DO NOT USE. Will be deleted later.
     top_three_ethical = models.BooleanField(
         help_text="Positive. Is this bank recommended best banks of a country page?", default=False
     )
+    # Deprecated. DO NOT USE. Will be deleted later.
     recommended_in = CountryField(
         multiple=True,
         help_text="Positive. what countries will this bank be recommended in?",
@@ -133,13 +134,6 @@ class Commentary(models.Model):
 
     our_take = models.TextField(
         help_text="Positive. used to to give our take on green banks", blank=True
-    )
-    result_page_variation = models.CharField(
-        max_length=20,
-        help_text="Used to customize how we display the brand result page on the frontend",
-        blank=True,
-        choices=ResultPageVariationChoice.choices,
-        default=ResultPageVariationChoice.BLANK,
     )
 
     subtitle = models.TextField(
