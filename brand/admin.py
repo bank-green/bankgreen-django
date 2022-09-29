@@ -146,10 +146,8 @@ class SubRegionAdminOverride(SubRegionAdmin):
     search_fields = SubRegionAdmin.search_fields + (
         "country__name",
         "country__name_ascii",
-        "country__geoname_id",
         "region__name",
         "region__name_ascii",
-        "region__geoname_id",
     )
 
 
