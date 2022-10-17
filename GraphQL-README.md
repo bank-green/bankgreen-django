@@ -1,42 +1,56 @@
 # Here are the ways how to query with graphql
 
+## all brands in a country
 
-## Query Brand objects
+**query**
 
-```
-query {
-  brands{
-    edges {
-      node {
-        id,
-        name,
-        tag,
-        commentary {
-          id,
-          rating
-        }
-        features {
-          onlineBanking
-        }
-      }
-    }
-  }
-}
-```
-
-## Filter Brand objects by country
-```
-query {
-  brands(countries: "DE") {
+```graphql
+query BrandsQuery(
+  $country: String
+  $recommendedOnly: Boolean
+  $rating: [String]
+  $first: Int
+  $withCommentary: Boolean = false
+  $withFeatures: Boolean = false
+) {
+  brands(
+    country: $country
+    recommendedOnly: $recommendedOnly
+    rating: $rating
+    first: $first
+    displayOnWebsite: true
+  ) {
     edges {
       node {
         name
-        countries {
-          name
-          code
-          alpha3
-          numeric
-          iocCode
+        tag
+        website
+        aliases
+        commentary @include(if: $withCommentary) {
+          rating
+          uniqueStatement
+          headline
+          topThreeEthical
+          recommendedIn {
+            code
+          }
+          fromTheWebsite
+          ourTake
+          amountFinancedSince2016
+          fossilFreeAlliance
+          subtitle
+          header
+          summary
+          details
+          fossilFreeAllianceRating
+          showOnSustainableBanksPage
+        }
+        bankFeatures @include(if: $withFeatures) {
+          offered
+          feature {
+            name
+          }
+          details
         }
       }
     }
@@ -44,62 +58,138 @@ query {
 }
 ```
 
-## Get one Brand object
+**variables**
 
+```graphql
+{
+  "country": "IT"
+}
 ```
-query {
-  brand(tag: "tag_of_brand"){
-    id,
-    name,
-    tag,
+
+## individual bank
+
+**query**
+
+```graphql
+query BrandByTagQuery($tag: String!) {
+  brand(tag: $tag) {
+    tag
+    name
+    website
     commentary {
-      id,
       rating
+      uniqueStatement
+      headline
+      recommendedIn {
+        code
+      }
+      fromTheWebsite
+      ourTake
+      amountFinancedSince2016
+      fossilFreeAlliance
+      subtitle
+      header
+      summary
+      details
+      fossilFreeAllianceRating
+      showOnSustainableBanksPage
     }
-    features {
-      onlineBanking
+    bankFeatures {
+      offered
+      feature {
+        name
+      }
+      details
     }
   }
 }
 ```
 
+**variables**
 
-## Query or Filter Commentary objects
-
+```graphql
+{
+  "tag": "atmos"
+}
 ```
-query {
-  commentaries(rating: "bad"){
+
+## filter banks by features
+
+**query**
+
+```graphql
+query BrandsQuery(
+  $country: String
+  $first: Int
+  $fossilFreeAlliance: Boolean
+  $features: [String]
+  $regions: [String]
+  $subregions: [String]
+  $withCommentary: Boolean = false
+  $withFeatures: Boolean = false
+) {
+  brands(
+    country: $country
+    first: $first
+    fossilFreeAlliance: $fossilFreeAlliance
+    features: $features
+    regions: $regions
+    subregions: $subregions
+  ) {
     edges {
       node {
-        id,
-        headline,
-        rating,
-        brand {
-          id,
-          name,
-          tag
+        name
+        tag
+        website
+        aliases
+        regions {
+          id
+          name
+          slug
+        }
+        commentary @include(if: $withCommentary) {
+          rating
+          uniqueStatement
+          headline
+          recommendedIn {
+            code
+          }
+          fromTheWebsite
+          ourTake
+          amountFinancedSince2016
+          fossilFreeAlliance
+          subtitle
+          header
+          summary
+          details
+          fossilFreeAllianceRating
+          showOnSustainableBanksPage
+        }
+        bankFeatures @include(if: $withFeatures) {
+          offered
+          feature {
+            name
+          }
+          details
         }
       }
     }
   }
 }
 ```
-*delete the attribute if you want all commentaries.*
 
+**variables**
 
-## Get one Commentary object
-
-```
-query {
-  commentary(id: "id_of_commentary"){
-    id,
-    headline,
-    rating,
-    brand {
-      id,
-      name,
-      tag
-    }
-  }
+```graphql
+{
+  "country": "US",
+  "fossilFreeAlliance": true,
+  "features": [
+    "online_only",
+    "credit_cards"
+  ],
+  "first": 300,
+  "withCommentary": true,
+  "withFeatures": true
 }
 ```
