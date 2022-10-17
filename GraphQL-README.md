@@ -27,18 +27,9 @@ query BrandsQuery(
         website
         aliases
         commentary @include(if: $withCommentary) {
-          displayOnWebsite
           rating
           uniqueStatement
           headline
-          topBlurbHeadline
-          topBlurbSubheadline
-          snippet1
-          snippet1Link
-          snippet2
-          snippet2Link
-          snippet3
-          snippet3Link
           topThreeEthical
           recommendedIn {
             code
@@ -86,19 +77,9 @@ query BrandByTagQuery($tag: String!) {
     name
     website
     commentary {
-      displayOnWebsite
       rating
       uniqueStatement
       headline
-      topBlurbHeadline
-      topBlurbSubheadline
-      snippet1
-      snippet1Link
-      snippet2
-      snippet2Link
-      snippet3
-      snippet3Link
-      topThreeEthical
       recommendedIn {
         code
       }
@@ -167,19 +148,9 @@ query BrandsQuery(
           slug
         }
         commentary @include(if: $withCommentary) {
-          displayOnWebsite
           rating
           uniqueStatement
           headline
-          topBlurbHeadline
-          topBlurbSubheadline
-          snippet1
-          snippet1Link
-          snippet2
-          snippet2Link
-          snippet3
-          snippet3Link
-          topThreeEthical
           recommendedIn {
             code
           }
