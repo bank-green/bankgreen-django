@@ -107,6 +107,7 @@ class BrandUpdateAdmin(admin.ModelAdmin):
     fields = BrandUpdate.UPDATE_FIELDS
     readonly_fields = ["name", "aliases", "description", "website", "bank_features"]
     inlines = [BrandFeaturesReadonlyInline]
+    list_display = ("short_name", "update_tag")
 
     def save_model(self, request, obj, form, change):
         original = Brand.objects.get(tag=obj.update_tag)

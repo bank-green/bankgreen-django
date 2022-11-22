@@ -8,26 +8,31 @@
 </head>
 
 <body>
+    <div class="wrapper">
+        <div class="content">
+            <h1>Brand Update Creation</h1>
 
-    <h1>Brand Update Creation</h1>
+            <form method="post">{% csrf_token %}
+                <h2>Bank Details</h2>
+                <div class="details">
+                    <ul>
+                        {{ form.as_ul }}
+                    </ul>
+                </div>
+                <h2>Features</h2>
+                {{ features.management_form }}
+                {% for feature in features %}
+                <ul>
+                    <li>{{ feature.feature }} </li>
+                    <li>Offered: {{ feature.offered }} </li>
+                    <li>Details: {{ feature.details }} </li>
+                </ul>
+                {% endfor %}
 
-    <form method="post">{% csrf_token %}
-        {{ form.as_p }}
-        {{ features.management_form }}
-        {% for feature in features %}
-        <ul>
-            <li>{{ feature.feature }} </li>
-            <li>Offered: {{ feature.offered }} </li>
-            <li>Details: {{ feature.details }} </li>
-        </ul>
-        {% endfor %}
-
-        <input type="submit" value="Save">
-    </form>
-
-
-
-
+                <input type="submit" value="Save">
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>

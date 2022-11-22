@@ -36,7 +36,7 @@ class CreateUpdateView(CreateView):
         brand_update = form.save(commit=False)
         context = self.get_context_data()
         brand_update.update_tag = context["tag"]
-        brand_update.tag = uuid4().__str__()
+        brand_update.tag = context["tag"] + " (" + uuid4().hex + ")"
         brand_update.save()
         features = context["features"]
         features.instance = brand_update
