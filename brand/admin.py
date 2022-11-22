@@ -292,7 +292,7 @@ class BrandAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         # filter out all but base class
-        qs = super(BrandAdmin, self).get_queryset(request)
+        qs = super(BrandAdmin, self).get_queryset(request).filter(brandupdate__isnull=True)
         return qs
 
     def number_of_related_datasources(self, obj):
