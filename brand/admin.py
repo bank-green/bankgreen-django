@@ -8,12 +8,9 @@ from cities_light.admin import SubRegionAdmin
 from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 
-from brand.admin_utils import (
-    LinkedDatasourcesFilter,
-    link_datasources,
-    raise_validation_error_for_missing_country,
-    raise_validation_error_for_missing_region,
-)
+from brand.admin_utils import (LinkedDatasourcesFilter, link_datasources,
+                               raise_validation_error_for_missing_country,
+                               raise_validation_error_for_missing_region)
 from brand.models.brand_update import BrandUpdate
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
@@ -102,31 +99,6 @@ class BrandFeaturesReadonlyInline(admin.StackedInline):
     readonly_fields = ["feature", "offered", "details"]
 
 
-@admin.register(BrandUpdate)
-class BrandUpdateAdmin(admin.ModelAdmin):
-    fields = BrandUpdate.UPDATE_FIELDS
-    readonly_fields = ["name", "aliases", "description", "website", "bank_features"]
-    inlines = [BrandFeaturesReadonlyInline]
-    list_display = ("short_name", "update_tag")
-
-    def save_model(self, request, obj, form, change):
-        original = Brand.objects.get(tag=obj.update_tag)
-
-        # overwrite all fields with values from updates
-        for field in BrandUpdate.UPDATE_FIELDS:
-            value = getattr(obj, field)
-            setattr(original, field, value)
-
-        # overwrite features with features from update
-        BrandFeature.objects.filter(brand=original).delete()
-        original.bank_features.set(obj.bank_features.all())
-
-        original.save()
-
-        # delete brand update
-        obj.delete()
-
-
 @admin.register(FeatureType)
 class BrandFeatureAdmin(admin.ModelAdmin):
 
@@ -152,6 +124,32 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
 
 
 admin.site.unregister(SubRegion)
+
+
+@admin.register(BrandUpdate)
+class BrandUpdateAdmin(admin.ModelAdmin):
+    form = CountriesWidgetOverrideForm
+    fields = BrandUpdate.UPDATE_FIELDS
+    readonly_fields = ["name", "aliases", "description", "website", "bank_features"]
+    inlines = [BrandFeaturesReadonlyInline]
+    list_display = ("short_name", "update_tag")
+
+    def save_model(self, request, obj, form, change):
+        original = Brand.objects.get(tag=obj.update_tag)
+
+        # overwrite all fields with values from updates
+        for field in BrandUpdate.UPDATE_FIELDS:
+            value = getattr(obj, field)
+            setattr(original, field, value)
+
+        # overwrite features with features from update
+        BrandFeature.objects.filter(brand=original).delete()
+        original.bank_features.set(obj.bank_features.all())
+
+        original.save()
+
+        # delete brand update
+        obj.delete()
 
 
 @admin.register(SubRegion)
