@@ -26,11 +26,9 @@ django test datasource.tests.UsnicTestCase
             ```
         - banks (offspring) may be controlled by multiple banks (parents).
             - If control is split between multiple parents, use 
-                - IF EQUITY_IND =! 2, continue. Else report no parent. (non bank enityt)
+                - IF EQUITY_IND == 2, report no parent. (non bank enityt)
                 - If Equity_IND == 0, use PCT_OTHER to find controlling commpany
-                - IF Equity_IND == 2, use PCT_EQUITY and fallback to PCT_EQUITY_BRACKET'
-                - ELSE, choose any parent with an existing rannking or choose at random.
-            - Otherwise use PCT_OTHERR
+                - IF Equity_IND == 1, use PCT_EQUITY and fallback to PCT_EQUITY_BRACKET'
+                                
 
-            - otherwise use PCT_EQUITY_BRACKET
-            - otherwise just choose any parent with an existing rating or choose at random
+                - In cases with tied parents, choose any parent with an existing rannking or choose at random.
