@@ -13,16 +13,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import path, reverse_lazy
+from django.views.decorators.cache import cache_control
+from django.views.generic.base import RedirectView
 
 from graphene_django.views import GraphQLView
+
 from schema import schema
-from django.views.decorators.cache import cache_control
-from django.conf import settings
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", RedirectView.as_view(url=reverse_lazy("admin:index"))),
     path(
         "graphql",
         cache_control(max_age=settings.CACHE_MAX_AGE)(
