@@ -16,3 +16,21 @@ django test datasource.tests.UsnicTestCase
 
 - CSV_ATTRIBUTES_ACTIVE
     - MJR_OWN_MNRTY refers to ownership by women or minorities. There are text codes here but better to just import as a binary for now. 0 is False
+
+-CSV_RELATIONSHIPS
+    - `CTRL_IND` indicates control of a bank by another bank.
+        - historic controlling relatinships are indicated. To filter for only active use
+            ```
+            controlled_all = rels[rels["CTRL_IND"] == 1]
+            controlled_all[rels["DT_END"] == 99991231]
+            ```
+        - banks (offspring) may be controlled by multiple banks (parents).
+            - If control is split between multiple parents, use 
+                - IF EQUITY_IND =! 2, continue. Else report no parent. (non bank enityt)
+                - If Equity_IND == 0, use PCT_OTHER to find controlling commpany
+                - IF Equity_IND == 2, use PCT_EQUITY and fallback to PCT_EQUITY_BRACKET'
+                - ELSE, choose any parent with an existing rannking or choose at random.
+            - Otherwise use PCT_OTHERR
+
+            - otherwise use PCT_EQUITY_BRACKET
+            - otherwise just choose any parent with an existing rating or choose at random
