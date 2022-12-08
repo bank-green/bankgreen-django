@@ -1,10 +1,58 @@
 from django.db import models
 
 import pandas as pd
+from cities_light.models import Country, Region, SubRegion
 from django_countries.fields import CountryField
 
 from datasource.models.datasource import Datasource
 from datasource.pycountry_utils import pycountries
+
+
+class EntityTypes(models.TextChoices):
+    AGB = "Agreement Corporation - Banking"
+    AGI = "Agreement Corporation - Investment"
+    BHC = "Bank Holding Company"
+    CPB = "Cooperative Bank"
+    DBR = "Domestic Branch of a Domestic Bank"
+    DEO = "Domestic Entity Other"
+    DPS = "Data Processing Servicer"
+    EBR = "Edge Corporation - Domestic Branch"
+    EDB = "Edge Corporation - Banking"
+    EDI = "Edge Corporation - Investment"
+    FBH = "Foreign Banking Organization as a BHC"
+    FBK = "Foreign Bank"
+    FBO = "Foreign Banking Organization"
+    FCU = "Federal Credit Union"
+    FEO = "Foreign Entity Other"
+    FHD = "Financial Holding Company / BHC (Note: Can be a domestic or foreign-domiciled holding company)"
+    FHF = "Financial Holding Company / FBO"
+    FNC = "Finance Company"
+    FSB = "Federal Savings Bank"
+    IBK = "International Bank of a U.S. Depository - Edge or Trust Co."
+    IBR = "Foreign Branch of a U.S. Bank"
+    IHC = "Intermediate Holding Company"
+    IFB = "Insured Federal Branch of an FBO"
+    INB = "International Non-bank Subs of Domestic Entities"
+    ISB = "Insured State Branch of an FBO"
+    MTC = "Non-deposit Trust Company - Member"
+    NAT = "National Bank"
+    NMB = "Non-member Bank"
+    NTC = "Non-deposit Trust Company - Non-member"
+    NYI = "New York Investment Company"
+    PST = "Non-U.S. Branch managed by a U.S. Branch/Agency of a Foreign Bank for 002’s reporting - Pseudo Twig"
+    REP = "Representative Office"
+    SAL = "Savings & Loan Association"
+    SBD = "Securities Broker / Dealer"
+    SCU = "State Credit Union"
+    SLHC = "Savings and Loan Holding Company"
+    SMB = "State Member Bank"
+    SSB = "State Savings Bank"
+    TWG = "Non-U.S. Branch managed by a U.S. Branch/Agency of a Foreign Bank - TWIG"
+    UFA = "Uninsured Federal Agency of an FBO"
+    UFB = "Uninsured Federal Branch of an FBO"
+    USA = "Uninsured State Agency of an FBO"
+    USB = "Uninsured State Branch of an FBO"
+    UNK = "Unknown"
 
 
 class Usnic(Datasource):
@@ -40,8 +88,11 @@ class Usnic(Datasource):
         source_id = row.NM_SHORT.lower().strip().replace(" ", "_")
 
         defaults = {
-            # "source_link": row.link,
-            "name": row.NM_SHORT,
+            "name": row.NM_SHORT.strip(),
+            "legal_name": row.NM_LGL.strip(),
+            "entity_type": row.ENTITY_TYPE
+            if row.ENTITY_TYPE.strip() in [x.name for x in EntityTypes]
+            else EntityTypes.UNK,
             "country": pycountries.get(row.CNTRY_NM.lower().strip(), None),
             "website": "" if row.URL == "0" else row.URL,
             "thrift": row.ID_THRIFT,
@@ -68,6 +119,35 @@ class Usnic(Datasource):
         banks.append(bank)
         num_created += 1 if created else 0
         return num_created, banks
+
+    @classmethod
+    def supplement_with_branch_information(cls, row):
+
+        branch_bank_rssd = row["ID_RSSD_HD_OFF"]
+
+        try:
+            bank = Usnic.objects.get(rssd=branch_bank_rssd)
+        except Usnic.DoesNotExist:
+            return None
+
+        try:
+            country = pycountries.get(row.CNTRY_NM.lower().strip(), (None,))
+            country = Country.objects.get(code2=country)
+        except Country.DoesNotExist:
+            return bank
+
+        try:
+            state = Region.objects.get(
+                geoname_code=row.STATE_ABBR_NM.upper().strip(), country=country
+            )
+            bank.regions.add(state)
+        except Region.DoesNotExist or Region.MultipleObjectsReturned:
+            pass
+
+        # some potential to do subregions but will need to translate from PLACE_CD PHYSICAL PLACE CODE to geocode
+
+        bank.save()
+        return bank
 
     @classmethod
     def link_parents(cls):
@@ -114,5 +194,21 @@ class Usnic(Datasource):
         "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
     )
 
-    country = CountryField(multiple=False, help_text="Country the bank is locatd in", blank=True)
+    legal_name = models.CharField(max_length=200, null=False, blank=True)
+    entity_type = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        choices=EntityTypes.choices,
+        default=EntityTypes.UNK,
+    )
+
+    country = CountryField(multiple=False, help_text="Country the bank is locatd in", blank=True)  # type: ignore
+    regions = models.ManyToManyField(
+        Region, blank=True, help_text="regions in which there are local branches of a bank"
+    )
+    subregions = models.ManyToManyField(
+        SubRegion, blank=True, help_text="regions in which there are local branches of a bank"
+    )
+
     women_or_minority_owned = models.BooleanField(default=False)

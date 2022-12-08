@@ -202,7 +202,11 @@ class WikidataTestCase(TestCase):
 
 
 class UsnicTestCase(TestCase):
-    fixtures = ('fixtures/citieslight/country.json', 'fixtures/citieslight/region.json', 'fixtures/citieslight/subregion.json',)
+    fixtures = (
+        "fixtures/citieslight/country.json",
+        "fixtures/citieslight/region.json",
+        # "fixtures/citieslight/subregion.json",
+    )
 
     def setUp(self):
         self.active = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE_ABRIDGED.CSV")
@@ -215,6 +219,12 @@ class UsnicTestCase(TestCase):
         )
         bank = banks[0]
 
+        # make sure it's bank with rssd 71859. Needed for testing since this is a women/minority owned bank
+        self.assertEqual(bank.rssd, 71859)
+        self.assertEqual(bank.legal_name, "CBW BANK")
+        self.assertEqual(bank.name, "CBW BK")
+        self.assertEqual(bank.entity_type, "NMB")
+
         # just one bank created
         self.assertEqual(num_created, 1)
         self.assertEqual(num_created, len(banks))
@@ -224,3 +234,21 @@ class UsnicTestCase(TestCase):
 
         # women or minority owned is coded
         self.assertTrue(bank.women_or_minority_owned)
+
+    def test_supplement_with_branch_region_information(self):
+        bank_row = self.active[self.active["#ID_RSSD"] == 1164].iloc[0]
+        num_created, banks = Usnic._load_or_create_individual_instance(
+            banks=[], num_created=0, row=bank_row
+        )
+
+        bank = banks[0]
+        rssd = bank.rssd
+
+        branch_row = self.branches.iloc[0]
+        bank = Usnic.supplement_with_branch_information(branch_row)
+
+        if not bank:
+            self.fail("Bank was either not found or created")
+
+        region_abbreviations = [x["geoname_code"] for x in bank.regions.values()]
+        self.assertIn("CA", region_abbreviations)
