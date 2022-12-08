@@ -1,10 +1,9 @@
-from datetime import datetime, timezone
 from django.db import models
 
-
 import pandas as pd
+from django_countries.fields import CountryField
 
-from datasource.models.datasource import Datasource, classproperty
+from datasource.models.datasource import Datasource
 from datasource.pycountry_utils import pycountries
 
 
@@ -27,7 +26,9 @@ class Usnic(Datasource):
         num_created = 0
         for i, row in df.iterrows():
             try:
-                num_created = cls._load_or_create_individual_instance(banks, num_created, row)
+                num_created, banks = cls._load_or_create_individual_instance(
+                    banks, num_created, row
+                )
             except Exception as e:
                 print("\n\n===Usnic failed creation or updating===\n\n")
                 print(row)
@@ -41,7 +42,7 @@ class Usnic(Datasource):
         defaults = {
             # "source_link": row.link,
             "name": row.NM_SHORT,
-            "countries": pycountries.get(row.CNTRY_NM.lower(), None),
+            "country": pycountries.get(row.CNTRY_NM.lower().strip(), None),
             "website": "" if row.URL == "0" else row.URL,
             "thrift": row.ID_THRIFT,
             "thrift_hc": row.ID_THRIFT_HC,
@@ -54,6 +55,7 @@ class Usnic(Datasource):
             "ncua": row.ID_NCUA,
             "occ": row.ID_OCC,
             "ein": row.ID_TAX,
+            "women_or_minority_owned": True if str(row.MJR_OWN_MNRTY) != "0" else False,
         }
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
@@ -65,7 +67,7 @@ class Usnic(Datasource):
 
         banks.append(bank)
         num_created += 1 if created else 0
-        return num_created
+        return num_created, banks
 
     @classmethod
     def link_parents(cls):
@@ -111,3 +113,6 @@ class Usnic(Datasource):
     website = models.URLField(
         "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
     )
+
+    country = CountryField(multiple=False, help_text="Country the bank is locatd in", blank=True)
+    women_or_minority_owned = models.BooleanField(default=False)

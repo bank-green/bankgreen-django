@@ -1,15 +1,9 @@
-from re import M
-
 from django.test import TestCase
 
-import pandas as pd
-from datasource.models.bocc import Bocc
-
-from datasource.models.datasource import Datasource
-
 import np
-from brand.models.brand import Brand
+import pandas as pd
 
+from datasource.models.usnic import Usnic
 from datasource.models.wikidata import Wikidata
 
 from .models import Banktrack, Bimpact
@@ -206,19 +200,25 @@ class WikidataTestCase(TestCase):
         self.assertEqual(bank.website, "https://newuri")
         self.assertEqual(bank.source_link, "http://www.wikidata.org/entity/Q12345")
 
-    # def test_creates_parent_relationships(self):
-    #     df = pd.read_csv("./datasource/wikidata_parent_test.csv")
-    #     Wikidata._create(df=df)
 
-    #     askari = Wikidata.objects.get(source_id='http://www.wikidata.org/entity/Q4807137')
-    #     bilbao = Wikidata.objects.get(source_id='http://www.wikidata.org/entity/Q806189')
-    #     colombia = Wikidata.objects.get(source_id='http://www.wikidata.org/entity/Q16489599')
+class UsnicTestCase(TestCase):
+    def setUp(self):
+        self.active = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE_ABRIDGED.CSV")
+        self.branches = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_BRANCHES_ABRIDGED.CSV")
 
-    #     self.assertIsNotNone(askari)
-    #     self.assertIsNotNone(bilbao)
-    #     self.assertIsNotNone(colombia)
+    def test_load_or_create_individual_instance(self):
+        row = self.active.iloc[47]
+        num_created, banks = Usnic._load_or_create_individual_instance(
+            banks=[], num_created=0, row=row
+        )
+        bank = banks[0]
 
-    #     self.assertIsNone(askari.subsidiary_of_1)
+        # just one bank created
+        self.assertEqual(num_created, 1)
+        self.assertEqual(num_created, len(banks))
 
-    #     self.assertEqual(colombia.subsidiary_of_1, Brand.objects.get(source_link=bilbao.source_id))
-    #     self.assertEqual(colombia.subsidiary_of_1_pct, 100)
+        # country, region information filled in
+        self.assertEqual(bank.country.code, "US")
+
+        # women or minority owned is coded
+        self.assertTrue(bank.women_or_minority_owned)
