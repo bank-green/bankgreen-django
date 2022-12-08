@@ -61,6 +61,12 @@ sudo journalctl -u gunicorn.socket
 
 ## Refreshing Data
 
+
+### Updating cities_light fixtures
+```
+django dumpdata cities_light.Subregion --indent 4 > fixtures/citieslight/subregion.json
+```
+
 ### Refresh datasources from API
 
 ```
