@@ -1,0 +1,4034 @@
+[
+{
+    "model": "cities_light.country",
+    "pk": 1,
+    "fields": {
+        "name": "Andorra",
+        "name_ascii": "Andorra",
+        "slug": "andorra",
+        "geoname_id": 3041565,
+        "alternate_names": "Andorre;Les Vallées d’Andorre;L’Andorre;Principauté d’Andorre;Valls d’Andorra;Vallées et Suzerainetés d’Andorre",
+        "code2": "AD",
+        "code3": "AND",
+        "continent": "EU",
+        "tld": "ad",
+        "phone": "376"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 2,
+    "fields": {
+        "name": "United Arab Emirates",
+        "name_ascii": "United Arab Emirates",
+        "slug": "united-arab-emirates",
+        "geoname_id": 290557,
+        "alternate_names": "Al Imārāt al ‘Arabīyah al Muttaḩidah;Arab Federation of Gulf States;Arab Gulf Federation;Dawlat Ittiḩād al Imārāt al ‘Arabīyah;Federation of Arab Emirates;Federation of Arabian Emirates;Federation of Arabian Gulf Emirates;Union of Arab Emirates",
+        "code2": "AE",
+        "code3": "ARE",
+        "continent": "AS",
+        "tld": "ae",
+        "phone": "971"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 3,
+    "fields": {
+        "name": "Afghanistan",
+        "name_ascii": "Afghanistan",
+        "slug": "afghanistan",
+        "geoname_id": 1149361,
+        "alternate_names": "Afghānestān;Da Afghānestān Shāhī Dowlat;Democratic Republic of Afghanistan;Doulat i Jumhouri ye Afghanistan;Dowlat-e Eslāmī-ye Afghānestān;Dowlat-e Pādshāhī-ye Afghānestān;Islamic State of Afghanistan;Jomhūrī-ye Afghānestān;Jomhūrī-ye Demowkrātīk-e Afghānestān;Jomhūrī-ye Eslāmī-ye Afghānestān;Kingdom of Afghanistan;Republic of Afghanistan",
+        "code2": "AF",
+        "code3": "AFG",
+        "continent": "AS",
+        "tld": "af",
+        "phone": "93"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 4,
+    "fields": {
+        "name": "Antigua and Barbuda",
+        "name_ascii": "Antigua and Barbuda",
+        "slug": "antigua-and-barbuda",
+        "geoname_id": 3576396,
+        "alternate_names": "Antigua Presidency;Colony of Antigua;Presidency of Antigua;State of Antigua",
+        "code2": "AG",
+        "code3": "ATG",
+        "continent": "NA",
+        "tld": "ag",
+        "phone": "1-268"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 5,
+    "fields": {
+        "name": "Anguilla",
+        "name_ascii": "Anguilla",
+        "slug": "anguilla",
+        "geoname_id": 3573511,
+        "alternate_names": "",
+        "code2": "AI",
+        "code3": "AIA",
+        "continent": "NA",
+        "tld": "ai",
+        "phone": "1-264"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 6,
+    "fields": {
+        "name": "Albania",
+        "name_ascii": "Albania",
+        "slug": "albania",
+        "geoname_id": 783754,
+        "alternate_names": "Albanie;Albanien;Albanija;Albaniya;Alvania;Arnautluk;Peoples Republic of Albania;People’s Socialist Republic of Albania;Republika Popullore Socialiste e Shqipërisë;Republika Popullore e Shqipërisë;Sheypeni;Shkipeni;Shqipenia;Shqipni;Shqipnia;Shqipnija;Shqipnië;Shqipri;Shqipria;Shqiprija;Shqipëri;Shqipëria;Shqypni;Shqypëni",
+        "code2": "AL",
+        "code3": "ALB",
+        "continent": "EU",
+        "tld": "al",
+        "phone": "355"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 7,
+    "fields": {
+        "name": "Armenia",
+        "name_ascii": "Armenia",
+        "slug": "armenia",
+        "geoname_id": 174982,
+        "alternate_names": "Hayastan",
+        "code2": "AM",
+        "code3": "ARM",
+        "continent": "AS",
+        "tld": "am",
+        "phone": "374"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 8,
+    "fields": {
+        "name": "Angola",
+        "name_ascii": "Angola",
+        "slug": "angola",
+        "geoname_id": 3351879,
+        "alternate_names": "Colónia de Angola;Estado de Angola;People’s Republic of Angola;Portugiesisch Westafrika;Portuguese West Africa;Província de Angola;República Popular de Angola;África Ocidental Portuguesa",
+        "code2": "AO",
+        "code3": "AGO",
+        "continent": "AF",
+        "tld": "ao",
+        "phone": "244"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 9,
+    "fields": {
+        "name": "Antarctica",
+        "name_ascii": "Antarctica",
+        "slug": "antarctica",
+        "geoname_id": 6697173,
+        "alternate_names": "",
+        "code2": "AQ",
+        "code3": "ATA",
+        "continent": "AN",
+        "tld": "aq",
+        "phone": ""
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 10,
+    "fields": {
+        "name": "Argentina",
+        "name_ascii": "Argentina",
+        "slug": "argentina",
+        "geoname_id": 3865483,
+        "alternate_names": "La Argentina",
+        "code2": "AR",
+        "code3": "ARG",
+        "continent": "SA",
+        "tld": "ar",
+        "phone": "54"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 11,
+    "fields": {
+        "name": "American Samoa",
+        "name_ascii": "American Samoa",
+        "slug": "american-samoa",
+        "geoname_id": 5880801,
+        "alternate_names": "Amerika Samoa;Eastern Samoa",
+        "code2": "AS",
+        "code3": "ASM",
+        "continent": "OC",
+        "tld": "as",
+        "phone": "1-684"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 12,
+    "fields": {
+        "name": "Austria",
+        "name_ascii": "Austria",
+        "slug": "austria",
+        "geoname_id": 2782113,
+        "alternate_names": "Österreich",
+        "code2": "AT",
+        "code3": "AUT",
+        "continent": "EU",
+        "tld": "at",
+        "phone": "43"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 13,
+    "fields": {
+        "name": "Australia",
+        "name_ascii": "Australia",
+        "slug": "australia",
+        "geoname_id": 2077456,
+        "alternate_names": "Commonwealth of Australia",
+        "code2": "AU",
+        "code3": "AUS",
+        "continent": "OC",
+        "tld": "au",
+        "phone": "61"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 14,
+    "fields": {
+        "name": "Aruba",
+        "name_ascii": "Aruba",
+        "slug": "aruba",
+        "geoname_id": 3577279,
+        "alternate_names": "",
+        "code2": "AW",
+        "code3": "ABW",
+        "continent": "NA",
+        "tld": "aw",
+        "phone": "297"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 15,
+    "fields": {
+        "name": "Aland Islands",
+        "name_ascii": "Aland Islands",
+        "slug": "aland-islands",
+        "geoname_id": 661882,
+        "alternate_names": "Åland",
+        "code2": "AX",
+        "code3": "ALA",
+        "continent": "EU",
+        "tld": "ax",
+        "phone": "358-18"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 16,
+    "fields": {
+        "name": "Azerbaijan",
+        "name_ascii": "Azerbaijan",
+        "slug": "azerbaijan",
+        "geoname_id": 587116,
+        "alternate_names": "Azerbaijani Republic;Azärbaycan;Azärbayjan Respublikasy",
+        "code2": "AZ",
+        "code3": "AZE",
+        "continent": "AS",
+        "tld": "az",
+        "phone": "994"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 17,
+    "fields": {
+        "name": "Bosnia and Herzegovina",
+        "name_ascii": "Bosnia and Herzegovina",
+        "slug": "bosnia-and-herzegovina",
+        "geoname_id": 3277605,
+        "alternate_names": "Bosna i Hercegovina;Bosnia;Bosnia and Hercegovina;Narodna Republika Bosna i Hercegovina;People’s Republic of Bosnia and Hercegovina;Republic of Bosnia and Herzegovina;Republika Bosna i Hercegovina;Socialist Republic of Bosnia and Hercegovina;Socijalistička Republika Bosna i Hercegovina",
+        "code2": "BA",
+        "code3": "BIH",
+        "continent": "EU",
+        "tld": "ba",
+        "phone": "387"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 18,
+    "fields": {
+        "name": "Barbados",
+        "name_ascii": "Barbados",
+        "slug": "barbados",
+        "geoname_id": 3374084,
+        "alternate_names": "Barbadoes;Colony of Barbados",
+        "code2": "BB",
+        "code3": "BRB",
+        "continent": "NA",
+        "tld": "bb",
+        "phone": "1-246"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 19,
+    "fields": {
+        "name": "Bangladesh",
+        "name_ascii": "Bangladesh",
+        "slug": "bangladesh",
+        "geoname_id": 1210997,
+        "alternate_names": "Gana Prajatantri Bangladesh;People’s Republic of Bangladesh",
+        "code2": "BD",
+        "code3": "BGD",
+        "continent": "AS",
+        "tld": "bd",
+        "phone": "880"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 20,
+    "fields": {
+        "name": "Belgium",
+        "name_ascii": "Belgium",
+        "slug": "belgium",
+        "geoname_id": 2802361,
+        "alternate_names": "Belgien",
+        "code2": "BE",
+        "code3": "BEL",
+        "continent": "EU",
+        "tld": "be",
+        "phone": "32"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 21,
+    "fields": {
+        "name": "Burkina Faso",
+        "name_ascii": "Burkina Faso",
+        "slug": "burkina-faso",
+        "geoname_id": 2361809,
+        "alternate_names": "Burkina;Republic of Upper Volta;République Voltaïque;République de Haute-Volta;Volta Republic;Volta Superior;Voltaic Republic",
+        "code2": "BF",
+        "code3": "BFA",
+        "continent": "AF",
+        "tld": "bf",
+        "phone": "226"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 22,
+    "fields": {
+        "name": "Bulgaria",
+        "name_ascii": "Bulgaria",
+        "slug": "bulgaria",
+        "geoname_id": 732800,
+        "alternate_names": "Blgariya;Bulgarie;Bulgarien;Bulgaristan;Bŭlgariya;Narodna Republika Bŭlgariya;People’s Republic of Bulgaria",
+        "code2": "BG",
+        "code3": "BGR",
+        "continent": "EU",
+        "tld": "bg",
+        "phone": "359"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 23,
+    "fields": {
+        "name": "Bahrain",
+        "name_ascii": "Bahrain",
+        "slug": "bahrain",
+        "geoname_id": 290291,
+        "alternate_names": "Al Baḩrayn;Bahrein;Dawlat al Baḩrayn;Mamlakat al Baḩrayn;Shekdom of Bahrain;State of Bahrain;دَوْلَة اَلْبَحْرَيْن",
+        "code2": "BH",
+        "code3": "BHR",
+        "continent": "AS",
+        "tld": "bh",
+        "phone": "973"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 24,
+    "fields": {
+        "name": "Burundi",
+        "name_ascii": "Burundi",
+        "slug": "burundi",
+        "geoname_id": 433561,
+        "alternate_names": "Urundi",
+        "code2": "BI",
+        "code3": "BDI",
+        "continent": "AF",
+        "tld": "bi",
+        "phone": "257"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 25,
+    "fields": {
+        "name": "Benin",
+        "name_ascii": "Benin",
+        "slug": "benin",
+        "geoname_id": 2395170,
+        "alternate_names": "Bénin;Dahome;People’s Republic of Benin;Republic of Dahomey;République Populaire du Bénin;République du Dahomey",
+        "code2": "BJ",
+        "code3": "BEN",
+        "continent": "AF",
+        "tld": "bj",
+        "phone": "229"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 26,
+    "fields": {
+        "name": "Saint Barthelemy",
+        "name_ascii": "Saint Barthelemy",
+        "slug": "saint-barthelemy",
+        "geoname_id": 3578476,
+        "alternate_names": "Ouanalao;Saint Barthélemy",
+        "code2": "BL",
+        "code3": "BLM",
+        "continent": "NA",
+        "tld": "gp",
+        "phone": "590"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 27,
+    "fields": {
+        "name": "Bermuda",
+        "name_ascii": "Bermuda",
+        "slug": "bermuda",
+        "geoname_id": 3573345,
+        "alternate_names": "",
+        "code2": "BM",
+        "code3": "BMU",
+        "continent": "NA",
+        "tld": "bm",
+        "phone": "1-441"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 28,
+    "fields": {
+        "name": "Brunei",
+        "name_ascii": "Brunei",
+        "slug": "brunei",
+        "geoname_id": 1820814,
+        "alternate_names": "Negara Brunei Darussalam;Negeri Brunei;State of Brunei;Sultanate of Brunei",
+        "code2": "BN",
+        "code3": "BRN",
+        "continent": "AS",
+        "tld": "bn",
+        "phone": "673"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 29,
+    "fields": {
+        "name": "Bolivia",
+        "name_ascii": "Bolivia",
+        "slug": "bolivia",
+        "geoname_id": 3923057,
+        "alternate_names": "Bolivia (Plurinational State of);Bolivia, Plurinational State Of;Plurinational State of Bolivia;Republic of Bolivia",
+        "code2": "BO",
+        "code3": "BOL",
+        "continent": "SA",
+        "tld": "bo",
+        "phone": "591"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 30,
+    "fields": {
+        "name": "Bonaire, Saint Eustatius and Saba",
+        "name_ascii": "Bonaire, Saint Eustatius and Saba",
+        "slug": "bonaire-saint-eustatius-and-saba",
+        "geoname_id": 7626844,
+        "alternate_names": "Bonaire, Saint Eustatius, and Saba;Bonaire, Sint Eustatius and Saba;Caribbean Netherlands",
+        "code2": "BQ",
+        "code3": "BES",
+        "continent": "NA",
+        "tld": "bq",
+        "phone": "599"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 31,
+    "fields": {
+        "name": "Brazil",
+        "name_ascii": "Brazil",
+        "slug": "brazil",
+        "geoname_id": 3469034,
+        "alternate_names": "Brasil;Brasilien;Brasíle;Brésil;Estados Unidos do Brasil;Estados Unidos do Brazil;República dos Estados Unidos do Brasil;United States of Brazil",
+        "code2": "BR",
+        "code3": "BRA",
+        "continent": "SA",
+        "tld": "br",
+        "phone": "55"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 32,
+    "fields": {
+        "name": "Bahamas",
+        "name_ascii": "Bahamas",
+        "slug": "bahamas",
+        "geoname_id": 3572887,
+        "alternate_names": "Bahama Islands;Colony of the Bahamas;Commonwealth of The Bahamas",
+        "code2": "BS",
+        "code3": "BHS",
+        "continent": "NA",
+        "tld": "bs",
+        "phone": "1-242"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 33,
+    "fields": {
+        "name": "Bhutan",
+        "name_ascii": "Bhutan",
+        "slug": "bhutan",
+        "geoname_id": 1252634,
+        "alternate_names": "Druk-yul;Kingdom of Bhutan",
+        "code2": "BT",
+        "code3": "BTN",
+        "continent": "AS",
+        "tld": "bt",
+        "phone": "975"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 34,
+    "fields": {
+        "name": "Bouvet Island",
+        "name_ascii": "Bouvet Island",
+        "slug": "bouvet-island",
+        "geoname_id": 3371123,
+        "alternate_names": "",
+        "code2": "BV",
+        "code3": "BVT",
+        "continent": "AN",
+        "tld": "bv",
+        "phone": ""
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 35,
+    "fields": {
+        "name": "Botswana",
+        "name_ascii": "Botswana",
+        "slug": "botswana",
+        "geoname_id": 933860,
+        "alternate_names": "Bechuanaland Protectorate;Betschuanaland Protektorat;Betsjoeanaland;Betsjoeanaland Protektoraat;British Protectorate of Bechuanaland;Britse Protektoraat van Betsjoeanaland;Northern Bechuanaland;Republic of Botswana",
+        "code2": "BW",
+        "code3": "BWA",
+        "continent": "AF",
+        "tld": "bw",
+        "phone": "267"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 36,
+    "fields": {
+        "name": "Belarus",
+        "name_ascii": "Belarus",
+        "slug": "belarus",
+        "geoname_id": 630336,
+        "alternate_names": "Belorussia;Byelarus’;Republic of Byelarus",
+        "code2": "BY",
+        "code3": "BLR",
+        "continent": "EU",
+        "tld": "by",
+        "phone": "375"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 37,
+    "fields": {
+        "name": "Belize",
+        "name_ascii": "Belize",
+        "slug": "belize",
+        "geoname_id": 3582678,
+        "alternate_names": "Balize;Belice",
+        "code2": "BZ",
+        "code3": "BLZ",
+        "continent": "NA",
+        "tld": "bz",
+        "phone": "501"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 38,
+    "fields": {
+        "name": "Canada",
+        "name_ascii": "Canada",
+        "slug": "canada",
+        "geoname_id": 6251999,
+        "alternate_names": "",
+        "code2": "CA",
+        "code3": "CAN",
+        "continent": "NA",
+        "tld": "ca",
+        "phone": "1"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 39,
+    "fields": {
+        "name": "Cocos Islands",
+        "name_ascii": "Cocos Islands",
+        "slug": "cocos-islands",
+        "geoname_id": 1547376,
+        "alternate_names": "Keeling Islands",
+        "code2": "CC",
+        "code3": "CCK",
+        "continent": "AS",
+        "tld": "cc",
+        "phone": "61"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 40,
+    "fields": {
+        "name": "Democratic Republic of the Congo",
+        "name_ascii": "Democratic Republic of the Congo",
+        "slug": "democratic-republic-of-the-congo",
+        "geoname_id": 203312,
+        "alternate_names": "Congo Free State;Federal Republic of the Congo;Federation of the Congo",
+        "code2": "CD",
+        "code3": "COD",
+        "continent": "AF",
+        "tld": "cd",
+        "phone": "243"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 41,
+    "fields": {
+        "name": "Central African Republic",
+        "name_ascii": "Central African Republic",
+        "slug": "central-african-republic",
+        "geoname_id": 239880,
+        "alternate_names": "Central African Empire;Empire Centrafricaine;Oubangui-Chari;Territoire de l’Oubangui;Ubangi-Shari;Ubangui-Shari",
+        "code2": "CF",
+        "code3": "CAF",
+        "continent": "AF",
+        "tld": "cf",
+        "phone": "236"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 42,
+    "fields": {
+        "name": "Republic of the Congo",
+        "name_ascii": "Republic of the Congo",
+        "slug": "republic-of-the-congo",
+        "geoname_id": 2260494,
+        "alternate_names": "Middle Congo;Moyen-Congo;République Populaire du Congo",
+        "code2": "CG",
+        "code3": "COG",
+        "continent": "AF",
+        "tld": "cg",
+        "phone": "242"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 43,
+    "fields": {
+        "name": "Switzerland",
+        "name_ascii": "Switzerland",
+        "slug": "switzerland",
+        "geoname_id": 2658434,
+        "alternate_names": "Confederatio Helvetica;Helvetia;Schweiz;Schweizerische Eidgenossenschaft;Schwiz;Suisse;Svizzera;Swiss Confederation",
+        "code2": "CH",
+        "code3": "CHE",
+        "continent": "EU",
+        "tld": "ch",
+        "phone": "41"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 44,
+    "fields": {
+        "name": "Ivory Coast",
+        "name_ascii": "Ivory Coast",
+        "slug": "ivory-coast",
+        "geoname_id": 2287781,
+        "alternate_names": "Costa de Marfil;Côte de l’Ivoire;Elfenbein-Küste",
+        "code2": "CI",
+        "code3": "CIV",
+        "continent": "AF",
+        "tld": "ci",
+        "phone": "225"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 45,
+    "fields": {
+        "name": "Cook Islands",
+        "name_ascii": "Cook Islands",
+        "slug": "cook-islands",
+        "geoname_id": 1899402,
+        "alternate_names": "",
+        "code2": "CK",
+        "code3": "COK",
+        "continent": "OC",
+        "tld": "ck",
+        "phone": "682"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 46,
+    "fields": {
+        "name": "Chile",
+        "name_ascii": "Chile",
+        "slug": "chile",
+        "geoname_id": 3895114,
+        "alternate_names": "República de Chile",
+        "code2": "CL",
+        "code3": "CHL",
+        "continent": "SA",
+        "tld": "cl",
+        "phone": "56"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 47,
+    "fields": {
+        "name": "Cameroon",
+        "name_ascii": "Cameroon",
+        "slug": "cameroon",
+        "geoname_id": 2233387,
+        "alternate_names": "Cameroun;Federal Republic of Cameroon;Federation of the Camerouns;République Fédérale du Cameroun;République Unie du Cameroun;United Republic of Cameroon",
+        "code2": "CM",
+        "code3": "CMR",
+        "continent": "AF",
+        "tld": "cm",
+        "phone": "237"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 48,
+    "fields": {
+        "name": "China",
+        "name_ascii": "China",
+        "slug": "china",
+        "geoname_id": 1814991,
+        "alternate_names": "Chung-hua Jen-min-kung-ho-kuo;Zhongguo;Zhonghua Renmin Gongheguo;中华人民共和国;中国",
+        "code2": "CN",
+        "code3": "CHN",
+        "continent": "AS",
+        "tld": "cn",
+        "phone": "86"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 49,
+    "fields": {
+        "name": "Colombia",
+        "name_ascii": "Colombia",
+        "slug": "colombia",
+        "geoname_id": 3686110,
+        "alternate_names": "Colombié;Columbien;República de Colombia",
+        "code2": "CO",
+        "code3": "COL",
+        "continent": "SA",
+        "tld": "co",
+        "phone": "57"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 50,
+    "fields": {
+        "name": "Costa Rica",
+        "name_ascii": "Costa Rica",
+        "slug": "costa-rica",
+        "geoname_id": 3624060,
+        "alternate_names": "Republic of Costa Rica",
+        "code2": "CR",
+        "code3": "CRI",
+        "continent": "NA",
+        "tld": "cr",
+        "phone": "506"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 51,
+    "fields": {
+        "name": "Cuba",
+        "name_ascii": "Cuba",
+        "slug": "cuba",
+        "geoname_id": 3562981,
+        "alternate_names": "Republic of Cuba",
+        "code2": "CU",
+        "code3": "CUB",
+        "continent": "NA",
+        "tld": "cu",
+        "phone": "53"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 52,
+    "fields": {
+        "name": "Cabo Verde",
+        "name_ascii": "Cabo Verde",
+        "slug": "cabo-verde",
+        "geoname_id": 3374766,
+        "alternate_names": "Province of Cape Verde;Província de Cabo Verde;Republic of Cape Verde Islands",
+        "code2": "CV",
+        "code3": "CPV",
+        "continent": "AF",
+        "tld": "cv",
+        "phone": "238"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 53,
+    "fields": {
+        "name": "Curacao",
+        "name_ascii": "Curacao",
+        "slug": "curacao",
+        "geoname_id": 7626836,
+        "alternate_names": "Country of Curaçao",
+        "code2": "CW",
+        "code3": "CUW",
+        "continent": "NA",
+        "tld": "cw",
+        "phone": "599"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 54,
+    "fields": {
+        "name": "Christmas Island",
+        "name_ascii": "Christmas Island",
+        "slug": "christmas-island",
+        "geoname_id": 2078138,
+        "alternate_names": "Territory of Christmas Island",
+        "code2": "CX",
+        "code3": "CXR",
+        "continent": "OC",
+        "tld": "cx",
+        "phone": "61"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 55,
+    "fields": {
+        "name": "Cyprus",
+        "name_ascii": "Cyprus",
+        "slug": "cyprus",
+        "geoname_id": 146669,
+        "alternate_names": "Republic of Cyprus",
+        "code2": "CY",
+        "code3": "CYP",
+        "continent": "EU",
+        "tld": "cy",
+        "phone": "357"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 56,
+    "fields": {
+        "name": "Czechia",
+        "name_ascii": "Czechia",
+        "slug": "czechia",
+        "geoname_id": 3077311,
+        "alternate_names": "Czech Lands",
+        "code2": "CZ",
+        "code3": "CZE",
+        "continent": "EU",
+        "tld": "cz",
+        "phone": "420"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 57,
+    "fields": {
+        "name": "Germany",
+        "name_ascii": "Germany",
+        "slug": "germany",
+        "geoname_id": 2921044,
+        "alternate_names": "Duitschland",
+        "code2": "DE",
+        "code3": "DEU",
+        "continent": "EU",
+        "tld": "de",
+        "phone": "49"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 58,
+    "fields": {
+        "name": "Djibouti",
+        "name_ascii": "Djibouti",
+        "slug": "djibouti",
+        "geoname_id": 223816,
+        "alternate_names": "Afars and Issas;Jumhūrīyat Jībūtī;Jībūtī",
+        "code2": "DJ",
+        "code3": "DJI",
+        "continent": "AF",
+        "tld": "dj",
+        "phone": "253"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 59,
+    "fields": {
+        "name": "Denmark",
+        "name_ascii": "Denmark",
+        "slug": "denmark",
+        "geoname_id": 2623032,
+        "alternate_names": "Danemark;Danimarca",
+        "code2": "DK",
+        "code3": "DNK",
+        "continent": "EU",
+        "tld": "dk",
+        "phone": "45"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 60,
+    "fields": {
+        "name": "Dominica",
+        "name_ascii": "Dominica",
+        "slug": "dominica",
+        "geoname_id": 3575830,
+        "alternate_names": "Colony of Dominica;Presidency of Dominica;State of Dominica",
+        "code2": "DM",
+        "code3": "DMA",
+        "continent": "NA",
+        "tld": "dm",
+        "phone": "1-767"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 61,
+    "fields": {
+        "name": "Dominican Republic",
+        "name_ascii": "Dominican Republic",
+        "slug": "dominican-republic",
+        "geoname_id": 3508796,
+        "alternate_names": "Santo Domingo",
+        "code2": "DO",
+        "code3": "DOM",
+        "continent": "NA",
+        "tld": "do",
+        "phone": "1-809 and 1-829"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 62,
+    "fields": {
+        "name": "Algeria",
+        "name_ascii": "Algeria",
+        "slug": "algeria",
+        "geoname_id": 2589581,
+        "alternate_names": "Al Jazā’ir;Al Jumhūrīyah al Jazā’irīyah ad Dīmuqrāţīyah ash Sha‘bīyah;Algérie;Argelia;Democratic People’s Republic of Algeria;Democratic and Popular Republic of Algeria;La République Algérienne;La République Algérienne Démocratique et Populaire;L’Algérie;L’Etat Algerien;Republic of Algeria;République Algérienne Démocratique et Populaire",
+        "code2": "DZ",
+        "code3": "DZA",
+        "continent": "AF",
+        "tld": "dz",
+        "phone": "213"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 63,
+    "fields": {
+        "name": "Ecuador",
+        "name_ascii": "Ecuador",
+        "slug": "ecuador",
+        "geoname_id": 3658394,
+        "alternate_names": "Republic of Ecuador",
+        "code2": "EC",
+        "code3": "ECU",
+        "continent": "SA",
+        "tld": "ec",
+        "phone": "593"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 64,
+    "fields": {
+        "name": "Estonia",
+        "name_ascii": "Estonia",
+        "slug": "estonia",
+        "geoname_id": 453733,
+        "alternate_names": "Estland;Estoniya;Estonja",
+        "code2": "EE",
+        "code3": "EST",
+        "continent": "EU",
+        "tld": "ee",
+        "phone": "372"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 65,
+    "fields": {
+        "name": "Egypt",
+        "name_ascii": "Egypt",
+        "slug": "egypt",
+        "geoname_id": 357994,
+        "alternate_names": "Aegyptus;Aigyptos;Al Iqlīm al Janūbī;Al Iqlīm al Mişrī;Al Jumhūrīyah al Miṣrīyah;Al Jumhūrīyah al ‘Arabīyah al Muttaḩidah;Egitto;Egypte;El Masr;El Qutr el Masri;Jumhūrīyat Mişr al ‘Arabīyah;Republic of Egypt;United Arab Republic;Ägypten",
+        "code2": "EG",
+        "code3": "EGY",
+        "continent": "AF",
+        "tld": "eg",
+        "phone": "20"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 66,
+    "fields": {
+        "name": "Western Sahara",
+        "name_ascii": "Western Sahara",
+        "slug": "western-sahara",
+        "geoname_id": 2461445,
+        "alternate_names": "El Sáhara;Provincia Española de Sáhara",
+        "code2": "EH",
+        "code3": "ESH",
+        "continent": "AF",
+        "tld": "eh",
+        "phone": "212"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 67,
+    "fields": {
+        "name": "Eritrea",
+        "name_ascii": "Eritrea",
+        "slug": "eritrea",
+        "geoname_id": 338010,
+        "alternate_names": "Erithrea;Erythraea;Erythraia;Hagere Ērtra;Érythrée;Ēritra",
+        "code2": "ER",
+        "code3": "ERI",
+        "continent": "AF",
+        "tld": "er",
+        "phone": "291"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 68,
+    "fields": {
+        "name": "Spain",
+        "name_ascii": "Spain",
+        "slug": "spain",
+        "geoname_id": 2510769,
+        "alternate_names": "Espagne;Espanha;Estado Español;Hispania;Spagna;Spanien;Spanish State",
+        "code2": "ES",
+        "code3": "ESP",
+        "continent": "EU",
+        "tld": "es",
+        "phone": "34"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 69,
+    "fields": {
+        "name": "Ethiopia",
+        "name_ascii": "Ethiopia",
+        "slug": "ethiopia",
+        "geoname_id": 337996,
+        "alternate_names": "Abessinien;Abissinia;Abyssinie;El Habesha;Etiopia;Hibreteseb’āwīt Ītyop’iya;People’s Democratic Republic of Ethiopia;Socialist Ethiopia;Ye’ Etiyop’iya Niguse Negast Mengist;Äthiopien;Ītyop’yā",
+        "code2": "ET",
+        "code3": "ETH",
+        "continent": "AF",
+        "tld": "et",
+        "phone": "251"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 70,
+    "fields": {
+        "name": "Finland",
+        "name_ascii": "Finland",
+        "slug": "finland",
+        "geoname_id": 660013,
+        "alternate_names": "Finlande;Finlandia;Finlyandiya;Finnland",
+        "code2": "FI",
+        "code3": "FIN",
+        "continent": "EU",
+        "tld": "fi",
+        "phone": "358"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 71,
+    "fields": {
+        "name": "Fiji",
+        "name_ascii": "Fiji",
+        "slug": "fiji",
+        "geoname_id": 2205218,
+        "alternate_names": "Feeje;Republic of Fiji;Republic of the Fiji Islands;Viti",
+        "code2": "FJ",
+        "code3": "FJI",
+        "continent": "OC",
+        "tld": "fj",
+        "phone": "679"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 72,
+    "fields": {
+        "name": "Falkland Islands",
+        "name_ascii": "Falkland Islands",
+        "slug": "falkland-islands",
+        "geoname_id": 3474414,
+        "alternate_names": "Colony of the Falkland Islands;Falkland Islands (Islas Malvinas);Islas Malvinas",
+        "code2": "FK",
+        "code3": "FLK",
+        "continent": "SA",
+        "tld": "fk",
+        "phone": "500"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 73,
+    "fields": {
+        "name": "Micronesia",
+        "name_ascii": "Micronesia",
+        "slug": "micronesia",
+        "geoname_id": 2081918,
+        "alternate_names": "Federated States of Micronesia",
+        "code2": "FM",
+        "code3": "FSM",
+        "continent": "OC",
+        "tld": "fm",
+        "phone": "691"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 74,
+    "fields": {
+        "name": "Faroe Islands",
+        "name_ascii": "Faroe Islands",
+        "slug": "faroe-islands",
+        "geoname_id": 2622320,
+        "alternate_names": "Faeroe Islands;Fæaerøoerne",
+        "code2": "FO",
+        "code3": "FRO",
+        "continent": "EU",
+        "tld": "fo",
+        "phone": "298"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 75,
+    "fields": {
+        "name": "France",
+        "name_ascii": "France",
+        "slug": "france",
+        "geoname_id": 3017382,
+        "alternate_names": "Republic of France",
+        "code2": "FR",
+        "code3": "FRA",
+        "continent": "EU",
+        "tld": "fr",
+        "phone": "33"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 76,
+    "fields": {
+        "name": "Gabon",
+        "name_ascii": "Gabon",
+        "slug": "gabon",
+        "geoname_id": 2400553,
+        "alternate_names": "Gaboon Republic;Gabun;Territoire du Gabon",
+        "code2": "GA",
+        "code3": "GAB",
+        "continent": "AF",
+        "tld": "ga",
+        "phone": "241"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 77,
+    "fields": {
+        "name": "United Kingdom",
+        "name_ascii": "United Kingdom",
+        "slug": "united-kingdom",
+        "geoname_id": 2635167,
+        "alternate_names": "Britain",
+        "code2": "GB",
+        "code3": "GBR",
+        "continent": "EU",
+        "tld": "uk",
+        "phone": "44"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 78,
+    "fields": {
+        "name": "Grenada",
+        "name_ascii": "Grenada",
+        "slug": "grenada",
+        "geoname_id": 3580239,
+        "alternate_names": "Colony of Grenada",
+        "code2": "GD",
+        "code3": "GRD",
+        "continent": "NA",
+        "tld": "gd",
+        "phone": "1-473"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 79,
+    "fields": {
+        "name": "Georgia",
+        "name_ascii": "Georgia",
+        "slug": "georgia",
+        "geoname_id": 614540,
+        "alternate_names": "Gruziya;Republic of Georgia;Sak’art’velos Respublika",
+        "code2": "GE",
+        "code3": "GEO",
+        "continent": "AS",
+        "tld": "ge",
+        "phone": "995"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 80,
+    "fields": {
+        "name": "French Guiana",
+        "name_ascii": "French Guiana",
+        "slug": "french-guiana",
+        "geoname_id": 3381670,
+        "alternate_names": "La Guyane;La Guyane Française",
+        "code2": "GF",
+        "code3": "GUF",
+        "continent": "SA",
+        "tld": "gf",
+        "phone": "594"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 81,
+    "fields": {
+        "name": "Guernsey",
+        "name_ascii": "Guernsey",
+        "slug": "guernsey",
+        "geoname_id": 3042362,
+        "alternate_names": "",
+        "code2": "GG",
+        "code3": "GGY",
+        "continent": "EU",
+        "tld": "gg",
+        "phone": "44-1481"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 82,
+    "fields": {
+        "name": "Ghana",
+        "name_ascii": "Ghana",
+        "slug": "ghana",
+        "geoname_id": 2300660,
+        "alternate_names": "Republic of Ghana",
+        "code2": "GH",
+        "code3": "GHA",
+        "continent": "AF",
+        "tld": "gh",
+        "phone": "233"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 83,
+    "fields": {
+        "name": "Gibraltar",
+        "name_ascii": "Gibraltar",
+        "slug": "gibraltar",
+        "geoname_id": 2411586,
+        "alternate_names": "",
+        "code2": "GI",
+        "code3": "GIB",
+        "continent": "EU",
+        "tld": "gi",
+        "phone": "350"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 84,
+    "fields": {
+        "name": "Greenland",
+        "name_ascii": "Greenland",
+        "slug": "greenland",
+        "geoname_id": 3425505,
+        "alternate_names": "",
+        "code2": "GL",
+        "code3": "GRL",
+        "continent": "NA",
+        "tld": "gl",
+        "phone": "299"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 85,
+    "fields": {
+        "name": "Gambia",
+        "name_ascii": "Gambia",
+        "slug": "gambia",
+        "geoname_id": 2413451,
+        "alternate_names": "",
+        "code2": "GM",
+        "code3": "GMB",
+        "continent": "AF",
+        "tld": "gm",
+        "phone": "220"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 86,
+    "fields": {
+        "name": "Guinea",
+        "name_ascii": "Guinea",
+        "slug": "guinea",
+        "geoname_id": 2420477,
+        "alternate_names": "Französisch-Guinea;French Guinea;Guinean People’s Republic;Guinée;Guinée Française;People’s Revolutionary Republic of Guinea;Popular and Revolutionary Republic of Guinea;Revolutionary People’s Republic of Guinea",
+        "code2": "GN",
+        "code3": "GIN",
+        "continent": "AF",
+        "tld": "gn",
+        "phone": "224"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 87,
+    "fields": {
+        "name": "Guadeloupe",
+        "name_ascii": "Guadeloupe",
+        "slug": "guadeloupe",
+        "geoname_id": 3579143,
+        "alternate_names": "",
+        "code2": "GP",
+        "code3": "GLP",
+        "continent": "NA",
+        "tld": "gp",
+        "phone": "590"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 88,
+    "fields": {
+        "name": "Equatorial Guinea",
+        "name_ascii": "Equatorial Guinea",
+        "slug": "equatorial-guinea",
+        "geoname_id": 2309096,
+        "alternate_names": "Guinea Española;Posesiones Españolas del Golfo de Guinea;Provincia de la Guinea Ecuatorial;Spanish Guinea;Territorios Españoles del Golfo de Guinea",
+        "code2": "GQ",
+        "code3": "GNQ",
+        "continent": "AF",
+        "tld": "gq",
+        "phone": "240"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 89,
+    "fields": {
+        "name": "Greece",
+        "name_ascii": "Greece",
+        "slug": "greece",
+        "geoname_id": 390903,
+        "alternate_names": "Grece;Grecia;Griechenland;Hellas;Kingdom of Hella",
+        "code2": "GR",
+        "code3": "GRC",
+        "continent": "EU",
+        "tld": "gr",
+        "phone": "30"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 90,
+    "fields": {
+        "name": "South Georgia and the South Sandwich Islands",
+        "name_ascii": "South Georgia and the South Sandwich Islands",
+        "slug": "south-georgia-and-the-south-sandwich-islands",
+        "geoname_id": 3474415,
+        "alternate_names": "Islas Georgias del Sur",
+        "code2": "GS",
+        "code3": "SGS",
+        "continent": "AN",
+        "tld": "gs",
+        "phone": ""
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 91,
+    "fields": {
+        "name": "Guatemala",
+        "name_ascii": "Guatemala",
+        "slug": "guatemala",
+        "geoname_id": 3595528,
+        "alternate_names": "Republic of Guatemala",
+        "code2": "GT",
+        "code3": "GTM",
+        "continent": "NA",
+        "tld": "gt",
+        "phone": "502"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 92,
+    "fields": {
+        "name": "Guam",
+        "name_ascii": "Guam",
+        "slug": "guam",
+        "geoname_id": 4043988,
+        "alternate_names": "Guam - US Unincorporated Organized Territory;Territory of Guam",
+        "code2": "GU",
+        "code3": "GUM",
+        "continent": "OC",
+        "tld": "gu",
+        "phone": "1-671"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 93,
+    "fields": {
+        "name": "Guinea-Bissau",
+        "name_ascii": "Guinea-Bissau",
+        "slug": "guinea-bissau",
+        "geoname_id": 2372248,
+        "alternate_names": "Guiné Portuguesa;Guinée Bissao;Guinée-Bissau;Portuguese Guinea;Província da Guiné",
+        "code2": "GW",
+        "code3": "GNB",
+        "continent": "AF",
+        "tld": "gw",
+        "phone": "245"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 94,
+    "fields": {
+        "name": "Guyana",
+        "name_ascii": "Guyana",
+        "slug": "guyana",
+        "geoname_id": 3378535,
+        "alternate_names": "Co-operative Republic of Guyana",
+        "code2": "GY",
+        "code3": "GUY",
+        "continent": "SA",
+        "tld": "gy",
+        "phone": "592"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 95,
+    "fields": {
+        "name": "Hong Kong",
+        "name_ascii": "Hong Kong",
+        "slug": "hong-kong",
+        "geoname_id": 1819730,
+        "alternate_names": "Colony of Hong Kong;Hsiang-chiang;Xianggang;Xianggang Tebie Xingzhengqu;香港;香港特别行政区",
+        "code2": "HK",
+        "code3": "HKG",
+        "continent": "AS",
+        "tld": "hk",
+        "phone": "852"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 96,
+    "fields": {
+        "name": "Heard Island and McDonald Islands",
+        "name_ascii": "Heard Island and McDonald Islands",
+        "slug": "heard-island-and-mcdonald-islands",
+        "geoname_id": 1547314,
+        "alternate_names": "Heard and McDonald Islands;Territory of Heard and McDonald Islands",
+        "code2": "HM",
+        "code3": "HMD",
+        "continent": "AN",
+        "tld": "hm",
+        "phone": ""
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 97,
+    "fields": {
+        "name": "Honduras",
+        "name_ascii": "Honduras",
+        "slug": "honduras",
+        "geoname_id": 3608932,
+        "alternate_names": "Republic of Honduras",
+        "code2": "HN",
+        "code3": "HND",
+        "continent": "NA",
+        "tld": "hn",
+        "phone": "504"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 98,
+    "fields": {
+        "name": "Croatia",
+        "name_ascii": "Croatia",
+        "slug": "croatia",
+        "geoname_id": 3202326,
+        "alternate_names": "Hrvatska;Narodna Republika Hrvatska;Peoples Republic of Croatia;Republika Hrvatska;Socialist Republic of Croatia;Socijalistička Republika Hrvatska",
+        "code2": "HR",
+        "code3": "HRV",
+        "continent": "EU",
+        "tld": "hr",
+        "phone": "385"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 99,
+    "fields": {
+        "name": "Haiti",
+        "name_ascii": "Haiti",
+        "slug": "haiti",
+        "geoname_id": 3723988,
+        "alternate_names": "Republic of Haiti",
+        "code2": "HT",
+        "code3": "HTI",
+        "continent": "NA",
+        "tld": "ht",
+        "phone": "509"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 100,
+    "fields": {
+        "name": "Hungary",
+        "name_ascii": "Hungary",
+        "slug": "hungary",
+        "geoname_id": 719819,
+        "alternate_names": "A Magyar Köztársaság;A Magyar Népköztársaság;Hongrie;Madjarska;Magyar Népköztársaság;Maďarsko;Ungaria;Ungarn;Ungheria;Wegry",
+        "code2": "HU",
+        "code3": "HUN",
+        "continent": "EU",
+        "tld": "hu",
+        "phone": "36"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 101,
+    "fields": {
+        "name": "Indonesia",
+        "name_ascii": "Indonesia",
+        "slug": "indonesia",
+        "geoname_id": 1643084,
+        "alternate_names": "Indonesië;Netherland India;Netherlands Indies;Republiek de Verenigde Staten van Indonesië;Republik Indonesia;Republik Indonesia Serikat;United States of Indonesia",
+        "code2": "ID",
+        "code3": "IDN",
+        "continent": "AS",
+        "tld": "id",
+        "phone": "62"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 102,
+    "fields": {
+        "name": "Ireland",
+        "name_ascii": "Ireland",
+        "slug": "ireland",
+        "geoname_id": 2963597,
+        "alternate_names": "Irish Free State;Irish Republic;Republic of Ireland;Saorstát Eireann",
+        "code2": "IE",
+        "code3": "IRL",
+        "continent": "EU",
+        "tld": "ie",
+        "phone": "353"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 103,
+    "fields": {
+        "name": "Israel",
+        "name_ascii": "Israel",
+        "slug": "israel",
+        "geoname_id": 294640,
+        "alternate_names": "Dawlat Isrā’īl;Eretz Yisrael;Ereẕ Yisra’el;Isrā’īl;Yisra’el",
+        "code2": "IL",
+        "code3": "ISR",
+        "continent": "AS",
+        "tld": "il",
+        "phone": "972"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 104,
+    "fields": {
+        "name": "Isle of Man",
+        "name_ascii": "Isle of Man",
+        "slug": "isle-of-man",
+        "geoname_id": 3042225,
+        "alternate_names": "",
+        "code2": "IM",
+        "code3": "IMN",
+        "continent": "EU",
+        "tld": "im",
+        "phone": "44-1624"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 105,
+    "fields": {
+        "name": "India",
+        "name_ascii": "India",
+        "slug": "india",
+        "geoname_id": 1269750,
+        "alternate_names": "Bharat;Republic of India",
+        "code2": "IN",
+        "code3": "IND",
+        "continent": "AS",
+        "tld": "in",
+        "phone": "91"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 106,
+    "fields": {
+        "name": "British Indian Ocean Territory",
+        "name_ascii": "British Indian Ocean Territory",
+        "slug": "british-indian-ocean-territory",
+        "geoname_id": 1282588,
+        "alternate_names": "",
+        "code2": "IO",
+        "code3": "IOT",
+        "continent": "AS",
+        "tld": "io",
+        "phone": "246"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 107,
+    "fields": {
+        "name": "Iraq",
+        "name_ascii": "Iraq",
+        "slug": "iraq",
+        "geoname_id": 99237,
+        "alternate_names": "Al Jumhūrīyah al ‘Irāqīyah;Al ‘Irāq;Irak;Jumhūrīyat al ‘Irāq",
+        "code2": "IQ",
+        "code3": "IRQ",
+        "continent": "AS",
+        "tld": "iq",
+        "phone": "964"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 108,
+    "fields": {
+        "name": "Iran",
+        "name_ascii": "Iran",
+        "slug": "iran",
+        "geoname_id": 130758,
+        "alternate_names": "Empire of Iran;Iran (Islamic Republic of);Keshvar-e Shāhanshāhī-ye Īrān;Persia;Īrān",
+        "code2": "IR",
+        "code3": "IRN",
+        "continent": "AS",
+        "tld": "ir",
+        "phone": "98"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 109,
+    "fields": {
+        "name": "Iceland",
+        "name_ascii": "Iceland",
+        "slug": "iceland",
+        "geoname_id": 2629691,
+        "alternate_names": "Islanda;Islande;Ísland",
+        "code2": "IS",
+        "code3": "ISL",
+        "continent": "EU",
+        "tld": "is",
+        "phone": "354"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 110,
+    "fields": {
+        "name": "Italy",
+        "name_ascii": "Italy",
+        "slug": "italy",
+        "geoname_id": 3175395,
+        "alternate_names": "Italia;Italie;Italien",
+        "code2": "IT",
+        "code3": "ITA",
+        "continent": "EU",
+        "tld": "it",
+        "phone": "39"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 111,
+    "fields": {
+        "name": "Jersey",
+        "name_ascii": "Jersey",
+        "slug": "jersey",
+        "geoname_id": 3042142,
+        "alternate_names": "",
+        "code2": "JE",
+        "code3": "JEY",
+        "continent": "EU",
+        "tld": "je",
+        "phone": "44-1534"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 112,
+    "fields": {
+        "name": "Jamaica",
+        "name_ascii": "Jamaica",
+        "slug": "jamaica",
+        "geoname_id": 3489940,
+        "alternate_names": "",
+        "code2": "JM",
+        "code3": "JAM",
+        "continent": "NA",
+        "tld": "jm",
+        "phone": "1-876"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 113,
+    "fields": {
+        "name": "Jordan",
+        "name_ascii": "Jordan",
+        "slug": "jordan",
+        "geoname_id": 248816,
+        "alternate_names": "Al Mamlakah al Urdunīyah al Hāshimīyah;Al Urdun;Hashemite Jordan Kingdom;Hashimite Kingdom of Jordan;Jordanian Hashimite Kingdom;Sharq el Urdun;Sharq el Urdunn;Trans-Jordan;Transjordania",
+        "code2": "JO",
+        "code3": "JOR",
+        "continent": "AS",
+        "tld": "jo",
+        "phone": "962"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 114,
+    "fields": {
+        "name": "Japan",
+        "name_ascii": "Japan",
+        "slug": "japan",
+        "geoname_id": 1861060,
+        "alternate_names": "Giappone;Japon;Nihon;Yaponiya",
+        "code2": "JP",
+        "code3": "JPN",
+        "continent": "AS",
+        "tld": "jp",
+        "phone": "81"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 115,
+    "fields": {
+        "name": "Kenya",
+        "name_ascii": "Kenya",
+        "slug": "kenya",
+        "geoname_id": 192950,
+        "alternate_names": "Jamhuri ya Kenya;Kenia;Republic of Kenya",
+        "code2": "KE",
+        "code3": "KEN",
+        "continent": "AF",
+        "tld": "ke",
+        "phone": "254"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 116,
+    "fields": {
+        "name": "Kyrgyzstan",
+        "name_ascii": "Kyrgyzstan",
+        "slug": "kyrgyzstan",
+        "geoname_id": 1527747,
+        "alternate_names": "Kirgizskaya Respublika;Kyrgyz Republic;Kyrgyz Respublikasy;Kyrgyzskaya Respublika;Kyrgyzstan Respublikasy;Republic of Kyrgyzstan",
+        "code2": "KG",
+        "code3": "KGZ",
+        "continent": "AS",
+        "tld": "kg",
+        "phone": "996"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 117,
+    "fields": {
+        "name": "Cambodia",
+        "name_ascii": "Cambodia",
+        "slug": "cambodia",
+        "geoname_id": 1831722,
+        "alternate_names": "Cam Bot;Cambodge;Camboja;Cambotja;Democratic Cambodia;Democratic Kampuchea;Kambuja;Kampuchea Démocratique;Khmer Republic;Kâmpŭchéa;Kâmpŭchéa Prâchéathĭpâtéyy;Le Cambodge;Preah Reach Ana Chak Kampuchea;Preăhréachéanachâkr Kâmpŭchéa;Royaume du Cambodge;République Khmère;République du Cambodge",
+        "code2": "KH",
+        "code3": "KHM",
+        "continent": "AS",
+        "tld": "kh",
+        "phone": "855"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 118,
+    "fields": {
+        "name": "Kiribati",
+        "name_ascii": "Kiribati",
+        "slug": "kiribati",
+        "geoname_id": 4030945,
+        "alternate_names": "Gilbert Islands;Kiribasi;Republic of Kiribati",
+        "code2": "KI",
+        "code3": "KIR",
+        "continent": "OC",
+        "tld": "ki",
+        "phone": "686"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 119,
+    "fields": {
+        "name": "Comoros",
+        "name_ascii": "Comoros",
+        "slug": "comoros",
+        "geoname_id": 921929,
+        "alternate_names": "Al Qumur;Comoro Islands;Federal Islamic Republic of the Comoros;Ittiḩad al Qamar;Jumhūrīyat Juzur al Qamar al Ittiḩādīyah al Islāmīyah;Jumhūrīyat Juzur al Qamar al Muttaḩidah;Jumhūrīyat al Qamar al Muttaḩidah;Jumhūrīyat al Qumur al Ittiḩādīyah al Islāmīyah;Juzur al Qamar;Las Comoras;Republic of the Comoros;République Fédérale Islamique des Comores;République Fédérale et Islamique des Comores;République des Comores;Territoire des Comores;Territory of the Comoro Islands;Udzima wa Komori;État Comorien",
+        "code2": "KM",
+        "code3": "COM",
+        "continent": "AF",
+        "tld": "km",
+        "phone": "269"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 120,
+    "fields": {
+        "name": "Saint Kitts and Nevis",
+        "name_ascii": "Saint Kitts and Nevis",
+        "slug": "saint-kitts-and-nevis",
+        "geoname_id": 3575174,
+        "alternate_names": "Federation of Saint Christopher and Nevis;Federation of Saint Kitts and Nevis;Presidency of Saint Christopher-Nevis;Presidency of Saint Kitts-Nevis;Saint Christopher and Nevis;State of Saint Christopher-Nevis",
+        "code2": "KN",
+        "code3": "KNA",
+        "continent": "NA",
+        "tld": "kn",
+        "phone": "1-869"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 121,
+    "fields": {
+        "name": "North Korea",
+        "name_ascii": "North Korea",
+        "slug": "north-korea",
+        "geoname_id": 1873107,
+        "alternate_names": "Choson Minchu-chui Inmin Konghwa-Guk;Korean People’s Republic;People’s Democratic Republic of Korea;People’s Republic of Korea",
+        "code2": "KP",
+        "code3": "PRK",
+        "continent": "AS",
+        "tld": "kp",
+        "phone": "850"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 122,
+    "fields": {
+        "name": "South Korea",
+        "name_ascii": "South Korea",
+        "slug": "south-korea",
+        "geoname_id": 1835841,
+        "alternate_names": "Caoli;Chosŏn;Chyosyön;Chōsen;Corai;Coras;Coray;Corea;Coria;Corée;Dae Han Min Kuk;Daehan-Min’guk;Dai Han;Han-kouo;Hān;Kan-koku;Kaoli;Kara no Kuni;Koreya;Koria;Korie;Korye;Koryŏ;Kōrai;Tai Han;Tchao-sien;Tchösen;Tschosön;Tyōsen",
+        "code2": "KR",
+        "code3": "KOR",
+        "continent": "AS",
+        "tld": "kr",
+        "phone": "82"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 123,
+    "fields": {
+        "name": "Kosovo",
+        "name_ascii": "Kosovo",
+        "slug": "kosovo",
+        "geoname_id": 831053,
+        "alternate_names": "Autonomna Pokrajina Kosovo i Metohija;Kosovo i Metohija;Socijalistička Autonomna Pokrajina Kosovo",
+        "code2": "XK",
+        "code3": "XKX",
+        "continent": "EU",
+        "tld": "",
+        "phone": ""
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 124,
+    "fields": {
+        "name": "Kuwait",
+        "name_ascii": "Kuwait",
+        "slug": "kuwait",
+        "geoname_id": 285570,
+        "alternate_names": "Al Kuwait;Al Kuwayt;Al Kuweit;Dawlat al Kuwayt;Dawlat al-Kuwait;Dowlat al Kuwait;Koweit;Kuweit;Shaikhdom of Kuwait;Sheikhdom of Kuwait",
+        "code2": "KW",
+        "code3": "KWT",
+        "continent": "AS",
+        "tld": "kw",
+        "phone": "965"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 125,
+    "fields": {
+        "name": "Cayman Islands",
+        "name_ascii": "Cayman Islands",
+        "slug": "cayman-islands",
+        "geoname_id": 3580718,
+        "alternate_names": "Cayman",
+        "code2": "KY",
+        "code3": "CYM",
+        "continent": "NA",
+        "tld": "ky",
+        "phone": "1-345"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 126,
+    "fields": {
+        "name": "Kazakhstan",
+        "name_ascii": "Kazakhstan",
+        "slug": "kazakhstan",
+        "geoname_id": 1522867,
+        "alternate_names": "Kazakstan;Respublika Kazakhstan",
+        "code2": "KZ",
+        "code3": "KAZ",
+        "continent": "AS",
+        "tld": "kz",
+        "phone": "7"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 127,
+    "fields": {
+        "name": "Laos",
+        "name_ascii": "Laos",
+        "slug": "laos",
+        "geoname_id": 1655842,
+        "alternate_names": "Kingdom of Laos;Lane Xang;Lanxang;Pharassa Anachak Lao;Phrarassa Anachak Lao;Phraratsa Anachak Lao",
+        "code2": "LA",
+        "code3": "LAO",
+        "continent": "AS",
+        "tld": "la",
+        "phone": "856"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 128,
+    "fields": {
+        "name": "Lebanon",
+        "name_ascii": "Lebanon",
+        "slug": "lebanon",
+        "geoname_id": 272103,
+        "alternate_names": "Al Jumhūrīyah al Lubnānīyah;Lebanese Republic;République Libanaise;État du Grand Liban;الجمهورية اللبنانية",
+        "code2": "LB",
+        "code3": "LBN",
+        "continent": "AS",
+        "tld": "lb",
+        "phone": "961"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 129,
+    "fields": {
+        "name": "Saint Lucia",
+        "name_ascii": "Saint Lucia",
+        "slug": "saint-lucia",
+        "geoname_id": 3576468,
+        "alternate_names": "Colony of Saint Lucia;Saint Lucia Colony;State of Saint Lucia",
+        "code2": "LC",
+        "code3": "LCA",
+        "continent": "NA",
+        "tld": "lc",
+        "phone": "1-758"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 130,
+    "fields": {
+        "name": "Liechtenstein",
+        "name_ascii": "Liechtenstein",
+        "slug": "liechtenstein",
+        "geoname_id": 3042058,
+        "alternate_names": "Lichtenstein",
+        "code2": "LI",
+        "code3": "LIE",
+        "continent": "EU",
+        "tld": "li",
+        "phone": "423"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 131,
+    "fields": {
+        "name": "Sri Lanka",
+        "name_ascii": "Sri Lanka",
+        "slug": "sri-lanka",
+        "geoname_id": 1227603,
+        "alternate_names": "Ceylon;Democratic Socialist Republic of Sri Lanka;Dominion of Ceylon;Lanka;Selan;Serendib;Sri Lankā Janarajaya;Taprobane",
+        "code2": "LK",
+        "code3": "LKA",
+        "continent": "AS",
+        "tld": "lk",
+        "phone": "94"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 132,
+    "fields": {
+        "name": "Liberia",
+        "name_ascii": "Liberia",
+        "slug": "liberia",
+        "geoname_id": 2275384,
+        "alternate_names": "Republic of Liberia",
+        "code2": "LR",
+        "code3": "LBR",
+        "continent": "AF",
+        "tld": "lr",
+        "phone": "231"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 133,
+    "fields": {
+        "name": "Lesotho",
+        "name_ascii": "Lesotho",
+        "slug": "lesotho",
+        "geoname_id": 932692,
+        "alternate_names": "Basoetoland;Colony of Basutoland;Kingdom of Lesotho;Lesuto",
+        "code2": "LS",
+        "code3": "LSO",
+        "continent": "AF",
+        "tld": "ls",
+        "phone": "266"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 134,
+    "fields": {
+        "name": "Lithuania",
+        "name_ascii": "Lithuania",
+        "slug": "lithuania",
+        "geoname_id": 597427,
+        "alternate_names": "Lietuva",
+        "code2": "LT",
+        "code3": "LTU",
+        "continent": "EU",
+        "tld": "lt",
+        "phone": "370"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 135,
+    "fields": {
+        "name": "Luxembourg",
+        "name_ascii": "Luxembourg",
+        "slug": "luxembourg",
+        "geoname_id": 2960313,
+        "alternate_names": "Letzeburg;Luxemburg",
+        "code2": "LU",
+        "code3": "LUX",
+        "continent": "EU",
+        "tld": "lu",
+        "phone": "352"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 136,
+    "fields": {
+        "name": "Latvia",
+        "name_ascii": "Latvia",
+        "slug": "latvia",
+        "geoname_id": 458258,
+        "alternate_names": "Latvija",
+        "code2": "LV",
+        "code3": "LVA",
+        "continent": "EU",
+        "tld": "lv",
+        "phone": "371"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 137,
+    "fields": {
+        "name": "Libya",
+        "name_ascii": "Libya",
+        "slug": "libya",
+        "geoname_id": 2215636,
+        "alternate_names": "Libia;Libyan Arab People’s Republic;Libyan Arab People’s Socialist Republic;Libyan Arab Popular Socialist Public;Libyan Arab Republic;Libyan Jamahiriyah;Libye;Lībiyā;People’s Socialist Libyan Arab Republic;Socialist People’s Libyan Arab Jamahiriya",
+        "code2": "LY",
+        "code3": "LBY",
+        "continent": "AF",
+        "tld": "ly",
+        "phone": "218"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 138,
+    "fields": {
+        "name": "Morocco",
+        "name_ascii": "Morocco",
+        "slug": "morocco",
+        "geoname_id": 2542007,
+        "alternate_names": "Al Maghrib;Al Maghrib al Aqşá;Al Mamlakah al Maghribīyah;Al-Mamlaka al-Maghrabiya;El Maghreb el Aqsa;Maroc;Marocco;Marokko;Marruecos;Moghreb-el-Aksa;Reino de Marruecos;Royaume du Maroc",
+        "code2": "MA",
+        "code3": "MAR",
+        "continent": "AF",
+        "tld": "ma",
+        "phone": "212"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 139,
+    "fields": {
+        "name": "Monaco",
+        "name_ascii": "Monaco",
+        "slug": "monaco",
+        "geoname_id": 2993457,
+        "alternate_names": "Principality of Monaco",
+        "code2": "MC",
+        "code3": "MCO",
+        "continent": "EU",
+        "tld": "mc",
+        "phone": "377"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 140,
+    "fields": {
+        "name": "Moldova",
+        "name_ascii": "Moldova",
+        "slug": "moldova",
+        "geoname_id": 617790,
+        "alternate_names": "Moldova, Republic Of;Republic of Moldova",
+        "code2": "MD",
+        "code3": "MDA",
+        "continent": "EU",
+        "tld": "md",
+        "phone": "373"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 141,
+    "fields": {
+        "name": "Montenegro",
+        "name_ascii": "Montenegro",
+        "slug": "montenegro",
+        "geoname_id": 3194884,
+        "alternate_names": "People’s Republic of Montenegro;Republika Crna Gora;Socialist Republic of Montenegro",
+        "code2": "ME",
+        "code3": "MNE",
+        "continent": "EU",
+        "tld": "me",
+        "phone": "382"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 142,
+    "fields": {
+        "name": "Saint Martin",
+        "name_ascii": "Saint Martin",
+        "slug": "saint-martin",
+        "geoname_id": 3578421,
+        "alternate_names": "Saint Martin (French Part);Saint-Martin Collectivity;St Martin;St. Martin;St. Martin (French Part)",
+        "code2": "MF",
+        "code3": "MAF",
+        "continent": "NA",
+        "tld": "gp",
+        "phone": "590"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 143,
+    "fields": {
+        "name": "Madagascar",
+        "name_ascii": "Madagascar",
+        "slug": "madagascar",
+        "geoname_id": 1062947,
+        "alternate_names": "Democratic Republic of Madagascar;Grande-Terre;Grande-Île;La Grand Île de Madagascar;Madagascar and Dependencies;Malagash Republic;Malagasy Republic;Malgache;Malgache Republic;Repoblika Demokratika Malagasy;Repoblika Malagasy;République Démocratique de Madagascar;République Malgache;Territoire de Madagascar;Territoire de Madagascar et Dépendances;Île Rouge",
+        "code2": "MG",
+        "code3": "MDG",
+        "continent": "AF",
+        "tld": "mg",
+        "phone": "261"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 144,
+    "fields": {
+        "name": "Marshall Islands",
+        "name_ascii": "Marshall Islands",
+        "slug": "marshall-islands",
+        "geoname_id": 2080185,
+        "alternate_names": "Kwajalein District;Majuro District;Marshall District;Marshall Islands District;Marshalls;Marshalls District;RMI in Free Association with the USA;Republic of the Marshall Islands",
+        "code2": "MH",
+        "code3": "MHL",
+        "continent": "OC",
+        "tld": "mh",
+        "phone": "692"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 145,
+    "fields": {
+        "name": "North Macedonia",
+        "name_ascii": "North Macedonia",
+        "slug": "north-macedonia",
+        "geoname_id": 718075,
+        "alternate_names": "Former Yugoslav Republic of Macedonia;Makedonija;Peoples Republic of Macedonia;Republika Makedonija;Socialist Republic of Macedonia;The Former Yugoslav Republic of Macedonia",
+        "code2": "MK",
+        "code3": "MKD",
+        "continent": "EU",
+        "tld": "mk",
+        "phone": "389"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 146,
+    "fields": {
+        "name": "Mali",
+        "name_ascii": "Mali",
+        "slug": "mali",
+        "geoname_id": 2453866,
+        "alternate_names": "Republic of Mali;République Soudanaise;République du Mali;Soudan;Soudan Français;Soudanese Republic;Sudán Francés",
+        "code2": "ML",
+        "code3": "MLI",
+        "continent": "AF",
+        "tld": "ml",
+        "phone": "223"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 147,
+    "fields": {
+        "name": "Myanmar",
+        "name_ascii": "Myanmar",
+        "slug": "myanmar",
+        "geoname_id": 1327865,
+        "alternate_names": "Barmanie;Birmania;Birmanie;Burma;Burmah;Mien;Myanma Naingngandaw;Myanmā;Socialist Republic of the Union of Burma;Union of Myanmar",
+        "code2": "MM",
+        "code3": "MMR",
+        "continent": "AS",
+        "tld": "mm",
+        "phone": "95"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 148,
+    "fields": {
+        "name": "Mongolia",
+        "name_ascii": "Mongolia",
+        "slug": "mongolia",
+        "geoname_id": 2029969,
+        "alternate_names": "Mongol Peoples Republic;Mongolian People’s Republic",
+        "code2": "MN",
+        "code3": "MNG",
+        "continent": "AS",
+        "tld": "mn",
+        "phone": "976"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 149,
+    "fields": {
+        "name": "Macao",
+        "name_ascii": "Macao",
+        "slug": "macao",
+        "geoname_id": 1821275,
+        "alternate_names": "Aomen;Aomen Tebie Xingzhengqu;Province of Macao;Província de Macau",
+        "code2": "MO",
+        "code3": "MAC",
+        "continent": "AS",
+        "tld": "mo",
+        "phone": "853"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 150,
+    "fields": {
+        "name": "Northern Mariana Islands",
+        "name_ascii": "Northern Mariana Islands",
+        "slug": "northern-mariana-islands",
+        "geoname_id": 4041468,
+        "alternate_names": "CNMI - Unincorporated Organized Territory of the USA",
+        "code2": "MP",
+        "code3": "MNP",
+        "continent": "OC",
+        "tld": "mp",
+        "phone": "1-670"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 151,
+    "fields": {
+        "name": "Martinique",
+        "name_ascii": "Martinique",
+        "slug": "martinique",
+        "geoname_id": 3570311,
+        "alternate_names": "La Martinique",
+        "code2": "MQ",
+        "code3": "MTQ",
+        "continent": "NA",
+        "tld": "mq",
+        "phone": "596"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 152,
+    "fields": {
+        "name": "Mauritania",
+        "name_ascii": "Mauritania",
+        "slug": "mauritania",
+        "geoname_id": 2378080,
+        "alternate_names": "Al Jumhūrīyah al Islāmīyah al Mūrītānīyah;La Mauritanie;Mauretania;Mauretanien;Mauritanian Islamic Republic;République Islamique Mauritanienne;République Islamique de Mauritanie",
+        "code2": "MR",
+        "code3": "MRT",
+        "continent": "AF",
+        "tld": "mr",
+        "phone": "222"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 153,
+    "fields": {
+        "name": "Montserrat",
+        "name_ascii": "Montserrat",
+        "slug": "montserrat",
+        "geoname_id": 3578097,
+        "alternate_names": "Montserrat Colony of;Montserrat Presidency",
+        "code2": "MS",
+        "code3": "MSR",
+        "continent": "NA",
+        "tld": "ms",
+        "phone": "1-664"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 154,
+    "fields": {
+        "name": "Malta",
+        "name_ascii": "Malta",
+        "slug": "malta",
+        "geoname_id": 2562770,
+        "alternate_names": "Repubblika ta’ Malta;State of Malta",
+        "code2": "MT",
+        "code3": "MLT",
+        "continent": "EU",
+        "tld": "mt",
+        "phone": "356"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 155,
+    "fields": {
+        "name": "Mauritius",
+        "name_ascii": "Mauritius",
+        "slug": "mauritius",
+        "geoname_id": 934292,
+        "alternate_names": "Republic of Mauritius",
+        "code2": "MU",
+        "code3": "MUS",
+        "continent": "AF",
+        "tld": "mu",
+        "phone": "230"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 156,
+    "fields": {
+        "name": "Maldives",
+        "name_ascii": "Maldives",
+        "slug": "maldives",
+        "geoname_id": 1282028,
+        "alternate_names": "Dhivehi Raajje;Dhivehi Raajjeyge Jumhooriyyaa;Republic of the Maldive Islands",
+        "code2": "MV",
+        "code3": "MDV",
+        "continent": "AS",
+        "tld": "mv",
+        "phone": "960"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 157,
+    "fields": {
+        "name": "Malawi",
+        "name_ascii": "Malawi",
+        "slug": "malawi",
+        "geoname_id": 927384,
+        "alternate_names": "Nyasaland;Republic of Malawi",
+        "code2": "MW",
+        "code3": "MWI",
+        "continent": "AF",
+        "tld": "mw",
+        "phone": "265"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 158,
+    "fields": {
+        "name": "Mexico",
+        "name_ascii": "Mexico",
+        "slug": "mexico",
+        "geoname_id": 3996063,
+        "alternate_names": "Mexiko;Mexique;Mèssico;Republica Mexicana;República Méjico",
+        "code2": "MX",
+        "code3": "MEX",
+        "continent": "NA",
+        "tld": "mx",
+        "phone": "52"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 159,
+    "fields": {
+        "name": "Malaysia",
+        "name_ascii": "Malaysia",
+        "slug": "malaysia",
+        "geoname_id": 1733045,
+        "alternate_names": "Federation of Malaya;Federation of Malaysia;Persekutuan Tanah Malaysia;Persekutuan Tanah Melayu",
+        "code2": "MY",
+        "code3": "MYS",
+        "continent": "AS",
+        "tld": "my",
+        "phone": "60"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 160,
+    "fields": {
+        "name": "Mozambique",
+        "name_ascii": "Mozambique",
+        "slug": "mozambique",
+        "geoname_id": 1036973,
+        "alternate_names": "Colónia de Moçambique;Estado de Moçambique;People’s Republic of Mozambique;Portuguese East Africa;Província de Moçambique;República Popular de Moçambique;State of Mozambique",
+        "code2": "MZ",
+        "code3": "MOZ",
+        "continent": "AF",
+        "tld": "mz",
+        "phone": "258"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 161,
+    "fields": {
+        "name": "Namibia",
+        "name_ascii": "Namibia",
+        "slug": "namibia",
+        "geoname_id": 3355338,
+        "alternate_names": "Namibië;Republic of Namibia;South-West Africa;Suidwes-Afrika",
+        "code2": "NA",
+        "code3": "NAM",
+        "continent": "AF",
+        "tld": "na",
+        "phone": "264"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 162,
+    "fields": {
+        "name": "New Caledonia",
+        "name_ascii": "New Caledonia",
+        "slug": "new-caledonia",
+        "geoname_id": 2139685,
+        "alternate_names": "Territory of New Caledonia and Dependencies",
+        "code2": "NC",
+        "code3": "NCL",
+        "continent": "OC",
+        "tld": "nc",
+        "phone": "687"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 163,
+    "fields": {
+        "name": "Niger",
+        "name_ascii": "Niger",
+        "slug": "niger",
+        "geoname_id": 2440476,
+        "alternate_names": "Republic of Niger",
+        "code2": "NE",
+        "code3": "NER",
+        "continent": "AF",
+        "tld": "ne",
+        "phone": "227"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 164,
+    "fields": {
+        "name": "Norfolk Island",
+        "name_ascii": "Norfolk Island",
+        "slug": "norfolk-island",
+        "geoname_id": 2155115,
+        "alternate_names": "Territory of Norfolk Island",
+        "code2": "NF",
+        "code3": "NFK",
+        "continent": "OC",
+        "tld": "nf",
+        "phone": "672"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 165,
+    "fields": {
+        "name": "Nigeria",
+        "name_ascii": "Nigeria",
+        "slug": "nigeria",
+        "geoname_id": 2328926,
+        "alternate_names": "Federal Republic of Nigeria;Federation of Nigeria;Republic of Songhai",
+        "code2": "NG",
+        "code3": "NGA",
+        "continent": "AF",
+        "tld": "ng",
+        "phone": "234"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 166,
+    "fields": {
+        "name": "Nicaragua",
+        "name_ascii": "Nicaragua",
+        "slug": "nicaragua",
+        "geoname_id": 3617476,
+        "alternate_names": "Republic of Nicaragua",
+        "code2": "NI",
+        "code3": "NIC",
+        "continent": "NA",
+        "tld": "ni",
+        "phone": "505"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 167,
+    "fields": {
+        "name": "Netherlands",
+        "name_ascii": "Netherlands",
+        "slug": "netherlands",
+        "geoname_id": 2750405,
+        "alternate_names": "Holland;Nederland;Nederlanden;Niederlande",
+        "code2": "NL",
+        "code3": "NLD",
+        "continent": "EU",
+        "tld": "nl",
+        "phone": "31"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 168,
+    "fields": {
+        "name": "Norway",
+        "name_ascii": "Norway",
+        "slug": "norway",
+        "geoname_id": 3144096,
+        "alternate_names": "Kongeriget Norge;Noreg;Norge;Norreweg;Norvegia;Norvège;Norwegen",
+        "code2": "NO",
+        "code3": "NOR",
+        "continent": "EU",
+        "tld": "no",
+        "phone": "47"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 169,
+    "fields": {
+        "name": "Nepal",
+        "name_ascii": "Nepal",
+        "slug": "nepal",
+        "geoname_id": 1282988,
+        "alternate_names": "Kingdom of Nepal;State of Nepal",
+        "code2": "NP",
+        "code3": "NPL",
+        "continent": "AS",
+        "tld": "np",
+        "phone": "977"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 170,
+    "fields": {
+        "name": "Nauru",
+        "name_ascii": "Nauru",
+        "slug": "nauru",
+        "geoname_id": 2110425,
+        "alternate_names": "Trust Territory of Nauru",
+        "code2": "NR",
+        "code3": "NRU",
+        "continent": "OC",
+        "tld": "nr",
+        "phone": "674"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 171,
+    "fields": {
+        "name": "Niue",
+        "name_ascii": "Niue",
+        "slug": "niue",
+        "geoname_id": 4036232,
+        "alternate_names": "Republic of Niue",
+        "code2": "NU",
+        "code3": "NIU",
+        "continent": "OC",
+        "tld": "nu",
+        "phone": "683"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 172,
+    "fields": {
+        "name": "New Zealand",
+        "name_ascii": "New Zealand",
+        "slug": "new-zealand",
+        "geoname_id": 2186224,
+        "alternate_names": "Dominion of New Zealand",
+        "code2": "NZ",
+        "code3": "NZL",
+        "continent": "OC",
+        "tld": "nz",
+        "phone": "64"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 173,
+    "fields": {
+        "name": "Oman",
+        "name_ascii": "Oman",
+        "slug": "oman",
+        "geoname_id": 286963,
+        "alternate_names": "Masqat and Oman;Salţanat Masqaţ wa ‘Umān;Salţanat ‘Umān;Sultanat Masqat wah Oman;Sultanate of Muscat and Oman;Sultanate of Musqat and Oman;Sultanate of Oman and Muscat",
+        "code2": "OM",
+        "code3": "OMN",
+        "continent": "AS",
+        "tld": "om",
+        "phone": "968"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 174,
+    "fields": {
+        "name": "Panama",
+        "name_ascii": "Panama",
+        "slug": "panama",
+        "geoname_id": 3703430,
+        "alternate_names": "Republic of Panama",
+        "code2": "PA",
+        "code3": "PAN",
+        "continent": "NA",
+        "tld": "pa",
+        "phone": "507"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 175,
+    "fields": {
+        "name": "Peru",
+        "name_ascii": "Peru",
+        "slug": "peru",
+        "geoname_id": 3932488,
+        "alternate_names": "El Perú;Pérou;República del Perú",
+        "code2": "PE",
+        "code3": "PER",
+        "continent": "SA",
+        "tld": "pe",
+        "phone": "51"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 176,
+    "fields": {
+        "name": "French Polynesia",
+        "name_ascii": "French Polynesia",
+        "slug": "french-polynesia",
+        "geoname_id": 4030656,
+        "alternate_names": "French Establishments in Oceania;French Oceania;French Settlements in Oceania;Établissements Français de l’ Océanie",
+        "code2": "PF",
+        "code3": "PYF",
+        "continent": "OC",
+        "tld": "pf",
+        "phone": "689"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 177,
+    "fields": {
+        "name": "Papua New Guinea",
+        "name_ascii": "Papua New Guinea",
+        "slug": "papua-new-guinea",
+        "geoname_id": 2088628,
+        "alternate_names": "Independent State of Papua New Guinea",
+        "code2": "PG",
+        "code3": "PNG",
+        "continent": "OC",
+        "tld": "pg",
+        "phone": "675"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 178,
+    "fields": {
+        "name": "Philippines",
+        "name_ascii": "Philippines",
+        "slug": "philippines",
+        "geoname_id": 1694008,
+        "alternate_names": "Commonwealth of the Philippines;Filipinas;Las Islas Felipenas;Philippine Islands;Republika ng Pilipinas;República de las Filipinas;República de las Islas Filipinas",
+        "code2": "PH",
+        "code3": "PHL",
+        "continent": "AS",
+        "tld": "ph",
+        "phone": "63"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 179,
+    "fields": {
+        "name": "Pakistan",
+        "name_ascii": "Pakistan",
+        "slug": "pakistan",
+        "geoname_id": 1168579,
+        "alternate_names": "Islamic Republic of Pakistan",
+        "code2": "PK",
+        "code3": "PAK",
+        "continent": "AS",
+        "tld": "pk",
+        "phone": "92"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 180,
+    "fields": {
+        "name": "Poland",
+        "name_ascii": "Poland",
+        "slug": "poland",
+        "geoname_id": 798544,
+        "alternate_names": "Lengyelország;Lenkija;Polen;Polija;Polish People’s Republic;Pologne;Polonia;Polsha;Polska;Polska Rzeczpospolita Ludowa;Polsko;Poola",
+        "code2": "PL",
+        "code3": "POL",
+        "continent": "EU",
+        "tld": "pl",
+        "phone": "48"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 181,
+    "fields": {
+        "name": "Saint Pierre and Miquelon",
+        "name_ascii": "Saint Pierre and Miquelon",
+        "slug": "saint-pierre-and-miquelon",
+        "geoname_id": 3424932,
+        "alternate_names": "Department of Saint Pierre and Miquelon;Département de Saint-Pierre et Miquelon;Territoire de Saint Pierre et Miquelon;Territoire des Îles Saint-Pierre et Miquelon;Territory of Saint Pierre and Miquelon",
+        "code2": "PM",
+        "code3": "SPM",
+        "continent": "NA",
+        "tld": "pm",
+        "phone": "508"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 182,
+    "fields": {
+        "name": "Pitcairn",
+        "name_ascii": "Pitcairn",
+        "slug": "pitcairn",
+        "geoname_id": 4030699,
+        "alternate_names": "Pitcairn Islands;Pitcairn, Henderson, Ducie and Oeno Islands",
+        "code2": "PN",
+        "code3": "PCN",
+        "continent": "OC",
+        "tld": "pn",
+        "phone": "870"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 183,
+    "fields": {
+        "name": "Puerto Rico",
+        "name_ascii": "Puerto Rico",
+        "slug": "puerto-rico",
+        "geoname_id": 4566966,
+        "alternate_names": "Borikén;Porto Rico;Territory of Porto Rice",
+        "code2": "PR",
+        "code3": "PRI",
+        "continent": "NA",
+        "tld": "pr",
+        "phone": "1-787 and 1-939"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 184,
+    "fields": {
+        "name": "Palestinian Territory",
+        "name_ascii": "Palestinian Territory",
+        "slug": "palestinian-territory",
+        "geoname_id": 6254930,
+        "alternate_names": "Palestine;Palestinian Territories;Palestinian Territory (the Occupied);Palestinian Territory, Occupied;the Occupied Palestinian Territory",
+        "code2": "PS",
+        "code3": "PSE",
+        "continent": "AS",
+        "tld": "ps",
+        "phone": "970"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 185,
+    "fields": {
+        "name": "Portugal",
+        "name_ascii": "Portugal",
+        "slug": "portugal",
+        "geoname_id": 2264397,
+        "alternate_names": "Lusitania;Republic of Portugal",
+        "code2": "PT",
+        "code3": "PRT",
+        "continent": "EU",
+        "tld": "pt",
+        "phone": "351"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 186,
+    "fields": {
+        "name": "Palau",
+        "name_ascii": "Palau",
+        "slug": "palau",
+        "geoname_id": 1559582,
+        "alternate_names": "",
+        "code2": "PW",
+        "code3": "PLW",
+        "continent": "OC",
+        "tld": "pw",
+        "phone": "680"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 187,
+    "fields": {
+        "name": "Paraguay",
+        "name_ascii": "Paraguay",
+        "slug": "paraguay",
+        "geoname_id": 3437598,
+        "alternate_names": "El Paraguay",
+        "code2": "PY",
+        "code3": "PRY",
+        "continent": "SA",
+        "tld": "py",
+        "phone": "595"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 188,
+    "fields": {
+        "name": "Qatar",
+        "name_ascii": "Qatar",
+        "slug": "qatar",
+        "geoname_id": 289688,
+        "alternate_names": "Al Qatar;Dawlat Qaţar;Katar;Qaţar;Shaikhdom of Qatar;Sheikhdom of Qatar",
+        "code2": "QA",
+        "code3": "QAT",
+        "continent": "AS",
+        "tld": "qa",
+        "phone": "974"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 189,
+    "fields": {
+        "name": "Reunion",
+        "name_ascii": "Reunion",
+        "slug": "reunion",
+        "geoname_id": 935317,
+        "alternate_names": "Réunion",
+        "code2": "RE",
+        "code3": "REU",
+        "continent": "AF",
+        "tld": "re",
+        "phone": "262"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 190,
+    "fields": {
+        "name": "Romania",
+        "name_ascii": "Romania",
+        "slug": "romania",
+        "geoname_id": 798549,
+        "alternate_names": "Republica Populară Romînă;Republica Socialistă România;Romanica;Romaniei;Romanya;Romînia;Roumania;Roumanie;Rumania;Rumanian People’s Republic;Rumunija;Rumunsko;Rumänien;Socialist Republic of Romania;Socialist Republic of Rumania",
+        "code2": "RO",
+        "code3": "ROU",
+        "continent": "EU",
+        "tld": "ro",
+        "phone": "40"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 191,
+    "fields": {
+        "name": "Serbia",
+        "name_ascii": "Serbia",
+        "slug": "serbia",
+        "geoname_id": 6290252,
+        "alternate_names": "",
+        "code2": "RS",
+        "code3": "SRB",
+        "continent": "EU",
+        "tld": "rs",
+        "phone": "381"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 192,
+    "fields": {
+        "name": "Russia",
+        "name_ascii": "Russia",
+        "slug": "russia",
+        "geoname_id": 2017370,
+        "alternate_names": "Rossiya;Rossiyskaya Federatsiya",
+        "code2": "RU",
+        "code3": "RUS",
+        "continent": "EU",
+        "tld": "ru",
+        "phone": "7"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 193,
+    "fields": {
+        "name": "Rwanda",
+        "name_ascii": "Rwanda",
+        "slug": "rwanda",
+        "geoname_id": 49518,
+        "alternate_names": "Ruanda;Rwandese Republic;République Rwandaise;Résidence du Ruanda",
+        "code2": "RW",
+        "code3": "RWA",
+        "continent": "AF",
+        "tld": "rw",
+        "phone": "250"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 194,
+    "fields": {
+        "name": "Saudi Arabia",
+        "name_ascii": "Saudi Arabia",
+        "slug": "saudi-arabia",
+        "geoname_id": 102358,
+        "alternate_names": "Al Mamlakah al ‘Arabīyah as Su‘ūdīyah;Al ‘Arabīyah as Su‘ūdīyah;Al-Mamlaka al-‘Arabiya as-Sa‘udiya;Saudi Arabian Kingdom",
+        "code2": "SA",
+        "code3": "SAU",
+        "continent": "AS",
+        "tld": "sa",
+        "phone": "966"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 195,
+    "fields": {
+        "name": "Solomon Islands",
+        "name_ascii": "Solomon Islands",
+        "slug": "solomon-islands",
+        "geoname_id": 2103350,
+        "alternate_names": "British Solomon Islands;British Solomon Islands Protectorate",
+        "code2": "SB",
+        "code3": "SLB",
+        "continent": "OC",
+        "tld": "sb",
+        "phone": "677"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 196,
+    "fields": {
+        "name": "Seychelles",
+        "name_ascii": "Seychelles",
+        "slug": "seychelles",
+        "geoname_id": 241170,
+        "alternate_names": "Colony of the Seychelles;Republic of Seychelles",
+        "code2": "SC",
+        "code3": "SYC",
+        "continent": "AF",
+        "tld": "sc",
+        "phone": "248"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 197,
+    "fields": {
+        "name": "Sudan",
+        "name_ascii": "Sudan",
+        "slug": "sudan",
+        "geoname_id": 366755,
+        "alternate_names": "Anglo-Egyptian Sudan;Es Sūdān el Inglīzi el Masri;Jamhuryat el-Sudan;Jumhūrīyat as Sūdān;Jumhūrīyat as Sūdān ad Dīmuqrāţīyah;Republic of the Sudan;Soudan",
+        "code2": "SD",
+        "code3": "SDN",
+        "continent": "AF",
+        "tld": "sd",
+        "phone": "249"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 198,
+    "fields": {
+        "name": "South Sudan",
+        "name_ascii": "South Sudan",
+        "slug": "south-sudan",
+        "geoname_id": 7909807,
+        "alternate_names": "Republic of South Sudan",
+        "code2": "SS",
+        "code3": "SSD",
+        "continent": "AF",
+        "tld": "ss",
+        "phone": "211"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 199,
+    "fields": {
+        "name": "Sweden",
+        "name_ascii": "Sweden",
+        "slug": "sweden",
+        "geoname_id": 2661886,
+        "alternate_names": "Ruotsi;Schweden;Suède;Svezia",
+        "code2": "SE",
+        "code3": "SWE",
+        "continent": "EU",
+        "tld": "se",
+        "phone": "46"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 200,
+    "fields": {
+        "name": "Singapore",
+        "name_ascii": "Singapore",
+        "slug": "singapore",
+        "geoname_id": 1880251,
+        "alternate_names": "Republic of Singapore",
+        "code2": "SG",
+        "code3": "SGP",
+        "continent": "AS",
+        "tld": "sg",
+        "phone": "65"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 201,
+    "fields": {
+        "name": "Saint Helena",
+        "name_ascii": "Saint Helena",
+        "slug": "saint-helena",
+        "geoname_id": 3370751,
+        "alternate_names": "Saint Helena, Ascension, and Tristan da Cunha;St. Helena;St. Helena, Ascension, and Tristan da Cunha",
+        "code2": "SH",
+        "code3": "SHN",
+        "continent": "AF",
+        "tld": "sh",
+        "phone": "290"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 202,
+    "fields": {
+        "name": "Slovenia",
+        "name_ascii": "Slovenia",
+        "slug": "slovenia",
+        "geoname_id": 3190538,
+        "alternate_names": "Narodna Republika Slovenija;Peoples Republic of Slovenia;Republika Slovenija;Slovenija;Socialist Republic of Slovenia;Socijalistička Republika Slovenija",
+        "code2": "SI",
+        "code3": "SVN",
+        "continent": "EU",
+        "tld": "si",
+        "phone": "386"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 203,
+    "fields": {
+        "name": "Svalbard and Jan Mayen",
+        "name_ascii": "Svalbard and Jan Mayen",
+        "slug": "svalbard-and-jan-mayen",
+        "geoname_id": 607072,
+        "alternate_names": "Svalbard Archipelago",
+        "code2": "SJ",
+        "code3": "SJM",
+        "continent": "EU",
+        "tld": "sj",
+        "phone": "47"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 204,
+    "fields": {
+        "name": "Slovakia",
+        "name_ascii": "Slovakia",
+        "slug": "slovakia",
+        "geoname_id": 3057568,
+        "alternate_names": "Slovak Socialist Republic;Slovenská Socialistická Republika;Slovenské Kraje",
+        "code2": "SK",
+        "code3": "SVK",
+        "continent": "EU",
+        "tld": "sk",
+        "phone": "421"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 205,
+    "fields": {
+        "name": "Sierra Leone",
+        "name_ascii": "Sierra Leone",
+        "slug": "sierra-leone",
+        "geoname_id": 2403846,
+        "alternate_names": "Republic of Sierra Leone;Serra Leoa",
+        "code2": "SL",
+        "code3": "SLE",
+        "continent": "AF",
+        "tld": "sl",
+        "phone": "232"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 206,
+    "fields": {
+        "name": "San Marino",
+        "name_ascii": "San Marino",
+        "slug": "san-marino",
+        "geoname_id": 3168068,
+        "alternate_names": "Most Serene Republic of San Marino",
+        "code2": "SM",
+        "code3": "SMR",
+        "continent": "EU",
+        "tld": "sm",
+        "phone": "378"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 207,
+    "fields": {
+        "name": "Senegal",
+        "name_ascii": "Senegal",
+        "slug": "senegal",
+        "geoname_id": 2245662,
+        "alternate_names": "Sénégal",
+        "code2": "SN",
+        "code3": "SEN",
+        "continent": "AF",
+        "tld": "sn",
+        "phone": "221"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 208,
+    "fields": {
+        "name": "Somalia",
+        "name_ascii": "Somalia",
+        "slug": "somalia",
+        "geoname_id": 51537,
+        "alternate_names": "Jamhuuriyada Demuqraadiga Soomaaliyeed;Jumhūrīyat aş Şūmāl al Fīdirālīyah;Somali Democratic Republic;Somalie;Soomaaliya",
+        "code2": "SO",
+        "code3": "SOM",
+        "continent": "AF",
+        "tld": "so",
+        "phone": "252"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 209,
+    "fields": {
+        "name": "Suriname",
+        "name_ascii": "Suriname",
+        "slug": "suriname",
+        "geoname_id": 3382998,
+        "alternate_names": "Nederlandisch Guyana;Nederlandsch Guyana;Netherlands Guiana;Republic of Surinam;Republiek van Suriname;Surinam",
+        "code2": "SR",
+        "code3": "SUR",
+        "continent": "SA",
+        "tld": "sr",
+        "phone": "597"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 210,
+    "fields": {
+        "name": "Sao Tome and Principe",
+        "name_ascii": "Sao Tome and Principe",
+        "slug": "sao-tome-and-principe",
+        "geoname_id": 2410758,
+        "alternate_names": "Colónia de São Tomé e Príncipe;Province of Sao Tome and Principe;Província de São Tomé e Príncipe;Saint Thomas and Prince;Saint Thomas and Principe;São Thomé and Principe",
+        "code2": "ST",
+        "code3": "STP",
+        "continent": "AF",
+        "tld": "st",
+        "phone": "239"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 211,
+    "fields": {
+        "name": "El Salvador",
+        "name_ascii": "El Salvador",
+        "slug": "el-salvador",
+        "geoname_id": 3585968,
+        "alternate_names": "Salvador",
+        "code2": "SV",
+        "code3": "SLV",
+        "continent": "NA",
+        "tld": "sv",
+        "phone": "503"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 212,
+    "fields": {
+        "name": "Sint Maarten",
+        "name_ascii": "Sint Maarten",
+        "slug": "sint-maarten",
+        "geoname_id": 7609695,
+        "alternate_names": "",
+        "code2": "SX",
+        "code3": "SXM",
+        "continent": "NA",
+        "tld": "sx",
+        "phone": "599"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 213,
+    "fields": {
+        "name": "Syria",
+        "name_ascii": "Syria",
+        "slug": "syria",
+        "geoname_id": 163843,
+        "alternate_names": "Al Iqlīm as Sūrī;Al Iqlīm ash Shamālī;Al Jumhūrīyah al ‘Arabīyah as Sūrīyah;Al-Suriyah;Arām;El Suriya;Es Suriya;Esh Sham;La Syrie;Northern Region;Siria;Syrian Region;Syrie;Sūrīyah",
+        "code2": "SY",
+        "code3": "SYR",
+        "continent": "AS",
+        "tld": "sy",
+        "phone": "963"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 214,
+    "fields": {
+        "name": "Eswatini",
+        "name_ascii": "Eswatini",
+        "slug": "eswatini",
+        "geoname_id": 934841,
+        "alternate_names": "Kingdom of Eswatini;Ngwane;Swasieland",
+        "code2": "SZ",
+        "code3": "SWZ",
+        "continent": "AF",
+        "tld": "sz",
+        "phone": "268"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 215,
+    "fields": {
+        "name": "Turks and Caicos Islands",
+        "name_ascii": "Turks and Caicos Islands",
+        "slug": "turks-and-caicos-islands",
+        "geoname_id": 3576916,
+        "alternate_names": "",
+        "code2": "TC",
+        "code3": "TCA",
+        "continent": "NA",
+        "tld": "tc",
+        "phone": "1-649"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 216,
+    "fields": {
+        "name": "Chad",
+        "name_ascii": "Chad",
+        "slug": "chad",
+        "geoname_id": 2434508,
+        "alternate_names": "Colonie du Chad;Jumhūrīyat Tshād;Tchad;Territoire du Tchad;Tshād",
+        "code2": "TD",
+        "code3": "TCD",
+        "continent": "AF",
+        "tld": "td",
+        "phone": "235"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 217,
+    "fields": {
+        "name": "French Southern Territories",
+        "name_ascii": "French Southern Territories",
+        "slug": "french-southern-territories",
+        "geoname_id": 1546748,
+        "alternate_names": "French Antarctica;French Antarctica and Southern Lands;French Southern Indian Ocean Islands;French Southern and Antarctic Lands;French Southern and Antarctic Territories;Southern and Antarctic Territories;Îles Australes;Îles Australes Françaises",
+        "code2": "TF",
+        "code3": "ATF",
+        "continent": "AN",
+        "tld": "tf",
+        "phone": ""
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 218,
+    "fields": {
+        "name": "Togo",
+        "name_ascii": "Togo",
+        "slug": "togo",
+        "geoname_id": 2363686,
+        "alternate_names": "French Togoland;Republic of Togo",
+        "code2": "TG",
+        "code3": "TGO",
+        "continent": "AF",
+        "tld": "tg",
+        "phone": "228"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 219,
+    "fields": {
+        "name": "Thailand",
+        "name_ascii": "Thailand",
+        "slug": "thailand",
+        "geoname_id": 1605651,
+        "alternate_names": "Muang-Thai;Prades Thai;Prathet Thai;Ratcha Anachak Thai;Sayam;Siam",
+        "code2": "TH",
+        "code3": "THA",
+        "continent": "AS",
+        "tld": "th",
+        "phone": "66"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 220,
+    "fields": {
+        "name": "Tajikistan",
+        "name_ascii": "Tajikistan",
+        "slug": "tajikistan",
+        "geoname_id": 1220409,
+        "alternate_names": "Tadjikistan;Tojikiston",
+        "code2": "TJ",
+        "code3": "TJK",
+        "continent": "AS",
+        "tld": "tj",
+        "phone": "992"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 221,
+    "fields": {
+        "name": "Tokelau",
+        "name_ascii": "Tokelau",
+        "slug": "tokelau",
+        "geoname_id": 4031074,
+        "alternate_names": "",
+        "code2": "TK",
+        "code3": "TKL",
+        "continent": "OC",
+        "tld": "tk",
+        "phone": "690"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 222,
+    "fields": {
+        "name": "Timor Leste",
+        "name_ascii": "Timor Leste",
+        "slug": "timor-leste",
+        "geoname_id": 1966436,
+        "alternate_names": "Colónia de Timor;East Timor;Loro Sae;Portuguese Timor;Propinsi Timor Timur;Province of Timor;Província de Timor;República Democrática de Timor-Leste;Timor Timur",
+        "code2": "TL",
+        "code3": "TLS",
+        "continent": "OC",
+        "tld": "tl",
+        "phone": "670"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 223,
+    "fields": {
+        "name": "Turkmenistan",
+        "name_ascii": "Turkmenistan",
+        "slug": "turkmenistan",
+        "geoname_id": 1218197,
+        "alternate_names": "",
+        "code2": "TM",
+        "code3": "TKM",
+        "continent": "AS",
+        "tld": "tm",
+        "phone": "993"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 224,
+    "fields": {
+        "name": "Tunisia",
+        "name_ascii": "Tunisia",
+        "slug": "tunisia",
+        "geoname_id": 2464461,
+        "alternate_names": "Al Jumhūrīyah at Tūnisīyah;Al Mamlakah at Tūnusīyah;Jumhūrīyat Tūnus;La République Tunisienne;La Tunisie;Republic of Tunisia;Tunez;Tunisie",
+        "code2": "TN",
+        "code3": "TUN",
+        "continent": "AF",
+        "tld": "tn",
+        "phone": "216"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 225,
+    "fields": {
+        "name": "Tonga",
+        "name_ascii": "Tonga",
+        "slug": "tonga",
+        "geoname_id": 4032283,
+        "alternate_names": "Kingdom of Tonga",
+        "code2": "TO",
+        "code3": "TON",
+        "continent": "OC",
+        "tld": "to",
+        "phone": "676"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 226,
+    "fields": {
+        "name": "Turkey",
+        "name_ascii": "Turkey",
+        "slug": "turkey",
+        "geoname_id": 298795,
+        "alternate_names": "Tourkía;Turchia;Turquie;Türkei",
+        "code2": "TR",
+        "code3": "TUR",
+        "continent": "AS",
+        "tld": "tr",
+        "phone": "90"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 227,
+    "fields": {
+        "name": "Trinidad and Tobago",
+        "name_ascii": "Trinidad and Tobago",
+        "slug": "trinidad-and-tobago",
+        "geoname_id": 3573591,
+        "alternate_names": "Colony of Trinidad and Tobago;Republic of Trinidad and Tobago;Trinidad;Trinidad and Tobago Colony;United Colony of Trinidad and Tobago",
+        "code2": "TT",
+        "code3": "TTO",
+        "continent": "NA",
+        "tld": "tt",
+        "phone": "1-868"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 228,
+    "fields": {
+        "name": "Tuvalu",
+        "name_ascii": "Tuvalu",
+        "slug": "tuvalu",
+        "geoname_id": 2110297,
+        "alternate_names": "",
+        "code2": "TV",
+        "code3": "TUV",
+        "continent": "OC",
+        "tld": "tv",
+        "phone": "688"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 229,
+    "fields": {
+        "name": "Taiwan",
+        "name_ascii": "Taiwan",
+        "slug": "taiwan",
+        "geoname_id": 1668284,
+        "alternate_names": "Chung-hua Min-kuo;Republic of China",
+        "code2": "TW",
+        "code3": "TWN",
+        "continent": "AS",
+        "tld": "tw",
+        "phone": "886"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 230,
+    "fields": {
+        "name": "Tanzania",
+        "name_ascii": "Tanzania",
+        "slug": "tanzania",
+        "geoname_id": 149590,
+        "alternate_names": "Tansania;Tanzanie;United Republic of Tanganyika and Zanzibar;United Republic of Tanzania",
+        "code2": "TZ",
+        "code3": "TZA",
+        "continent": "AF",
+        "tld": "tz",
+        "phone": "255"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 231,
+    "fields": {
+        "name": "Ukraine",
+        "name_ascii": "Ukraine",
+        "slug": "ukraine",
+        "geoname_id": 690791,
+        "alternate_names": "",
+        "code2": "UA",
+        "code3": "UKR",
+        "continent": "EU",
+        "tld": "ua",
+        "phone": "380"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 232,
+    "fields": {
+        "name": "Uganda",
+        "name_ascii": "Uganda",
+        "slug": "uganda",
+        "geoname_id": 226074,
+        "alternate_names": "Ouganda;Republic of Uganda;Uganda Protectorate",
+        "code2": "UG",
+        "code3": "UGA",
+        "continent": "AF",
+        "tld": "ug",
+        "phone": "256"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 233,
+    "fields": {
+        "name": "United States Minor Outlying Islands",
+        "name_ascii": "United States Minor Outlying Islands",
+        "slug": "united-states-minor-outlying-islands",
+        "geoname_id": 5854968,
+        "alternate_names": "U.S. Outlying Islands",
+        "code2": "UM",
+        "code3": "UMI",
+        "continent": "OC",
+        "tld": "um",
+        "phone": "1"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 234,
+    "fields": {
+        "name": "United States",
+        "name_ascii": "United States",
+        "slug": "united-states",
+        "geoname_id": 6252001,
+        "alternate_names": "United States of America",
+        "code2": "US",
+        "code3": "USA",
+        "continent": "NA",
+        "tld": "us",
+        "phone": "1"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 235,
+    "fields": {
+        "name": "Uruguay",
+        "name_ascii": "Uruguay",
+        "slug": "uruguay",
+        "geoname_id": 3439705,
+        "alternate_names": "Banda Oriental;Republica del Uruguay",
+        "code2": "UY",
+        "code3": "URY",
+        "continent": "SA",
+        "tld": "uy",
+        "phone": "598"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 236,
+    "fields": {
+        "name": "Uzbekistan",
+        "name_ascii": "Uzbekistan",
+        "slug": "uzbekistan",
+        "geoname_id": 1512440,
+        "alternate_names": "Republic of Uzbekistan",
+        "code2": "UZ",
+        "code3": "UZB",
+        "continent": "AS",
+        "tld": "uz",
+        "phone": "998"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 237,
+    "fields": {
+        "name": "Vatican",
+        "name_ascii": "Vatican",
+        "slug": "vatican",
+        "geoname_id": 3164670,
+        "alternate_names": "Holy See;Holy See (Vatican City State);Vatican City;Vatican City State;Vatican City State (Holy See);Vatican Hill",
+        "code2": "VA",
+        "code3": "VAT",
+        "continent": "EU",
+        "tld": "va",
+        "phone": "379"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 238,
+    "fields": {
+        "name": "Saint Vincent and the Grenadines",
+        "name_ascii": "Saint Vincent and the Grenadines",
+        "slug": "saint-vincent-and-the-grenadines",
+        "geoname_id": 3577815,
+        "alternate_names": "Colony of Saint Vincent;Saint Vincent;Saint Vincent Colony;State of Saint Vincent",
+        "code2": "VC",
+        "code3": "VCT",
+        "continent": "NA",
+        "tld": "vc",
+        "phone": "1-784"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 239,
+    "fields": {
+        "name": "Venezuela",
+        "name_ascii": "Venezuela",
+        "slug": "venezuela",
+        "geoname_id": 3625428,
+        "alternate_names": "Estados Unidos de Venezuela;Republic of Venezuela;República Bolivariana de Venezuela;United States of Venezuela",
+        "code2": "VE",
+        "code3": "VEN",
+        "continent": "SA",
+        "tld": "ve",
+        "phone": "58"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 240,
+    "fields": {
+        "name": "British Virgin Islands",
+        "name_ascii": "British Virgin Islands",
+        "slug": "british-virgin-islands",
+        "geoname_id": 3577718,
+        "alternate_names": "Presidency of Virgin Islands;Virgin Islands;Virgin Islands Presidency",
+        "code2": "VG",
+        "code3": "VGB",
+        "continent": "NA",
+        "tld": "vg",
+        "phone": "1-284"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 241,
+    "fields": {
+        "name": "U.S. Virgin Islands",
+        "name_ascii": "U.S. Virgin Islands",
+        "slug": "us-virgin-islands",
+        "geoname_id": 4796775,
+        "alternate_names": "American Virgins;Danish Islands in America;Danish West Indies;Danish Westindia Islands;Dansk Vestindien;Danske Ey-Lande;De Dansk-Vestindiske Oer;Islas Virgenes;Isles de Vierges;Isles des Vierges;Isole Vergini;Jomfrue Oer;Virgin Islands of the United States",
+        "code2": "VI",
+        "code3": "VIR",
+        "continent": "NA",
+        "tld": "vi",
+        "phone": "1-340"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 242,
+    "fields": {
+        "name": "Vietnam",
+        "name_ascii": "Vietnam",
+        "slug": "vietnam",
+        "geoname_id": 1562822,
+        "alternate_names": "Socialist Republic of Vietnam",
+        "code2": "VN",
+        "code3": "VNM",
+        "continent": "AS",
+        "tld": "vn",
+        "phone": "84"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 243,
+    "fields": {
+        "name": "Vanuatu",
+        "name_ascii": "Vanuatu",
+        "slug": "vanuatu",
+        "geoname_id": 2134431,
+        "alternate_names": "Republic of Vanuatu",
+        "code2": "VU",
+        "code3": "VUT",
+        "continent": "OC",
+        "tld": "vu",
+        "phone": "678"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 244,
+    "fields": {
+        "name": "Wallis and Futuna",
+        "name_ascii": "Wallis and Futuna",
+        "slug": "wallis-and-futuna",
+        "geoname_id": 4034749,
+        "alternate_names": "Wallis & Futuna",
+        "code2": "WF",
+        "code3": "WLF",
+        "continent": "OC",
+        "tld": "wf",
+        "phone": "681"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 245,
+    "fields": {
+        "name": "Samoa",
+        "name_ascii": "Samoa",
+        "slug": "samoa",
+        "geoname_id": 4034894,
+        "alternate_names": "Samoa i Sisifo;Western Samoa",
+        "code2": "WS",
+        "code3": "WSM",
+        "continent": "OC",
+        "tld": "ws",
+        "phone": "685"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 246,
+    "fields": {
+        "name": "Yemen",
+        "name_ascii": "Yemen",
+        "slug": "yemen",
+        "geoname_id": 69543,
+        "alternate_names": "Al Jumhūrīyah al Yamanīyah;Al Yaman;Yaman",
+        "code2": "YE",
+        "code3": "YEM",
+        "continent": "AS",
+        "tld": "ye",
+        "phone": "967"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 247,
+    "fields": {
+        "name": "Mayotte",
+        "name_ascii": "Mayotte",
+        "slug": "mayotte",
+        "geoname_id": 1024031,
+        "alternate_names": "Collectivité Territoriale de Mayotte",
+        "code2": "YT",
+        "code3": "MYT",
+        "continent": "AF",
+        "tld": "yt",
+        "phone": "262"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 248,
+    "fields": {
+        "name": "South Africa",
+        "name_ascii": "South Africa",
+        "slug": "south-africa",
+        "geoname_id": 953987,
+        "alternate_names": "Afurika Tshipembe;Riphabuliki ya Afurika Tshipembe;iRiphabliki ye Sewula Afrika;iSewula Afrika",
+        "code2": "ZA",
+        "code3": "ZAF",
+        "continent": "AF",
+        "tld": "za",
+        "phone": "27"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 249,
+    "fields": {
+        "name": "Zambia",
+        "name_ascii": "Zambia",
+        "slug": "zambia",
+        "geoname_id": 895949,
+        "alternate_names": "",
+        "code2": "ZM",
+        "code3": "ZMB",
+        "continent": "AF",
+        "tld": "zm",
+        "phone": "260"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 250,
+    "fields": {
+        "name": "Zimbabwe",
+        "name_ascii": "Zimbabwe",
+        "slug": "zimbabwe",
+        "geoname_id": 878675,
+        "alternate_names": "Republic of Zimbabwe;State of Zimbabwe;Zimbabwe/Rhodesia",
+        "code2": "ZW",
+        "code3": "ZWE",
+        "continent": "AF",
+        "tld": "zw",
+        "phone": "263"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 251,
+    "fields": {
+        "name": "Serbia and Montenegro",
+        "name_ascii": "Serbia and Montenegro",
+        "slug": "serbia-and-montenegro",
+        "geoname_id": 8505033,
+        "alternate_names": "CS;SCG",
+        "code2": "CS",
+        "code3": "SCG",
+        "continent": "EU",
+        "tld": "cs",
+        "phone": "381"
+    }
+},
+{
+    "model": "cities_light.country",
+    "pk": 252,
+    "fields": {
+        "name": "Netherlands Antilles",
+        "name_ascii": "Netherlands Antilles",
+        "slug": "netherlands-antilles",
+        "geoname_id": 8505032,
+        "alternate_names": "Antias Hulandes",
+        "code2": "AN",
+        "code3": "ANT",
+        "continent": "NA",
+        "tld": "an",
+        "phone": "599"
+    }
+}
+]

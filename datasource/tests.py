@@ -202,6 +202,8 @@ class WikidataTestCase(TestCase):
 
 
 class UsnicTestCase(TestCase):
+    fixtures = ('fixtures/citieslight/country.json', 'fixtures/citieslight/region.json', 'fixtures/citieslight/subregion.json',)
+
     def setUp(self):
         self.active = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE_ABRIDGED.CSV")
         self.branches = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_BRANCHES_ABRIDGED.CSV")
