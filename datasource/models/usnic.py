@@ -2,6 +2,7 @@ from django.db import models
 
 import pandas as pd
 from cities_light.models import Country, Region, SubRegion
+from jsonfield import JSONField
 from django_countries.fields import CountryField
 
 from datasource.models.datasource import Datasource
@@ -56,7 +57,42 @@ class EntityTypes(models.TextChoices):
 
 
 class Usnic(Datasource):
-    """ """
+    """US National Information Center data"""
+
+    rssd = models.CharField(max_length=15, blank=True)
+    lei = models.CharField(max_length=15, blank=True)
+    cusip = models.CharField(max_length=15, blank=True)
+    aba_prim = models.CharField(max_length=15, blank=True)
+    fdic_cert = models.CharField(max_length=15, blank=True)
+    ncua = models.CharField(max_length=15, blank=True)
+    thrift = models.CharField(max_length=15, blank=True)
+    thrift_hc = models.CharField(max_length=15, blank=True)
+    occ = models.CharField(max_length=15, blank=True)
+    ein = models.CharField(max_length=15, blank=True)
+    website = models.URLField(
+        "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
+    )
+
+    legal_name = models.CharField(max_length=200, null=False, blank=True)
+    entity_type = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        choices=EntityTypes.choices,
+        default=EntityTypes.UNK,
+    )
+
+    country = CountryField(multiple=False, help_text="Country the bank is locatd in", blank=True)  # type: ignore
+    regions = models.ManyToManyField(
+        Region, blank=True, help_text="regions in which there are local branches of a bank"
+    )
+    subregions = models.ManyToManyField(
+        SubRegion, blank=True, help_text="regions in which there are local branches of a bank"
+    )
+
+    women_or_minority_owned = models.BooleanField(default=False)
+
+    control = JSONField(default={})
 
     @classmethod
     def load_and_create(cls, load_from_api=False):
@@ -96,15 +132,15 @@ class Usnic(Datasource):
             "country": pycountries.get(row.CNTRY_NM.lower().strip(), None),
             "website": "" if row.URL == "0" else row.URL,
             "rssd": row["#ID_RSSD"],
-            "lei": row.ID_LEI if row.ID_LEI is not 0 else None,
-            "cusip": row.ID_CUSIP if row.ID_CUSIP is not 0 else None,
-            "aba_prim": row.ID_ABA_PRIM if row.ID_ABA_PRIM is not 0 else None,
-            "fdic_cert": row.ID_FDIC_CERT if row.ID_FDIC_CERT is not 0 else None,
-            "ncua": row.ID_NCUA if row.ID_NCUA is not 0 else None,
-            "thrift": row.ID_THRIFT if row.ID_THRIFT is not 0 else None,
-            "thrift_hc": row.ID_THRIFT_HC if row.ID_THRIFT_HC is not 0 else None,
-            "occ": row.ID_OCC if row.ID_OCC is not 0 else None,
-            "ein": row.ID_TAX if row.ID_TAX is not 0 else None,
+            "lei": row.ID_LEI if row.ID_LEI != 0 else None,
+            "cusip": row.ID_CUSIP if row.ID_CUSIP != 0 else None,
+            "aba_prim": row.ID_ABA_PRIM if row.ID_ABA_PRIM != 0 else None,
+            "fdic_cert": row.ID_FDIC_CERT if row.ID_FDIC_CERT != 0 else None,
+            "ncua": row.ID_NCUA if row.ID_NCUA != 0 else None,
+            "thrift": row.ID_THRIFT if row.ID_THRIFT != 0 else None,
+            "thrift_hc": row.ID_THRIFT_HC if row.ID_THRIFT_HC != 0 else None,
+            "occ": row.ID_OCC if row.ID_OCC != 0 else None,
+            "ein": row.ID_TAX if row.ID_TAX != 0 else None,
             "women_or_minority_owned": True if str(row.MJR_OWN_MNRTY) != "0" else False,
         }
         # filter out unnecessary defaults
@@ -151,79 +187,42 @@ class Usnic(Datasource):
     @classmethod
     def add_relationships(cls, relationship_df):
         # cycle through banks again, this time adding owner relationships
-        df = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS.CSV")
-        existing_rssds = [x for x in Usnic.objects.values_list("rssd", flat=True)]
+        existing_rssds = [int(x) for x in Usnic.objects.values_list("rssd", flat=True)]
 
-        for existing_rssd in existing_rssds:
-            subset_df = df[df["ID_RSSD_OFFSPRING"] == existing_rssd]
+        for child_id in existing_rssds:
+            subset_df = relationship_df[relationship_df["ID_RSSD_OFFSPRING"] == child_id]
+            child_bank = Usnic.objects.get(rssd=child_id)
+            control_json = child_bank.control
 
-            for i, row in df.iterrows():
-                child_id = row["ID_RSSD_OFFSPRING"]
+            for i, row in subset_df.iterrows():
                 parent_id = row["#ID_RSSD_PARENT"]
+                # if the relationship is not controlling or has ended or parent is not in the dataset
+                if (
+                    row["CTRL_IND"] != 1
+                    or row["DT_END"] != 99991231
+                    or parent_id not in existing_rssds
+                ):
+                    continue
 
-                # if the relationship has ended or either the parent/offspring is not in the dataset
-                if row["DT_END"] != 99991231 or parent_id not in existing_rssds or child_id not in existing_rssds:
-                    continue 
+                # set equity to exact reported or upper bound if only bracket is available
+                pct_equity = 0
+                if row["PCT_EQUITY"] != 0:
+                    pct_equity = int(row["PCT_EQUITY"])
+                elif row["PCT_EQUITY_BRACKET"]:
+                    pct_equity = int(row["PCT_EQUITY_BRACKET"].strip().split("-")[-1])
 
+                if row["EQUITY_IND"] == 1:
+                    control_json[parent_id] = {"parent_type": "banking", "equity_owned": pct_equity}
+                elif row["EQUITY_IND"] == 2:
+                    control_json[parent_id] = {
+                        "parent_type": "non-banking",
+                        "equity_owned": pct_equity,
+                    }
+                elif row["EQUITY_IND"] == 0:
+                    control_json[parent_id] = {
+                        "parent_type": "non-equity-control",
+                        "equity_owned": pct_equity,
+                    }
 
-
-
-        # for i, row in df.iterrows():
-
-            
-        #     try:
-        #         child = Usnic.objects.get(rssd=str(row["ID_RSSD_OFFSPRING"]))
-        #         parent = Usnic.objects.get(rssd=str(row["#ID_RSSD_PARENT"]))
-        #     except Usnic.DoesNotExist:
-        #         continue
-
-
-            # if not child.subsidiary_of_1 or child.subsidiary_of_1 != parent:
-            #     # child.subsidiary_of_1 = Usnic.objects.get(rssd=str(row['#ID_RSSD_PARENT']))
-            #     child.subsidiary_of_1 = parent
-            #     child.subsidiary_of_1_pct = row["PCT_EQUITY"]
-            # elif not child.subsidiary_of_2 or child.subsidiary_of_2 != parent:
-            #     child.subsidiary_of_2 = parent
-            #     child.subsidiary_of_2_pct = row["PCT_EQUITY"]
-            # elif not child.subsidiary_of_3 or child.subsidiary_of_3 != parent:
-            #     child.subsidiary_of_3 = parent
-            #     child.subsidiary_of_3_pct = row["PCT_EQUITY"]
-            # elif not child.subsidiary_of_4 or child.subsidiary_of_4 != parent:
-            #     child.subsidiary_of_4 = parent
-            #     child.subsidiary_of_4_pct = row["PCT_EQUITY"]
-            # else:
-            #     pass
-            # child.save()
-
-    rssd = models.CharField(max_length=15, blank=True)
-    lei = models.CharField(max_length=15, blank=True)
-    cusip = models.CharField(max_length=15, blank=True)
-    aba_prim = models.CharField(max_length=15, blank=True)
-    fdic_cert = models.CharField(max_length=15, blank=True)
-    ncua = models.CharField(max_length=15, blank=True)
-    thrift = models.CharField(max_length=15, blank=True)
-    thrift_hc = models.CharField(max_length=15, blank=True)
-    occ = models.CharField(max_length=15, blank=True)
-    ein = models.CharField(max_length=15, blank=True)
-    website = models.URLField(
-        "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
-    )
-
-    legal_name = models.CharField(max_length=200, null=False, blank=True)
-    entity_type = models.CharField(
-        max_length=100,
-        null=False,
-        blank=False,
-        choices=EntityTypes.choices,
-        default=EntityTypes.UNK,
-    )
-
-    country = CountryField(multiple=False, help_text="Country the bank is locatd in", blank=True)  # type: ignore
-    regions = models.ManyToManyField(
-        Region, blank=True, help_text="regions in which there are local branches of a bank"
-    )
-    subregions = models.ManyToManyField(
-        SubRegion, blank=True, help_text="regions in which there are local branches of a bank"
-    )
-
-    women_or_minority_owned = models.BooleanField(default=False)
+                child_bank.control = control_json
+                child_bank.save()

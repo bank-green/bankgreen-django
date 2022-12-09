@@ -211,6 +211,7 @@ class UsnicTestCase(TestCase):
     def setUp(self):
         self.active = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE_ABRIDGED.CSV")
         self.branches = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_BRANCHES_ABRIDGED.CSV")
+        self.rels = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS_ABRIDGED.CSV")
 
     def test_load_or_create_individual_instance(self):
         row = self.active.iloc[47]
@@ -251,18 +252,23 @@ class UsnicTestCase(TestCase):
 
         region_abbreviations = [x["geoname_code"] for x in bank.regions.values()]
         self.assertIn("CA", region_abbreviations)
-    
+
     def test_add_relationships(self):
-        bank_row = self.active[self.active["#ID_RSSD"] == 1164].iloc[0]
-        _, _ = Usnic._load_or_create_individual_instance(
+        # artificially mark all relationships as unended
+        self.rels["DT_END"] = 99991231
+
+        # create parent and child bank
+        bank_row = self.active[self.active["#ID_RSSD"] == 1155].iloc[0]
+        _, child_banks = Usnic._load_or_create_individual_instance(
             banks=[], num_created=0, row=bank_row
         )
+        child_bank = child_banks[0]
+        parent_bank = Usnic.objects.create(name="test parent", rssd=469951)
 
-        branch_row = self.branches.iloc[0]
-        bank = Usnic.supplement_with_branch_information(branch_row)
+        # add relationship info and refresh child. (communication through db)
+        Usnic.add_relationships(self.rels)
+        child_bank.refresh_from_db()
 
-
-        relationship_df = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS_ABRIDGED.CSV")
-        Usnic.add_relationships(relationship_df)
-
-
+        # assert that the control json is not default
+        self.assertTrue(child_bank.control != {})
+        self.assertTrue("469951" in child_bank.control.keys())
