@@ -242,7 +242,6 @@ class UsnicTestCase(TestCase):
         )
 
         bank = banks[0]
-        rssd = bank.rssd
 
         branch_row = self.branches.iloc[0]
         bank = Usnic.supplement_with_branch_information(branch_row)
@@ -252,3 +251,18 @@ class UsnicTestCase(TestCase):
 
         region_abbreviations = [x["geoname_code"] for x in bank.regions.values()]
         self.assertIn("CA", region_abbreviations)
+    
+    def test_add_relationships(self):
+        bank_row = self.active[self.active["#ID_RSSD"] == 1164].iloc[0]
+        _, _ = Usnic._load_or_create_individual_instance(
+            banks=[], num_created=0, row=bank_row
+        )
+
+        branch_row = self.branches.iloc[0]
+        bank = Usnic.supplement_with_branch_information(branch_row)
+
+
+        relationship_df = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS_ABRIDGED.CSV")
+        Usnic.add_relationships(relationship_df)
+
+

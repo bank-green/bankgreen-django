@@ -95,17 +95,16 @@ class Usnic(Datasource):
             else EntityTypes.UNK,
             "country": pycountries.get(row.CNTRY_NM.lower().strip(), None),
             "website": "" if row.URL == "0" else row.URL,
-            "thrift": row.ID_THRIFT,
-            "thrift_hc": row.ID_THRIFT_HC,
-            "rssd": row[0],  # todo: fix this
-            "rssd_hd": row.ID_RSSD_HD_OFF,
-            "lei": row.ID_LEI,
-            "cusip": row.ID_CUSIP,
-            "aba_prim": row.ID_ABA_PRIM,
-            "fdic_cert": row.ID_FDIC_CERT,
-            "ncua": row.ID_NCUA,
-            "occ": row.ID_OCC,
-            "ein": row.ID_TAX,
+            "rssd": row["#ID_RSSD"],
+            "lei": row.ID_LEI if row.ID_LEI is not 0 else None,
+            "cusip": row.ID_CUSIP if row.ID_CUSIP is not 0 else None,
+            "aba_prim": row.ID_ABA_PRIM if row.ID_ABA_PRIM is not 0 else None,
+            "fdic_cert": row.ID_FDIC_CERT if row.ID_FDIC_CERT is not 0 else None,
+            "ncua": row.ID_NCUA if row.ID_NCUA is not 0 else None,
+            "thrift": row.ID_THRIFT if row.ID_THRIFT is not 0 else None,
+            "thrift_hc": row.ID_THRIFT_HC if row.ID_THRIFT_HC is not 0 else None,
+            "occ": row.ID_OCC if row.ID_OCC is not 0 else None,
+            "ein": row.ID_TAX if row.ID_TAX is not 0 else None,
             "women_or_minority_owned": True if str(row.MJR_OWN_MNRTY) != "0" else False,
         }
         # filter out unnecessary defaults
@@ -150,46 +149,62 @@ class Usnic(Datasource):
         return bank
 
     @classmethod
-    def link_parents(cls):
+    def add_relationships(cls, relationship_df):
         # cycle through banks again, this time adding owner relationships
         df = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS.CSV")
-        existing_objects = Usnic.objects.values_list("rssd", flat=True)
-        for i, row in df.iterrows():
-            if str(row["#ID_RSSD_PARENT"]) in list(existing_objects) and str(
-                row["ID_RSSD_OFFSPRING"]
-            ) in list(existing_objects):
+        existing_rssds = [x for x in Usnic.objects.values_list("rssd", flat=True)]
 
-                child = Usnic.objects.get(rssd=str(row["ID_RSSD_OFFSPRING"]))
-                parent = Usnic.objects.get(rssd=str(row["#ID_RSSD_PARENT"]))
+        for existing_rssd in existing_rssds:
+            subset_df = df[df["ID_RSSD_OFFSPRING"] == existing_rssd]
 
-                if not child.subsidiary_of_1 or child.subsidiary_of_1 != parent:
-                    # child.subsidiary_of_1 = Usnic.objects.get(rssd=str(row['#ID_RSSD_PARENT']))
-                    child.subsidiary_of_1 = parent
-                    child.subsidiary_of_1_pct = row["PCT_EQUITY"]
-                elif not child.subsidiary_of_2 or child.subsidiary_of_2 != parent:
-                    child.subsidiary_of_2 = parent
-                    child.subsidiary_of_2_pct = row["PCT_EQUITY"]
-                elif not child.subsidiary_of_3 or child.subsidiary_of_3 != parent:
-                    child.subsidiary_of_3 = parent
-                    child.subsidiary_of_3_pct = row["PCT_EQUITY"]
-                elif not child.subsidiary_of_4 or child.subsidiary_of_4 != parent:
-                    child.subsidiary_of_4 = parent
-                    child.subsidiary_of_4_pct = row["PCT_EQUITY"]
-                else:
-                    pass
-                child.save()
+            for i, row in df.iterrows():
+                child_id = row["ID_RSSD_OFFSPRING"]
+                parent_id = row["#ID_RSSD_PARENT"]
+
+                # if the relationship has ended or either the parent/offspring is not in the dataset
+                if row["DT_END"] != 99991231 or parent_id not in existing_rssds or child_id not in existing_rssds:
+                    continue 
+
+
+
+
+        # for i, row in df.iterrows():
+
+            
+        #     try:
+        #         child = Usnic.objects.get(rssd=str(row["ID_RSSD_OFFSPRING"]))
+        #         parent = Usnic.objects.get(rssd=str(row["#ID_RSSD_PARENT"]))
+        #     except Usnic.DoesNotExist:
+        #         continue
+
+
+            # if not child.subsidiary_of_1 or child.subsidiary_of_1 != parent:
+            #     # child.subsidiary_of_1 = Usnic.objects.get(rssd=str(row['#ID_RSSD_PARENT']))
+            #     child.subsidiary_of_1 = parent
+            #     child.subsidiary_of_1_pct = row["PCT_EQUITY"]
+            # elif not child.subsidiary_of_2 or child.subsidiary_of_2 != parent:
+            #     child.subsidiary_of_2 = parent
+            #     child.subsidiary_of_2_pct = row["PCT_EQUITY"]
+            # elif not child.subsidiary_of_3 or child.subsidiary_of_3 != parent:
+            #     child.subsidiary_of_3 = parent
+            #     child.subsidiary_of_3_pct = row["PCT_EQUITY"]
+            # elif not child.subsidiary_of_4 or child.subsidiary_of_4 != parent:
+            #     child.subsidiary_of_4 = parent
+            #     child.subsidiary_of_4_pct = row["PCT_EQUITY"]
+            # else:
+            #     pass
+            # child.save()
 
     rssd = models.CharField(max_length=15, blank=True)
-    rssd_hd = models.CharField(max_length=15, blank=True)
+    lei = models.CharField(max_length=15, blank=True)
     cusip = models.CharField(max_length=15, blank=True)
+    aba_prim = models.CharField(max_length=15, blank=True)
+    fdic_cert = models.CharField(max_length=15, blank=True)
+    ncua = models.CharField(max_length=15, blank=True)
     thrift = models.CharField(max_length=15, blank=True)
     thrift_hc = models.CharField(max_length=15, blank=True)
-    aba_prim = models.CharField(max_length=15, blank=True)
-    ncua = models.CharField(max_length=15, blank=True)
-    fdic_cert = models.CharField(max_length=15, blank=True)
     occ = models.CharField(max_length=15, blank=True)
     ein = models.CharField(max_length=15, blank=True)
-    lei = models.CharField(max_length=15, blank=True)
     website = models.URLField(
         "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
     )
