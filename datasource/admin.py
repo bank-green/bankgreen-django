@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db import models
 
+from brand.admin import CountriesWidgetOverrideForm
 
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter, DropdownFilter
 from Levenshtein import distance as lev
@@ -20,6 +21,22 @@ from .models import (
     Usnic,
     Wikidata,
 )
+
+
+class IsControlledFilter(admin.SimpleListFilter):
+    title = "is_controlled"
+    parameter_name = "is_controlled"
+
+    def lookups(self, request, model_admin):
+        return (("Independent", "Independent"), ("Controlled", "Controlled"))
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "Independent":
+            return queryset.filter(control__iexact="{}")
+        elif value == "Controlled":
+            return queryset.exclude(control__iexact="{}")
+        return queryset
 
 
 @admin.register(Datasource)
@@ -114,9 +131,12 @@ class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
 
 @admin.register(Usnic)
 class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
+    form = CountriesWidgetOverrideForm
+
     list_display = ["name", "get_entity_type_display", "rssd", "lei"]
     search_fields = [
         "name",
+        "legal_name",
         "rssd",
         "lei",
         "cusip",
@@ -132,6 +152,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         "women_or_minority_owned",
         ("country", ChoiceDropdownFilter),
         ("entity_type", DropdownFilter),
+        IsControlledFilter,
         "created",
         "modified",
     )

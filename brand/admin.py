@@ -14,9 +14,7 @@ from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary
 
-from django_admin_listfilter_dropdown.filters import (
-    ChoiceDropdownFilter,
-)
+from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 
 
 class RecommendedInOverrideForm(forms.ModelForm):
