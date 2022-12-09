@@ -1,3 +1,4 @@
+import re
 from django.db import models
 
 import pandas as pd
@@ -104,12 +105,13 @@ class Usnic(Datasource):
             print("No Usnic API. Loading data from local copy...")
 
         attr_df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV")
-        branch_df = pd.read_csv("./datasource/local/usnic/CSV_BRANCHES.CSV")
+        branch_df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_BRANCHES.CSV")
         rels_df = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS.CSV")
 
         # create instances
         banks = []
         num_created = 0
+        print("USNIC Creating records")
         for i, row in attr_df.iterrows():
             try:
                 num_created, banks = cls._load_or_create_individual_instance(
@@ -121,6 +123,8 @@ class Usnic(Datasource):
                 print(e)
 
         # update with branch information
+
+        print("USNIC updating records with branch information")
         for i, row in branch_df.iterrows():
             try:
                 cls._supplement_with_branch_information(row)
@@ -129,6 +133,7 @@ class Usnic(Datasource):
                 print(row)
                 print(e)
 
+        print("USNIC records with relationship/control information")
         cls._add_relationships(rels_df)
 
         return banks, num_created
@@ -229,7 +234,8 @@ class Usnic(Datasource):
             if row["PCT_EQUITY"] != 0:
                 pct_equity = int(row["PCT_EQUITY"])
             elif row["PCT_EQUITY_BRACKET"]:
-                pct_equity = int(row["PCT_EQUITY_BRACKET"].strip().split("-")[-1])
+                last_pct = row["PCT_EQUITY_BRACKET"].strip().split("-")[-1]
+                pct_equity = int(re.sub(r"[^[0-9\.]", "", last_pct))
 
             if row["EQUITY_IND"] == 1:
                 control_json[parent_id] = {"parent_type": "banking", "equity_owned": pct_equity}
