@@ -2,11 +2,7 @@ from django.contrib import admin
 from django.db import models
 
 
-from django_admin_listfilter_dropdown.filters import (
-    ChoiceDropdownFilter,
-    DropdownFilter,
-    RelatedDropdownFilter,
-)
+from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter, DropdownFilter
 from Levenshtein import distance as lev
 
 from brand.models import Brand
@@ -30,7 +26,7 @@ from .models import (
 class DatasourceAdmin(admin.ModelAdmin):
     list_display = ["name", "source_id"]
     search_fields = ["name", "source_id"]
-    list_filter = ("created", "modified")
+    list_filter = ("created", "modified", ("countries", ChoiceDropdownFilter))
 
 
 @admin.register(Banktrack)
@@ -118,7 +114,27 @@ class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
 
 @admin.register(Usnic)
 class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
-    pass
+    list_display = ["name", "get_entity_type_display", "rssd", "lei"]
+    search_fields = [
+        "name",
+        "rssd",
+        "lei",
+        "cusip",
+        "aba_prim",
+        "fdic_cert",
+        "ncua",
+        "thrift",
+        "thrift_hc",
+        "occ",
+        "ein",
+    ]
+    list_filter = (
+        "women_or_minority_owned",
+        ("country", ChoiceDropdownFilter),
+        ("entity_type", DropdownFilter),
+        "created",
+        "modified",
+    )
 
 
 @admin.register(Wikidata)

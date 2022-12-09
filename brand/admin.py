@@ -14,6 +14,10 @@ from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary
 
+from django_admin_listfilter_dropdown.filters import (
+    ChoiceDropdownFilter,
+)
+
 
 class RecommendedInOverrideForm(forms.ModelForm):
     class Meta:
@@ -194,6 +198,7 @@ class BrandAdmin(admin.ModelAdmin):
         "commentary__rating",
         "commentary__number_of_requests",
         "commentary__top_three_ethical",
+        ("countries", ChoiceDropdownFilter),
     )
     list_display = ("short_name", "short_tag", "website")
     list_per_page = 800
