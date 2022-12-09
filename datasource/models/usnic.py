@@ -98,17 +98,19 @@ class Usnic(Datasource):
     def load_and_create(cls, load_from_api=False):
 
         # load from api or from local disk.
-        df = None
         if not load_from_api:
             print("Loading Usnic data from local copy...")
-            df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV")
         else:
-            print("Loading Usnic data from API...")
-            df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV")
+            print("No Usnic API. Loading data from local copy...")
 
+        attr_df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV")
+        branch_df = pd.read_csv("./datasource/local/usnic/CSV_BRANCHES.CSV")
+        rels_df = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS.CSV")
+
+        # create instances
         banks = []
         num_created = 0
-        for i, row in df.iterrows():
+        for i, row in attr_df.iterrows():
             try:
                 num_created, banks = cls._load_or_create_individual_instance(
                     banks, num_created, row
@@ -117,6 +119,18 @@ class Usnic(Datasource):
                 print("\n\n===Usnic failed creation or updating===\n\n")
                 print(row)
                 print(e)
+
+        # update with branch information
+        for i, row in branch_df.iterrows():
+            try:
+                cls._supplement_with_branch_information(row)
+            except Exception as e:
+                print("\n\n===Usnic failed to update branch information ===\n\n")
+                print(row)
+                print(e)
+
+        cls._add_relationships(rels_df)
+
         return banks, num_created
 
     @classmethod
@@ -156,7 +170,7 @@ class Usnic(Datasource):
         return num_created, banks
 
     @classmethod
-    def supplement_with_branch_information(cls, row):
+    def _supplement_with_branch_information(cls, row):
 
         branch_bank_rssd = row["ID_RSSD_HD_OFF"]
 
@@ -185,44 +199,47 @@ class Usnic(Datasource):
         return bank
 
     @classmethod
-    def add_relationships(cls, relationship_df):
+    def _add_relationships(cls, relationship_df):
         # cycle through banks again, this time adding owner relationships
         existing_rssds = [int(x) for x in Usnic.objects.values_list("rssd", flat=True)]
 
         for child_id in existing_rssds:
             subset_df = relationship_df[relationship_df["ID_RSSD_OFFSPRING"] == child_id]
-            child_bank = Usnic.objects.get(rssd=child_id)
-            control_json = child_bank.control
+            try:
+                cls._add_individual_relationship(subset_df, child_id, existing_rssds)
+            except Exception as e:
+                print("\n\n===Usnic failed to update relationship information ===\n\n")
+                print(child_id)
+                print(subset_df)
+                print(e)
 
-            for i, row in subset_df.iterrows():
-                parent_id = row["#ID_RSSD_PARENT"]
-                # if the relationship is not controlling or has ended or parent is not in the dataset
-                if (
-                    row["CTRL_IND"] != 1
-                    or row["DT_END"] != 99991231
-                    or parent_id not in existing_rssds
-                ):
-                    continue
+    @classmethod
+    def _add_individual_relationship(cls, subset_df, child_id, existing_rssds):
+        child_bank = Usnic.objects.get(rssd=child_id)
+        control_json = child_bank.control
 
-                # set equity to exact reported or upper bound if only bracket is available
-                pct_equity = 0
-                if row["PCT_EQUITY"] != 0:
-                    pct_equity = int(row["PCT_EQUITY"])
-                elif row["PCT_EQUITY_BRACKET"]:
-                    pct_equity = int(row["PCT_EQUITY_BRACKET"].strip().split("-")[-1])
+        for i, row in subset_df.iterrows():
+            parent_id = row["#ID_RSSD_PARENT"]
+            # if the relationship is not controlling or has ended or parent is not in the dataset
+            if row["CTRL_IND"] != 1 or row["DT_END"] != 99991231 or parent_id not in existing_rssds:
+                continue
 
-                if row["EQUITY_IND"] == 1:
-                    control_json[parent_id] = {"parent_type": "banking", "equity_owned": pct_equity}
-                elif row["EQUITY_IND"] == 2:
-                    control_json[parent_id] = {
-                        "parent_type": "non-banking",
-                        "equity_owned": pct_equity,
-                    }
-                elif row["EQUITY_IND"] == 0:
-                    control_json[parent_id] = {
-                        "parent_type": "non-equity-control",
-                        "equity_owned": pct_equity,
-                    }
+            # set equity to exact reported or upper bound if only bracket is available
+            pct_equity = 0
+            if row["PCT_EQUITY"] != 0:
+                pct_equity = int(row["PCT_EQUITY"])
+            elif row["PCT_EQUITY_BRACKET"]:
+                pct_equity = int(row["PCT_EQUITY_BRACKET"].strip().split("-")[-1])
 
-                child_bank.control = control_json
-                child_bank.save()
+            if row["EQUITY_IND"] == 1:
+                control_json[parent_id] = {"parent_type": "banking", "equity_owned": pct_equity}
+            elif row["EQUITY_IND"] == 2:
+                control_json[parent_id] = {"parent_type": "non-banking", "equity_owned": pct_equity}
+            elif row["EQUITY_IND"] == 0:
+                control_json[parent_id] = {
+                    "parent_type": "non-equity-control",
+                    "equity_owned": pct_equity,
+                }
+
+            child_bank.control = control_json
+            child_bank.save()

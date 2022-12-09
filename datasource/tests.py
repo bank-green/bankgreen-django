@@ -245,7 +245,7 @@ class UsnicTestCase(TestCase):
         bank = banks[0]
 
         branch_row = self.branches.iloc[0]
-        bank = Usnic.supplement_with_branch_information(branch_row)
+        bank = Usnic._supplement_with_branch_information(branch_row)
 
         if not bank:
             self.fail("Bank was either not found or created")
@@ -266,7 +266,7 @@ class UsnicTestCase(TestCase):
         parent_bank = Usnic.objects.create(name="test parent", rssd=469951)
 
         # add relationship info and refresh child. (communication through db)
-        Usnic.add_relationships(self.rels)
+        Usnic._add_relationships(self.rels)
         child_bank.refresh_from_db()
 
         # assert that the control json is not default
