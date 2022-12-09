@@ -235,7 +235,7 @@ class Usnic(Datasource):
                 pct_equity = int(row["PCT_EQUITY"])
             elif row["PCT_EQUITY_BRACKET"]:
                 last_pct = row["PCT_EQUITY_BRACKET"].strip().split("-")[-1]
-                pct_equity = int(re.sub(r"[^[0-9\.]", "", last_pct))
+                pct_equity = int(re.sub(r'[^[0-9\.]', '', last_pct))
 
             if row["EQUITY_IND"] == 1:
                 control_json[parent_id] = {"parent_type": "banking", "equity_owned": pct_equity}
