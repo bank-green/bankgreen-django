@@ -1,14 +1,19 @@
 from django.contrib import admin
 from django.db import models
-
-from brand.admin import CountriesWidgetOverrideForm
+from django.urls import reverse
+from django.utils.html import escape, format_html
 
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter, DropdownFilter
-from Levenshtein import distance as lev
+from django_json_widget.widgets import JSONEditorWidget
 
+# from Levenshtein import distance as lev
+from jsonfield import JSONField
+
+from brand.admin import CountriesWidgetOverrideForm
 from brand.models import Brand
 
-from .constants import lev_distance, model_names, read_only_fields
+# from .constants import lev_distance, model_names
+from .constants import read_only_fields
 from .models import (
     Banktrack,
     Bimpact,
@@ -156,6 +161,33 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         "created",
         "modified",
     )
+
+    @admin.display(description="controlling_orgs")
+    def controlling_orgs(self, obj):
+
+        controlling_rssds = list(obj.control.keys())
+        controlling_orgs = Usnic.objects.filter(rssd__in=controlling_rssds)
+        html = ""
+        for controller in controlling_orgs:
+            url = reverse("admin:%s_%s_change" % ("datasource", "usnic"), args=(controller.pk,))
+            html += f"<a href='{url}'>{controller.name} - rssd:{controller.rssd} - id:{controller.pk}</a><br />"
+        return format_html(html)
+
+    fields = (
+        ("name", "legal_name", "website", "women_or_minority_owned"),
+        "brand",
+        ("rssd", "lei"),
+        ("country", "source_id"),
+        ("regions", "subregions"),
+        "controlling_orgs",
+        ("control"),
+        ("cusip", "aba_prim", "fdic_cert", "ncua", "thrift", "thrift_hc", "occ", "ein"),
+    )
+
+    readonly_fields = ("controlling_orgs",)
+
+    formfield_overrides = {JSONField: {"widget": JSONEditorWidget}}
+    autocomplete_fields = ["brand"]
 
 
 @admin.register(Wikidata)

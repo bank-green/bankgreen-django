@@ -1,6 +1,5 @@
 import re
 from django.db import models
-
 import pandas as pd
 from cities_light.models import Country, Region, SubRegion
 from jsonfield import JSONField
@@ -224,9 +223,18 @@ class Usnic(Datasource):
         control_json = child_bank.control
 
         for i, row in subset_df.iterrows():
-            parent_id = row["#ID_RSSD_PARENT"]
+            parent_rssd = row["#ID_RSSD_PARENT"]
+
+            parent_usnic_obj = Usnic.objects.filter(rssd=parent_rssd).first()
+            parent_name = parent_usnic_obj.name if parent_usnic_obj else "n/a"
+            parent_bankgreen_id = parent_usnic_obj.id if parent_usnic_obj else "n/a"
+
             # if the relationship is not controlling or has ended or parent is not in the dataset
-            if row["CTRL_IND"] != 1 or row["DT_END"] != 99991231 or parent_id not in existing_rssds:
+            if (
+                row["CTRL_IND"] != 1
+                or row["DT_END"] != 99991231
+                or parent_rssd not in existing_rssds
+            ):
                 continue
 
             # set equity to exact reported or upper bound if only bracket is available
@@ -237,15 +245,19 @@ class Usnic(Datasource):
                 last_pct = row["PCT_EQUITY_BRACKET"].strip().split("-")[-1]
                 pct_equity = int(re.sub(r"[^[0-9\.]", "", last_pct))
 
+            control_json[parent_rssd] = {
+                "equity_owned": pct_equity,
+                "parent_rssd": parent_rssd,
+                "parent_name": parent_name,
+                "parent_bankgreen_id": parent_bankgreen_id,
+            }
+
             if row["EQUITY_IND"] == 1:
-                control_json[parent_id] = {"parent_type": "banking", "equity_owned": pct_equity}
+                control_json[parent_rssd]["parent_type"] = "banking"
             elif row["EQUITY_IND"] == 2:
-                control_json[parent_id] = {"parent_type": "non-banking", "equity_owned": pct_equity}
+                control_json[parent_rssd]["parent_type"] = "non-banking"
             elif row["EQUITY_IND"] == 0:
-                control_json[parent_id] = {
-                    "parent_type": "non-equity-control",
-                    "equity_owned": pct_equity,
-                }
+                control_json[parent_rssd]["parent_type"] = "non-equity-control"
 
             child_bank.control = control_json
             child_bank.save()

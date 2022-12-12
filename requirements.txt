@@ -25,6 +25,7 @@ graphene==2.1.9
 graphene-django==2.15.0
 django-filter==21.1
 jsonfield==3.1.0
+django-json-widget==1.1.1
 np==1.0.2
 Markdown==3.3.7
 markdown-link-attr-modifier==0.2.0
