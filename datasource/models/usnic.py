@@ -1,4 +1,5 @@
 import re
+import threading
 from django.db import models
 import pandas as pd
 from cities_light.models import Country, Region, SubRegion
@@ -204,60 +205,74 @@ class Usnic(Datasource):
 
     @classmethod
     def _add_relationships(cls, relationship_df):
+        cls.num_threads = 10
+        threads = []
+
         # cycle through banks again, this time adding owner relationships
         existing_rssds = [int(x) for x in Usnic.objects.values_list("rssd", flat=True)]
 
         for child_id in existing_rssds:
-            subset_df = relationship_df[relationship_df["ID_RSSD_OFFSPRING"] == child_id]
-            try:
-                cls._add_individual_relationship(subset_df, child_id, existing_rssds)
-            except Exception as e:
-                print("\n\n===Usnic failed to update relationship information ===\n\n")
-                print(child_id)
-                print(subset_df)
-                print(e)
+            t = threading.Thread(
+                target=cls._add_individual_relationship,
+                args=(relationship_df, child_id, existing_rssds),
+            )
+            # cls._add_individual_relationship(relationship_df, child_id, existing_rssds)
+            t.start()
+            threads.append(t)
+
+            for t in threads:
+                t.join()
 
     @classmethod
-    def _add_individual_relationship(cls, subset_df, child_id, existing_rssds):
-        child_bank = Usnic.objects.get(rssd=child_id)
-        control_json = child_bank.control
+    def _add_individual_relationship(cls, relationship_df, child_id, existing_rssds):
+        try:
+            print(f"trying {child_id}")
+            subset_df = relationship_df[relationship_df["ID_RSSD_OFFSPRING"] == child_id]
+            child_bank = Usnic.objects.get(rssd=child_id)
+            control_json = child_bank.control
 
-        for i, row in subset_df.iterrows():
-            parent_rssd = row["#ID_RSSD_PARENT"]
+            for i, row in subset_df.iterrows():
+                parent_rssd = row["#ID_RSSD_PARENT"]
 
-            parent_usnic_obj = Usnic.objects.filter(rssd=parent_rssd).first()
-            parent_name = parent_usnic_obj.name if parent_usnic_obj else "n/a"
-            parent_bankgreen_id = parent_usnic_obj.id if parent_usnic_obj else "n/a"
+                parent_usnic_obj = Usnic.objects.filter(rssd=parent_rssd).first()
+                parent_name = parent_usnic_obj.name if parent_usnic_obj else "n/a"
+                parent_bankgreen_id = parent_usnic_obj.id if parent_usnic_obj else "n/a"
 
-            # if the relationship is not controlling or has ended or parent is not in the dataset
-            if (
-                row["CTRL_IND"] != 1
-                or row["DT_END"] != 99991231
-                or parent_rssd not in existing_rssds
-            ):
-                continue
+                # if the relationship is not controlling or has ended or parent is not in the dataset
+                if (
+                    row["CTRL_IND"] != 1
+                    or row["DT_END"] != 99991231
+                    or parent_rssd not in existing_rssds
+                ):
+                    continue
 
-            # set equity to exact reported or upper bound if only bracket is available
-            pct_equity = 0
-            if row["PCT_EQUITY"] != 0:
-                pct_equity = int(row["PCT_EQUITY"])
-            elif row["PCT_EQUITY_BRACKET"]:
-                last_pct = row["PCT_EQUITY_BRACKET"].strip().split("-")[-1]
-                pct_equity = int(re.sub(r"[^[0-9\.]", "", last_pct))
+                # set equity to exact reported or upper bound if only bracket is available
+                pct_equity = 0
+                if row["PCT_EQUITY"] != 0:
+                    pct_equity = int(row["PCT_EQUITY"])
+                elif row["PCT_EQUITY_BRACKET"]:
+                    last_pct = row["PCT_EQUITY_BRACKET"].strip().split("-")[-1]
+                    pct_equity = int(re.sub(r"[^[0-9\.]", "", last_pct))
 
-            control_json[parent_rssd] = {
-                "equity_owned": pct_equity,
-                "parent_rssd": parent_rssd,
-                "parent_name": parent_name,
-                "parent_bankgreen_id": parent_bankgreen_id,
-            }
+                control_json[parent_rssd] = {
+                    "equity_owned": pct_equity,
+                    "parent_rssd": parent_rssd,
+                    "parent_name": parent_name,
+                    "parent_bankgreen_id": parent_bankgreen_id,
+                }
 
-            if row["EQUITY_IND"] == 1:
-                control_json[parent_rssd]["parent_type"] = "banking"
-            elif row["EQUITY_IND"] == 2:
-                control_json[parent_rssd]["parent_type"] = "non-banking"
-            elif row["EQUITY_IND"] == 0:
-                control_json[parent_rssd]["parent_type"] = "non-equity-control"
+                if row["EQUITY_IND"] == 1:
+                    control_json[parent_rssd]["parent_type"] = "banking"
+                elif row["EQUITY_IND"] == 2:
+                    control_json[parent_rssd]["parent_type"] = "non-banking"
+                elif row["EQUITY_IND"] == 0:
+                    control_json[parent_rssd]["parent_type"] = "non-equity-control"
 
-            child_bank.control = control_json
-            child_bank.save()
+                child_bank.control = control_json
+                child_bank.save()
+        except Exception as e:
+            subset_df = relationship_df[relationship_df["ID_RSSD_OFFSPRING"] == child_id]
+            print("\n\n===Usnic failed to update relationship information ===\n\n")
+            print(child_id)
+            print(subset_df)
+            print(e)
