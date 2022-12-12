@@ -6,6 +6,8 @@ python manage.py refresh_datasources usnic
 
 django test datasource.tests.UsnicTestCase
 
+python manage.py dumpdata datasource.Usnic --indent 4 > fixtures/usnic/usnic.json 
+python manage.py loaddata fixtures/usnic/usnic.json --app datasource.Usnic
 
 ### Random Notes
 
