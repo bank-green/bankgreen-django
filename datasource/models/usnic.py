@@ -108,8 +108,6 @@ class Usnic(Datasource):
             print("No Usnic API. Loading data from local copy...")
 
         attr_df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV")
-        branch_df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_BRANCHES.CSV")
-        rels_df = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS.CSV")
 
         # create instances
         banks = []
@@ -120,14 +118,20 @@ class Usnic(Datasource):
                 num_created, banks = cls._load_or_create_individual_instance(
                     banks, num_created, row
                 )
+                print(banks[-1])
             except Exception as e:
                 print("\n\n===Usnic failed creation or updating===\n\n")
                 print(row)
                 print(e)
 
-        # update with branch information
+        del attr_df
 
-        print("USNIC updating records with branch information")
+        existing_rssds = [int(x) for x in Usnic.objects.all().values_list("rssd", flat=True)]
+
+        # update with branch information
+        branch_df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_BRANCHES.CSV")
+        branch_df = branch_df[branch_df["ID_RSSD_HD_OFF"].isin(existing_rssds)]
+        print("\n\nUSNIC updating records with branch information")
         for i, row in branch_df.iterrows():
             try:
                 cls._supplement_with_branch_information(row)
@@ -136,7 +140,13 @@ class Usnic(Datasource):
                 print(row)
                 print(e)
 
-        print("USNIC records with relationship/control information")
+        del branch_df
+
+        # Update with relationship information
+        print("\n\nUSNIC records with relationship/control information")
+        rels_df = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS.CSV")
+        rels_df = rels_df[rels_df["ID_RSSD_OFFSPRING"].isin(existing_rssds)]
+
         cls._add_relationships(rels_df)
 
         return banks, num_created
@@ -184,6 +194,7 @@ class Usnic(Datasource):
 
         try:
             bank = Usnic.objects.get(rssd=branch_bank_rssd)
+            print(bank)
         except Usnic.DoesNotExist:
             return None
 
@@ -216,7 +227,8 @@ class Usnic(Datasource):
 
         for child_id in existing_rssds:
 
-            if "test" in sys.argv:
+            # if "test" in sys.argv:
+            if True:
                 cls._add_individual_relationship(relationship_df, child_id, existing_rssds)
             else:
                 t = threading.Thread(
