@@ -1,15 +1,9 @@
-from re import M
-
 from django.test import TestCase
 
-import pandas as pd
-from datasource.models.bocc import Bocc
-
-from datasource.models.datasource import Datasource
-
 import np
-from brand.models.brand import Brand
+import pandas as pd
 
+from datasource.models.usnic import Usnic
 from datasource.models.wikidata import Wikidata
 
 from .models import Banktrack, Bimpact
@@ -206,19 +200,75 @@ class WikidataTestCase(TestCase):
         self.assertEqual(bank.website, "https://newuri")
         self.assertEqual(bank.source_link, "http://www.wikidata.org/entity/Q12345")
 
-    # def test_creates_parent_relationships(self):
-    #     df = pd.read_csv("./datasource/wikidata_parent_test.csv")
-    #     Wikidata._create(df=df)
 
-    #     askari = Wikidata.objects.get(source_id='http://www.wikidata.org/entity/Q4807137')
-    #     bilbao = Wikidata.objects.get(source_id='http://www.wikidata.org/entity/Q806189')
-    #     colombia = Wikidata.objects.get(source_id='http://www.wikidata.org/entity/Q16489599')
+class UsnicTestCase(TestCase):
+    fixtures = (
+        "fixtures/citieslight/country.json",
+        "fixtures/citieslight/region.json",
+        # "fixtures/citieslight/subregion.json",
+    )
 
-    #     self.assertIsNotNone(askari)
-    #     self.assertIsNotNone(bilbao)
-    #     self.assertIsNotNone(colombia)
+    def setUp(self):
+        self.active = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE_ABRIDGED.CSV")
+        self.branches = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_BRANCHES_ABRIDGED.CSV")
+        self.rels = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS_ABRIDGED.CSV")
 
-    #     self.assertIsNone(askari.subsidiary_of_1)
+    def test_load_or_create_individual_instance(self):
+        row = self.active.iloc[47]
+        num_created, banks = Usnic._load_or_create_individual_instance(
+            banks=[], num_created=0, row=row
+        )
+        bank = banks[0]
 
-    #     self.assertEqual(colombia.subsidiary_of_1, Brand.objects.get(source_link=bilbao.source_id))
-    #     self.assertEqual(colombia.subsidiary_of_1_pct, 100)
+        # make sure it's bank with rssd 71859. Needed for testing since this is a women/minority owned bank
+        self.assertEqual(bank.rssd, 71859)
+        self.assertEqual(bank.legal_name, "CBW BANK")
+        self.assertEqual(bank.name, "CBW BK")
+        self.assertEqual(bank.entity_type, "NMB")
+
+        # just one bank created
+        self.assertEqual(num_created, 1)
+        self.assertEqual(num_created, len(banks))
+
+        # country, region information filled in
+        self.assertEqual(bank.country.code, "US")
+
+        # women or minority owned is coded
+        self.assertTrue(bank.women_or_minority_owned)
+
+    def test_supplement_with_branch_region_information(self):
+        bank_row = self.active[self.active["#ID_RSSD"] == 1164].iloc[0]
+        num_created, banks = Usnic._load_or_create_individual_instance(
+            banks=[], num_created=0, row=bank_row
+        )
+
+        bank = banks[0]
+
+        branch_row = self.branches.iloc[0]
+        bank = Usnic._supplement_with_branch_information(branch_row)
+
+        if not bank:
+            self.fail("Bank was either not found or created")
+
+        region_abbreviations = [x["geoname_code"] for x in bank.regions.values()]
+        self.assertIn("CA", region_abbreviations)
+
+    def test_add_relationships(self):
+        # artificially mark all relationships as unended
+        self.rels["DT_END"] = 99991231
+
+        # create parent and child bank
+        bank_row = self.active[self.active["#ID_RSSD"] == 1155].iloc[0]
+        _, child_banks = Usnic._load_or_create_individual_instance(
+            banks=[], num_created=0, row=bank_row
+        )
+        child_bank = child_banks[0]
+        parent_bank = Usnic.objects.create(name="test parent", rssd=469951)
+
+        # add relationship info and refresh child. (communication through db)
+        Usnic._add_relationships(self.rels)
+        child_bank.refresh_from_db()
+
+        # assert that the control json is not default
+        self.assertTrue(child_bank.control != {})
+        self.assertTrue("469951" in child_bank.control.keys())

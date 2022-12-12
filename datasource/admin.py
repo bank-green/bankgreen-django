@@ -1,17 +1,19 @@
 from django.contrib import admin
 from django.db import models
+from django.urls import reverse
+from django.utils.html import escape, format_html
 
+from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter, DropdownFilter
+from django_json_widget.widgets import JSONEditorWidget
 
-from django_admin_listfilter_dropdown.filters import (
-    ChoiceDropdownFilter,
-    DropdownFilter,
-    RelatedDropdownFilter,
-)
-from Levenshtein import distance as lev
+# from Levenshtein import distance as lev
+from jsonfield import JSONField
 
+from brand.admin import CountriesWidgetOverrideForm
 from brand.models import Brand
 
-from .constants import lev_distance, model_names, read_only_fields
+# from .constants import lev_distance, model_names
+from .constants import read_only_fields
 from .models import (
     Banktrack,
     Bimpact,
@@ -26,11 +28,27 @@ from .models import (
 )
 
 
+class IsControlledFilter(admin.SimpleListFilter):
+    title = "is_controlled"
+    parameter_name = "is_controlled"
+
+    def lookups(self, request, model_admin):
+        return (("Independent", "Independent"), ("Controlled", "Controlled"))
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "Independent":
+            return queryset.filter(control__iexact="{}")
+        elif value == "Controlled":
+            return queryset.exclude(control__iexact="{}")
+        return queryset
+
+
 @admin.register(Datasource)
 class DatasourceAdmin(admin.ModelAdmin):
     list_display = ["name", "source_id"]
     search_fields = ["name", "source_id"]
-    list_filter = ("created", "modified")
+    list_filter = ("created", "modified", ("countries", ChoiceDropdownFilter))
 
 
 @admin.register(Banktrack)
@@ -118,7 +136,58 @@ class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
 
 @admin.register(Usnic)
 class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
-    pass
+    form = CountriesWidgetOverrideForm
+
+    list_display = ["name", "get_entity_type_display", "rssd", "lei"]
+    search_fields = [
+        "name",
+        "legal_name",
+        "rssd",
+        "lei",
+        "cusip",
+        "aba_prim",
+        "fdic_cert",
+        "ncua",
+        "thrift",
+        "thrift_hc",
+        "occ",
+        "ein",
+    ]
+    list_filter = (
+        "women_or_minority_owned",
+        ("country", ChoiceDropdownFilter),
+        ("entity_type", DropdownFilter),
+        IsControlledFilter,
+        "created",
+        "modified",
+    )
+
+    @admin.display(description="controlling_orgs")
+    def controlling_orgs(self, obj):
+
+        controlling_rssds = list(obj.control.keys())
+        controlling_orgs = Usnic.objects.filter(rssd__in=controlling_rssds)
+        html = ""
+        for controller in controlling_orgs:
+            url = reverse("admin:%s_%s_change" % ("datasource", "usnic"), args=(controller.pk,))
+            html += f"<a href='{url}'>{controller.name} - rssd:{controller.rssd} - id:{controller.pk}</a><br />"
+        return format_html(html)
+
+    fields = (
+        ("name", "legal_name", "website", "women_or_minority_owned"),
+        "brand",
+        ("rssd", "lei"),
+        ("country", "source_id"),
+        ("regions", "subregions"),
+        "controlling_orgs",
+        ("control"),
+        ("cusip", "aba_prim", "fdic_cert", "ncua", "thrift", "thrift_hc", "occ", "ein"),
+    )
+
+    readonly_fields = ("controlling_orgs",)
+
+    formfield_overrides = {JSONField: {"widget": JSONEditorWidget}}
+    autocomplete_fields = ["brand"]
 
 
 @admin.register(Wikidata)

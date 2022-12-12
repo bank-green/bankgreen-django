@@ -14,6 +14,8 @@ from datasource.models.datasource import Datasource
 
 from .models import Brand, Commentary
 
+from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
+
 
 class RecommendedInOverrideForm(forms.ModelForm):
     class Meta:
@@ -173,19 +175,22 @@ class BrandAdmin(admin.ModelAdmin):
     readonly_fields = ["related_datasources", "created", "modified"]
     autocomplete_fields = ["subregions"]
     fields = (
-        ("name"),
-        ("tag"),
-        ("aliases"),
+        ("name", "tag"),
+        ("website", "aliases"),
         ("related_datasources"),
         ("description"),
-        ("website"),
         ("countries"),
         ("regions"),
         ("subregions"),
-        ("subsidiary_of_1", "subsidiary_of_1_pct"),
-        ("subsidiary_of_2", "subsidiary_of_2_pct"),
-        ("subsidiary_of_3", "subsidiary_of_3_pct"),
-        ("subsidiary_of_4", "subsidiary_of_4_pct"),
+        ("rssd", "rssd_locked"),
+        ("lei", "lei_locked"),
+        ("permid", "permid_locked"),
+        ("ncua", "ncua_locked"),
+        ("fdic_cert", "fdic_cert_locked"),
+        # ("subsidiary_of_1", "subsidiary_of_1_pct"),
+        # ("subsidiary_of_2", "subsidiary_of_2_pct"),
+        # ("subsidiary_of_3", "subsidiary_of_3_pct"),
+        # ("subsidiary_of_4", "subsidiary_of_4_pct"),
         # "suggested_datasource",
         ("created", "modified"),
     )
@@ -194,6 +199,7 @@ class BrandAdmin(admin.ModelAdmin):
         "commentary__rating",
         "commentary__number_of_requests",
         "commentary__top_three_ethical",
+        ("countries", ChoiceDropdownFilter),
     )
     list_display = ("short_name", "short_tag", "website")
     list_per_page = 800
