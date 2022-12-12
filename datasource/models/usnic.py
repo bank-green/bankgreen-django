@@ -95,6 +95,8 @@ class Usnic(Datasource):
 
     control = JSONField(default={})
 
+    num_threads = 10
+
     @classmethod
     def load_and_create(cls, load_from_api=False):
 
@@ -205,7 +207,7 @@ class Usnic(Datasource):
 
     @classmethod
     def _add_relationships(cls, relationship_df):
-        cls.num_threads = 10
+
         threads = []
 
         # cycle through banks again, this time adding owner relationships
@@ -226,7 +228,6 @@ class Usnic(Datasource):
     @classmethod
     def _add_individual_relationship(cls, relationship_df, child_id, existing_rssds):
         try:
-            print(f"trying {child_id}")
             subset_df = relationship_df[relationship_df["ID_RSSD_OFFSPRING"] == child_id]
             child_bank = Usnic.objects.get(rssd=child_id)
             control_json = child_bank.control
