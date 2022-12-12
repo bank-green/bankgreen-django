@@ -1,4 +1,5 @@
 import re
+import sys
 import threading
 from django.db import models
 import pandas as pd
@@ -214,13 +215,16 @@ class Usnic(Datasource):
         existing_rssds = [int(x) for x in Usnic.objects.values_list("rssd", flat=True)]
 
         for child_id in existing_rssds:
-            t = threading.Thread(
-                target=cls._add_individual_relationship,
-                args=(relationship_df, child_id, existing_rssds),
-            )
-            # cls._add_individual_relationship(relationship_df, child_id, existing_rssds)
-            t.start()
-            threads.append(t)
+
+            if "test" in sys.argv:
+                cls._add_individual_relationship(relationship_df, child_id, existing_rssds)
+            else:
+                t = threading.Thread(
+                    target=cls._add_individual_relationship,
+                    args=(relationship_df, child_id, existing_rssds),
+                )
+                t.start()
+                threads.append(t)
 
             for t in threads:
                 t.join()
