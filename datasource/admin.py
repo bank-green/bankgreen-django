@@ -176,6 +176,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     list_filter = (
         "women_or_minority_owned",
         ("country", ChoiceDropdownFilter),
+        ("regions__name", DropdownFilter),
         ("entity_type", DropdownFilter),
         IsControlledFilter,
         HasRegionalBranchesFilter,
