@@ -11,6 +11,7 @@ from jsonfield import JSONField
 
 from brand.admin import CountriesWidgetOverrideForm
 from brand.models import Brand
+from datasource.models.usnic import EntityTypes
 
 # from .constants import lev_distance, model_names
 from .constants import read_only_fields
@@ -154,7 +155,10 @@ class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
 class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
 
-    list_display = ["name", "get_entity_type_display", "rssd", "lei"]
+    def branch_regions(self, obj):
+        return ", ".join([x["geoname_code"] for x in obj.regions.values()])
+
+    list_display = ["name", "branch_regions", "get_entity_type_display", "pk", "rssd", "lei"]
     search_fields = [
         "name",
         "legal_name",
@@ -190,10 +194,15 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
             html += f"<a href='{url}'>{controller.name} - rssd:{controller.rssd} - id:{controller.pk}</a><br />"
         return format_html(html)
 
+    @admin.display(description="entity type")
+    def entity_type_override(self, obj):
+        return f"{obj.entity_type}: {EntityTypes[obj.entity_type].value}"
+
     fields = (
         ("name", "legal_name", "website", "women_or_minority_owned"),
         "brand",
         ("rssd", "lei"),
+        ("entity_type_override"),
         ("country", "source_id"),
         ("regions", "subregions"),
         "controlling_orgs",
@@ -201,7 +210,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         ("cusip", "aba_prim", "fdic_cert", "ncua", "thrift", "thrift_hc", "occ", "ein"),
     )
 
-    readonly_fields = ("controlling_orgs",)
+    readonly_fields = ("controlling_orgs", "entity_type_override")
 
     formfield_overrides = {JSONField: {"widget": JSONEditorWidget}}
     autocomplete_fields = ["brand"]

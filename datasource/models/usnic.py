@@ -113,7 +113,6 @@ class Usnic(Datasource):
                 "NM_SHORT",
                 "NM_LGL",
                 "ENTITY_TYPE",
-                "ENTITY_TYPE",
                 "URL",
                 "#ID_RSSD",
                 "ID_LEI",
