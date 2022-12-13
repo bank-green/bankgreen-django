@@ -29,8 +29,8 @@ from .models import (
 
 
 class IsControlledFilter(admin.SimpleListFilter):
-    title = "is_controlled"
-    parameter_name = "is_controlled"
+    title = "controlled"
+    parameter_name = "controlled"
 
     def lookups(self, request, model_admin):
         return (("Independent", "Independent"), ("Controlled", "Controlled"))
@@ -41,6 +41,22 @@ class IsControlledFilter(admin.SimpleListFilter):
             return queryset.filter(control__iexact="{}")
         elif value == "Controlled":
             return queryset.exclude(control__iexact="{}")
+        return queryset
+
+
+class HasRegionalBranchesFilter(admin.SimpleListFilter):
+    title = "regional branches"
+    parameter_name = "regional branches"
+
+    def lookups(self, request, model_admin):
+        return (("Branches", "Branches"), ("No Branches", "No Branches"))
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "Branches":
+            return queryset.exclude(regions=None)
+        elif value == "No Branches":
+            return queryset.filter(regions=None)
         return queryset
 
 
@@ -158,6 +174,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         ("country", ChoiceDropdownFilter),
         ("entity_type", DropdownFilter),
         IsControlledFilter,
+        HasRegionalBranchesFilter,
         "created",
         "modified",
     )
