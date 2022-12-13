@@ -202,9 +202,9 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     fields = (
         ("name", "legal_name", "website", "women_or_minority_owned"),
         "brand",
-        ("rssd", "lei"),
+        ("rssd", "lei", "source_id"),
         ("entity_type_override"),
-        ("country", "source_id"),
+        ("country"),
         ("regions", "subregions"),
         "controlling_orgs",
         ("control"),

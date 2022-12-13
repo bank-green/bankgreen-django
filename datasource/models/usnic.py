@@ -61,16 +61,16 @@ class EntityTypes(models.TextChoices):
 class Usnic(Datasource):
     """US National Information Center data"""
 
-    rssd = models.CharField(max_length=15, blank=True)
-    lei = models.CharField(max_length=15, blank=True)
-    cusip = models.CharField(max_length=15, blank=True)
-    aba_prim = models.CharField(max_length=15, blank=True)
-    fdic_cert = models.CharField(max_length=15, blank=True)
-    ncua = models.CharField(max_length=15, blank=True)
-    thrift = models.CharField(max_length=15, blank=True)
-    thrift_hc = models.CharField(max_length=15, blank=True)
-    occ = models.CharField(max_length=15, blank=True)
-    ein = models.CharField(max_length=15, blank=True)
+    rssd = models.CharField(max_length=30, blank=True)
+    lei = models.CharField(max_length=30, blank=True)
+    cusip = models.CharField(max_length=30, blank=True)
+    aba_prim = models.CharField(max_length=30, blank=True)
+    fdic_cert = models.CharField(max_length=30, blank=True)
+    ncua = models.CharField(max_length=30, blank=True)
+    thrift = models.CharField(max_length=30, blank=True)
+    thrift_hc = models.CharField(max_length=30, blank=True)
+    occ = models.CharField(max_length=30, blank=True)
+    ein = models.CharField(max_length=30, blank=True)
     website = models.URLField(
         "Website of this brand/data source. i.e. bankofamerica.com", null=True, blank=True
     )
@@ -327,3 +327,12 @@ class Usnic(Datasource):
             print(child_id)
             print(subset_df)
             print(e)
+
+    def save(self, *args, **kwargs):
+        if self.brand:
+            self.update_brand()
+        super(Datasource, self).save()
+
+    def update_brand(self):
+        print("brand_updated")
+        pass
