@@ -107,7 +107,27 @@ class Usnic(Datasource):
         else:
             print("No Usnic API. Loading data from local copy...")
 
-        attr_df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV")
+        attr_df = pd.read_csv(
+            "./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV",
+            usecols=[
+                "NM_SHORT",
+                "NM_LGL",
+                "ENTITY_TYPE",
+                "ENTITY_TYPE",
+                "URL",
+                "#ID_RSSD",
+                "ID_LEI",
+                "ID_CUSIP",
+                "ID_ABA_PRIM",
+                "ID_FDIC_CERT",
+                "ID_NCUA",
+                "ID_THRIFT",
+                "ID_THRIFT_HC",
+                "ID_OCC",
+                "ID_TAX",
+                "MJR_OWN_MNRTY",
+            ],
+        )
 
         # create instances
         banks = []
@@ -129,7 +149,10 @@ class Usnic(Datasource):
         existing_rssds = [int(x) for x in Usnic.objects.all().values_list("rssd", flat=True)]
 
         # update with branch information
-        branch_df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_BRANCHES.CSV")
+        branch_df = pd.read_csv(
+            "./datasource/local/usnic/CSV_ATTRIBUTES_BRANCHES.CSV",
+            usecols=["ID_RSSD_HD_OFF", "CNTRY_NM", "STATE_ABBR_NM"],
+        )
         branch_df = branch_df[branch_df["ID_RSSD_HD_OFF"].isin(existing_rssds)]
         print("\n\nUSNIC updating records with branch information")
         for i, row in branch_df.iterrows():
@@ -144,7 +167,18 @@ class Usnic(Datasource):
 
         # Update with relationship information
         print("\n\nUSNIC records with relationship/control information")
-        rels_df = pd.read_csv("./datasource/local/usnic/CSV_RELATIONSHIPS.CSV")
+        rels_df = pd.read_csv(
+            "./datasource/local/usnic/CSV_RELATIONSHIPS.CSV",
+            usecols=[
+                "ID_RSSD_OFFSPRING",
+                "#ID_RSSD_PARENT",
+                "CTRL_IND",
+                "DT_END",
+                "PCT_EQUITY",
+                "PCT_EQUITY_BRACKET",
+                "EQUITY_IND",
+            ],
+        )
         rels_df = rels_df[rels_df["ID_RSSD_OFFSPRING"].isin(existing_rssds)]
 
         cls._add_relationships(rels_df)
@@ -247,6 +281,7 @@ class Usnic(Datasource):
             subset_df = relationship_df[relationship_df["ID_RSSD_OFFSPRING"] == child_id]
             child_bank = Usnic.objects.get(rssd=child_id)
             control_json = child_bank.control
+            print(child_bank)
 
             for i, row in subset_df.iterrows():
                 parent_rssd = row["#ID_RSSD_PARENT"]
