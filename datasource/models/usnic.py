@@ -333,6 +333,57 @@ class Usnic(Datasource):
             self.update_brand()
         super(Datasource, self).save()
 
-    def update_brand(self):
-        print("brand_updated")
-        pass
+    def update_brand(self) -> None:
+        # might need to be run as a celery task?
+        # will need a filter for showing what datassources are associated with brands and what are not
+
+        brand = self.brand
+        if not brand:  # deal with typing
+            return
+
+        if not brand.website_locked:
+            brand.website = self.website
+
+        # various identifiers
+        if not brand.rssd_locked:
+            brand.rssd = self.rssd
+        if not brand.lei_locked:
+            brand.lei = self.lei
+        if not brand.cusip_locked:
+            brand.cusip = self.cusip
+        if not brand.aba_prim_locked:
+            brand.aba_prim = self.aba_prim
+        if not brand.fdic_cert_locked:
+            brand.fdic_cert = self.fdic_cert
+        if not brand.ncua_locked:
+            brand.ncua = self.ncua
+        if not brand.thrift_locked:
+            brand.thrift = self.thrift
+        if not brand.thrift_hc_locked:
+            brand.thrift_hc = self.thrift_hc
+        if not brand.occ_locked:
+            brand.occ = self.occ
+        if not brand.ein_locked:
+            brand.ein = self.ein
+
+        # countries, regions, and subregions are addative
+        if self.country not in brand.countries:
+            # the temp list is necessary for some queryset weirdness.
+            # brand.countries is a list, but can't seem to be appended to
+            temp_country_list = [x for x in brand.countries]
+            temp_country_list.append(self.country)
+            brand.countries = temp_country_list
+
+        new_regions = brand.regions.values_list("id", flat=True) | self.regions.values_list(
+            "id", flat=True
+        )
+        new_regions = new_regions.distinct()
+        brand.regions.add(*new_regions)
+
+        new_subregions = brand.subregions.values_list(
+            "id", flat=True
+        ) | self.subregions.values_list("id", flat=True)
+        new_subregions = new_subregions.distinct()
+        brand.subregions.add(*new_subregions)
+
+        brand.save()
