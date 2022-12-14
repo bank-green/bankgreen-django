@@ -117,10 +117,14 @@ def raise_validation_error_for_missing_country(self):
     expected_country_iso2 = set(
         [x.code2 for x in Country.objects.filter(id__in=expected_country_ids)]
     )
-    actual_country_iso2 = set([x for x in self.cleaned_data.get("countries", [])])
 
-    if not expected_country_iso2.issubset(actual_country_iso2):
-        missing_country_codes = expected_country_iso2 - actual_country_iso2
+    actual_countries_iso2 = set([x for x in self.cleaned_data.get("countries", [])])
+    # validation hack for when datasources don't have "countries" defined, but only "country"
+    if single_country := self.cleaned_data.get("country"):
+        actual_countries_iso2.add(single_country)
+
+    if not expected_country_iso2.issubset(actual_countries_iso2):
+        missing_country_codes = expected_country_iso2 - actual_countries_iso2
         missing_country_names = ", ".join(
             [x.name for x in Country.objects.filter(code2__in=missing_country_codes)]
         )

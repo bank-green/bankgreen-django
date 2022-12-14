@@ -11,6 +11,7 @@ from jsonfield import JSONField
 
 from brand.admin import CountriesWidgetOverrideForm
 from brand.models import Brand
+from datasource.models.usnic import EntityTypes
 
 # from .constants import lev_distance, model_names
 from .constants import read_only_fields
@@ -28,9 +29,25 @@ from .models import (
 )
 
 
+class IsLinkedToBrandFilter(admin.SimpleListFilter):
+    title = "linked to brand"
+    parameter_name = "linked to brand"
+
+    def lookups(self, request, model_admin):
+        return (("Linked", "Linked"), ("Not Linked", "Not Linked"))
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "Linked":
+            return queryset.filter(brand__isnull=False)
+        elif value == "Not Linked":
+            return queryset.filter(brand__isnull=True)
+        return queryset
+
+
 class IsControlledFilter(admin.SimpleListFilter):
-    title = "is_controlled"
-    parameter_name = "is_controlled"
+    title = "controlled"
+    parameter_name = "controlled"
 
     def lookups(self, request, model_admin):
         return (("Independent", "Independent"), ("Controlled", "Controlled"))
@@ -41,6 +58,22 @@ class IsControlledFilter(admin.SimpleListFilter):
             return queryset.filter(control__iexact="{}")
         elif value == "Controlled":
             return queryset.exclude(control__iexact="{}")
+        return queryset
+
+
+class HasRegionalBranchesFilter(admin.SimpleListFilter):
+    title = "regional branches"
+    parameter_name = "regional branches"
+
+    def lookups(self, request, model_admin):
+        return (("Branches", "Branches"), ("No Branches", "No Branches"))
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "Branches":
+            return queryset.exclude(regions=None)
+        elif value == "No Branches":
+            return queryset.filter(regions=None)
         return queryset
 
 
@@ -138,7 +171,10 @@ class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
 class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
 
-    list_display = ["name", "get_entity_type_display", "rssd", "lei"]
+    def branch_regions(self, obj):
+        return ", ".join([x["geoname_code"] for x in obj.regions.values()])
+
+    list_display = ["name", "branch_regions", "get_entity_type_display", "pk", "rssd", "lei"]
     search_fields = [
         "name",
         "legal_name",
@@ -156,15 +192,17 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     list_filter = (
         "women_or_minority_owned",
         ("country", ChoiceDropdownFilter),
+        ("regions__name", DropdownFilter),
         ("entity_type", DropdownFilter),
         IsControlledFilter,
+        IsLinkedToBrandFilter,
+        HasRegionalBranchesFilter,
         "created",
         "modified",
     )
 
     @admin.display(description="controlling_orgs")
     def controlling_orgs(self, obj):
-
         controlling_rssds = list(obj.control.keys())
         controlling_orgs = Usnic.objects.filter(rssd__in=controlling_rssds)
         html = ""
@@ -173,18 +211,23 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
             html += f"<a href='{url}'>{controller.name} - rssd:{controller.rssd} - id:{controller.pk}</a><br />"
         return format_html(html)
 
+    @admin.display(description="entity type")
+    def entity_type_override(self, obj):
+        return f"{obj.entity_type}: {EntityTypes[obj.entity_type].value}"
+
     fields = (
         ("name", "legal_name", "website", "women_or_minority_owned"),
         "brand",
-        ("rssd", "lei"),
-        ("country", "source_id"),
+        ("rssd", "lei", "source_id"),
+        ("entity_type_override"),
+        ("country"),
         ("regions", "subregions"),
         "controlling_orgs",
         ("control"),
         ("cusip", "aba_prim", "fdic_cert", "ncua", "thrift", "thrift_hc", "occ", "ein"),
     )
 
-    readonly_fields = ("controlling_orgs",)
+    readonly_fields = ("controlling_orgs", "entity_type_override")
 
     formfield_overrides = {JSONField: {"widget": JSONEditorWidget}}
     autocomplete_fields = ["brand"]
