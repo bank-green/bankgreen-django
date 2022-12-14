@@ -29,6 +29,22 @@ from .models import (
 )
 
 
+class IsLinkedToBrandFilter(admin.SimpleListFilter):
+    title = "linked to brand"
+    parameter_name = "linked to brand"
+
+    def lookups(self, request, model_admin):
+        return (("Linked", "Linked"), ("Not Linked", "Not Linked"))
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "Linked":
+            return queryset.filter(brand__isnull=False)
+        elif value == "Not Linked":
+            return queryset.filter(brand__isnull=True)
+        return queryset
+
+
 class IsControlledFilter(admin.SimpleListFilter):
     title = "controlled"
     parameter_name = "controlled"
@@ -179,6 +195,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         ("regions__name", DropdownFilter),
         ("entity_type", DropdownFilter),
         IsControlledFilter,
+        IsLinkedToBrandFilter,
         HasRegionalBranchesFilter,
         "created",
         "modified",
@@ -186,7 +203,6 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
 
     @admin.display(description="controlling_orgs")
     def controlling_orgs(self, obj):
-
         controlling_rssds = list(obj.control.keys())
         controlling_orgs = Usnic.objects.filter(rssd__in=controlling_rssds)
         html = ""
