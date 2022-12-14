@@ -16,6 +16,50 @@ class BrandTestCase(TestCase):
             countries="TW",
             tag=Banktrack.tag_prepend_str + "unique_source_id",
         )
+        self.brand1 = Brand.objects.create(
+            pk=100,
+            tag="test_brand_1",
+            name="Test Brand 1",
+            aliases="test brand, testb",
+            website="www.testbrand.com",
+            permid="test permid",
+            viafid="test viafid",
+            lei="test lei",
+            rssd="test rssd",
+        )
+
+        self.brand2 = Brand.objects.create(
+            pk=200,
+            tag="another_brand_2",
+            name="Another Brand 2",
+            aliases="another brand, anotherb",
+            website="https://www.anotherbwebsite.com/somepage",
+            permid="another permid",
+            viafid="another viafid",
+            lei="another lei",
+            rssd="another rssd",
+        )
+
+    def test_create_spelling_dictionary(self):
+        spelling_dict = Brand.create_spelling_dictionary()
+        print(spelling_dict)
+
+        self.assertTrue(spelling_dict.get("test brand 1"), 100)
+        self.assertTrue(spelling_dict.get("test brand"), 100)
+        self.assertTrue(spelling_dict.get("testb"), 100)
+        self.assertTrue(spelling_dict.get("tb1"), 100)
+        self.assertTrue(spelling_dict.get("tb"), 100)
+        self.assertTrue(spelling_dict.get("testbrand.com"), 100)
+        self.assertTrue(spelling_dict.get("another rssd"), 100)
+
+        self.assertTrue(spelling_dict.get("another brand 2"), 200)
+        self.assertTrue(spelling_dict.get("another brand"), 200)
+        self.assertTrue(spelling_dict.get("anotherb"), 200)
+        self.assertTrue(spelling_dict.get("ab2"), 200)
+        self.assertTrue(spelling_dict.get("ab"), 200)
+        self.assertTrue(spelling_dict.get("anotherbwebsite.com"), 200)
+        self.assertTrue(spelling_dict.get("anotherbwebsite.com/somepage"), 200)
+        self.assertTrue(spelling_dict.get("another lei"), 200)
 
 
 #     commented out until we change brand-datasource association
