@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from datasource.models import Banktrack
 
-from .models import Brand
+from ..models import Brand
 
 
 class BrandTestCase(TestCase):
@@ -42,7 +42,7 @@ class BrandTestCase(TestCase):
 
     def test_create_spelling_dictionary(self):
         spelling_dict = Brand.create_spelling_dictionary()
-        print(spelling_dict)
+        # print(spelling_dict)
 
         self.assertTrue(spelling_dict.get("test brand 1"), 100)
         self.assertTrue(spelling_dict.get("test brand"), 100)
