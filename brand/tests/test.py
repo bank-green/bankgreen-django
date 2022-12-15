@@ -1,4 +1,5 @@
 from django.test import TestCase
+from brand.tests.utils import create_test_brands
 
 from datasource.models import Banktrack
 
@@ -16,29 +17,7 @@ class BrandTestCase(TestCase):
             countries="TW",
             tag=Banktrack.tag_prepend_str + "unique_source_id",
         )
-        self.brand1 = Brand.objects.create(
-            pk=100,
-            tag="test_brand_1",
-            name="Test Brand 1",
-            aliases="test brand, testb",
-            website="www.testbrand.com",
-            permid="test permid",
-            viafid="test viafid",
-            lei="test lei",
-            rssd="test rssd",
-        )
-
-        self.brand2 = Brand.objects.create(
-            pk=200,
-            tag="another_brand_2",
-            name="Another Brand 2",
-            aliases="another brand, anotherb",
-            website="https://www.anotherbwebsite.com/somepage",
-            permid="another permid",
-            viafid="another viafid",
-            lei="another lei",
-            rssd="another rssd",
-        )
+        self.brand1, self.brand2 = create_test_brands()
 
     def test_create_spelling_dictionary(self):
         spelling_dict = Brand.create_spelling_dictionary()
