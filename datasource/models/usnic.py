@@ -1,11 +1,15 @@
+from collections import defaultdict
 import re
-import sys
 import threading
+from typing import Dict
 from django.db import models
 import pandas as pd
 from cities_light.models import Country, Region, SubRegion
 from jsonfield import JSONField
 from django_countries.fields import CountryField
+from brand.models.brand import Brand
+import symspellpy
+from symspellpy import SymSpell, Verbosity
 
 from datasource.models.datasource import Datasource
 from datasource.pycountry_utils import pycountries
@@ -387,3 +391,33 @@ class Usnic(Datasource):
         brand.subregions.add(*new_subregions)
 
         brand.save()
+
+    @classmethod
+    def suggest_associations(cls) -> Dict:
+        """Suggest brands for usnic records to be associated to. Writes results to each USNIC.
+        returns a dict mapping from usnic to sets of brands, but also links usnic to brands as
+        a side effect
+        """
+        spelling_dict = Brand.create_spelling_dictionary()
+
+        symspell = SymSpell()
+        for word in spelling_dict.keys():
+            symspell.create_dictionary_entry(word, 1)
+
+        candidate_dict = defaultdict(set)
+        usnics = Usnic.objects.all()
+        for usnic in usnics:
+            suggestions = []
+
+            suggestions += [
+                x.term for x in symspell.lookup(usnic.rssd, Verbosity.TOP, max_edit_distance=0)
+            ]
+            suggestions += [
+                x.term for x in symspell.lookup(usnic.name, Verbosity.CLOSEST, max_edit_distance=2)
+            ]
+
+            for suggestion in suggestions:
+                brand = Brand.objects.get(id=spelling_dict[suggestion])
+                candidate_dict[usnic].add(brand)
+
+        return candidate_dict

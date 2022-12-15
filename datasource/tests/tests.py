@@ -7,6 +7,7 @@ from brand.tests.utils import create_test_brands
 
 from datasource.models.usnic import Usnic
 from datasource.models.wikidata import Wikidata
+from datasource.tests.utils import create_test_usnic
 
 from ..models import Banktrack, Bimpact
 
@@ -277,6 +278,11 @@ class UsnicTestCase(TestCase):
 
     def test_recommend_brands(self):
         brand1, brand2 = create_test_brands()
+        usnic1, usnic2, usnic3, usnic4 = create_test_usnic()
 
-        
+        candidate_dict = Usnic.suggest_associations()
 
+        self.assertTrue(brand1 in candidate_dict[usnic1])
+        self.assertTrue(brand2 in candidate_dict[usnic2])
+        self.assertTrue(brand1 in candidate_dict[usnic3])
+        self.assertEqual(len(candidate_dict[usnic4]), 0)
