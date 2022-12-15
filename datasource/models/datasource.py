@@ -1,7 +1,7 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from model_utils.models import TimeStampedModel
 
-from django_countries.fields import CountryField
 from Levenshtein import distance as lev
 
 from brand.models.brand import Brand
@@ -31,9 +31,13 @@ class Datasource(TimeStampedModel):
     brand = models.ForeignKey(
         Brand, related_name="datasources", null=True, blank=True, on_delete=models.SET_NULL
     )
-
     name = models.CharField(
         "Name of this data source", max_length=200, null=False, blank=False, default="-unnamed-"
+    )
+    suggested_associations = models.ManyToManyField(
+        Brand,
+        through="SuggestedAssociation",
+        help_text="link between brands and datasources that may be related to eachother",
     )
 
     # used to identify duplicates on refresh
@@ -44,7 +48,6 @@ class Datasource(TimeStampedModel):
         editable=True,
         help_text="the original identifier used by the datasource. i.e wikiid, or banktrack tag",
     )
-
     source_link = models.URLField(
         "Link to the data source's webpage. i.e. the banktrack.org or b-impact webpage for the bank",
         editable=True,
@@ -72,3 +75,16 @@ class Datasource(TimeStampedModel):
         raise NotImplementedError(
             f"{self} is not a Datasource and does not have subclass listed in model_names"
         )
+
+
+class SuggestedAssociation(models.Model):
+    brand = models.ForeignKey(Brand, null=False, on_delete=models.CASCADE)
+    datasource = models.ForeignKey(Datasource, null=False, on_delete=models.CASCADE)
+    certainty = models.IntegerField(
+        default=0,
+        validators=[MaxValueValidator(10), MinValueValidator(0)],
+        help_text="how certain the system is of this association. 0 is more certain. 10 is least certain.",
+    )
+
+    class Meta:
+        unique_together = ("brand", "datasource")

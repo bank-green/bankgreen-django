@@ -2,16 +2,19 @@ from collections import defaultdict
 import re
 import threading
 from typing import Dict
+
 from django.db import models
-import pandas as pd
+from django_countries.fields import CountryField
+from django.db.utils import IntegrityError
+
+from brand.models.brand import Brand
+
 from cities_light.models import Country, Region, SubRegion
 from jsonfield import JSONField
-from django_countries.fields import CountryField
-from brand.models.brand import Brand
-import symspellpy
+import pandas as pd
 from symspellpy import SymSpell, Verbosity
 
-from datasource.models.datasource import Datasource
+from datasource.models.datasource import Datasource, SuggestedAssociation
 from datasource.pycountry_utils import pycountries
 
 
@@ -416,8 +419,13 @@ class Usnic(Datasource):
                 x.term for x in symspell.lookup(usnic.name, Verbosity.CLOSEST, max_edit_distance=2)
             ]
 
+            # need more fields done here. Probably need to extract into helper functions
+
             for suggestion in suggestions:
                 brand = Brand.objects.get(id=spelling_dict[suggestion])
+                SuggestedAssociation.objects.update_or_create(
+                    brand=brand, datasource=usnic, defaults={"certainty": 5}
+                )
                 candidate_dict[usnic].add(brand)
 
         return candidate_dict

@@ -283,6 +283,13 @@ class UsnicTestCase(TestCase):
         candidate_dict = Usnic.suggest_associations()
 
         self.assertTrue(brand1 in candidate_dict[usnic1])
+        self.assertTrue(brand1 in usnic1.suggested_associations.all())
+
         self.assertTrue(brand2 in candidate_dict[usnic2])
+        self.assertTrue(brand2 in usnic2.suggested_associations.all())
+
         self.assertTrue(brand1 in candidate_dict[usnic3])
+        self.assertTrue(brand1 in usnic3.suggested_associations.all())
+
         self.assertEqual(len(candidate_dict[usnic4]), 0)
+        self.assertTrue(brand1 not in usnic4.suggested_associations.all())
