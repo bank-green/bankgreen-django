@@ -2,11 +2,13 @@ from django.test import TestCase
 
 import np
 import pandas as pd
+from brand.models.brand import Brand
+from brand.tests.utils import create_test_brands
 
 from datasource.models.usnic import Usnic
 from datasource.models.wikidata import Wikidata
 
-from .models import Banktrack, Bimpact
+from ..models import Banktrack, Bimpact
 
 
 class BanktrackTestCase(TestCase):
@@ -272,3 +274,9 @@ class UsnicTestCase(TestCase):
         # assert that the control json is not default
         self.assertTrue(child_bank.control != {})
         self.assertTrue("469951" in child_bank.control.keys())
+
+    def test_recommend_brands(self):
+        brand1, brand2 = create_test_brands()
+
+        
+
