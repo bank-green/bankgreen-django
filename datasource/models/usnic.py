@@ -407,6 +407,10 @@ class Usnic(Datasource):
         returns a dict mapping from usnic to sets of brands, but also links usnic to brands as
         a side effect
         """
+        # get current associations and delete
+        # should probably move delete to later in the function for safety... later
+        SuggestedAssociation.objects.all().delete()
+
         # create dictionaries and spelling corpus
         spelling_dict = Brand.create_spelling_dictionary()
         symspell = SymSpell(max_dictionary_edit_distance=MAX_DICT_EDIT_DISTANCE)
@@ -450,6 +454,10 @@ class Usnic(Datasource):
         id_suggs = [spelling_dict.get(x) for x in id_suggs if x and x != ""]
         id_suggs_exact = {x: 0 for x in id_suggs if x}
 
+        # websites
+        websites = [x for x in self.get_shortened_url_possibilities() if x != "" and x != " "]
+        website_suggs = {spelling_dict.get(x): 2 for x in websites if spelling_dict.get(x)}
+
         # names
         names = [self.name, self.legal_name]
         names = [x.lower() for x in names if x and x != ""]
@@ -467,4 +475,4 @@ class Usnic(Datasource):
             spelling_suggs = spelling_suggs | {spelling_dict.get(x.term): 8 for x in matches}
 
         # more certain levels overwrite less certain ones
-        return spelling_suggs | name_suggs_exact | id_suggs_exact
+        return spelling_suggs | name_suggs_exact | website_suggs | id_suggs_exact

@@ -1,3 +1,4 @@
+import re
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from model_utils.models import TimeStampedModel
@@ -54,6 +55,13 @@ class Datasource(TimeStampedModel):
         null=True,
         blank=True,
     )
+
+    def get_shortened_url_possibilities(self):
+        web_sans_prefix = re.sub(
+            "http(s)?(:)?(\/\/)?|(\/\/)?(www\.)?", "", str(self.source_link)
+        ).strip("/")
+        domain_matches = re.match(r"^(?:\/\/|[^\/]+)*", web_sans_prefix).group(0)
+        return (web_sans_prefix, domain_matches)
 
     def get_data(self, url, params=None):
         """

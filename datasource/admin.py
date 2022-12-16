@@ -98,12 +98,14 @@ class HasSuggestedAssociationsFilter(admin.SimpleListFilter):
             return queryset.exclude(suggested_associations=None)
         elif value == "High Certainty Suggestions":
             # assocs = [x.brand for x in SuggestedAssociation.objects.filter(certainty=0)]
-            usnic_pks = [x.datasource.pk for x in SuggestedAssociation.objects.filter(certainty=0)]
+            usnic_pks = [
+                x.datasource.pk for x in SuggestedAssociation.objects.filter(certainty__lte=3)
+            ]
             return queryset.filter(pk__in=usnic_pks)
         elif value == " Medium Certainty Suggestions":
             usnic_pks = [
                 x.datasource.pk
-                for x in SuggestedAssociation.objects.filter(certainty__gte=1, certainty__lte=7)
+                for x in SuggestedAssociation.objects.filter(certainty__gte=4, certainty__lte=7)
             ]
             return queryset.filter(pk__in=usnic_pks)
         elif value == " Low Certainty Suggestions":
