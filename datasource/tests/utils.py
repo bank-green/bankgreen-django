@@ -11,5 +11,6 @@ def create_test_usnic():
     usnic4 = Usnic.objects.create(
         id=4000, name="veryunusualnameshouldnotbeassociated", rssd="9820394845e"
     )
+    usnic5 = Usnic.objects.create(id=5000, name="Another Brand")
 
-    return (usnic1, usnic2, usnic3, usnic4)
+    return (usnic1, usnic2, usnic3, usnic4, usnic5)

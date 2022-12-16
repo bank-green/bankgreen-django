@@ -17,6 +17,8 @@ from symspellpy import SymSpell, Verbosity
 from datasource.models.datasource import Datasource, SuggestedAssociation
 from datasource.pycountry_utils import pycountries
 
+MAX_DICT_EDIT_DISTANCE = 4
+
 
 class EntityTypes(models.TextChoices):
     AGB = "Agreement Corporation - Banking"
@@ -401,31 +403,63 @@ class Usnic(Datasource):
         returns a dict mapping from usnic to sets of brands, but also links usnic to brands as
         a side effect
         """
+        # create dictionaries and spelling corpus
         spelling_dict = Brand.create_spelling_dictionary()
-
-        symspell = SymSpell()
+        symspell = SymSpell(max_dictionary_edit_distance=MAX_DICT_EDIT_DISTANCE)
         for word in spelling_dict.keys():
             symspell.create_dictionary_entry(word, 1)
 
+        # collect and record suggestions
         candidate_dict = defaultdict(set)
         usnics = Usnic.objects.all()
         for usnic in usnics:
-            suggestions = []
-
-            suggestions += [
-                x.term for x in symspell.lookup(usnic.rssd, Verbosity.TOP, max_edit_distance=0)
-            ]
-            suggestions += [
-                x.term for x in symspell.lookup(usnic.name, Verbosity.CLOSEST, max_edit_distance=2)
-            ]
-
-            # need more fields done here. Probably need to extract into helper functions
-
-            for suggestion in suggestions:
-                brand = Brand.objects.get(id=spelling_dict[suggestion])
+            suggestions = usnic.search_for_suggested_associations(spelling_dict, symspell)
+            for brand_id, certainty in suggestions.items():
+                brand = Brand.objects.get(id=brand_id)
                 SuggestedAssociation.objects.update_or_create(
-                    brand=brand, datasource=usnic, defaults={"certainty": 5}
+                    brand=brand, datasource=usnic, defaults={"certainty": certainty}
                 )
                 candidate_dict[usnic].add(brand)
 
         return candidate_dict
+
+    def search_for_suggested_associations(self, spelling_dict, symspell) -> Dict:
+        """
+        cycles through usnic properties and checks against the spelling dict for exact matches.
+        cycles through usnic names and checks against the selling dict for close and exact matches.
+        returns a dictionary with {brand_id: match_cetainty}
+        """
+
+        id_suggs = [
+            self.rssd,
+            self.lei,
+            self.cusip,
+            self.aba_prim,
+            self.fdic_cert,
+            self.ncua,
+            self.thrift,
+            self.thrift_hc,
+            self.occ,
+            self.ein,
+        ]
+        id_suggs = [spelling_dict.get(x) for x in id_suggs if x and x != ""]
+        id_suggs_exact = {x: 0 for x in id_suggs if x}
+
+        # names
+        names = [self.name, self.legal_name]
+        names = [x for x in names if x and x != ""]
+
+        # exact name matches
+        name_suggs_exact = {spelling_dict.get(x): 3 for x in names if spelling_dict.get(x)}
+
+        # misspelling matches
+        spelling_suggs = {}
+        for name in names:
+            edit_distance = min(
+                int(len(name) / 5), MAX_DICT_EDIT_DISTANCE
+            )  # edit distance increases with word lengh
+            matches = symspell.lookup(self.name, Verbosity.CLOSEST, max_edit_distance=edit_distance)
+            spelling_suggs = spelling_suggs | {spelling_dict.get(x.term): 8 for x in matches}
+
+        # more certain levels overwrite less certain ones
+        return spelling_suggs | name_suggs_exact | id_suggs_exact

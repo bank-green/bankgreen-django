@@ -4,6 +4,7 @@ import np
 import pandas as pd
 from brand.models.brand import Brand
 from brand.tests.utils import create_test_brands
+from datasource.models.datasource import SuggestedAssociation
 
 from datasource.models.usnic import Usnic
 from datasource.models.wikidata import Wikidata
@@ -278,7 +279,7 @@ class UsnicTestCase(TestCase):
 
     def test_recommend_brands(self):
         brand1, brand2 = create_test_brands()
-        usnic1, usnic2, usnic3, usnic4 = create_test_usnic()
+        usnic1, usnic2, usnic3, usnic4, usnic5 = create_test_usnic()
 
         candidate_dict = Usnic.suggest_associations()
 
@@ -293,3 +294,11 @@ class UsnicTestCase(TestCase):
 
         self.assertEqual(len(candidate_dict[usnic4]), 0)
         self.assertTrue(brand1 not in usnic4.suggested_associations.all())
+
+        # brand should be a partial match
+        self.assertTrue(brand2 in candidate_dict[usnic5])
+        self.assertTrue(brand2 in usnic5.suggested_associations.all())
+        # the association should not be certain (0) but have a certainty value of greater than 0
+        self.assertTrue(
+            SuggestedAssociation.objects.get(brand=brand2, datasource=usnic5).certainty > 0
+        )
