@@ -6,11 +6,11 @@ from django.utils.html import escape, format_html
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter, DropdownFilter
 from django_json_widget.widgets import JSONEditorWidget
 
-# from Levenshtein import distance as lev
 from jsonfield import JSONField
 
 from brand.admin import CountriesWidgetOverrideForm
 from brand.models import Brand
+from datasource.models.datasource import SuggestedAssociation
 from datasource.models.usnic import EntityTypes
 
 # from .constants import lev_distance, model_names
@@ -201,7 +201,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         "modified",
     )
 
-    @admin.display(description="controlling_orgs")
+    @admin.display(description="controlling orgs")
     def controlling_orgs(self, obj):
         controlling_rssds = list(obj.control.keys())
         controlling_orgs = Usnic.objects.filter(rssd__in=controlling_rssds)
@@ -211,12 +211,23 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
             html += f"<a href='{url}'>{controller.name} - rssd:{controller.rssd} - id:{controller.pk}</a><br />"
         return format_html(html)
 
+    @admin.display(description="suggested_brands")
+    def suggested_brands(self, obj):
+        associations = SuggestedAssociation.objects.filter(datasource=obj)
+        associations.order_by("certainty")
+        html = "<p>The system is more sure of some likely associations than others. 0 is most certain. 10 is least certain.</p>"
+        for assoc in associations:
+            url = reverse("admin:%s_%s_change" % ("brand", "brand"), args=(assoc.brand.pk,))
+            html += f"<a href='{url}'>{assoc.brand.tag} - {assoc.brand.pk} - {assoc.brand.name} | certainty: {assoc.certainty}</a> <br />"
+        return format_html(html)
+
     @admin.display(description="entity type")
     def entity_type_override(self, obj):
         return f"{obj.entity_type}: {EntityTypes[obj.entity_type].value}"
 
     fields = (
         ("name", "legal_name", "website", "women_or_minority_owned"),
+        "suggested_brands",
         "brand",
         ("rssd", "lei", "source_id"),
         ("entity_type_override"),
@@ -227,7 +238,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         ("cusip", "aba_prim", "fdic_cert", "ncua", "thrift", "thrift_hc", "occ", "ein"),
     )
 
-    readonly_fields = ("controlling_orgs", "entity_type_override")
+    readonly_fields = ("controlling_orgs", "entity_type_override", "suggested_brands")
 
     formfield_overrides = {JSONField: {"widget": JSONEditorWidget}}
     autocomplete_fields = ["brand"]
