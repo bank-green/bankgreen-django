@@ -144,10 +144,10 @@ class Brand(TimeStampedModel):
     subsidiary_of_4_pct = models.IntegerField("percentage owned by subsidiary 4", default=0)
 
     def __str__(self):
-        return self.tag
+        return f"{self.tag}: {self.pk}"
 
     def __repr__(self):
-        return f"<{type(self).__name__}: {self.tag}>"
+        return f"<{type(self).__name__}: {self.tag}: {self.pk}>"
 
     def refresh_name(self, overwrite_existing=False):
         # if the existing name is the default, we are overwriting

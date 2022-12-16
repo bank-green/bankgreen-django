@@ -100,10 +100,14 @@ class Usnic(Datasource):
     subregions = models.ManyToManyField(
         SubRegion, blank=True, help_text="regions in which there are local branches of a bank"
     )
-
     women_or_minority_owned = models.BooleanField(default=False)
-
     control = JSONField(default={})
+
+    def __str__(self):
+        return f"{self.name}: {self.pk}: {self.rssd}"
+
+    def __repr__(self):
+        return f"<{type(self).__name__}: {self.name}: {self.pk}: {self.rssd}>"
 
     num_threads = 10
 
