@@ -88,3 +88,6 @@ class SuggestedAssociation(models.Model):
 
     class Meta:
         unique_together = ("brand", "datasource")
+
+    def __str__(self):
+        return f"{self.brand} <-- {self.certainty} --> {self.datasource}"
