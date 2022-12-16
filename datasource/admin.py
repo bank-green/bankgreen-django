@@ -77,6 +77,43 @@ class HasRegionalBranchesFilter(admin.SimpleListFilter):
         return queryset
 
 
+class HasSuggestedAssociationsFilter(admin.SimpleListFilter):
+    title = "suggested associations"
+    parameter_name = "suggested associations"
+
+    def lookups(self, request, model_admin):
+        return (
+            ("No Suggestions", "No Suggestions"),
+            ("Any Suggestions", "Any Suggestions"),
+            ("High Certainty Suggestions", "High Certainty Suggestions"),
+            (" Medium Certainty Suggestions", " Medium Certainty Suggestions"),
+            (" Low Certainty Suggestions", " Low Certainty Suggestions"),
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "No Suggestions":
+            return queryset.filter(suggested_associations=None)
+        if value == "Any Suggestions":
+            return queryset.exclude(suggested_associations=None)
+        elif value == "High Certainty Suggestions":
+            # assocs = [x.brand for x in SuggestedAssociation.objects.filter(certainty=0)]
+            usnic_pks = [x.datasource.pk for x in SuggestedAssociation.objects.filter(certainty=0)]
+            return queryset.filter(pk__in=usnic_pks)
+        elif value == " Medium Certainty Suggestions":
+            usnic_pks = [
+                x.datasource.pk
+                for x in SuggestedAssociation.objects.filter(certainty__gte=1, certainty__lte=7)
+            ]
+            return queryset.filter(pk__in=usnic_pks)
+        elif value == " Low Certainty Suggestions":
+            usnic_pks = [
+                x.datasource.pk for x in SuggestedAssociation.objects.filter(certainty__gte=8)
+            ]
+            return queryset.filter(pk__in=usnic_pks)
+        return queryset
+
+
 @admin.register(Datasource)
 class DatasourceAdmin(admin.ModelAdmin):
     list_display = ["name", "source_id"]
@@ -174,7 +211,19 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])
 
-    list_display = ["name", "branch_regions", "get_entity_type_display", "pk", "rssd", "lei"]
+    def num_suggest(self, obj):
+        num = SuggestedAssociation.objects.filter(datasource=obj).count()
+        return str(num) if num else ""
+
+    list_display = [
+        "name",
+        "branch_regions",
+        "num_suggest",
+        "get_entity_type_display",
+        "pk",
+        "rssd",
+        "lei",
+    ]
     search_fields = [
         "name",
         "legal_name",
@@ -194,9 +243,10 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         ("country", ChoiceDropdownFilter),
         ("regions__name", DropdownFilter),
         ("entity_type", DropdownFilter),
-        IsControlledFilter,
         IsLinkedToBrandFilter,
         HasRegionalBranchesFilter,
+        HasSuggestedAssociationsFilter,
+        IsControlledFilter,
         "created",
         "modified",
     )
@@ -215,7 +265,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     def suggested_brands(self, obj):
         associations = SuggestedAssociation.objects.filter(datasource=obj)
         associations.order_by("certainty")
-        html = "<p>The system is more sure of some likely associations than others. 0 is most certain. 10 is least certain.</p>"
+        html = "<p>The system is more sure of some likely associations than others. Banks with short names often result in poor matches. 0 is most certain. 10 is least certain.</p>"
         for assoc in associations:
             url = reverse("admin:%s_%s_change" % ("brand", "brand"), args=(assoc.brand.pk,))
             html += f"<a href='{url}'>{assoc.brand.tag} - {assoc.brand.pk} - {assoc.brand.name} | certainty: {assoc.certainty}</a> <br />"

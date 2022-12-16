@@ -91,3 +91,6 @@ class SuggestedAssociation(models.Model):
 
     def __str__(self):
         return f"{self.brand} <-- {self.certainty} --> {self.datasource}"
+
+    def __repr__(self):
+        return f"{self.brand} <-- {self.certainty} --> {self.datasource}"
