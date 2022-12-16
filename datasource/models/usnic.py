@@ -446,12 +446,13 @@ class Usnic(Datasource):
             self.occ,
             self.ein,
         ]
+        id_suggs = [x for x in id_suggs if x and x != "" and x != "0"]
         id_suggs = [spelling_dict.get(x) for x in id_suggs if x and x != ""]
         id_suggs_exact = {x: 0 for x in id_suggs if x}
 
         # names
         names = [self.name, self.legal_name]
-        names = [x for x in names if x and x != ""]
+        names = [x.lower() for x in names if x and x != ""]
 
         # exact name matches
         name_suggs_exact = {spelling_dict.get(x): 3 for x in names if spelling_dict.get(x)}
@@ -462,7 +463,7 @@ class Usnic(Datasource):
             edit_distance = min(
                 int(len(name) / 5), MAX_DICT_EDIT_DISTANCE
             )  # edit distance increases with word lengh
-            matches = symspell.lookup(self.name, Verbosity.CLOSEST, max_edit_distance=edit_distance)
+            matches = symspell.lookup(name, Verbosity.CLOSEST, max_edit_distance=edit_distance)
             spelling_suggs = spelling_suggs | {spelling_dict.get(x.term): 8 for x in matches}
 
         # more certain levels overwrite less certain ones

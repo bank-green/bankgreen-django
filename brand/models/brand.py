@@ -244,7 +244,15 @@ class Brand(TimeStampedModel):
 
     @classmethod
     def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
-        if value and value != "" and value != "0" and not mydict.get(key):
+        if (
+            value
+            and value != ""
+            and value != "0"
+            and key
+            and key != ""
+            and key != "0"
+            and not mydict.get(key)
+        ):
             mydict[key] = value
         return mydict
 
@@ -307,6 +315,12 @@ class Brand(TimeStampedModel):
                 brand.ein,
             ):
                 spelling_dict = cls._non_replacing_insert(spelling_dict, identifier, brand.pk)
+
+        spelling_dict = {
+            k: v
+            for k, v in spelling_dict.items()
+            if k and v and k != "" and k != "0" and v != "" and v != "0"
+        }
 
         return spelling_dict
 
