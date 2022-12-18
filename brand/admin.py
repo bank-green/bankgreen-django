@@ -10,7 +10,7 @@ from cities_light.admin import SubRegionAdmin
 
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
-from datasource.models.datasource import Datasource
+from datasource.models.datasource import Datasource, SuggestedAssociation
 
 from .models import Brand, Commentary
 
@@ -161,6 +161,44 @@ admin.site.unregister(SubRegion)
 admin.site.register(SubRegion, SubRegionAdminOverride)
 
 
+class HasSuggestionsFilter(admin.SimpleListFilter):
+    title = "suggested associations"
+    parameter_name = "suggested associations"
+
+    def lookups(self, request, model_admin):
+        return (
+            ("Any Suggestions", "Any Suggestions"),
+            ("No Suggestions", "No Suggestions"),
+            ("High Certainty Suggestions", "High Certainty Suggestions"),
+            (" Medium Certainty Suggestions", " Medium Certainty Suggestions"),
+            (" Low Certainty Suggestions", " Low Certainty Suggestions"),
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "Any Suggestions":
+            brand_pks = [x.brand.pk for x in SuggestedAssociation.objects.all()]
+            return queryset.filter(pk__in=brand_pks)
+        if value == "No Suggestions":
+            brand_pks = [x.brand.pk for x in SuggestedAssociation.objects.all()]
+            return queryset.exclude(pk__in=brand_pks)
+        elif value == "High Certainty Suggestions":
+            brand_pks = [x.brand.pk for x in SuggestedAssociation.objects.filter(certainty__lte=3)]
+            return queryset.filter(pk__in=brand_pks)
+        elif value == " Medium Certainty Suggestions":
+            brand_pks = [
+                x.brand.pk
+                for x in SuggestedAssociation.objects.filter(certainty__gte=4, certainty__lte=7)
+            ]
+            return queryset.filter(pk__in=brand_pks)
+        elif value == " Low Certainty Suggestions":
+            brand_pks = [
+                x.datasource.pk for x in SuggestedAssociation.objects.filter(certainty__gte=8)
+            ]
+            return queryset.filter(pk__in=brand_pks)
+        return queryset
+
+
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
@@ -173,8 +211,15 @@ class BrandAdmin(admin.ModelAdmin):
             links += link_datasources(datasources, model)
         return format_html("<br />".join(links))
 
+    def num_suggest(self, obj):
+        num = SuggestedAssociation.objects.filter(brand=obj).count()
+        return str(num) if num else ""
+
+    def num_linked(self, obj):
+        num = obj.datasources.count()
+        return str(num) if num else ""
+
     raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
-    # list_display = ["name", "tag", "number_of_related_datasources", "website"]
     search_fields = ["name", "tag", "website"]
     readonly_fields = ["related_datasources", "created", "modified"]
     autocomplete_fields = ["subregions"]
@@ -203,9 +248,10 @@ class BrandAdmin(admin.ModelAdmin):
         "commentary__rating",
         "commentary__number_of_requests",
         "commentary__top_three_ethical",
+        HasSuggestionsFilter,
         ("countries", ChoiceDropdownFilter),
     )
-    list_display = ("short_name", "short_tag", "website")
+    list_display = ("short_name", "short_tag", "pk", "website", "num_suggest", "num_linked")
     list_per_page = 800
 
     inlines = [DatasourceInline, CommentaryInline, BrandFeaturesInline]
