@@ -154,11 +154,29 @@ class SubRegionAdminOverride(SubRegionAdmin):
         "country__name_ascii",
         "region__name",
         "region__name_ascii",
-    )
+    )  # type: ignore
 
 
 admin.site.unregister(SubRegion)
 admin.site.register(SubRegion, SubRegionAdminOverride)
+
+
+class LinkedDatasourcesFilter(admin.SimpleListFilter):
+    title = "Linked Datasources"
+    parameter_name = "Linked Datasources"
+
+    def lookups(self, request, model_admin):
+        return (("Linked", "Linked"), ("Unlinked", "Unlinked"))
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "Linked":
+            brand_pks = [x.brand.pk for x in Datasource.objects.filter(brand__isnull=False)]
+            return queryset.filter(pk__in=brand_pks)
+        if value == "Unlinked":
+            brand_pks = [x.brand.pk for x in Datasource.objects.filter(brand__isnull=False)]
+            return queryset.exclude(pk__in=brand_pks)
+        return queryset
 
 
 class HasSuggestionsFilter(admin.SimpleListFilter):
@@ -259,6 +277,7 @@ class BrandAdmin(admin.ModelAdmin):
         "commentary__number_of_requests",
         "commentary__top_three_ethical",
         HasSuggestionsFilter,
+        LinkedDatasourcesFilter,
         ("countries", ChoiceDropdownFilter),
     )
     list_display = ("short_name", "short_tag", "pk", "website", "num_suggest", "num_linked")
