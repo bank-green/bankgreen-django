@@ -80,8 +80,8 @@ def link_datasources(datasources, datasource_str):
     links = []
     filtered_datasources = [x for x in datasources if hasattr(x, datasource_str)]
     for ds in filtered_datasources:
-        url = reverse("admin:%s_%s_change" % ("datasource", "banktrack"), args=(ds.id,))
-        string_to_show = escape(f"{datasource_str} - . - . - {ds.name}")
+        url = reverse("admin:%s_%s_change" % ("datasource", datasource_str), args=(ds.id,))
+        string_to_show = escape(f"{datasource_str}: {ds.name}")
         link = format_html(f'<a href="{url}" />{string_to_show}</a>')
         links.append(link)
     return links
@@ -203,9 +203,18 @@ class HasSuggestionsFilter(admin.SimpleListFilter):
 class BrandAdmin(admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
 
-    @admin.display(description="related_datasources")
+    @admin.display(description="related datasources")
     def related_datasources(self, obj):
         datasources = obj.datasources.all()
+        links = []
+        for model in model_names:
+            links += link_datasources(datasources, model)
+        return format_html("<br />".join(links))
+
+    @admin.display(description="suggested associations")
+    def suggested_associations(self, obj):
+        suggested_associations = SuggestedAssociation.objects.filter(brand=obj)
+        datasources = [x.datasource for x in suggested_associations]
         links = []
         for model in model_names:
             links += link_datasources(datasources, model)
@@ -221,12 +230,13 @@ class BrandAdmin(admin.ModelAdmin):
 
     raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
     search_fields = ["name", "tag", "website"]
-    readonly_fields = ["related_datasources", "created", "modified"]
+    readonly_fields = ["related_datasources", "suggested_associations", "created", "modified"]
     autocomplete_fields = ["subregions"]
     fields = (
         ("name", "tag"),
         ("website", "aliases"),
         ("related_datasources"),
+        ("suggested_associations"),
         ("description"),
         ("countries"),
         ("regions"),
