@@ -177,7 +177,7 @@ class Wikidata(Datasource):
 
         # filter out unnecessary defaults
         defaults = {k: v for k, v in defaults.items() if v == v and v is not None and v != ""}
-        print(f"updating or creating {link}")
+        # print(f"updating or creating {link}")
         bank, created = Wikidata.objects.update_or_create(source_id=link, defaults=defaults)
         if created:
             bank.save()

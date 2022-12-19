@@ -1,3 +1,4 @@
+import re
 from typing import List, Tuple
 
 from django.db import models
@@ -143,10 +144,10 @@ class Brand(TimeStampedModel):
     subsidiary_of_4_pct = models.IntegerField("percentage owned by subsidiary 4", default=0)
 
     def __str__(self):
-        return self.tag
+        return f"{self.tag}: {self.pk}"
 
     def __repr__(self):
-        return f"<{type(self).__name__}: {self.tag}>"
+        return f"<{type(self).__name__}: {self.tag}: {self.pk}>"
 
     def refresh_name(self, overwrite_existing=False):
         # if the existing name is the default, we are overwriting
@@ -241,6 +242,88 @@ class Brand(TimeStampedModel):
 
         return (brands_created, brands_updated)
 
+    @classmethod
+    def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
+        if (
+            value
+            and value != ""
+            and value != "0"
+            and key
+            and key != ""
+            and key != "0"
+            and not mydict.get(key)
+        ):
+            mydict[key] = value
+        return mydict
+
+    @classmethod
+    def _aliases_into_spelling_dict(cls, brand, spelling_dict):
+        if brand.aliases:
+            aliases = [x.strip() for x in brand.aliases.split(",")]
+            for alias in aliases:
+                # aliases should not overwrite others
+                spelling_dict[alias] = spelling_dict.get(alias, brand.pk)
+        return spelling_dict
+
+    @classmethod
+    def _abbreviations_into_spelling_dict(cls, brand, spelling_dict):
+        abbrev = re.sub("[^A-Z]", "", brand.name).lower()
+        cls._non_replacing_insert(spelling_dict, abbrev, brand.pk)
+        abbrev = re.sub("[^A-Z0-9]", "", brand.name).lower()
+        spelling_dict[abbrev] = spelling_dict.get(abbrev, brand.pk)
+        return spelling_dict
+
+    @classmethod
+    def website_into_spelling_dict(cls, brand, spelling_dict):
+        if brand.website:
+            web_sans_prefix = re.sub(
+                "http(s)?(:)?(\/\/)?|(\/\/)?(www\.)?", "", brand.website
+            ).strip("/")
+            domain_matches = re.match(r"^(?:\/\/|[^\/]+)*", web_sans_prefix).group(0)
+
+            spelling_dict[web_sans_prefix] = spelling_dict.get(web_sans_prefix, brand.pk)
+            if domain_matches and domain_matches != "":
+                spelling_dict[domain_matches] = spelling_dict.get(domain_matches, brand.pk)
+        return spelling_dict
+
+    @classmethod
+    def create_spelling_dictionary(cls):
+        brands = Brand.objects.all()
+        spelling_dict = {}
+        for brand in brands:
+            spelling_dict[brand.name.lower()] = brand.pk
+
+            # abbreviations with and without numbers. Should not overwrite existing keys
+            spelling_dict = cls._abbreviations_into_spelling_dict(brand, spelling_dict)
+            spelling_dict = cls._aliases_into_spelling_dict(brand, spelling_dict)
+            spelling_dict = cls.website_into_spelling_dict(brand, spelling_dict)
+
+            for identifier in (
+                brand.lei,
+                brand.permid,
+                brand.viafid,
+                brand.googleid,
+                brand.rssd,
+                brand.rssd_hd,
+                brand.cusip,
+                brand.thrift,
+                brand.thrift_hc,
+                brand.aba_prim,
+                brand.ncua,
+                brand.fdic_cert,
+                brand.occ,
+                brand.ein,
+            ):
+                spelling_dict = cls._non_replacing_insert(spelling_dict, identifier, brand.pk)
+
+        spelling_dict = {
+            k: v
+            for k, v in spelling_dict.items()
+            if k and v and k != "" and k != "0" and v != "" and v != "0"
+        }
+
+        return spelling_dict
+
     # commented out until we finish reworking the brand-datasource association
     #
     # def return_suggested_brands_or_datasources(self):
@@ -268,6 +351,7 @@ class Brand(TimeStampedModel):
 
     #         # get rids of brands that are already associated with the datasource
     #         # in this case, self is a brand
+
     #         if hasattr(bods, "brand") and bods.brand == self:
     #             continue
 

@@ -6,11 +6,11 @@ from django.utils.html import escape, format_html
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter, DropdownFilter
 from django_json_widget.widgets import JSONEditorWidget
 
-# from Levenshtein import distance as lev
 from jsonfield import JSONField
 
 from brand.admin import CountriesWidgetOverrideForm
 from brand.models import Brand
+from datasource.models.datasource import SuggestedAssociation
 from datasource.models.usnic import EntityTypes
 
 # from .constants import lev_distance, model_names
@@ -74,6 +74,45 @@ class HasRegionalBranchesFilter(admin.SimpleListFilter):
             return queryset.exclude(regions=None)
         elif value == "No Branches":
             return queryset.filter(regions=None)
+        return queryset
+
+
+class HasSuggestedAssociationsFilter(admin.SimpleListFilter):
+    title = "suggested associations"
+    parameter_name = "suggested associations"
+
+    def lookups(self, request, model_admin):
+        return (
+            ("No Suggestions", "No Suggestions"),
+            ("Any Suggestions", "Any Suggestions"),
+            ("High Certainty Suggestions", "High Certainty Suggestions"),
+            (" Medium Certainty Suggestions", " Medium Certainty Suggestions"),
+            (" Low Certainty Suggestions", " Low Certainty Suggestions"),
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "No Suggestions":
+            return queryset.filter(suggested_associations=None)
+        if value == "Any Suggestions":
+            return queryset.exclude(suggested_associations=None)
+        elif value == "High Certainty Suggestions":
+            # assocs = [x.brand for x in SuggestedAssociation.objects.filter(certainty=0)]
+            usnic_pks = [
+                x.datasource.pk for x in SuggestedAssociation.objects.filter(certainty__lte=3)
+            ]
+            return queryset.filter(pk__in=usnic_pks)
+        elif value == " Medium Certainty Suggestions":
+            usnic_pks = [
+                x.datasource.pk
+                for x in SuggestedAssociation.objects.filter(certainty__gte=4, certainty__lte=7)
+            ]
+            return queryset.filter(pk__in=usnic_pks)
+        elif value == " Low Certainty Suggestions":
+            usnic_pks = [
+                x.datasource.pk for x in SuggestedAssociation.objects.filter(certainty__gte=8)
+            ]
+            return queryset.filter(pk__in=usnic_pks)
         return queryset
 
 
@@ -174,7 +213,19 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])
 
-    list_display = ["name", "branch_regions", "get_entity_type_display", "pk", "rssd", "lei"]
+    def num_suggest(self, obj):
+        num = SuggestedAssociation.objects.filter(datasource=obj).count()
+        return str(num) if num else ""
+
+    list_display = [
+        "name",
+        "branch_regions",
+        "num_suggest",
+        "get_entity_type_display",
+        "pk",
+        "rssd",
+        "lei",
+    ]
     search_fields = [
         "name",
         "legal_name",
@@ -194,14 +245,15 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         ("country", ChoiceDropdownFilter),
         ("regions__name", DropdownFilter),
         ("entity_type", DropdownFilter),
-        IsControlledFilter,
         IsLinkedToBrandFilter,
         HasRegionalBranchesFilter,
+        HasSuggestedAssociationsFilter,
+        IsControlledFilter,
         "created",
         "modified",
     )
 
-    @admin.display(description="controlling_orgs")
+    @admin.display(description="controlling orgs")
     def controlling_orgs(self, obj):
         controlling_rssds = list(obj.control.keys())
         controlling_orgs = Usnic.objects.filter(rssd__in=controlling_rssds)
@@ -211,12 +263,23 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
             html += f"<a href='{url}'>{controller.name} - rssd:{controller.rssd} - id:{controller.pk}</a><br />"
         return format_html(html)
 
+    @admin.display(description="suggested_brands")
+    def suggested_brands(self, obj):
+        associations = SuggestedAssociation.objects.filter(datasource=obj)
+        associations.order_by("certainty")
+        html = "<p>The system is more sure of some likely associations than others. Banks with short names often result in poor matches. 0 is most certain. 10 is least certain.</p>"
+        for assoc in associations:
+            url = reverse("admin:%s_%s_change" % ("brand", "brand"), args=(assoc.brand.pk,))
+            html += f"<a href='{url}'>{assoc.brand.tag} - {assoc.brand.pk} - {assoc.brand.name} | certainty: {assoc.certainty}</a> <br />"
+        return format_html(html)
+
     @admin.display(description="entity type")
     def entity_type_override(self, obj):
         return f"{obj.entity_type}: {EntityTypes[obj.entity_type].value}"
 
     fields = (
         ("name", "legal_name", "website", "women_or_minority_owned"),
+        "suggested_brands",
         "brand",
         ("rssd", "lei", "source_id"),
         ("entity_type_override"),
@@ -227,7 +290,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         ("cusip", "aba_prim", "fdic_cert", "ncua", "thrift", "thrift_hc", "occ", "ein"),
     )
 
-    readonly_fields = ("controlling_orgs", "entity_type_override")
+    readonly_fields = ("controlling_orgs", "entity_type_override", "suggested_brands")
 
     formfield_overrides = {JSONField: {"widget": JSONEditorWidget}}
     autocomplete_fields = ["brand"]

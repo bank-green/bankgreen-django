@@ -1,8 +1,9 @@
 from django.test import TestCase
+from brand.tests.utils import create_test_brands
 
 from datasource.models import Banktrack
 
-from .models import Brand
+from ..models import Brand
 
 
 class BrandTestCase(TestCase):
@@ -16,6 +17,28 @@ class BrandTestCase(TestCase):
             countries="TW",
             tag=Banktrack.tag_prepend_str + "unique_source_id",
         )
+        self.brand1, self.brand2 = create_test_brands()
+
+    def test_create_spelling_dictionary(self):
+        spelling_dict = Brand.create_spelling_dictionary()
+        # print(spelling_dict)
+
+        self.assertTrue(spelling_dict.get("test brand 1"), 100)
+        self.assertTrue(spelling_dict.get("test brand"), 100)
+        self.assertTrue(spelling_dict.get("testb"), 100)
+        self.assertTrue(spelling_dict.get("tb1"), 100)
+        self.assertTrue(spelling_dict.get("tb"), 100)
+        self.assertTrue(spelling_dict.get("testbrand.com"), 100)
+        self.assertTrue(spelling_dict.get("another rssd"), 100)
+
+        self.assertTrue(spelling_dict.get("another brand 2"), 200)
+        self.assertTrue(spelling_dict.get("another brand"), 200)
+        self.assertTrue(spelling_dict.get("anotherb"), 200)
+        self.assertTrue(spelling_dict.get("ab2"), 200)
+        self.assertTrue(spelling_dict.get("ab"), 200)
+        self.assertTrue(spelling_dict.get("anotherbwebsite.com"), 200)
+        self.assertTrue(spelling_dict.get("anotherbwebsite.com/somepage"), 200)
+        self.assertTrue(spelling_dict.get("another lei"), 200)
 
 
 #     commented out until we change brand-datasource association

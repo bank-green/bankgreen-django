@@ -2,11 +2,15 @@ from django.test import TestCase
 
 import np
 import pandas as pd
+from brand.models.brand import Brand
+from brand.tests.utils import create_test_brands
+from datasource.models.datasource import SuggestedAssociation
 
 from datasource.models.usnic import Usnic
 from datasource.models.wikidata import Wikidata
+from datasource.tests.utils import create_test_usnic
 
-from .models import Banktrack, Bimpact
+from ..models import Banktrack, Bimpact
 
 
 class BanktrackTestCase(TestCase):
@@ -272,3 +276,29 @@ class UsnicTestCase(TestCase):
         # assert that the control json is not default
         self.assertTrue(child_bank.control != {})
         self.assertTrue("469951" in child_bank.control.keys())
+
+    def test_recommend_brands(self):
+        brand1, brand2 = create_test_brands()
+        usnic1, usnic2, usnic3, usnic4, usnic5 = create_test_usnic()
+
+        candidate_dict = Usnic.suggest_associations()
+
+        self.assertTrue(brand1 in candidate_dict[usnic1])
+        self.assertTrue(brand1 in usnic1.suggested_associations.all())
+
+        self.assertTrue(brand2 in candidate_dict[usnic2])
+        self.assertTrue(brand2 in usnic2.suggested_associations.all())
+
+        self.assertTrue(brand1 in candidate_dict[usnic3])
+        self.assertTrue(brand1 in usnic3.suggested_associations.all())
+
+        self.assertEqual(len(candidate_dict[usnic4]), 0)
+        self.assertTrue(brand1 not in usnic4.suggested_associations.all())
+
+        # brand should be a partial match
+        self.assertTrue(brand2 in candidate_dict[usnic5])
+        self.assertTrue(brand2 in usnic5.suggested_associations.all())
+        # the association should not be certain (0) but have a certainty value of greater than 0
+        self.assertTrue(
+            SuggestedAssociation.objects.get(brand=brand2, datasource=usnic5).certainty > 0
+        )

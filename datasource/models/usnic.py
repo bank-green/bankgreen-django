@@ -1,14 +1,23 @@
+from collections import defaultdict
 import re
-import sys
 import threading
+from typing import Dict
+
 from django.db import models
-import pandas as pd
+from django_countries.fields import CountryField
+from django.db.utils import IntegrityError
+
+from brand.models.brand import Brand
+
 from cities_light.models import Country, Region, SubRegion
 from jsonfield import JSONField
-from django_countries.fields import CountryField
+import pandas as pd
+from symspellpy import SymSpell, Verbosity
 
-from datasource.models.datasource import Datasource
+from datasource.models.datasource import Datasource, SuggestedAssociation
 from datasource.pycountry_utils import pycountries
+
+MAX_DICT_EDIT_DISTANCE = 4
 
 
 class EntityTypes(models.TextChoices):
@@ -91,10 +100,14 @@ class Usnic(Datasource):
     subregions = models.ManyToManyField(
         SubRegion, blank=True, help_text="regions in which there are local branches of a bank"
     )
-
     women_or_minority_owned = models.BooleanField(default=False)
-
     control = JSONField(default={})
+
+    def __str__(self):
+        return f"{self.name}: {self.pk}: {self.rssd}"
+
+    def __repr__(self):
+        return f"<{type(self).__name__}: {self.name}: {self.pk}: {self.rssd}>"
 
     num_threads = 10
 
@@ -387,3 +400,79 @@ class Usnic(Datasource):
         brand.subregions.add(*new_subregions)
 
         brand.save()
+
+    @classmethod
+    def suggest_associations(cls) -> Dict:
+        """Suggest brands for usnic records to be associated to. Writes results to each USNIC.
+        returns a dict mapping from usnic to sets of brands, but also links usnic to brands as
+        a side effect
+        """
+        # get current associations and delete
+        # should probably move delete to later in the function for safety... later
+        SuggestedAssociation.objects.all().delete()
+
+        # create dictionaries and spelling corpus
+        spelling_dict = Brand.create_spelling_dictionary()
+        symspell = SymSpell(max_dictionary_edit_distance=MAX_DICT_EDIT_DISTANCE)
+        for word in spelling_dict.keys():
+            symspell.create_dictionary_entry(word, 1)
+
+        # collect and record suggestions
+        candidate_dict = defaultdict(set)
+        usnics = Usnic.objects.all()
+        for usnic in usnics:
+            suggestions = usnic.search_for_suggested_associations(spelling_dict, symspell)
+            for brand_id, certainty in suggestions.items():
+                brand = Brand.objects.get(id=brand_id)
+                SuggestedAssociation.objects.update_or_create(
+                    brand=brand, datasource=usnic, defaults={"certainty": certainty}
+                )
+                candidate_dict[usnic].add(brand)
+
+        return candidate_dict
+
+    def search_for_suggested_associations(self, spelling_dict, symspell) -> Dict:
+        """
+        cycles through usnic properties and checks against the spelling dict for exact matches.
+        cycles through usnic names and checks against the selling dict for close and exact matches.
+        returns a dictionary with {brand_id: match_cetainty}
+        """
+
+        id_suggs = [
+            self.rssd,
+            self.lei,
+            self.cusip,
+            self.aba_prim,
+            self.fdic_cert,
+            self.ncua,
+            self.thrift,
+            self.thrift_hc,
+            self.occ,
+            self.ein,
+        ]
+        id_suggs = [x for x in id_suggs if x and x != "" and x != "0"]
+        id_suggs = [spelling_dict.get(x) for x in id_suggs if x and x != ""]
+        id_suggs_exact = {x: 0 for x in id_suggs if x}
+
+        # websites
+        websites = [x for x in self.get_shortened_url_possibilities() if x != "" and x != " "]
+        website_suggs = {spelling_dict.get(x): 2 for x in websites if spelling_dict.get(x)}
+
+        # names
+        names = [self.name, self.legal_name]
+        names = [x.lower() for x in names if x and x != ""]
+
+        # exact name matches
+        name_suggs_exact = {spelling_dict.get(x): 3 for x in names if spelling_dict.get(x)}
+
+        # misspelling matches
+        spelling_suggs = {}
+        for name in names:
+            edit_distance = min(
+                int(len(name) / 5), MAX_DICT_EDIT_DISTANCE
+            )  # edit distance increases with word lengh
+            matches = symspell.lookup(name, Verbosity.CLOSEST, max_edit_distance=edit_distance)
+            spelling_suggs = spelling_suggs | {spelling_dict.get(x.term): 8 for x in matches}
+
+        # more certain levels overwrite less certain ones
+        return spelling_suggs | name_suggs_exact | website_suggs | id_suggs_exact
