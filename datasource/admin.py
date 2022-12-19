@@ -4,9 +4,10 @@ from django.urls import reverse
 from django.utils.html import escape, format_html
 
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter, DropdownFilter
-from django_json_widget.widgets import JSONEditorWidget
 
-from jsonfield import JSONField
+# from django_json_widget.widgets import JSONEditorWidget
+
+# from jsonfield import JSONField
 
 from brand.admin import CountriesWidgetOverrideForm
 from brand.models import Brand
@@ -292,7 +293,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
 
     readonly_fields = ("controlling_orgs", "entity_type_override", "suggested_brands")
 
-    formfield_overrides = {JSONField: {"widget": JSONEditorWidget}}
+    # formfield_overrides = {JSONField: {"widget": JSONEditorWidget}}
     autocomplete_fields = ["brand"]
 
 
