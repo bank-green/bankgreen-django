@@ -242,6 +242,10 @@ class BrandAdmin(admin.ModelAdmin):
         num = SuggestedAssociation.objects.filter(brand=obj).count()
         return str(num) if num else ""
 
+    def num_requests(self, obj):
+        num_requests = obj.commentary.number_of_requests
+        return "-" if not num_requests else num_requests
+
     def num_linked(self, obj):
         num = obj.datasources.count()
         return str(num) if num else ""
@@ -280,7 +284,15 @@ class BrandAdmin(admin.ModelAdmin):
         LinkedDatasourcesFilter,
         ("countries", ChoiceDropdownFilter),
     )
-    list_display = ("short_name", "short_tag", "pk", "website", "num_suggest", "num_linked")
+    list_display = (
+        "short_name",
+        "short_tag",
+        "num_requests",
+        "pk",
+        "website",
+        "num_linked",
+        "num_suggest",
+    )
     list_per_page = 800
 
     inlines = [DatasourceInline, CommentaryInline, BrandFeaturesInline]
