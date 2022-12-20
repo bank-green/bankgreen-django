@@ -161,7 +161,7 @@ class BrandAdmin(admin.ModelAdmin):
 
     @admin.display(description="related datasources")
     def related_datasources(self, obj):
-        datasources = obj.datasources.all()
+        datasources = obj.datasources.filter(brand=obj)
         links = []
         for model in model_names:
             links += link_datasources(datasources, model)
