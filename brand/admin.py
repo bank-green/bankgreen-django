@@ -180,9 +180,14 @@ class BrandAdmin(admin.ModelAdmin):
         num = SuggestedAssociation.objects.filter(brand=obj).count()
         return str(num) if num else ""
 
+    @admin.display(ordering="-commentary__number_of_requests")
     def num_requests(self, obj):
         num_requests = obj.commentary.number_of_requests
         return "-" if not num_requests else num_requests
+
+    @admin.display(ordering="tag")
+    def tag(self, obj):
+        return obj.tag
 
     def num_linked(self, obj):
         num = obj.datasources.count()
@@ -231,6 +236,9 @@ class BrandAdmin(admin.ModelAdmin):
         "num_linked",
         "num_suggest",
     )
+    list_display_links = ("short_name", "short_tag")
+    # list_editable=('website',)
+
     list_per_page = 800
 
     inlines = [DatasourceInline, CommentaryInline, BrandFeaturesInline]
