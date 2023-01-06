@@ -1,7 +1,9 @@
-{% extends 'admin/base.html' %} {% block extrahead %}{{ block.super }}
-<style>
-  :root {
-    --primary: #c80400;
-  }
-</style>
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}Data.Bank.Green{% endblock %}
+{% block extrastyle %}
+     <link rel="stylesheet" type="text/css" href="{% static "django_color.css" %}"/>
 {% endblock %}
+
+{% block nav-global %}{% endblock %}
