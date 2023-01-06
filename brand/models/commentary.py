@@ -25,6 +25,16 @@ class Commentary(models.Model):
         help_text="What brand is this comment associated with?",
         on_delete=models.CASCADE,
     )
+
+    inherit_brand_rating = models.ForeignKey(
+        Brand,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="inherit_brand_rating",
+        help_text="should this brand have a rating inherited from another? If so, save will override the existing rating using the parent's rating unless the parent rating is blank.",
+    )
+
     display_on_website = models.BooleanField(default=False)
     number_of_requests = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     comment = models.TextField(help_text="Meta. Comments for staff and/or editors", blank=True)

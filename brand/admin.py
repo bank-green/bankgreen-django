@@ -27,6 +27,7 @@ class RecommendedInOverrideForm(forms.ModelForm):
 
 
 class CommentaryInline(admin.StackedInline):
+    fk_name = "brand"
     model = Commentary
     form = RecommendedInOverrideForm
     fieldsets = (
@@ -36,6 +37,7 @@ class CommentaryInline(admin.StackedInline):
                 "fields": (
                     ("display_on_website", "fossil_free_alliance", "number_of_requests"),
                     ("rating", "fossil_free_alliance_rating", "show_on_sustainable_banks_page"),
+                    ("inherit_brand_rating",),
                 )
             },
         ),
@@ -241,7 +243,7 @@ class BrandAdmin(admin.ModelAdmin):
 
     list_per_page = 800
 
-    inlines = [DatasourceInline, CommentaryInline, BrandFeaturesInline]
+    inlines = [CommentaryInline, BrandFeaturesInline, DatasourceInline]
 
     def get_queryset(self, request):
         # filter out all but base class

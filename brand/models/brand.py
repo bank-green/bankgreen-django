@@ -103,13 +103,6 @@ class Brand(TimeStampedModel):
     ein = models.CharField(max_length=30, blank=True)
     ein_locked = models.BooleanField(default=False)
 
-    # subsidiary information. Subsidiaries should be listed in descending order of ownership
-    # i.e. a DataSource A wholly owned by DataSource B would have subsidiary_of_1 set to B, and
-    # subsidiary_of_1_pct set to 100
-    inherit_rating_from = models.ForeignKey(
-        "self", on_delete=models.SET_NULL, null=True, blank=True
-    )
-
     subsidiary_of_1 = models.ForeignKey(
         "self",
         on_delete=models.SET_NULL,
