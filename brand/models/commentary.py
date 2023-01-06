@@ -169,6 +169,16 @@ class Commentary(models.Model):
     def __str__(self):
         return f"Commentary: {self.brand.tag}"
 
+    def save(self, *args, **kwargs):
+        if (
+            self.inherit_brand_rating
+            and self.inherit_brand_rating.commentary  #  type: ignore
+            and self.inherit_brand_rating.commentary.rating != RatingChoice.UNKNOWN  #  type: ignore
+        ):
+            self.rating = self.inherit_brand_rating.commentary.rating  #  type: ignore
+
+        super(Commentary, self).save()
+
     def clean(self):
         if self.fossil_free_alliance and self.fossil_free_alliance_rating <= -1:
             raise ValidationError(
