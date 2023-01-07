@@ -1,9 +1,13 @@
 {% extends "admin/base.html" %}
 {% load i18n static %}
 
-{% block title %}Data.Bank.Green{% endblock %}
+{% block title %} {% trans "Data.Bank.Green" %}{% endblock %}
 {% block extrastyle %}
      <link rel="stylesheet" type="text/css" href="{% static "django_color.css" %}"/>
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">{% trans "Bankgreen Data Admin" %}</h1>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
