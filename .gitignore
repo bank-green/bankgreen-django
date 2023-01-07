@@ -28,5 +28,5 @@ venv
 .idea
 .editorconfig
 
-# static files
-static
+# # static files
+# static
