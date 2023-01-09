@@ -175,6 +175,8 @@ class Commentary(models.Model):
             and self.inherit_brand_rating.commentary  #  type: ignore
             and self.inherit_brand_rating.commentary.rating != RatingChoice.UNKNOWN  #  type: ignore
         ):
+            # recurse upwards
+            self.inherit_brand_rating.commentary.save()  #   type: ignore
             self.rating = self.inherit_brand_rating.commentary.rating  #  type: ignore
 
         super(Commentary, self).save()
