@@ -71,7 +71,12 @@ class BrandFilter(FilterSet):
             Q(subregions__name_ascii__in=value) | Q(subregions__geoname_code__in=value)
         )
 
-    rating = MultipleChoiceFilter(field_name="commentary__rating", choices=RatingChoice.choices)
+    rating = MultipleChoiceFilter(
+        method="filter_rating", field_name="commentary__rating", choices=RatingChoice.choices
+    )
+
+    # rating_inherited = MultipleChoiceFilter(field_name="commentary__rating_inherited", choices=RatingChoice.choices)
+
     recommended_only = BooleanFilter(field_name="commentary__top_three_ethical")
 
     display_on_website = BooleanFilter(field_name="commentary__display_on_website")
@@ -89,6 +94,21 @@ class BrandFilter(FilterSet):
             .annotate(num_feats=Count("bank_features"))
             .filter(num_feats=len(value))
         )
+
+    def filter_rating(self, queryset, name, value):
+
+        # ratings matching the query exactly
+        direct_matches_qs = queryset.filter(commentary__rating__in=value)
+
+        # some brands have inherited ratings defined as a property
+        inherited_matches_pks = [
+            x.pk
+            for x in queryset.filter(commentary__rating=RatingChoice.INHERIT)
+            if x.commentary.rating_inherited in value
+        ]
+        inheritors_qs = Brand.objects.filter(Q(pk__in=inherited_matches_pks))
+
+        return direct_matches_qs | inheritors_qs
 
     class Meta:
         model = Brand
@@ -172,6 +192,9 @@ class CommentaryType(DjangoObjectType):
     header = HtmlFromMarkdown()
     details = HtmlFromMarkdown()
     subtitle = HtmlFromMarkdown()
+    rating_inherited = graphene.Field(
+        graphene.String, resolver=lambda obj, info: obj.rating_inherited
+    )
 
     class Meta:
         model = Commentary

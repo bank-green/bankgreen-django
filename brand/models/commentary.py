@@ -15,6 +15,7 @@ class RatingChoice(models.TextChoices):
     BAD = "bad"
     WORST = "worst"
     UNKNOWN = "unknown"
+    INHERIT = "inherit"
 
 
 class Commentary(models.Model):
@@ -45,6 +46,14 @@ class Commentary(models.Model):
         choices=RatingChoice.choices,
         default=RatingChoice.UNKNOWN,
     )
+
+    @property
+    def rating_inherited(self):
+        if self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
+            return self.inherit_brand_rating.commentary.rating_inherited
+
+        return self.rating
+
     fossil_free_alliance = models.BooleanField(
         default=False, help_text="Is this brand in the fossil free alliance?"
     )
@@ -170,14 +179,8 @@ class Commentary(models.Model):
         return f"Commentary: {self.brand.tag}"
 
     def save(self, *args, **kwargs):
-        if (
-            self.inherit_brand_rating
-            and self.inherit_brand_rating.commentary  #  type: ignore
-            and self.inherit_brand_rating.commentary.rating != RatingChoice.UNKNOWN  #  type: ignore
-        ):
-            # recurse upwards
-            self.inherit_brand_rating.commentary.save()  #   type: ignore
-            self.rating = self.inherit_brand_rating.commentary.rating  #  type: ignore
+        if self.inherit_brand_rating:
+            self.rating = RatingChoice.INHERIT
 
         super(Commentary, self).save()
 
