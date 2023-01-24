@@ -30,6 +30,8 @@ class CommentaryInline(admin.StackedInline):
     fk_name = "brand"
     model = Commentary
     form = RecommendedInOverrideForm
+
+    readonly_fields = ("rating_inherited",)
     fieldsets = (
         (
             "Display Configuration",
@@ -37,7 +39,7 @@ class CommentaryInline(admin.StackedInline):
                 "fields": (
                     ("display_on_website", "fossil_free_alliance", "number_of_requests"),
                     ("rating", "fossil_free_alliance_rating", "show_on_sustainable_banks_page"),
-                    ("inherit_brand_rating",),
+                    ("rating_inherited", "inherit_brand_rating"),
                 )
             },
         ),
