@@ -15,6 +15,7 @@ class RatingChoice(models.TextChoices):
     BAD = "bad"
     WORST = "worst"
     UNKNOWN = "unknown"
+    INHERIT = "inherit"
 
 
 class Commentary(models.Model):
@@ -25,6 +26,16 @@ class Commentary(models.Model):
         help_text="What brand is this comment associated with?",
         on_delete=models.CASCADE,
     )
+
+    inherit_brand_rating = models.ForeignKey(
+        Brand,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="inherit_brand_rating",
+        help_text="should this brand have a rating inherited from another? If so, save will override the existing rating using the parent's rating unless the parent rating is blank.",
+    )
+
     display_on_website = models.BooleanField(default=False)
     number_of_requests = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     comment = models.TextField(help_text="Meta. Comments for staff and/or editors", blank=True)
@@ -35,6 +46,14 @@ class Commentary(models.Model):
         choices=RatingChoice.choices,
         default=RatingChoice.UNKNOWN,
     )
+
+    @property
+    def rating_inherited(self):
+        if self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
+            return self.inherit_brand_rating.commentary.rating_inherited
+
+        return self.rating
+
     fossil_free_alliance = models.BooleanField(
         default=False, help_text="Is this brand in the fossil free alliance?"
     )
@@ -158,6 +177,12 @@ class Commentary(models.Model):
 
     def __str__(self):
         return f"Commentary: {self.brand.tag}"
+
+    def save(self, *args, **kwargs):
+        if self.inherit_brand_rating:
+            self.rating = RatingChoice.INHERIT
+
+        super(Commentary, self).save()
 
     def clean(self):
         if self.fossil_free_alliance and self.fossil_free_alliance_rating <= -1:
