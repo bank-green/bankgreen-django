@@ -15,9 +15,9 @@ class FeatureType(models.Model):
 
 class FeatureAvailabilityChoice(models.TextChoices):
     YES = "Yes"
-    NO = "No"
-    MAYBE = "Maybe"
-    NOT_APPLICABLE = "N/A"
+    # NO = "No"
+    # MAYBE = "Maybe"
+    # NOT_APPLICABLE = "N/A"
 
 
 class BrandFeature(models.Model):
@@ -30,7 +30,7 @@ class BrandFeature(models.Model):
     offered = models.CharField(
         max_length=16,
         choices=FeatureAvailabilityChoice.choices,
-        default=FeatureAvailabilityChoice.NOT_APPLICABLE,
+        default=FeatureAvailabilityChoice.YES,
         help_text="Is the feature offered?",
     )
 
