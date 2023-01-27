@@ -7,6 +7,11 @@ class FeatureType(models.Model):
     name = models.CharField(
         max_length=40, help_text="i.e. Free Checking account, Credit Card, etc."
     )
+    conventions_for_use = models.TextField(
+        help_text="Describe, for other admin panel users, how features should be defined. For example, what should users do when the availability of a feature is unclear?",
+        default="",
+        blank=True,
+    )
     description = models.TextField(help_text="Description about this feature type")
 
     def __str__(self):

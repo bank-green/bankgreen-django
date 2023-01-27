@@ -216,6 +216,7 @@ class FeatureTypeType(DjangoObjectType):
 class BrandFeatureType(DjangoObjectType):
     name = graphene.String()
     description = graphene.String()
+    conventions_for_use = graphene.String()
 
     def resolve_name(obj, info):
         return obj.feature.name
