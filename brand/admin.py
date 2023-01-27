@@ -8,9 +8,12 @@ from cities_light.admin import SubRegionAdmin
 from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 
-from brand.admin_utils import (LinkedDatasourcesFilter, link_datasources,
-                               raise_validation_error_for_missing_country,
-                               raise_validation_error_for_missing_region)
+from brand.admin_utils import (
+    LinkedDatasourcesFilter,
+    link_datasources,
+    raise_validation_error_for_missing_country,
+    raise_validation_error_for_missing_region,
+)
 from brand.models.brand_update import BrandUpdate
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
