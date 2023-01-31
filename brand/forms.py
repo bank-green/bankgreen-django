@@ -2,7 +2,6 @@ from dal import autocomplete
 from django import forms
 
 from .models import BrandUpdate, BrandFeature
-from cities_light.models import Region, SubRegion
 
 
 class CreateUpdateForm(forms.ModelForm):
