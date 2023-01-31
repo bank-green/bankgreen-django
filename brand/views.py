@@ -65,8 +65,17 @@ class CreateUpdateView(CreateView):
         brand_update.update_tag = context["tag"]
         brand_update.tag = context["tag"] + " (" + uuid4().hex + ")"
         brand_update.save()
-        print(brand_update.regions)
-        print(brand_update.subregions)
+
+        # proccess regions and subregions
+        regions = self.request.POST.getlist('regions')
+        for item in regions:
+            reg = Region.objects.get(pk=item)
+            brand_update.regions.add(reg)
+        subregions = self.request.POST.getlist('subregions')
+        for item in subregions:
+            subreg = SubRegion.objects.get(pk=item)
+            brand_update.subregions.add(subreg)
+       
         features = context["features"]
         features.instance = brand_update
         features.save()

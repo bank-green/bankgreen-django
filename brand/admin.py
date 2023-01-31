@@ -132,7 +132,7 @@ admin.site.unregister(SubRegion)
 @admin.register(BrandUpdate)
 class BrandUpdateAdmin(admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
-    fields = BrandUpdate.UPDATE_FIELDS
+    fields = BrandUpdate.UPDATE_FIELDS + ["additional_info", "email", "consent"]
     readonly_fields = ["name", "aliases", "description", "website", "bank_features"]
     inlines = [BrandFeaturesReadonlyInline]
     list_display = ("short_name", "update_tag")
