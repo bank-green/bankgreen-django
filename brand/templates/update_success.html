@@ -4,7 +4,19 @@
 
 {% block content %}
    <div class="text-center">
-        <h2>Congratulations!</h2>
-        <h3>Brand Update was successfully saved!</h3>
+        <h2>🎉 Success 🎉</h2>
+        <h3>Thank you for helping improve our bank data and making for the world a greener place!</h3><br />
+        <p>Your suggestion is being reviewed.</p>
+        <p>Your changes will most likely appear in the next week.</p>
+        <p>In 30 seconds, you will be redirected to the <a href="https://bank.green/take-action">take-action page</a></p>
    </div>
+   <script>
+      let timeLeft = 30;
+
+         setTimeout(function() {
+               window.location.href = 'https://bank.green/take-action';
+         }, timeLeft * 1000);
+         
+   </script>
+
 {% endblock content %}
