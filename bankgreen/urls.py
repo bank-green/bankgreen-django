@@ -16,17 +16,16 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, reverse_lazy, include
+from django.urls import path, reverse_lazy
 from django.views.decorators.cache import cache_control
 from django.views.generic.base import RedirectView
 
 from graphene_django.views import GraphQLView
-from ajax_select import urls as ajax_select_urls
 
 from schema import schema
 
-
 from brand import views
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -37,11 +36,12 @@ urlpatterns = [
             GraphQLView.as_view(graphiql=True, schema=schema)
         ),
     ),
-    path('region-autocomplete/',
-        views.RegionAutocomplete.as_view(),
-        name='region-autocomplete',),
-    path('subregion-autocomplete/',
+    path("region-autocomplete/", views.RegionAutocomplete.as_view(), name="region-autocomplete"),
+    path(
+        "subregion-autocomplete/",
         views.SubRegionAutocomplete.as_view(),
-        name='subregion-autocomplete',),
+        name="subregion-autocomplete",
+    ),
     path("update/<str:tag>/", views.CreateUpdateView.as_view(), name="update"),
+    path("update_success/", views.update_success, name="update_success"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

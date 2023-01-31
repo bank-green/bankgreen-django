@@ -1,20 +1,12 @@
-from unicodedata import name
 from uuid import uuid4
 from dal import autocomplete
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from django.views.generic import CreateView
 from django.forms.models import model_to_dict
-from django.forms import (
-    ModelForm,
-    ModelMultipleChoiceField,
-    inlineformset_factory,
-    ModelChoiceField,
-    Form,
-)
+from django.forms import inlineformset_factory
+from django.urls import reverse_lazy
 
-from brand.models import brand
 from .models import Brand, BrandUpdate, BrandFeature
 from .forms import CreateUpdateForm, BrandFeaturesForm
 
@@ -49,17 +41,15 @@ class SubRegionAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
-
 class CreateUpdateView(CreateView):
     template_name = "update.html"
     form_class = CreateUpdateForm
-    success_url = "https://bank.green"
+    success_url = reverse_lazy("update_success")
 
     def form_valid(self, form):
         """
         If the form is valid, save the associated model.
         """
-        print(self.request.POST)
         brand_update = form.save(commit=False)
         context = self.get_context_data()
         brand_update.update_tag = context["tag"]
@@ -67,15 +57,15 @@ class CreateUpdateView(CreateView):
         brand_update.save()
 
         # proccess regions and subregions
-        regions = self.request.POST.getlist('regions')
+        regions = self.request.POST.getlist("regions")
         for item in regions:
             reg = Region.objects.get(pk=item)
             brand_update.regions.add(reg)
-        subregions = self.request.POST.getlist('subregions')
+        subregions = self.request.POST.getlist("subregions")
         for item in subregions:
             subreg = SubRegion.objects.get(pk=item)
             brand_update.subregions.add(subreg)
-       
+
         features = context["features"]
         features.instance = brand_update
         features.save()
@@ -115,3 +105,7 @@ class CreateUpdateView(CreateView):
         return context
 
 
+def update_success(request):
+    template_name = "update_success.html"
+
+    return render(request, template_name)
