@@ -7,12 +7,10 @@ class FeatureType(models.Model):
     name = models.CharField(
         max_length=40, help_text="i.e. Free Checking account, Credit Card, etc."
     )
-    conventions_for_use = models.TextField(
-        help_text="Describe, for other admin panel users, how features should be defined. For example, what should users do when the availability of a feature is unclear?",
-        default="",
-        blank=True,
+
+    description = models.TextField(
+        help_text="Description about this feature type. This is displayed on the website."
     )
-    description = models.TextField(help_text="Description about this feature type")
 
     def __str__(self):
         return self.name
@@ -20,9 +18,9 @@ class FeatureType(models.Model):
 
 class FeatureAvailabilityChoice(models.TextChoices):
     YES = "Yes"
-    # NO = "No"
-    # MAYBE = "Maybe"
-    # NOT_APPLICABLE = "N/A"
+    NO = "No"
+    MAYBE = "Maybe"
+    NOT_APPLICABLE = "N/A"
 
 
 class BrandFeature(models.Model):
