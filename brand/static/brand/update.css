@@ -12,8 +12,49 @@
     padding-left: 5px!important;
 }
 
+body {
+    background-color: #dbeafe!important;
+}
+
 div.features-box {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+}
+.features-item{
+    background-color: white;
+}
+
+.custom-navbar{
+    background-color: #293145!important;
+    color: white;
+    border-radius: 12px;
+}
+
+.custom-navbar img {
+    height: 20px;
+}
+.custom-navbar .nav-link{
+    color: white!important;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    margin-left: 1rem;
+}
+
+.custom-navbar .take-action{
+    background-color: #7bb123;
+    border-radius: 12px;
+}
+.custom-navbar .take-action:hover{
+    background-color: #669120;
+}
+
+.save-btn{
+    background-color: #7bb123!important;
+    color: white!important;
+    font-weight: 500!important;
+}
+.save-btn:hover{
+    background-color: #669120!important;
 }
