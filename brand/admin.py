@@ -1,7 +1,12 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.utils.html import format_html
+from django.urls import reverse
+from django.utils.html import escape, format_html
+
+from cities_light.admin import SubRegionAdmin
+from cities_light.models import SubRegion
+from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 
 from brand.admin_utils import (
     LinkedDatasourcesFilter,
@@ -9,16 +14,12 @@ from brand.admin_utils import (
     raise_validation_error_for_missing_country,
     raise_validation_error_for_missing_region,
 )
-from cities_light.models import SubRegion
-from cities_light.admin import SubRegionAdmin
-
+from brand.models.brand_update import BrandUpdate
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 
 from .models import Brand, Commentary
-
-from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 
 
 class RecommendedInOverrideForm(forms.ModelForm):
@@ -84,6 +85,23 @@ class DatasourceInline(admin.StackedInline):
     show_change_link = True
 
 
+def link_datasources(datasources, datasource_str):
+    links = []
+    filtered_datasources = [x for x in datasources if hasattr(x, datasource_str)]
+    for ds in filtered_datasources:
+        url = reverse("admin:%s_%s_change" % ("datasource", "banktrack"), args=(ds.id,))
+        string_to_show = escape(f"{datasource_str} - . - . - {ds.name}")
+        link = format_html(f'<a href="{url}" />{string_to_show}</a>')
+        links.append(link)
+    return links
+
+
+class BrandFeaturesReadonlyInline(admin.StackedInline):
+    model = BrandFeature
+    fields = (("feature", "offered", "details"),)
+    readonly_fields = ["feature", "offered", "details"]
+
+
 @admin.register(FeatureType)
 class BrandFeatureAdmin(admin.ModelAdmin):
 
@@ -109,6 +127,32 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
 
 
 admin.site.unregister(SubRegion)
+
+
+@admin.register(BrandUpdate)
+class BrandUpdateAdmin(admin.ModelAdmin):
+    form = CountriesWidgetOverrideForm
+    fields = BrandUpdate.UPDATE_FIELDS + ["additional_info", "email", "consent"]
+    readonly_fields = ["name", "aliases", "description", "website", "bank_features"]
+    inlines = [BrandFeaturesReadonlyInline]
+    list_display = ("short_name", "update_tag")
+
+    def save_model(self, request, obj, form, change):
+        original = Brand.objects.get(tag=obj.update_tag)
+
+        # overwrite all fields with values from updates
+        for field in BrandUpdate.UPDATE_FIELDS:
+            value = getattr(obj, field)
+            setattr(original, field, value)
+
+        # overwrite features with features from update
+        BrandFeature.objects.filter(brand=original).delete()
+        original.bank_features.set(obj.bank_features.all())
+
+        original.save()
+
+        # delete brand update
+        obj.delete()
 
 
 @admin.register(SubRegion)
@@ -249,7 +293,7 @@ class BrandAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         # filter out all but base class
-        qs = super(BrandAdmin, self).get_queryset(request)
+        qs = super(BrandAdmin, self).get_queryset(request).filter(brandupdate__isnull=True)
         return qs
 
     def number_of_related_datasources(self, obj):
