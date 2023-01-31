@@ -7,7 +7,10 @@ class FeatureType(models.Model):
     name = models.CharField(
         max_length=40, help_text="i.e. Free Checking account, Credit Card, etc."
     )
-    description = models.TextField(help_text="Description about this feature type")
+
+    description = models.TextField(
+        help_text="Description about this feature type. This is displayed on the website."
+    )
 
     def __str__(self):
         return self.name
@@ -30,7 +33,7 @@ class BrandFeature(models.Model):
     offered = models.CharField(
         max_length=16,
         choices=FeatureAvailabilityChoice.choices,
-        default=FeatureAvailabilityChoice.NOT_APPLICABLE,
+        default=FeatureAvailabilityChoice.YES,
         help_text="Is the feature offered?",
     )
 
