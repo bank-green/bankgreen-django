@@ -4,35 +4,122 @@
 <html>
 
 <head>
-    <link rel='stylesheet' href="{% static 'update.css' %}">
+    <link rel='stylesheet' href="{% static 'brand/update.css' %}">
+    <link rel='stylesheet' href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <title>Brand Update</title>
 </head>
 
 <body>
-    <div class="wrapper">
+    <!-- As a link -->
+    <nav class="bg-color-293145">
+        
+    </nav>
+    <div class="wrapper container mb-3">
         <div class="content">
             <h1>Brand Update Creation</h1>
 
-            <form method="post">{% csrf_token %}
+            <form method="post">
+                {% csrf_token %}
                 <h2>Bank Details</h2>
                 <div class="details">
-                    <ul>
-                        {{ form.as_ul }}
-                    </ul>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label for="{{form.name.auto_id}}" class="form-label">{{ form.name.label }}</label>
+                            <input type="text" class="form-control" id="{{form.name.auto_id}}" name="{{form.name.name}}" aria-describedby="{{form.name.name}}Help" {% if form.name.initial %}value="{{form.name.initial}}"{% endif %}>
+                            <div id="{{form.name.name}}Help" class="form-text">{{form.name.help_text}}</div>
+                        </div>
+                        <div class="col">
+                            <label for="{{form.aliases.auto_id}}" class="form-label">{{ form.aliases.label }}</label>
+                            <input type="text" class="form-control" id="{{form.name.auto_id}}" name="{{form.aliases.name}}" aria-describedby="{{form.aliases.name}}Help" {% if form.aliases.initial %}value="{{form.aliases.initial}}"{% endif %}>
+                            <div id="{{form.aliases.name}}Help" class="form-text">{{form.aliases.help_text}}</div>
+                          </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label for="{{form.website.auto_id}}" class="form-label">{{ form.website.label }}</label>
+                            <input type="text" class="form-control" id="{{form.website.auto_id}}" name="{{form.website.name}}" aria-describedby="{{form.website.name}}Help" {% if form.website.initial %}value="{{form.website.initial}}"{% endif %}>
+                            <div id="{{form.website.name}}Help" class="form-text">{{form.website.help_text}}</div>
+                        </div>
+                        <div class="col">
+                            <label for="{{form.countries.auto_id}}" class="form-label">{{ form.countries.label }}</label>
+                            {{form.countries}}
+                            <div id="{{form.countries.name}}Help" class="form-text">{{form.countries.help_text}}</div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label for="{{form.regions.auto_id}}" class="form-label">{{ form.regions.label }}</label>
+                            {{form.regions}}
+                            <div id="{{form.regions.name}}Help" class="form-text">{{form.regions.help_text}}</div>
+                        </div>
+                        <div class="col">
+                            <label for="{{form.subregions.auto_id}}" class="form-label">{{ form.subregions.label }}</label>
+                            {{form.subregions}}
+                            <div id="{{form.subregions.name}}Help" class="form-text">{{form.subregions.help_text}}</div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label for="{{form.additional_info.auto_id}}" class="form-label">{{ form.additional_info.label }}</label>
+                            {{form.additional_info}}
+                            <div id="{{form.additional_info.name}}Help" class="form-text">{{form.additional_info.help_text}}</div>
+                        </div>
+                        <div class="col">
+                            <label for="{{form.email.auto_id}}" class="form-label">{{ form.email.label }}</label>
+                            <input type="email" class="form-control" id="{{form.email.auto_id}}" name="{{form.email.name}}" aria-describedby="{{form.email.name}}Help" {% if form.email.initial %}value="{{form.email.initial}}"{% endif %}>
+                            <div id="{{form.email.name}}Help" class="form-text">{{form.email.help_text}}</div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label for="{{form.consent.auto_id}}" class="form-label">{{ form.consent.label }}</label>
+                            {{form.consent}}
+                            <div id="{{form.consent.name}}Help" class="form-text">{{form.consent.help_text}}</div>
+                        </div>
+                    </div>
                 </div>
                 <h2>Features</h2>
                 {{ features.management_form }}
-                {% for feature in features %}
-                <ul>
-                    <li>{{ feature.feature }} </li>
-                    <li>Offered: {{ feature.offered }} </li>
-                    <li>Details: {{ feature.details }} </li>
-                </ul>
-                {% endfor %}
-
-                <input type="submit" value="Save">
+                <div class="features-box">
+                    {% for feature in features %}
+                        <div class="mb-3 border border-1 p-3 rounded-3">
+                            <div class="mb-3">
+                                <label for="{{feature.feature.auto_id}}" class="form-label">{{ feature.feature.label }}</label>
+                                {{ feature.feature }}
+                                <div id="{{feature.feature.name}}Help" class="form-text">{{feature.feature.help_text}}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{feature.offered.auto_id}}" class="form-label">{{ feature.offered.label }}</label>
+                                {{ feature.offered }}
+                                <div id="{{feature.offered.name}}Help" class="form-text">{{feature.offered.help_text}}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{feature.details.auto_id}}" class="form-label">{{ feature.details.label }}</label>
+                                {{ feature.details }}
+                                <div id="{{feature.details.name}}Help" class="form-text">{{feature.details.help_text}}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <input type="submit" value="Save" class="btn btn-success form-control">
             </form>
         </div>
     </div>
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}" ></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    {{form.media}}
+
+    <script>
+        $(document).ready(function() {
+            $('.form-select').select2();
+        });
+    </script>
 </body>
 
 </html>

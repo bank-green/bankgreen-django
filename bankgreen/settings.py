@@ -52,6 +52,8 @@ AIRTABLE_API_KEY = os.environ.get("AIRTABLE_API_KEY")
 
 
 INSTALLED_APPS = [
+    "dal",
+    "dal_select2",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -139,7 +141,11 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-STATICFILES_DIRS = ("static/admin",)
+STATICFILES_DIRS = (
+    "static/admin",
+    os.path.join(BASE_DIR, 'brand/static/')
+    )
+
 
 
 # Default primary key field type

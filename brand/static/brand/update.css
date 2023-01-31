@@ -1,0 +1,19 @@
+.select2-selection__choice__remove {
+    display: contents!important;
+}
+.select2-container .select2-search--inline {
+    float: none!important;
+}
+.select2-selection__rendered{
+    display: list-item!important;
+}
+.select2-search__field{
+    margin: 0!important;
+    padding-left: 5px!important;
+}
+
+div.features-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}

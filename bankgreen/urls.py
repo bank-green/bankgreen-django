@@ -14,12 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, reverse_lazy
+from django.urls import path, reverse_lazy, include
 from django.views.decorators.cache import cache_control
 from django.views.generic.base import RedirectView
 
 from graphene_django.views import GraphQLView
+from ajax_select import urls as ajax_select_urls
 
 from schema import schema
 
@@ -35,5 +37,11 @@ urlpatterns = [
             GraphQLView.as_view(graphiql=True, schema=schema)
         ),
     ),
+    path('region-autocomplete/',
+        views.RegionAutocomplete.as_view(),
+        name='region-autocomplete',),
+    path('subregion-autocomplete/',
+        views.SubRegionAutocomplete.as_view(),
+        name='subregion-autocomplete',),
     path("update/<str:tag>/", views.CreateUpdateView.as_view(), name="update"),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
