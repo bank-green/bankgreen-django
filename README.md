@@ -10,14 +10,11 @@ This project uses python 3.10. You will need to install "[pip](https://pip.pypa.
 
 
 
-There is a test `db.sqlite3` file included in `sample_db/db.sqlite3`. If you wish to use it, you will need to copy it into the project and create a superuser:
-`cp sample_db/db.sqlite3 db.sqlite3`
+There is a sample `db.sqlite3` file included in `sample_db/sample_db.sqlite3`. If you wish to use it, you will need to copy it into the project and create a superuser:
+`cp sample_db/sample_db.sqlite3 db.sqlite3`
 `python manage.py createsuperuser`
 
-If you do not need the database, you may also simply delete the file:
-`rm db.sqlite3`
-
-If you deleted the file, you will need to first migrate your database and then download a list of countries and regions:
+If you did not use the sample database, you must run migrations and then download a list of countries and regions:
 `python manage.py migrate`
 `python manage.py cities_light`
 
