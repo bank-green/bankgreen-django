@@ -28,5 +28,8 @@ db.sqlite3
 .idea
 .editorconfig
 
-# # static files
-# static
+# static files
+static
+
+# notes, etc
+ARCHIVE_DB/*
