@@ -293,3 +293,13 @@ class BrandAdmin(admin.ModelAdmin):
         return related_datasources
 
     number_of_related_datasources.short_description = "Nr. Dts"
+
+    def change_view(self, request, object_id, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["page_title"] = f"{Brand.objects.get(id=object_id).tag}: "
+        return super(BrandAdmin, self).change_view(request, object_id, extra_context=extra_context)
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["page_title"] = "Brands: "
+        return super(BrandAdmin, self).changelist_view(request, extra_context=extra_context)

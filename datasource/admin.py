@@ -121,7 +121,16 @@ class HasSuggestedAssociationsFilter(admin.SimpleListFilter):
 class DatasourceAdmin(admin.ModelAdmin):
     list_display = ["name", "source_id"]
     search_fields = ["name", "source_id"]
-    list_filter = ("created", "modified", ("countries", ChoiceDropdownFilter))
+    list_filter = ["created", "modified"]
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["page_title"] = f"{self.model.__name__}: "
+
+        if hasattr(self.model, "countries"):
+            self.list_filter = self.list_filter + [("countries", ChoiceDropdownFilter)]  # type: ignore
+
+        return super(DatasourceAdmin, self).changelist_view(request, extra_context=extra_context)
 
 
 @admin.register(Banktrack)
@@ -175,6 +184,15 @@ class BanktrackAdmin(admin.ModelAdmin):
             if f in form.base_fields:
                 form.base_fields[f].disabled = True
         return form
+
+    def change_view(self, request, object_id, extra_context=None):
+        extra_context = extra_context or {}
+        model_name = self.model.__name__
+        datasource_name = Banktrack.objects.get(id=object_id).name
+        extra_context["page_title"] = f"{model_name}: {datasource_name}: "
+        return super(BanktrackAdmin, self).change_view(
+            request, object_id, extra_context=extra_context
+        )
 
 
 @admin.register(Bimpact)
@@ -295,6 +313,13 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
 
     # formfield_overrides = {JSONField: {"widget": JSONEditorWidget}}
     autocomplete_fields = ["brand"]
+
+    def change_view(self, request, object_id, extra_context=None):
+        extra_context = extra_context or {}
+        model_name = self.model.__name__
+        datasource_name = Usnic.objects.get(id=object_id).name
+        extra_context["page_title"] = f"{model_name}: {datasource_name}: "
+        return super(UsnicAdmin, self).change_view(request, object_id, extra_context=extra_context)
 
 
 @admin.register(Wikidata)
