@@ -85,17 +85,6 @@ class DatasourceInline(admin.StackedInline):
     show_change_link = True
 
 
-def link_datasources(datasources, datasource_str):
-    links = []
-    filtered_datasources = [x for x in datasources if hasattr(x, datasource_str)]
-    for ds in filtered_datasources:
-        url = reverse("admin:%s_%s_change" % ("datasource", "banktrack"), args=(ds.id,))
-        string_to_show = escape(f"{datasource_str} - . - . - {ds.name}")
-        link = format_html(f'<a href="{url}" />{string_to_show}</a>')
-        links.append(link)
-    return links
-
-
 class BrandFeaturesReadonlyInline(admin.StackedInline):
     model = BrandFeature
     fields = (("feature", "offered", "details"),)
