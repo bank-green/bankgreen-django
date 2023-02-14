@@ -239,5 +239,7 @@ class Query(graphene.ObjectType):
 
     brands = DjangoFilterConnectionField(BrandNodeType)
 
+    features = DjangoListField(FeatureTypeType)
+
 
 schema = graphene.Schema(query=Query)
