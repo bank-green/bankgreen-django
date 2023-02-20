@@ -115,6 +115,10 @@ class BrandFilter(FilterSet):
         fields = []
 
 
+class FeatureTypeFilter(FilterSet):
+    allow_filtering = BooleanFilter(field_name="allow_filtering")
+
+
 class RegionType(DjangoObjectType):
     class Meta:
         model = Region
@@ -211,6 +215,8 @@ class FeatureTypeType(DjangoObjectType):
     class Meta:
         model = FeatureType
         fields = "__all__"
+
+    filterset_class = FeatureTypeFilter
 
 
 class BrandFeatureType(DjangoObjectType):
