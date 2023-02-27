@@ -3,11 +3,7 @@
 
 {% block content %}
 <div class="content">
-    <h1>Brand Update Creation</h1>
-
-    <form method="post">
-        {% csrf_token %}
-        <h2>Bank Details</h2>
+    <h1>Update Details For {{form.name.value}}</h2>
         <div class="details">
             <div class="mb-3 row">
                 <div class="col">
@@ -19,7 +15,7 @@
                     <label for="{{form.aliases.auto_id}}" class="form-label">{{ form.aliases.label }}</label>
                     <input type="text" class="form-control" id="{{form.name.auto_id}}" name="{{form.aliases.name}}" aria-describedby="{{form.aliases.name}}Help" {% if form.aliases.initial %}value="{{form.aliases.initial}}"{% endif %}>
                     <div id="{{form.aliases.name}}Help" class="form-text">{{form.aliases.help_text}}</div>
-                  </div>
+                </div>
             </div>
             <div class="mb-3 row">
                 <div class="col">
