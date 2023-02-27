@@ -182,16 +182,9 @@ class Commentary(models.Model):
         if self.inherit_brand_rating:
             self.rating = RatingChoice.INHERIT
 
+        if self.fossil_free_alliance and self.fossil_free_alliance_rating < 0:
+            self.fossil_free_alliance_rating = 0
+        elif not self.fossil_free_alliance:
+            self.fossil_free_alliance_rating = -1
+
         super(Commentary, self).save()
-
-    def clean(self):
-        if self.fossil_free_alliance and self.fossil_free_alliance_rating <= -1:
-            raise ValidationError(
-                "Brands in the Fossil Free Alliance must have FFA ratings. Use 0 if rating is unknown"
-            )
-
-        # this code is meant to be uncommented at a later time when the FFA ratings are finalized
-        if not self.fossil_free_alliance and self.fossil_free_alliance_rating > -1:
-            raise ValidationError(
-                "Brands not in the Fossil Free Alliance must have ratings set to -1"
-            )
