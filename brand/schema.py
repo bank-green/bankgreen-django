@@ -2,17 +2,15 @@ import graphene
 from django_countries.graphql.types import Country
 from graphene import Scalar, relay
 from graphene_django import DjangoObjectType
-from graphene_django.filter import DjangoFilterConnectionField
+from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
 from django_countries.graphql.types import Country
 from graphene_django import DjangoListField
 from django.db.models import Count
 from django_filters import (
-    CharFilter,
     FilterSet,
     ChoiceFilter,
     BooleanFilter,
     MultipleChoiceFilter,
-    BaseInFilter,
 )
 from django_countries import countries
 from brand.models.commentary import RatingChoice
@@ -34,21 +32,6 @@ class DatasourceType(DjangoObjectType):
         interfaces = (relay.Node,)
 
 
-class FeaturesFilter(BaseInFilter, CharFilter):
-    # utility to indicate values should be comma-separated
-    pass
-
-
-class RegionsFilter(BaseInFilter, CharFilter):
-    # utility to indicate values should be comma-separated
-    pass
-
-
-class SubregionFilter(BaseInFilter, CharFilter):
-    # utility to indicate values should be comma-separated
-    pass
-
-
 class BrandFilter(FilterSet):
     choices = tuple(countries)
 
@@ -57,14 +40,18 @@ class BrandFilter(FilterSet):
     def filter_countries(self, queryset, name, value):
         return queryset.filter(countries__contains=value).order_by("name")
 
-    regions = RegionsFilter(method="filter_regions")
+    regions = TypedFilter(
+        method="filter_regions", lookup_expr="in", input_type=graphene.List(graphene.String)
+    )
 
     def filter_regions(self, queryset, name, value):
         return queryset.filter(
             Q(regions__name_ascii__in=value) | Q(regions__geoname_code__in=value)
         )
 
-    subregions = SubregionFilter(method="filter_subregions")
+    subregions = TypedFilter(
+        method="filter_subregions", lookup_expr="in", input_type=graphene.List(graphene.String)
+    )
 
     def filter_subregions(self, queryset, name, value):
         return queryset.filter(
@@ -81,7 +68,9 @@ class BrandFilter(FilterSet):
 
     display_on_website = BooleanFilter(field_name="commentary__display_on_website")
 
-    features = FeaturesFilter(method="filter_features")
+    features = TypedFilter(
+        method="filter_features", lookup_expr="in", input_type=graphene.List(graphene.String)
+    )
 
     fossil_free_alliance = BooleanFilter(field_name="commentary__fossil_free_alliance")
 
