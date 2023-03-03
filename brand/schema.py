@@ -205,6 +205,7 @@ class CommentaryType(DjangoObjectType):
             "show_on_sustainable_banks_page",
         ]
         interfaces = (relay.Node,)
+        convert_choices_to_enum = False
 
 
 class FeatureTypeType(DjangoObjectType):
@@ -226,6 +227,7 @@ class BrandFeatureType(DjangoObjectType):
     class Meta:
         model = BrandFeature
         fields = "__all__"
+        convert_choices_to_enum = False
 
 
 class Query(graphene.ObjectType):
