@@ -6,12 +6,7 @@ from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
 from django_countries.graphql.types import Country
 from graphene_django import DjangoListField
 from django.db.models import Count
-from django_filters import (
-    FilterSet,
-    ChoiceFilter,
-    BooleanFilter,
-    MultipleChoiceFilter,
-)
+from django_filters import FilterSet, ChoiceFilter, BooleanFilter, MultipleChoiceFilter
 from django_countries import countries
 from brand.models.commentary import RatingChoice
 
