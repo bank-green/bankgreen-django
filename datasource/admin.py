@@ -234,6 +234,8 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     @admin.action(description='Create new related Brand and copy data')
     def add_to_Brands(self, request, queryset):
         self.message_user(request, 'Test Successful', messages.SUCCESS)
+        for object in queryset:
+            print(object)
 
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])
