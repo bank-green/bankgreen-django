@@ -31,6 +31,7 @@ class CommentaryInline(admin.StackedInline):
     fk_name = "brand"
     model = Commentary
     form = RecommendedInOverrideForm
+    autocomplete_fields = ["inherit_brand_rating"]
 
     readonly_fields = ("rating_inherited",)
     fieldsets = (
@@ -99,6 +100,13 @@ class BrandFeatureAdmin(admin.ModelAdmin):
 
 
 class CountriesWidgetOverrideForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea(attrs={"rows": 2, "cols": 100}))
+    rssd = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
+    lei = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
+    fdic_cert = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
+    ncua = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
+    permid = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
+
     class Meta:
         widgets = {
             "countries": FilteredSelectMultiple("countries", is_stacked=False),
@@ -239,15 +247,13 @@ class BrandAdmin(admin.ModelAdmin):
         ("website", "aliases"),
         ("related_datasources"),
         ("suggested_associations"),
-        ("description"),
         ("countries"),
         ("regions"),
         ("subregions"),
-        ("rssd", "rssd_locked"),
-        ("lei", "lei_locked"),
-        ("permid", "permid_locked"),
-        ("ncua", "ncua_locked"),
-        ("fdic_cert", "fdic_cert_locked"),
+        ("description"),
+        ("rssd", "lei"),
+        ("fdic_cert", "ncua"),
+        ("permid"),
         # ("subsidiary_of_1", "subsidiary_of_1_pct"),
         # ("subsidiary_of_2", "subsidiary_of_2_pct"),
         # ("subsidiary_of_3", "subsidiary_of_3_pct"),
@@ -255,6 +261,7 @@ class BrandAdmin(admin.ModelAdmin):
         # "suggested_datasource",
         ("created", "modified"),
     )
+
     list_filter = (
         "commentary__display_on_website",
         "commentary__rating",
