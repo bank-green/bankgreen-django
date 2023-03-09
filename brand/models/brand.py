@@ -214,7 +214,7 @@ class Brand(TimeStampedModel):
             self.refresh_countries()
 
     @classmethod
-    def create_brand_from_datasource(self, banks: List) -> Tuple[List, List]:
+    def create_brand_from_banktrack(self, banks: List) -> Tuple[List, List]:
         brands_updated, brands_created = [], []
 
         for bank in banks:
