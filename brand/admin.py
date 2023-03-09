@@ -112,7 +112,6 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
             "countries": FilteredSelectMultiple("countries", is_stacked=False),
             "regions": FilteredSelectMultiple("regions", is_stacked=False),
         }
-        fields = ["description", "permid"]
 
     def clean(self):
         """
