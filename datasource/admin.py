@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db import models
 from django.urls import reverse
 from django.utils.html import escape, format_html
@@ -228,6 +228,12 @@ class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
 @admin.register(Usnic)
 class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
+
+    actions = ['add_to_Brands']
+
+    @admin.action(description='Create new related Brand and copy data')
+    def add_to_Brands(self, request, queryset):
+        self.message_user(request, 'Test Successful', messages.SUCCESS)
 
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])
