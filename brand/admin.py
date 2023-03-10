@@ -88,8 +88,8 @@ class DatasourceInline(admin.StackedInline):
 
 class BrandFeaturesReadonlyInline(admin.StackedInline):
     model = BrandFeature
-    fields = (("feature", "offered", "details"),)
-    readonly_fields = ["feature", "offered", "details"]
+    fields = (("feature", "details"),)
+    readonly_fields = ["feature", "details"]
 
 
 @admin.register(FeatureType)
@@ -106,6 +106,15 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
     fdic_cert = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
     ncua = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
     permid = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
+
+    def __init__(self, *args, **kwargs):
+        super(forms.ModelForm, self).__init__(*args, **kwargs)
+        self.fields["description"].required = False
+        self.fields["rssd"].required = False
+        self.fields["lei"].required = False
+        self.fields["fdic_cert"].required = False
+        self.fields["ncua"].required = False
+        self.fields["permid"].required = False
 
     class Meta:
         widgets = {
@@ -130,26 +139,39 @@ admin.site.unregister(SubRegion)
 class BrandUpdateAdmin(admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
     fields = BrandUpdate.UPDATE_FIELDS + ["additional_info", "email", "consent"]
-    readonly_fields = ["name", "aliases", "description", "website", "bank_features"]
-    inlines = [BrandFeaturesReadonlyInline]
-    list_display = ("short_name", "update_tag")
+    readonly_fields = ["name", "aliases", "website", "bank_features"]
+    inlines = [BrandFeaturesInline]
+    autocomplete_fields = ["subregions"]
+
+    list_display = ("short_name", "update_tag", "created", "email")
 
     def save_model(self, request, obj, form, change):
         original = Brand.objects.get(tag=obj.update_tag)
 
         # overwrite all fields with values from updates
         for field in BrandUpdate.UPDATE_FIELDS:
-            value = getattr(obj, field)
-            setattr(original, field, value)
+            if field != "regions" and field != "subregions":
+                value = getattr(obj, field)
+                setattr(original, field, value)
+
+        # overwrite regions
+        original.regions.set(obj.regions.all())
+        original.subregions.set(obj.subregions.all())
 
         # overwrite features with features from update
-        BrandFeature.objects.filter(brand=original).delete()
+        original.bank_features.all().delete()
         original.bank_features.set(obj.bank_features.all())
-
         original.save()
 
-        # delete brand update
-        obj.delete()
+        # deleting regions prevents form validation errors
+        # obj.regions.all().delete()
+        # obj.subregions.all().delete()
+        # obj.save()
+
+        # deleting the object results in a an error with regions in forms/models.py _save_m2m
+        # and creates a validation error. This has to do with how regions and subregions are configured.
+        # It's comented out for now.
+        # obj.delete()
 
 
 @admin.register(SubRegion)
