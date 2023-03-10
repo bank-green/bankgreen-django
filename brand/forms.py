@@ -44,9 +44,8 @@ class BrandFeaturesForm(forms.ModelForm):
         super(BrandFeaturesForm, self).__init__(*args, **kwargs)
 
         self.fields["feature"].widget.attrs["class"] = "form-select"
-        self.fields["offered"].widget.attrs["class"] = "form-select"
         self.fields["details"].widget.attrs["class"] = "form-control"
 
     class Meta:
         model = BrandFeature
-        fields = ["offered", "details", "feature"]
+        fields = ["details", "feature"]
