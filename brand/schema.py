@@ -22,8 +22,17 @@ from cities_light.models import Region, SubRegion
 
 
 class DatasourceType(DjangoObjectType):
+    subclass = graphene.String()
+
+    def resolve_subclass(obj, info):
+        try:
+            return type(obj.subclass()).__name__
+        except NotImplementedError:
+            return None
+
     class Meta:
         model = Datasource
+        fields = ("name", "source_link")
         interfaces = (relay.Node,)
 
 
@@ -128,6 +137,7 @@ class BrandNodeType(DjangoObjectType):
             "aliases",
             "regions",
             "subregions",
+            "datasources",
         ]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
@@ -152,6 +162,7 @@ class BrandType(DjangoObjectType):
             "bank_features",
             "regions",
             "subregions",
+            "datasources",
         )
 
 
