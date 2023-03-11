@@ -221,6 +221,28 @@ class Brand(TimeStampedModel):
         return (brands_created, brands_updated)
 
     @classmethod
+    def create_brand_from_usnic(self, banks: list) -> list:
+        brands_created, brands_updated = [], []
+
+        for bank in banks:
+            tag = bank.tag.replace(bank.tag_prepend_str, "")
+
+            # brand must be saved to bank after brand creation for refresh methods to work
+            brand, created = Brand.objects.get_or_create(tag=tag)
+            bank.brand = brand
+            bank.save()
+
+            brand.refresh(name=True, description=True, overwrite_existing=False)
+            brand.save()
+
+            if created:
+                brands_created.append(brand)
+            else:
+                brands_updated.append(brand)
+
+        return brands_created
+
+    @classmethod
     def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
         if (
             value
