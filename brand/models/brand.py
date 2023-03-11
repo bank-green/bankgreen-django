@@ -221,7 +221,7 @@ class Brand(TimeStampedModel):
         return (brands_created, brands_updated)
 
     @classmethod
-    def create_brand_from_usnic(self, banks: list) -> list:
+    def create_brand_from_usnic(self, banks: List) -> Tuple(List, List):
         brands_created, brands_updated = [], []
 
         for bank in banks:
@@ -240,7 +240,7 @@ class Brand(TimeStampedModel):
             else:
                 brands_updated.append(brand)
 
-        return brands_created
+        return (brands_created, brands_updated)
 
     @classmethod
     def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
