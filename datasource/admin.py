@@ -235,8 +235,15 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     def add_to_Brands(self, request, queryset):
         self.message_user(request, 'Test Successful', messages.SUCCESS)
 
-        brands_created, brands_updated = Brand.create_brand_from_usnic(queryset.objects.all())
-        print(len(brands_created), len(brands_updated))
+        for bank in queryset.values():
+            brand = Brand(
+                tag = bank['source_id'], id = bank['id'], name = bank['name'],
+                countries = bank['country'], lei = bank['lei'], ein = bank['ein'],
+                rssd = bank['rssd'], cusip = bank['cusip'],
+                thrift = bank['thrift'], thrift_hc = bank['thrift_hc'],
+                aba_prim = bank['aba_prim'], ncua = bank['ncua'],
+                fdic_cert = bank['fdic_cert'], occ = bank['occ'])
+            brand.save()
 
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])
