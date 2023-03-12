@@ -225,10 +225,8 @@ class Brand(TimeStampedModel):
         brands_created, brands_updated = [], []
 
         for bank in banks:
-            tag = bank.tag.replace(bank.tag_prepend_str, "")
-
             # brand must be saved to bank after brand creation for refresh methods to work
-            brand, created = Brand.objects.get_or_create(tag=tag)
+            brand, created = Brand.objects.get_or_create(name=name)
             bank.brand = brand
             bank.save()
 
