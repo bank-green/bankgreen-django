@@ -245,6 +245,16 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
                 fdic_cert = bank['fdic_cert'], occ = bank['occ'])
             brand.save()
 
+            # Add regions, if any
+            if 'regions' in list(bank.keys()):
+                for region in bank['regions']:
+                    brand.regions.add(region)
+
+            # Add subregions, if any
+            if 'subregions' in list(bank.keys()):
+                for subregion in bank['subregions']:
+                    brand.regions.add(subregion)
+
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])
 
