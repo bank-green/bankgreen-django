@@ -233,7 +233,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
 
     @admin.action(description='Create new related Brand and copy data')
     def add_to_Brands(self, request, queryset):
-        self.message_user(request, 'Test Successful', messages.SUCCESS)
+        self.message_user(request, 'Successfully added new brand', messages.SUCCESS)
 
         for bank in queryset.values():
             brand = Brand(
