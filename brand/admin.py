@@ -5,8 +5,9 @@ from django.urls import reverse
 from django.utils.html import escape, format_html
 
 from cities_light.admin import SubRegionAdmin
-from cities_light.models import SubRegion
+from cities_light.models import Region, SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
+from django_countries.fields import Country
 
 from brand.admin_utils import (
     LinkedDatasourcesFilter,
@@ -126,8 +127,8 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
         """
         Checks that all regions have countries associated.
         """
-        raise_validation_error_for_missing_country(self)
-        raise_validation_error_for_missing_region(self)
+        # raise_validation_error_for_missing_country(self)
+        # raise_validation_error_for_missing_region(self)
 
         return self.cleaned_data
 
@@ -143,7 +144,8 @@ class BrandUpdateAdmin(admin.ModelAdmin):
     inlines = [BrandFeaturesInline]
     autocomplete_fields = ["subregions"]
 
-    list_display = ("short_name", "update_tag", "created", "email")
+    list_display = ("short_name", "update_tag", "created", "email", "merged")
+    list_filter = ("merged",)
 
     def save_model(self, request, obj, form, change):
         original = Brand.objects.get(tag=obj.update_tag)
@@ -154,19 +156,45 @@ class BrandUpdateAdmin(admin.ModelAdmin):
                 value = getattr(obj, field)
                 setattr(original, field, value)
 
-        # overwrite regions
-        original.regions.set(obj.regions.all())
-        original.subregions.set(obj.subregions.all())
+        # combine country, regions, and subregions
+        # if a country or region is not explicitly specified, add it
+        combined_subregions = obj.subregions.all() | original.subregions.all()
+        original.subregions.set(combined_subregions.distinct())
 
-        # overwrite features with features from update
+        combined_regions = (
+            obj.regions.all()
+            | original.regions.all()
+            | Region.objects.filter(id__in=[x.region.id for x in combined_subregions])
+        ).distinct()
+        original.regions.set(combined_regions)
+
+        implied_countries = set([x.country.code2 for x in combined_regions])
+        implied_countries = set([Country(x) for x in implied_countries])
+
+        combined_countries = set(obj.countries).union(implied_countries)
+        original.countries = list(combined_countries)
+
+        # It's possible for there to be duplicate feature types.
+        # in these cases, delete the original bank features with the same type
+        og_features = original.bank_features.all()
+        new_features = obj.bank_features.all()
+
+        new_feature_set = set([x.feature for x in new_features])
+        intersecting_features = [x.feature for x in og_features if x.feature in new_feature_set]
+
+        for x in intersecting_features:
+            og = og_features.filter(feature=x).first()
+            og_features = og_features.exclude(id=og.id)
+
+        new_combined_features = og_features | new_features
+
         original.bank_features.all().delete()
-        original.bank_features.set(obj.bank_features.all())
+        original.bank_features.set(new_combined_features)
+
         original.save()
 
-        # deleting regions prevents form validation errors
-        # obj.regions.all().delete()
-        # obj.subregions.all().delete()
-        # obj.save()
+        obj.merged = True
+        obj.save()
 
         # deleting the object results in a an error with regions in forms/models.py _save_m2m
         # and creates a validation error. This has to do with how regions and subregions are configured.
