@@ -52,6 +52,15 @@ query BrandsQuery(
           }
           details
         }
+        datasources {
+          edges {
+            node {
+              name
+              sourceLink
+              subclass
+            }
+          }
+        }
       }
     }
   }
@@ -100,6 +109,15 @@ query BrandByTagQuery($tag: String!) {
         name
       }
       details
+    }
+    datasources {
+      edges {
+        node {
+          name
+          sourceLink
+          subclass
+        }
+      }
     }
   }
 }
@@ -171,6 +189,15 @@ query BrandsQuery(
             name
           }
           details
+        }
+        datasources {
+          edges {
+            node {
+              name
+              sourceLink
+              subclass
+            }
+          }
         }
       }
     }
