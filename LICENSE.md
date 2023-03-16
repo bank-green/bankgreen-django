@@ -1,0 +1,1 @@
+Please email hello@bank.green to ask for rights to use this code.
