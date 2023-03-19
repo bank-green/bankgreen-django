@@ -233,10 +233,15 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
 
     @admin.action(description="Create new related Brand and copy data")
     def add_to_brands(self, request, queryset):
+        """
+        Adds new brands with USNIC data and displays appropriate message to user.
+        """
         existing_brands, successful_brands = [], []
         for bank in queryset.values():
+            # Don't create new brand if it already exists
             if bank["source_id"] in [x.tag for x in Brand.objects.all()]:
                 existing_brands.append(bank["name"])
+            # Otherwise create new brand with USNIC data
             else:
                 Brand.create_brand_from_usnic(bank)
                 successful_brands.append(bank["name"])
