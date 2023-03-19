@@ -234,14 +234,17 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     @admin.action(description='Create new related Brand and copy data')
     def add_to_brands(self, request, queryset):
         for bank in queryset.values():
-            brand = Brand(
-                tag = bank['source_id'], id = bank['id'], name = bank['name'],
-                countries = bank['country'], lei = bank['lei'], ein = bank['ein'],
-                rssd = bank['rssd'], cusip = bank['cusip'],
-                thrift = bank['thrift'], thrift_hc = bank['thrift_hc'],
-                aba_prim = bank['aba_prim'], ncua = bank['ncua'],
-                fdic_cert = bank['fdic_cert'], occ = bank['occ'])
-            brand.save()
+            if bank['source_id'] in [x.tag for x in Brand.objects.all()]:
+                self.message_user(request, f"Brand corresponding to USNIC entry {bank['name']} already exists")
+            else:
+                brand = Brand(
+                    tag = bank['source_id'], id = bank['id'], name = bank['name'],
+                    countries = bank['country'], lei = bank['lei'], ein = bank['ein'],
+                    rssd = bank['rssd'], cusip = bank['cusip'],
+                    thrift = bank['thrift'], thrift_hc = bank['thrift_hc'],
+                    aba_prim = bank['aba_prim'], ncua = bank['ncua'],
+                    fdic_cert = bank['fdic_cert'], occ = bank['occ'])
+                brand.save()
 
             # Add regions, if any
             if 'regions' in list(bank.keys()):
@@ -254,7 +257,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
                     brand.regions.add(subregion)
 
         # Display success message if all went well
-        self.message_user(request, 'Successfully added new brand', messages.SUCCESS)
+        self.message_user(request, 'Successfully added new brand(s)', messages.SUCCESS)
 
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])
