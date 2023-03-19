@@ -221,6 +221,36 @@ class Brand(TimeStampedModel):
         return (brands_created, brands_updated)
 
     @classmethod
+    def create_brand_from_usnic(self, bank: dsm.Usnic) -> None:
+        brand = Brand(
+            tag=bank["source_id"],
+            id=bank["id"],
+            name=bank["name"],
+            countries=bank["country"],
+            lei=bank["lei"],
+            ein=bank["ein"],
+            rssd=bank["rssd"],
+            cusip=bank["cusip"],
+            thrift=bank["thrift"],
+            thrift_hc=bank["thrift_hc"],
+            aba_prim=bank["aba_prim"],
+            ncua=bank["ncua"],
+            fdic_cert=bank["fdic_cert"],
+            occ=bank["occ"],
+        )
+        brand.save()
+
+        # Add regions, if any
+        if "regions" in list(bank.keys()):
+            for region in bank["regions"]:
+                brand.regions.add(region)
+
+        # Add subregions, if any
+        if "subregions" in list(bank.keys()):
+            for subregion in bank["subregions"]:
+                brand.regions.add(subregion)
+
+    @classmethod
     def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
         if (
             value
