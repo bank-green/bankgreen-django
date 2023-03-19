@@ -235,7 +235,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     def add_to_brands(self, request, queryset):
         for bank in queryset.values():
             if bank['source_id'] in [x.tag for x in Brand.objects.all()]:
-                self.message_user(request, f"Brand corresponding to USNIC entry {bank['name']} already exists")
+                self.message_user(request, f"A brand corresponding to {bank['name']} already exists", messages.WARNING)
             else:
                 brand = Brand(
                     tag = bank['source_id'], id = bank['id'], name = bank['name'],
@@ -246,18 +246,18 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
                     fdic_cert = bank['fdic_cert'], occ = bank['occ'])
                 brand.save()
 
-            # Add regions, if any
-            if 'regions' in list(bank.keys()):
-                for region in bank['regions']:
-                    brand.regions.add(region)
+                # Add regions, if any
+                if 'regions' in list(bank.keys()):
+                    for region in bank['regions']:
+                        brand.regions.add(region)
 
-            # Add subregions, if any
-            if 'subregions' in list(bank.keys()):
-                for subregion in bank['subregions']:
-                    brand.regions.add(subregion)
+                # Add subregions, if any
+                if 'subregions' in list(bank.keys()):
+                    for subregion in bank['subregions']:
+                        brand.regions.add(subregion)
 
-        # Display success message if all went well
-        self.message_user(request, 'Successfully added new brand(s)', messages.SUCCESS)
+                # Display success message if all went well
+                self.message_user(request, f"Successfully added new brand {bank['name']}", messages.SUCCESS)
 
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])
