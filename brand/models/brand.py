@@ -200,6 +200,9 @@ class Brand(TimeStampedModel):
 
     @classmethod
     def create_brand_from_banktrack(self, banks: List) -> Tuple[List, List]:
+        """
+        Add new brand to database using banktrack data.
+        """
         brands_updated, brands_created = [], []
 
         for bank in banks:
@@ -222,6 +225,9 @@ class Brand(TimeStampedModel):
 
     @classmethod
     def create_brand_from_usnic(self, bank: dsm.Usnic) -> None:
+        """
+        Add new brand to database using USNIC data.
+        """
         brand = Brand(
             tag=bank["source_id"],
             id=bank["id"],
