@@ -265,7 +265,6 @@ class Brand(TimeStampedModel):
                     for subregion in bank["subregions"]:
                         brand.regions.add(subregion)
 
-
                 successful_brands.append(bank["name"])
 
         return existing_brands, successful_brands
