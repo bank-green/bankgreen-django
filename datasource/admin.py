@@ -229,10 +229,10 @@ class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
 class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
 
-    actions = ['add_to_Brands']
+    actions = ['add_to_brands']
 
     @admin.action(description='Create new related Brand and copy data')
-    def add_to_Brands(self, request, queryset):
+    def add_to_brands(self, request, queryset):
         self.message_user(request, 'Successfully added new brand', messages.SUCCESS)
 
         for bank in queryset.values():
