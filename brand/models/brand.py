@@ -201,7 +201,7 @@ class Brand(TimeStampedModel):
     @classmethod
     def create_brand_from_banktrack(self, banks: List) -> Tuple[List, List]:
         """
-        Add new brand to database using banktrack data.
+        Add new brands to database using banktrack data.
         """
         brands_updated, brands_created = [], []
 
@@ -224,37 +224,51 @@ class Brand(TimeStampedModel):
         return (brands_created, brands_updated)
 
     @classmethod
-    def create_brand_from_usnic(self, bank) -> None:
+    def create_brand_from_usnic(self, banks: list) -> Tuple(list, list):
         """
-        Add new brand to database using USNIC data.
+        Add new brands to database using USNIC data.
         """
-        brand = Brand(
-            tag=bank["source_id"],
-            id=bank["id"],
-            name=bank["name"],
-            countries=bank["country"],
-            lei=bank["lei"],
-            ein=bank["ein"],
-            rssd=bank["rssd"],
-            cusip=bank["cusip"],
-            thrift=bank["thrift"],
-            thrift_hc=bank["thrift_hc"],
-            aba_prim=bank["aba_prim"],
-            ncua=bank["ncua"],
-            fdic_cert=bank["fdic_cert"],
-            occ=bank["occ"],
-        )
-        brand.save()
+        existing_brands, successful_brands = [], []
 
-        # Add regions, if any
-        if "regions" in list(bank.keys()):
-            for region in bank["regions"]:
-                brand.regions.add(region)
+        for bank in queryset.values():
+            # Don't create new brand if it already exists
+            if bank["source_id"] in [x.tag for x in Brand.objects.all()]:
+                existing_brands.append(bank["name"])
+            # Otherwise create new brand with USNIC data
+            else:
+                Brand.create_brand_from_usnic(bank)
+                brand = Brand(
+                    tag=bank["source_id"],
+                    id=bank["id"],
+                    name=bank["name"],
+                    countries=bank["country"],
+                    lei=bank["lei"],
+                    ein=bank["ein"],
+                    rssd=bank["rssd"],
+                    cusip=bank["cusip"],
+                    thrift=bank["thrift"],
+                    thrift_hc=bank["thrift_hc"],
+                    aba_prim=bank["aba_prim"],
+                    ncua=bank["ncua"],
+                    fdic_cert=bank["fdic_cert"],
+                    occ=bank["occ"],
+                )
+                brand.save()
 
-        # Add subregions, if any
-        if "subregions" in list(bank.keys()):
-            for subregion in bank["subregions"]:
-                brand.regions.add(subregion)
+                # Add regions, if any
+                if "regions" in list(bank.keys()):
+                    for region in bank["regions"]:
+                        brand.regions.add(region)
+
+                # Add subregions, if any
+                if "subregions" in list(bank.keys()):
+                    for subregion in bank["subregions"]:
+                        brand.regions.add(subregion)
+
+
+                successful_brands.append(bank["name"])
+
+        return existing_brands, successful_brands
 
     @classmethod
     def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
