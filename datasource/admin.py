@@ -229,43 +229,60 @@ class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
 class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
 
-    actions = ['add_to_brands']
+    actions = ["add_to_brands"]
 
-    @admin.action(description='Create new related Brand and copy data')
+    @admin.action(description="Create new related Brand and copy data")
     def add_to_brands(self, request, queryset):
         existing_brands, successful_brands = [], []
         for bank in queryset.values():
-            if bank['source_id'] in [x.tag for x in Brand.objects.all()]:
-                existing_brands.append(bank['name'])
+            if bank["source_id"] in [x.tag for x in Brand.objects.all()]:
+                existing_brands.append(bank["name"])
             else:
                 brand = Brand(
-                    tag = bank['source_id'], id = bank['id'], name = bank['name'],
-                    countries = bank['country'], lei = bank['lei'], ein = bank['ein'],
-                    rssd = bank['rssd'], cusip = bank['cusip'],
-                    thrift = bank['thrift'], thrift_hc = bank['thrift_hc'],
-                    aba_prim = bank['aba_prim'], ncua = bank['ncua'],
-                    fdic_cert = bank['fdic_cert'], occ = bank['occ'])
+                    tag=bank["source_id"],
+                    id=bank["id"],
+                    name=bank["name"],
+                    countries=bank["country"],
+                    lei=bank["lei"],
+                    ein=bank["ein"],
+                    rssd=bank["rssd"],
+                    cusip=bank["cusip"],
+                    thrift=bank["thrift"],
+                    thrift_hc=bank["thrift_hc"],
+                    aba_prim=bank["aba_prim"],
+                    ncua=bank["ncua"],
+                    fdic_cert=bank["fdic_cert"],
+                    occ=bank["occ"],
+                )
                 brand.save()
 
                 # Add regions, if any
-                if 'regions' in list(bank.keys()):
-                    for region in bank['regions']:
+                if "regions" in list(bank.keys()):
+                    for region in bank["regions"]:
                         brand.regions.add(region)
 
                 # Add subregions, if any
-                if 'subregions' in list(bank.keys()):
-                    for subregion in bank['subregions']:
+                if "subregions" in list(bank.keys()):
+                    for subregion in bank["subregions"]:
                         brand.regions.add(subregion)
 
-                successful_brands.append(bank['name'])
+                successful_brands.append(bank["name"])
 
         # Display warning message for already existing brands
         if len(existing_brands) > 0:
-            self.message_user(request, f"Brands corresponding to {', '.join(existing_brands)} already exist", messages.WARNING)
+            self.message_user(
+                request,
+                f"Brands corresponding to {', '.join(existing_brands)} already exist",
+                messages.WARNING,
+            )
 
         # Display success message for successfully added brands
         if len(successful_brands) > 0:
-            self.message_user(request, f"Successfully added new brands {', '.join(successful_brands)}", messages.SUCCESS)
+            self.message_user(
+                request,
+                f"Successfully added new brands {', '.join(successful_brands)}",
+                messages.SUCCESS,
+            )
 
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])

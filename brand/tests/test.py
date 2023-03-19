@@ -41,7 +41,7 @@ class BrandTestCase(TestCase):
         self.assertTrue(spelling_dict.get("another lei"), 200)
 
     def test_create_brand_from_banktrack(self):
-    # When a bank with duplicate source_id is sent, it should be merged into an existing bank
+        # When a bank with duplicate source_id is sent, it should be merged into an existing bank
         brands_created, brands_updated = Brand.create_brand_from_banktrack([self.test_bank])
         self.assertEqual(len(brands_created), 1)
         self.assertEqual(len(brands_updated), 0)
@@ -93,6 +93,7 @@ class BrandDatasourceTestCase(TestCase):
             countries="TW",
             tag=Banktrack.tag_prepend_str + "sad_aborted_pawn",
         )
+
 
 # commented out until we finish reworking the brand-datasource association
 #
