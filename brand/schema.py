@@ -89,7 +89,6 @@ class BrandFilter(FilterSet):
         )
 
     def filter_rating(self, queryset, name, value):
-
         # ratings matching the query exactly
         direct_matches_qs = queryset.filter(commentary__rating__in=value)
 
@@ -143,29 +142,6 @@ class BrandNodeType(DjangoObjectType):
         filterset_class = BrandFilter
 
 
-class BrandType(DjangoObjectType):
-    """ " """
-
-    countries = graphene.List(Country)
-    regions = RegionType
-    subregions = SubregionType
-
-    class Meta:
-        model = Brand
-        # filter_fields = ["tag"]
-        fields = (
-            "tag",
-            "name",
-            "website",
-            "countries",
-            "commentary",
-            "bank_features",
-            "regions",
-            "subregions",
-            "datasources",
-        )
-
-
 class HtmlFromMarkdown(Scalar):
     """Markdown parsed into HTML"""
 
@@ -177,7 +153,6 @@ class HtmlFromMarkdown(Scalar):
 
 
 class CommentaryType(DjangoObjectType):
-
     summary = HtmlFromMarkdown()
     header = HtmlFromMarkdown()
     details = HtmlFromMarkdown()
@@ -216,10 +191,11 @@ class BrandFeatureType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
+    node = relay.Node.Field()
     commentary = relay.Node.Field(CommentaryType)
     commentaries = DjangoFilterConnectionField(CommentaryType)
 
-    brand = graphene.Field(BrandType, tag=graphene.String())
+    brand = graphene.Field(BrandNodeType, tag=graphene.Argument(graphene.String, required=True))
 
     def resolve_brand(root, info, tag):
         return Brand.objects.get(tag=tag)
