@@ -1,7 +1,7 @@
 from django.test import TestCase
 from brand.tests.utils import create_test_brands
 
-from datasource.models import Banktrack
+from datasource.models import Banktrack, Usnic
 
 from ..models import Brand
 
@@ -16,6 +16,24 @@ class BrandTestCase(TestCase):
             website="test_website",
             countries="TW",
             tag=Banktrack.tag_prepend_str + "unique_source_id",
+        )
+        self.test_usnic1 = Usnic.objects.create(
+            source_id="unique_source_id1",
+            source_link="abc",
+            name="test_bank1",
+            website="test_website",
+        )
+        self.test_usnic2 = Usnic.objects.create(
+            source_id="unique_source_id2",
+            source_link="abc",
+            name="test_bank2",
+            website="test_website",
+        )
+        self.test_usnic3 = Usnic.objects.create(
+            source_id="unique_source_id3",
+            source_link="abc",
+            name="test_bank3",
+            website="test_website",
         )
         self.brand1, self.brand2 = create_test_brands()
 
