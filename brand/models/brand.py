@@ -224,7 +224,7 @@ class Brand(TimeStampedModel):
         return (brands_created, brands_updated)
 
     @classmethod
-    def create_brand_from_usnic(self, bank: dsm.Usnic) -> None:
+    def create_brand_from_usnic(self, bank) -> None:
         """
         Add new brand to database using USNIC data.
         """
