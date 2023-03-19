@@ -233,9 +233,10 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
 
     @admin.action(description='Create new related Brand and copy data')
     def add_to_brands(self, request, queryset):
+        existing_brands, successful_brands = [], []
         for bank in queryset.values():
             if bank['source_id'] in [x.tag for x in Brand.objects.all()]:
-                self.message_user(request, f"A brand corresponding to {bank['name']} already exists", messages.WARNING)
+                existing_brands.append(bank['name'])
             else:
                 brand = Brand(
                     tag = bank['source_id'], id = bank['id'], name = bank['name'],
@@ -256,8 +257,15 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
                     for subregion in bank['subregions']:
                         brand.regions.add(subregion)
 
-                # Display success message if all went well
-                self.message_user(request, f"Successfully added new brand {bank['name']}", messages.SUCCESS)
+                successful_brands.append(bank['name'])
+
+        # Display warning message for already existing brands
+        if len(existing_brands) > 0:
+            self.message_user(request, f"Brands corresponding to {', '.join(existing_brands)} already exist", messages.WARNING)
+
+        # Display success message for successfully added brands
+        if len(successful_brands) > 0:
+            self.message_user(request, f"Successfully added new brands {', '.join(successful_brands)}", messages.SUCCESS)
 
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])
