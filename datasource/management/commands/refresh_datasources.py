@@ -73,7 +73,7 @@ class Command(BaseCommand):
         )
 
         # Do not automatically create brands from banktrack because this should be a manual process
-        # brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
+        # brands_created, brands_updated = Brand.create_brand_from_banktrack(banks)
         # self.output_brand_creation(brands_created, brands_updated, Bimpact)
 
     def refresh_banktrack(self, options):
@@ -88,7 +88,7 @@ class Command(BaseCommand):
             )
         )
 
-        brands_created, brands_updated = Brand.create_brand_from_datasource(banks)
+        brands_created, brands_updated = Brand.create_brand_from_banktrack(banks)
         self.output_brand_creation(brands_created, brands_updated, Banktrack)
 
     def refresh_wikidata(self, options):
