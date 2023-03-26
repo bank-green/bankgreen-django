@@ -117,7 +117,6 @@ class HasSuggestedAssociationsFilter(admin.SimpleListFilter):
         return queryset
 
 
-@admin.register(Datasource)
 class DatasourceAdmin(admin.ModelAdmin):
     list_display = ["name", "source_id"]
     search_fields = ["name", "source_id"]

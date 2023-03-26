@@ -29,3 +29,5 @@ class BrandUpdate(Brand):
         unique=False,
         help_text=("the tag we use or this brand record at Bank.Green. ",),
     )
+
+    merged = models.BooleanField(default=False)
