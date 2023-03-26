@@ -230,7 +230,7 @@ class Brand(TimeStampedModel):
         Add new brands to database using USNIC data. Also checks for banks controlled by
         chosen Usnic entries.
         """
-        existing_brands, successful_brands= [], []
+        existing_brands, successful_brands = [], []
 
         for bank in banks:
             # Don't create new brand if it already exists

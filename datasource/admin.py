@@ -257,15 +257,15 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         child_brands = {}
         for bank in queryset.values():
             for item in Usnic.objects.all().values():
-                if len(item['control']) > 0:
-                    for child in list(item['control'].values()):
+                if len(item["control"]) > 0:
+                    for child in list(item["control"].values()):
                         if not isinstance(child, str):
-                            if child['parent_rssd'] == int(bank['rssd']):
-                                controlled_bank = {'name': item['name'], 'rssd': item['rssd']}
-                                if bank['name'] not in list(child_brands.keys()):
-                                    child_brands[bank['name']] = [controlled_bank]
+                            if child["parent_rssd"] == int(bank["rssd"]):
+                                controlled_bank = {"name": item["name"], "rssd": item["rssd"]}
+                                if bank["name"] not in list(child_brands.keys()):
+                                    child_brands[bank["name"]] = [controlled_bank]
                                 else:
-                                    child_brands[bank['name']].append(controlled_bank)
+                                    child_brands[bank["name"]].append(controlled_bank)
 
         # Display warning message for child brands
         for parent, children in child_brands.items():
@@ -273,9 +273,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
             for child in children:
                 children_string += f"Name: {child['name']}, RSSD: {child['rssd']}\n"
             self.message_user(
-                request,
-                f"Child Brands for {parent}:\n" + children_string,
-                messages.WARNING,
+                request, f"Child Brands for {parent}:\n" + children_string, messages.WARNING
             )
 
     def branch_regions(self, obj):
