@@ -235,7 +235,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         """
         Adds new brands with USNIC data and displays appropriate message to user.
         """
-        existing_brands, successful_brands, child_brands = Brand.create_brand_from_usnic(queryset.values())
+        existing_brands, successful_brands = Brand.create_brand_from_usnic(queryset.values())
 
         # Display success message for successfully added brands
         if len(successful_brands) > 0:
