@@ -253,6 +253,19 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
                 messages.WARNING,
             )
 
+        # Check for 'child' banks controlled by chosen Usnic entries
+        for bank in queryset.values():
+            for item in Usnic.objects.all().values():
+                if len(item['control']) > 0:
+                    for child in list(item['control'].values()):
+                        if not isinstance(child, str):
+                            if child['parent_rssd'] == int(bank['rssd']):
+                                controlled_bank = {'name': item['name'], 'rssd': item['rssd']}
+                                if bank['name'] not in list(child_brands.keys()):
+                                    child_brands[bank['name']] = [controlled_bank]
+                                else:
+                                    child_brands[bank['name']].append(controlled_bank)
+
         # Display warning message for child brands
         for parent, children in child_brands.items():
             children_string = ""
