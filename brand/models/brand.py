@@ -274,10 +274,11 @@ class Brand(TimeStampedModel):
                     for child in list(item['control'].values()):
                         if not isinstance(child, str):
                             if child['parent_rssd'] == int(bank['rssd']):
+                                controlled_bank = {'name': item['name'], 'rssd': item['rssd']}
                                 if bank['name'] not in list(child_brands.keys()):
-                                    child_brands[bank['name']] = [child]
+                                    child_brands[bank['name']] = [controlled_bank]
                                 else:
-                                    child_brands[bank['name']].append(child)
+                                    child_brands[bank['name']].append(controlled_bank)
 
         return existing_brands, successful_brands, child_brands
 
