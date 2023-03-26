@@ -271,10 +271,10 @@ class Brand(TimeStampedModel):
             # Check for 'child' banks controlled by chosen Usnic entries
             for item in Usnic.objects.all().values():
                 if len(item['control']) > 0:
-                    for parent in list(item['control'].values()):
-                        if not isinstance(parent, str):
-                            if parent['parent_rssd'] == int(bank['rssd']):
-                                child_brands.append(item['control'])
+                    for child in list(item['control'].values()):
+                        if not isinstance(child, str):
+                            if child['parent_rssd'] == int(bank['rssd']):
+                                child_brands.append(bank['name']: child)
 
         return existing_brands, successful_brands, child_brands
 
