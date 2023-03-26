@@ -79,19 +79,27 @@ class BrandTestCase(TestCase):
 
     def test_create_brand_from_usnic_new_entry(self):
         # Check that Usnic entry with no corresponding Brand is copied to Brands
-        existing_brands, successful_brands = Brand.create_brand_from_usnic(Usnic.objects.all().values()[:1])
-        self.assertEqual(len(successful_brands), 1) # Ensure only one entry added
-        self.assertEqual(len(existing_brands), 0) # Ensure no existing brands found, as usnic should not already be in Brands table
+        existing_brands, successful_brands = Brand.create_brand_from_usnic(
+            Usnic.objects.all().values()[:1]
+        )
+        self.assertEqual(len(successful_brands), 1)  # Ensure only one entry added
+        self.assertEqual(
+            len(existing_brands), 0
+        )  # Ensure no existing brands found, as usnic should not already be in Brands table
 
         # Check that only Usnic entry with no corresponding Brands are copied to Brands
-        existing_brands, successful_brands = Brand.create_brand_from_usnic(Usnic.objects.all().values()[:2])
-        self.assertEqual(len(successful_brands), 1) # Ensure only one new brand created
-        self.assertEqual(len(existing_brands), 1) # Check that existing copy of usnic is ignored
+        existing_brands, successful_brands = Brand.create_brand_from_usnic(
+            Usnic.objects.all().values()[:2]
+        )
+        self.assertEqual(len(successful_brands), 1)  # Ensure only one new brand created
+        self.assertEqual(len(existing_brands), 1)  # Check that existing copy of usnic is ignored
 
         # Check that no new Brands are created if all Usnic entries selected already exist
-        existing_brands, successful_brands = Brand.create_brand_from_usnic(Usnic.objects.all().values()[:2])
-        self.assertEqual(len(successful_brands), 0) # Ensure only one new brand created
-        self.assertEqual(len(existing_brands), 2) # Check that existing copy of usnic is ignored
+        existing_brands, successful_brands = Brand.create_brand_from_usnic(
+            Usnic.objects.all().values()[:2]
+        )
+        self.assertEqual(len(successful_brands), 0)  # Ensure only one new brand created
+        self.assertEqual(len(existing_brands), 2)  # Check that existing copies of usnic are ignored
 
 
 class BrandDatasourceTestCase(TestCase):
