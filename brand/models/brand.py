@@ -225,11 +225,12 @@ class Brand(TimeStampedModel):
         return (brands_created, brands_updated)
 
     @classmethod
-    def create_brand_from_usnic(self, banks: QuerySet) -> tuple[list, list]:
+    def create_brand_from_usnic(self, banks: QuerySet) -> tuple[list, list, list]:
         """
-        Add new brands to database using USNIC data.
+        Add new brands to database using USNIC data. Also checks for banks controlled by
+        chosen Usnic entries.
         """
-        existing_brands, successful_brands = [], []
+        existing_brands, successful_brands, child_brands = [], [], []
 
         for bank in banks:
             # Don't create new brand if it already exists
@@ -267,7 +268,15 @@ class Brand(TimeStampedModel):
 
                 successful_brands.append(bank["name"])
 
-        return existing_brands, successful_brands
+            # Check for 'child' banks controlled by chosen Usnic entries
+            for item in Usnic.objects.all().values():
+                if len(item['control']) > 0:
+                    for parent in list(item['control'].values()):
+                        if not isinstance(parent, str):
+                            if parent['parent_rssd'] == int(bank['rssd']):
+                                child_brands.append(item['control'])
+
+        return existing_brands, successful_brands, child_brands
 
     @classmethod
     def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
