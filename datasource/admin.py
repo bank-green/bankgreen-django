@@ -254,6 +254,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
             )
 
         # Check for 'child' banks controlled by chosen Usnic entries
+        child_brands = {}
         for bank in queryset.values():
             for item in Usnic.objects.all().values():
                 if len(item['control']) > 0:
