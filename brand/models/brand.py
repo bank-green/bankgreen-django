@@ -2,6 +2,7 @@ import re
 from typing import List, Tuple
 
 from django.db import models
+from django.db.models.query import QuerySet
 from django.template.defaultfilters import truncatechars
 
 from cities_light.models import Region, SubRegion
@@ -224,19 +225,18 @@ class Brand(TimeStampedModel):
         return (brands_created, brands_updated)
 
     @classmethod
-    def create_brand_from_usnic(self, banks: list) -> Tuple(list, list):
+    def create_brand_from_usnic(self, banks: QuerySet) -> tuple[list, list]:
         """
         Add new brands to database using USNIC data.
         """
         existing_brands, successful_brands = [], []
 
-        for bank in queryset.values():
+        for bank in banks:
             # Don't create new brand if it already exists
             if bank["source_id"] in [x.tag for x in Brand.objects.all()]:
                 existing_brands.append(bank["name"])
             # Otherwise create new brand with USNIC data
             else:
-                Brand.create_brand_from_usnic(bank)
                 brand = Brand(
                     tag=bank["source_id"],
                     id=bank["id"],
