@@ -230,7 +230,7 @@ class Brand(TimeStampedModel):
         Add new brands to database using USNIC data. Also checks for banks controlled by
         chosen Usnic entries.
         """
-        existing_brands, successful_brands, child_brands = [], [], {}
+        existing_brands, successful_brands= [], []
 
         for bank in banks:
             # Don't create new brand if it already exists
@@ -268,19 +268,7 @@ class Brand(TimeStampedModel):
 
                 successful_brands.append(bank["name"])
 
-            # Check for 'child' banks controlled by chosen Usnic entries
-            for item in Usnic.objects.all().values():
-                if len(item['control']) > 0:
-                    for child in list(item['control'].values()):
-                        if not isinstance(child, str):
-                            if child['parent_rssd'] == int(bank['rssd']):
-                                controlled_bank = {'name': item['name'], 'rssd': item['rssd']}
-                                if bank['name'] not in list(child_brands.keys()):
-                                    child_brands[bank['name']] = [controlled_bank]
-                                else:
-                                    child_brands[bank['name']].append(controlled_bank)
-
-        return existing_brands, successful_brands, child_brands
+        return existing_brands, successful_brands
 
     @classmethod
     def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
