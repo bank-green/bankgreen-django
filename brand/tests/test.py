@@ -88,6 +88,11 @@ class BrandTestCase(TestCase):
         self.assertEqual(len(successful_brands), 1) # Ensure only one new brand created
         self.assertEqual(len(existing_brands), 1) # Check that existing copy of usnic is ignored
 
+        # Check that no new Brands are created if all Usnic entries selected already exist
+        existing_brands, successful_brands = Brand.create_brand_from_usnic(Usnic.objects.all().values()[:2])
+        self.assertEqual(len(successful_brands), 0) # Ensure only one new brand created
+        self.assertEqual(len(existing_brands), 2) # Check that existing copy of usnic is ignored
+
 
 class BrandDatasourceTestCase(TestCase):
     def setUp(self):
