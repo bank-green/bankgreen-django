@@ -28,7 +28,6 @@ query BrandsQuery(
         aliases
         commentary @include(if: $withCommentary) {
           rating
-          uniqueStatement
           recommendedIn {
             code
           }
@@ -85,7 +84,6 @@ query BrandByTagQuery($tag: String!) {
     website
     commentary {
       rating
-      uniqueStatement
       recommendedIn {
         code
       }
@@ -164,7 +162,6 @@ query BrandsQuery(
         }
         commentary @include(if: $withCommentary) {
           rating
-          uniqueStatement
           recommendedIn {
             code
           }

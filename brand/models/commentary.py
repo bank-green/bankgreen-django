@@ -67,13 +67,6 @@ class Commentary(models.Model):
     )
 
     # Neutral Commentary
-    # Deprecated. DO NOT USE. Will be deleted later.
-    unique_statement = models.CharField(
-        help_text="Positive/Negative. i.e. Despite introducing policies to restrict unconventional oil and gas finance, BNP Paribas recently ",
-        null=True,
-        max_length=300,
-        blank=True,
-    )
 
     amount_financed_since_2016 = models.CharField(
         max_length=150,
