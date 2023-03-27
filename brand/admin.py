@@ -301,7 +301,6 @@ class BrandAdmin(admin.ModelAdmin):
         "commentary__display_on_website",
         "commentary__rating",
         "commentary__number_of_requests",
-        "commentary__top_three_ethical",
         HasSuggestionsFilter,
         LinkedDatasourcesFilter,
         ("countries", ChoiceDropdownFilter),

@@ -104,10 +104,7 @@ class Commentary(models.Model):
 
     # Positive Commentary
 
-    # Deprecated. DO NOT USE. Will be deleted later.
-    top_three_ethical = models.BooleanField(
-        help_text="Positive. Is this bank recommended best banks of a country page?", default=False
-    )
+
     # Deprecated. DO NOT USE. Will be deleted later.
     recommended_in = CountryField(
         multiple=True,

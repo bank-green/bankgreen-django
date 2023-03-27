@@ -30,7 +30,6 @@ query BrandsQuery(
           rating
           uniqueStatement
           headline
-          topThreeEthical
           recommendedIn {
             code
           }
