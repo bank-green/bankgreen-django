@@ -431,6 +431,23 @@ class Usnic(Datasource):
 
         return candidate_dict
 
+    @classmethod
+    def get_child_brands(queryset):
+        child_brands = {}
+        for bank in queryset.values():
+            for item in Usnic.objects.all().values():
+                if len(item["control"]) > 0:
+                    for child in list(item["control"].values()):
+                        if not isinstance(child, str):
+                            if child["parent_rssd"] == int(bank["rssd"]):
+                                controlled_bank = {"name": item["name"], "rssd": item["rssd"]}
+                                if bank["name"] not in list(child_brands.keys()):
+                                    child_brands[bank["name"]] = [controlled_bank]
+                                else:
+                                    child_brands[bank["name"]].append(controlled_bank)
+
+        return child_brands
+
     def search_for_suggested_associations(self, spelling_dict, symspell) -> Dict:
         """
         cycles through usnic properties and checks against the spelling dict for exact matches.
