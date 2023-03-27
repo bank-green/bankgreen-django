@@ -268,7 +268,7 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
             children_string = ""
             for child in children:
                 children_string += f"Name: {child['name']}, RSSD: {child['rssd']}\n"
-            if children_string != "": # Only show message if children_string is not empty
+            if children_string != "":  # Only show message if children_string is not empty
                 self.message_user(
                     request, f"Child Brands for {parent}:\n" + children_string, messages.WARNING
                 )
