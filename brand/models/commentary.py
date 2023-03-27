@@ -78,13 +78,6 @@ class Commentary(models.Model):
 
     # Positive Commentary
 
-
-    # Deprecated. DO NOT USE. Will be deleted later.
-    recommended_in = CountryField(
-        multiple=True,
-        help_text="Positive. what countries will this bank be recommended in?",
-        blank=True,
-    )
     show_on_sustainable_banks_page = models.BooleanField(
         help_text="Positive. Check if bank should be shown on sustainable banks page.",
         default=False,

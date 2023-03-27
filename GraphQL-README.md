@@ -28,9 +28,6 @@ query BrandsQuery(
         aliases
         commentary @include(if: $withCommentary) {
           rating
-          recommendedIn {
-            code
-          }
           fromTheWebsite
           ourTake
           amountFinancedSince2016
@@ -84,9 +81,6 @@ query BrandByTagQuery($tag: String!) {
     website
     commentary {
       rating
-      recommendedIn {
-        code
-      }
       fromTheWebsite
       ourTake
       amountFinancedSince2016
@@ -162,9 +156,6 @@ query BrandsQuery(
         }
         commentary @include(if: $withCommentary) {
           rating
-          recommendedIn {
-            code
-          }
           fromTheWebsite
           ourTake
           amountFinancedSince2016

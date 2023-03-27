@@ -178,7 +178,6 @@ class HtmlFromMarkdown(Scalar):
 
 class CommentaryType(DjangoObjectType):
 
-    recommended_in = graphene.List(Country)
     summary = HtmlFromMarkdown()
     header = HtmlFromMarkdown()
     details = HtmlFromMarkdown()
@@ -189,11 +188,7 @@ class CommentaryType(DjangoObjectType):
 
     class Meta:
         model = Commentary
-        filter_fields = [
-            "rating",
-            "display_on_website",
-            "show_on_sustainable_banks_page",
-        ]
+        filter_fields = ["rating", "display_on_website", "show_on_sustainable_banks_page"]
         interfaces = (relay.Node,)
         convert_choices_to_enum = False
 

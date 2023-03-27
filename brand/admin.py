@@ -23,15 +23,9 @@ from datasource.models.datasource import Datasource, SuggestedAssociation
 from .models import Brand, Commentary
 
 
-class RecommendedInOverrideForm(forms.ModelForm):
-    class Meta:
-        widgets = {"recommended_in": FilteredSelectMultiple("recommended_in", is_stacked=False)}
-
-
 class CommentaryInline(admin.StackedInline):
     fk_name = "brand"
     model = Commentary
-    form = RecommendedInOverrideForm
     autocomplete_fields = ["inherit_brand_rating"]
 
     readonly_fields = ("rating_inherited",)
