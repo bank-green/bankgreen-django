@@ -46,6 +46,7 @@ class CommentaryInline(admin.StackedInline):
                 )
             },
         ),
+        ("Text used for negatively rated banks", {"fields": (("amount_financed_since_2016",))}),
         (
             "Text used for positively rated banks",
             {"fields": (("from_the_website",), ("our_take",))},
