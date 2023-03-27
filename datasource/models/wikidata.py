@@ -67,34 +67,6 @@ class Wikidata(Datasource):
                 print(e)
                 traceback.print_exc()
 
-        # def add_subsidiary(bank, parent):
-        #     print(f"adding parent {parent.name} to child {bank.name}")
-        #     if not bank.subsidiary_of_1:
-        #         bank.subsidiary_of_1 = parent
-        #         bank.subsidiary_of_1_pct = 100
-        #         return bank.save()
-        #     if not bank.subsidiary_of_2:
-        #         bank.subsidiary_of_2 = parent
-        #         bank.subsidiary_of_2_pct = 100
-        #         return bank.save()
-        #     if not bank.subsidiary_of_3:
-        #         bank.subsidiary_of_3 = parent
-        #         bank.subsidiary_of_3_pct = 100
-        #         return bank.save()
-        #     if not bank.subsidiary_of_4:
-        #         bank.subsidiary_of_4 = parent
-        #         bank.subsidiary_of_4_pct = 100
-        #         return bank.save()
-
-        # not doing subsidiaries for now
-        # for bank_obj in Wikidata.objects.all():
-        #     # also include "owner" column in this
-        #     bank_df = df[df["bank.value"] == bank_obj.source_id]
-        #     parent_links = {x for x in set(bank_df["parent.value"]) if x == x}
-        #     for parent_link in parent_links:
-        #         parent_objs = Wikidata.objects.filter(source_id=parent_link)
-        #         if parent_objs.exists():
-        #             add_subsidiary(bank_obj, parent_objs[0])
         return banks, num_created
 
     @classmethod

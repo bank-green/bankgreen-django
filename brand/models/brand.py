@@ -88,39 +88,6 @@ class Brand(TimeStampedModel):
     occ = models.TextField(default="", blank=True)
     ein = models.TextField(default="", blank=True)
 
-    subsidiary_of_1 = models.ForeignKey(
-        "self",
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="subsidiary_of_1_data_source",
-        blank=True,
-    )
-    subsidiary_of_1_pct = models.IntegerField("percentage owned by subsidiary 1", default=0)
-    subsidiary_of_2 = models.ForeignKey(
-        "self",
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="subsidiary_of_2_data_source",
-        blank=True,
-    )
-    subsidiary_of_2_pct = models.IntegerField("percentage owned by subsidiary 2", default=0)
-    subsidiary_of_3 = models.ForeignKey(
-        "self",
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="subsidiary_of_3_data_source",
-        blank=True,
-    )
-    subsidiary_of_3_pct = models.IntegerField("percentage owned by subsidiary 3", default=0)
-    subsidiary_of_4 = models.ForeignKey(
-        "self",
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="subsidiary_of_4_data_source",
-        blank=True,
-    )
-    subsidiary_of_4_pct = models.IntegerField("percentage owned by subsidiary 4", default=0)
-
     def __str__(self):
         return f"{self.tag}: {self.pk}"
 
@@ -301,39 +268,3 @@ class Brand(TimeStampedModel):
         }
 
         return spelling_dict
-
-    # commented out until we finish reworking the brand-datasource association
-    #
-    # def return_suggested_brands_or_datasources(self):
-    #     """
-    #     Suggestion of data sources based on Levenshtein distance
-    #     Returns a list of records of datasource subclasses
-    #     """
-    #     # subclass self in case it was passed as a datasource
-    #     self = self.subclass()
-    #     suggested_brands_or_datasources = []
-    #     brands_or_datasources = Brand.objects.all()
-    #     current_name = re.sub("[^0-9a-zA-Z]+", "", self.name.lower())
-
-    #     for bods in brands_or_datasources:
-    #         bods = bods.subclass()
-
-    #         # bods of one class cannot recommend the same class
-    #         if self.__class__ == bods.__class__:
-    #             continue
-
-    #         # get rid of datasources that are already associated with the brand.
-    #         # In this case, self is a datasource
-    #         if hasattr(self, "brand") and self.brand == bods:
-    #             continue
-
-    #         # get rids of brands that are already associated with the datasource
-    #         # in this case, self is a brand
-
-    #         if hasattr(bods, "brand") and bods.brand == self:
-    #             continue
-
-    #         bods_name = re.sub("[^0-9a-zA-Z]+", "*", bods.name.lower())
-    #         if lev(bods_name, current_name) <= lev_distance:
-    #             suggested_brands_or_datasources.append(bods)
-    #     return suggested_brands_or_datasources

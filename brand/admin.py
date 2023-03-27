@@ -79,7 +79,7 @@ class BrandFeaturesInline(admin.StackedInline):
 class DatasourceInline(admin.StackedInline):
     model = Datasource
     extra = 0
-    # raw_id_fields = ["subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
+
     readonly_fields = ("name", "source_id")
     fields = [readonly_fields]
 
@@ -288,7 +288,6 @@ class BrandAdmin(admin.ModelAdmin):
         num = obj.datasources.count()
         return str(num) if num else ""
 
-    raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
     search_fields = ["name", "tag", "website"]
     readonly_fields = ["related_datasources", "suggested_associations", "created", "modified"]
     autocomplete_fields = ["subregions"]
@@ -304,10 +303,6 @@ class BrandAdmin(admin.ModelAdmin):
         ("rssd", "lei"),
         ("fdic_cert", "ncua"),
         ("permid"),
-        # ("subsidiary_of_1", "subsidiary_of_1_pct"),
-        # ("subsidiary_of_2", "subsidiary_of_2_pct"),
-        # ("subsidiary_of_3", "subsidiary_of_3_pct"),
-        # ("subsidiary_of_4", "subsidiary_of_4_pct"),
         # "suggested_datasource",
         ("created", "modified"),
     )
