@@ -179,7 +179,6 @@ class HtmlFromMarkdown(Scalar):
 class CommentaryType(DjangoObjectType):
 
     recommended_in = graphene.List(Country)
-    top_blurb_subheadline = HtmlFromMarkdown()
     summary = HtmlFromMarkdown()
     header = HtmlFromMarkdown()
     details = HtmlFromMarkdown()

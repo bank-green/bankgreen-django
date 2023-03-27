@@ -86,12 +86,6 @@ class Commentary(models.Model):
         max_length=300,
         blank=True,
     )
-    # Deprecated. DO NOT USE. Will be deleted later.
-    top_blurb_subheadline = models.CharField(
-        help_text="Positive/Negative. i.e. According to the latest research*, in 2020 your bank was the 4th largest funder...",
-        max_length=500,
-        blank=True,
-    )
 
     amount_financed_since_2016 = models.CharField(
         max_length=150,
