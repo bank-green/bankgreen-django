@@ -256,16 +256,17 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         # Check for 'child' banks controlled by chosen Usnic entries
         child_brands = {}
         for bank in queryset:
-            child_brands[bank['name']] = bank.get_child_brands()
+            child_brands[bank.name] = bank.get_child_brands()
 
         # Display warning message for child brands
         for parent, children in child_brands.items():
             children_string = ""
             for child in children:
                 children_string += f"Name: {child['name']}, RSSD: {child['rssd']}\n"
-            self.message_user(
-                request, f"Child Brands for {parent}:\n" + children_string, messages.WARNING
-            )
+            if children_string != "": # Only show message if children_string is not empty
+                self.message_user(
+                    request, f"Child Brands for {parent}:\n" + children_string, messages.WARNING
+                )
 
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])
