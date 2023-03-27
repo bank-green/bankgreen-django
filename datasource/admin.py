@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db import models
 from django.urls import reverse
 from django.utils.html import escape, format_html
@@ -227,6 +227,51 @@ class SwitchitAdmin(DatasourceAdmin, admin.ModelAdmin):
 @admin.register(Usnic)
 class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
+
+    actions = ["add_to_brands"]
+
+    @admin.action(description="Create new related Brand and copy data")
+    def add_to_brands(self, request, queryset):
+        """
+        Adds new brands with USNIC data and displays appropriate message to user.
+        """
+        existing_brands, successful_brands = Brand.create_brand_from_usnic(queryset.values())
+
+        # Update brand fields in queryset
+        for bank in queryset:
+            bank.brand = Brand.objects.filter(rssd=bank.rssd).first()
+            bank.save()
+
+        # Display success message for successfully added brands
+        if len(successful_brands) > 0:
+            self.message_user(
+                request,
+                f"Successfully added new brands {', '.join(successful_brands)}",
+                messages.SUCCESS,
+            )
+
+        # Display warning message for already existing brands
+        if len(existing_brands) > 0:
+            self.message_user(
+                request,
+                f"Brands corresponding to {', '.join(existing_brands)} already exist",
+                messages.WARNING,
+            )
+
+        # Check for 'child' banks controlled by chosen Usnic entries
+        child_brands = {}
+        for bank in queryset:
+            child_brands[bank.name] = bank.get_child_brands()
+
+        # Display warning message for child brands
+        for parent, children in child_brands.items():
+            children_string = ""
+            for child in children:
+                children_string += f"Name: {child['name']}, RSSD: {child['rssd']}\n"
+            if children_string != "":  # Only show message if children_string is not empty
+                self.message_user(
+                    request, f"Child Brands for {parent}:\n" + children_string, messages.WARNING
+                )
 
     def branch_regions(self, obj):
         return ", ".join([x["geoname_code"] for x in obj.regions.values()])

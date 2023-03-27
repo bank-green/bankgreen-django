@@ -2,6 +2,7 @@ import re
 from typing import List, Tuple
 
 from django.db import models
+from django.db.models.query import QuerySet
 from django.template.defaultfilters import truncatechars
 
 from cities_light.models import Region, SubRegion
@@ -199,7 +200,10 @@ class Brand(TimeStampedModel):
             self.refresh_countries()
 
     @classmethod
-    def create_brand_from_datasource(self, banks: List) -> Tuple[List, List]:
+    def create_brand_from_banktrack(self, banks: List) -> Tuple[List, List]:
+        """
+        Add new brands to database using banktrack data.
+        """
         brands_updated, brands_created = [], []
 
         for bank in banks:
@@ -219,6 +223,52 @@ class Brand(TimeStampedModel):
                 brands_updated.append(brand)
 
         return (brands_created, brands_updated)
+
+    @classmethod
+    def create_brand_from_usnic(self, banks: QuerySet) -> tuple[list, list, dict]:
+        """
+        Add new brands to database using USNIC data. Also checks for banks controlled by
+        chosen Usnic entries.
+        """
+        existing_brands, successful_brands = [], []
+
+        for bank in banks:
+            # Don't create new brand if it already exists
+            if bank["source_id"] in [x.tag for x in Brand.objects.all()]:
+                existing_brands.append(bank["name"])
+            # Otherwise create new brand with USNIC data
+            else:
+                brand = Brand(
+                    tag=bank["source_id"],
+                    id=bank["id"],
+                    name=bank["name"],
+                    countries=bank["country"],
+                    lei=bank["lei"],
+                    ein=bank["ein"],
+                    rssd=bank["rssd"],
+                    cusip=bank["cusip"],
+                    thrift=bank["thrift"],
+                    thrift_hc=bank["thrift_hc"],
+                    aba_prim=bank["aba_prim"],
+                    ncua=bank["ncua"],
+                    fdic_cert=bank["fdic_cert"],
+                    occ=bank["occ"],
+                )
+                brand.save()
+
+                # Add regions, if any
+                if "regions" in list(bank.keys()):
+                    for region in bank["regions"]:
+                        brand.regions.add(region)
+
+                # Add subregions, if any
+                if "subregions" in list(bank.keys()):
+                    for subregion in bank["subregions"]:
+                        brand.regions.add(subregion)
+
+                successful_brands.append(bank["name"])
+
+        return existing_brands, successful_brands
 
     @classmethod
     def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
