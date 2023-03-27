@@ -180,9 +180,6 @@ class CommentaryType(DjangoObjectType):
 
     recommended_in = graphene.List(Country)
     top_blurb_subheadline = HtmlFromMarkdown()
-    snippet_1 = HtmlFromMarkdown()
-    snippet_2 = HtmlFromMarkdown()
-    snippet_3 = HtmlFromMarkdown()
     summary = HtmlFromMarkdown()
     header = HtmlFromMarkdown()
     details = HtmlFromMarkdown()

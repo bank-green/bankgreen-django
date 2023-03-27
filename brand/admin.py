@@ -47,16 +47,6 @@ class CommentaryInline(admin.StackedInline):
             },
         ),
         (
-            "READ ONLY text for negatively rated banks. This should be manually migrated to the description field.",
-            {
-                "fields": (
-                    ("snippet_1", "snippet_1_link"),
-                    ("snippet_2", "snippet_2_link"),
-                    ("snippet_3", "snippet_3_link"),
-                )
-            },
-        ),
-        (
             "Text used for positively rated banks",
             {"fields": (("from_the_website",), ("our_take",))},
         ),

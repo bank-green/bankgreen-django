@@ -93,35 +93,6 @@ class Commentary(models.Model):
         blank=True,
     )
 
-    # Negative Commentary
-    snippet_1 = models.CharField(
-        max_length=300,
-        help_text="Negative. Custom fact about the brand. Used to fill in templates",
-        blank=True,
-        default="",
-    )
-    snippet_1_link = models.URLField(
-        help_text="link to dirty deal 1 detauls", blank=True, default=""
-    )
-    snippet_2 = models.CharField(
-        max_length=300,
-        help_text="Negative. Custom fact about the brand. Used to fill in templates",
-        blank=True,
-        default="",
-    )
-    snippet_2_link = models.URLField(
-        help_text="link to dirty deal 2 detauls", blank=True, default=""
-    )
-    snippet_3 = models.CharField(
-        max_length=300,
-        help_text="Negative. Custom fact about the brand. Used to fill in templates",
-        blank=True,
-        default="",
-    )
-    snippet_3_link = models.URLField(
-        help_text="link to dirty deal 3 detauls", blank=True, default=""
-    )
-
     # Deprecated. DO NOT USE. Will be deleted later.
     amount_financed_since_2016 = models.CharField(
         max_length=150,
