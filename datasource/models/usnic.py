@@ -434,7 +434,7 @@ class Usnic(Datasource):
     def get_child_brands(self):
         child_brands = []
         for item in Usnic.objects.all().values():
-            if len(item["control"]) > 0:
+            if item.get("control"):
                 for child in list(item["control"].values()):
                     if not isinstance(child, str):
                         if child["parent_rssd"] == int(self.rssd):
