@@ -237,6 +237,11 @@ class UsnicAdmin(DatasourceAdmin, admin.ModelAdmin):
         """
         existing_brands, successful_brands = Brand.create_brand_from_usnic(queryset.values())
 
+        # Update brand fields in queryset
+        for bank in queryset:
+            bank.brand = Brand.objects.filter(rssd=bank.rssd).first()
+            bank.save()
+
         # Display success message for successfully added brands
         if len(successful_brands) > 0:
             self.message_user(
