@@ -436,11 +436,10 @@ class Usnic(Datasource):
         for item in Usnic.objects.all().values():
             if item.get("control"):
                 for child in list(item["control"].values()):
-                    if not isinstance(child, str):
-                        if child["parent_rssd"] == int(self.rssd):
-                            child_brands.append({
-                                "name": item["name"], "rssd": item["rssd"]
-                            })
+                    if not isinstance(child, str) and child["parent_rssd"] == int(self.rssd):
+                        child_brands.append({
+                            "name": item["name"], "rssd": item["rssd"]
+                        })
 
         return child_brands
 
