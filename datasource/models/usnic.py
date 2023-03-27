@@ -357,28 +357,6 @@ class Usnic(Datasource):
         if not brand.website_locked:
             brand.website = self.website
 
-        # various identifiers
-        if not brand.rssd_locked:
-            brand.rssd = self.rssd
-        if not brand.lei_locked:
-            brand.lei = self.lei
-        if not brand.cusip_locked:
-            brand.cusip = self.cusip
-        if not brand.aba_prim_locked:
-            brand.aba_prim = self.aba_prim
-        if not brand.fdic_cert_locked:
-            brand.fdic_cert = self.fdic_cert
-        if not brand.ncua_locked:
-            brand.ncua = self.ncua
-        if not brand.thrift_locked:
-            brand.thrift = self.thrift
-        if not brand.thrift_hc_locked:
-            brand.thrift_hc = self.thrift_hc
-        if not brand.occ_locked:
-            brand.occ = self.occ
-        if not brand.ein_locked:
-            brand.ein = self.ein
-
         # countries, regions, and subregions are addative
         if self.country not in brand.countries:
             # the temp list is necessary for some queryset weirdness.
