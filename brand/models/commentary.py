@@ -75,11 +75,6 @@ class Commentary(models.Model):
         blank=True,
     )
 
-    # Deprecated. DO NOT USE. Will be deleted later.
-    headline = models.CharField(
-        help_text="Positive/Negative. i.e. #1 in Coal", max_length=200, null=True, blank=True
-    )
-
     amount_financed_since_2016 = models.CharField(
         max_length=150,
         help_text="Negative. Amount of fossil fuel investment the brand has financed since the paris accord, i.e. $382 billion USD",

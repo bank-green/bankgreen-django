@@ -29,7 +29,6 @@ query BrandsQuery(
         commentary @include(if: $withCommentary) {
           rating
           uniqueStatement
-          headline
           recommendedIn {
             code
           }
@@ -87,7 +86,6 @@ query BrandByTagQuery($tag: String!) {
     commentary {
       rating
       uniqueStatement
-      headline
       recommendedIn {
         code
       }
@@ -167,7 +165,6 @@ query BrandsQuery(
         commentary @include(if: $withCommentary) {
           rating
           uniqueStatement
-          headline
           recommendedIn {
             code
           }
