@@ -54,6 +54,10 @@ class Commentary(models.Model):
 
         return self.rating
 
+    @rating_inherited.setter
+    def rating_inherited(self, inheritance):
+        self.inheritance = inheritance
+
     fossil_free_alliance = models.BooleanField(
         default=False, help_text="Is this brand in the fossil free alliance?"
     )
