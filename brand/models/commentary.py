@@ -51,10 +51,11 @@ class Commentary(models.Model):
     def rating_inherited(self):
         return self.compute_inherited_rating([self.brand])
 
-    def compute_inherited_rating(self, inheritance):
-        if self.inherit_brand_rating in inheritance:
+
+    def compute_inherited_rating(self, inheritance: list):
+        if inheritance[0] in inheritance[1:]:
             return RatingChoice.UNKNOWN
-        elif self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
+        if self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
             inheritance.append(self.inherit_brand_rating)
             return self.inherit_brand_rating.commentary.compute_inherited_rating(inheritance)
 
@@ -185,7 +186,7 @@ class Commentary(models.Model):
         return f"Commentary: {self.brand.tag}"
 
     def save(self, *args, **kwargs):
-        if self.inherit_brand_rating:
+        if self.inherit_brand_rating and self.rating_inherited != RatingChoice.UNKNOWN:
             self.rating = RatingChoice.INHERIT
 
         if self.fossil_free_alliance and self.fossil_free_alliance_rating < 0:
@@ -193,4 +194,5 @@ class Commentary(models.Model):
         elif not self.fossil_free_alliance:
             self.fossil_free_alliance_rating = -1
 
-        super(Commentary, self).save()
+        if self.rating_inherited != RatingChoice.UNKNOWN:
+            super(Commentary, self).save()
