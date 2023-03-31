@@ -51,7 +51,6 @@ class Commentary(models.Model):
     def rating_inherited(self):
         return self.compute_inherited_rating([self.brand])
 
-
     def compute_inherited_rating(self, inheritance: list):
         if inheritance[0] in inheritance[1:]:
             return RatingChoice.UNKNOWN
