@@ -49,14 +49,17 @@ class Commentary(models.Model):
 
     @property
     def rating_inherited(self):
-        if self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
-            return self.inherit_brand_rating.commentary.rating_inherited
-
-        return self.rating
+        return self.compute_inherited_rating([self.brand])
 
     @rating_inherited.setter
     def rating_inherited(self, inheritance):
         self.inheritance = inheritance
+
+    def compute_inherited_rating(self, inheritance):
+        if self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
+            return self.inherit_brand_rating.commentary.compute_inherited_rating
+
+        return self.rating
 
     fossil_free_alliance = models.BooleanField(
         default=False, help_text="Is this brand in the fossil free alliance?"
