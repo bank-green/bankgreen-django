@@ -52,7 +52,9 @@ class Commentary(models.Model):
         return self.compute_inherited_rating([self.brand])
 
     def compute_inherited_rating(self, inheritance):
-        if self.rating == RatingChoice.INHERIT and self.inherit_brand_rating and self.inherit_brand_rating not in inheritance:
+        if self.inherit_brand_rating in inheritance:
+            return RatingChoice.UNKNOWN
+        elif self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
             inheritance.append(self.inherit_brand_rating)
             return self.inherit_brand_rating.commentary.compute_inherited_rating(inheritance)
 
