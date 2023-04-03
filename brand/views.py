@@ -1,5 +1,6 @@
 from uuid import uuid4
 from dal import autocomplete
+from django.conf import settings
 
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView
@@ -109,3 +110,7 @@ def update_success(request):
     template_name = "update_success.html"
 
     return render(request, template_name)
+
+
+def calendar_redirect(request):
+    return redirect(settings.SEMI_PUBLIC_CALENDAR_URL)
