@@ -46,11 +46,6 @@ ALLOWED_HOSTS = (
     os.environ.get("ALLOWED_HOSTS").split(" ") if os.environ.get("ALLOWED_HOSTS") else []
 )
 
-# Airtable keys
-AIRTABLE_BASE_ID = os.environ.get("AIRTABLE_BASE_ID")
-AIRTABLE_API_KEY = os.environ.get("AIRTABLE_API_KEY")
-
-
 INSTALLED_APPS = [
     "dal",
     "dal_select2",
