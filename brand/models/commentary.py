@@ -49,14 +49,26 @@ class Commentary(models.Model):
 
     @property
     def rating_inherited(self):
-        return self.compute_inherited_rating([self.brand])
+        return self.compute_inherited_rating()
 
-    def compute_inherited_rating(self, inheritance: list):
-        if inheritance[0] in inheritance[1:]:
+    def compute_inherited_rating(self, inheritance_set=None, throw_error=False):
+
+        inheritance_set = set() if inheritance_set is None else inheritance_set
+        brand_in_inheritance_set = self.brand in inheritance_set
+
+        if throw_error and brand_in_inheritance_set:
+            raise ValidationError(
+                "Commentary rating is inherited from itself. Please assign a non-inherited rating."
+            )
+        elif not throw_error and brand_in_inheritance_set:
             return RatingChoice.UNKNOWN
-        if self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
-            inheritance.append(self.inherit_brand_rating)
-            return self.inherit_brand_rating.commentary.compute_inherited_rating(inheritance)
+        elif self.rating == RatingChoice.INHERIT and not self.inherit_brand_rating:
+            return RatingChoice.UNKNOWN
+        elif self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
+            inheritance_set.add(self.brand)
+            return self.inherit_brand_rating.commentary.compute_inherited_rating(
+                inheritance_set, throw_error=throw_error
+            )
 
         return self.rating
 
