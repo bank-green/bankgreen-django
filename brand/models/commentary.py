@@ -196,6 +196,10 @@ class Commentary(models.Model):
     def __str__(self):
         return f"Commentary: {self.brand.tag}"
 
+    def clean(self):
+        # Ensure no cycles when saving
+        _ = self.compute_inherited_rating(throw_error=True)
+
     def save(self, *args, **kwargs):
         if self.inherit_brand_rating and self.rating_inherited != RatingChoice.UNKNOWN:
             self.rating = RatingChoice.INHERIT
