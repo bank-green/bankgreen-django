@@ -1,6 +1,8 @@
+from django.forms import ValidationError
 from django.test import TestCase
-from brand.tests.utils import create_test_brands
 
+from brand.models.commentary import Commentary, RatingChoice
+from brand.tests.utils import create_test_brands
 from datasource.models import Banktrack, Usnic
 
 from ..models import Brand
@@ -103,7 +105,7 @@ class BrandTestCase(TestCase):
 
 
 class BrandDatasourceTestCase(TestCase):
-    def setUp(self):
+    def test_banktrack_brands_can_be_created_from_banktrack(self):
         self.kinged_fred = Banktrack.objects.create(
             source_id="kinged_fred",
             source_link="abc",
@@ -116,51 +118,81 @@ class BrandDatasourceTestCase(TestCase):
         brands_created, _ = Brand.create_brand_from_banktrack([self.kinged_fred])
         self.brand = brands_created[0]
 
-        self.pending_king_george = Banktrack.objects.create(
-            source_id="pending_king_george",
-            source_link="abcdef",
-            name="Matched banktrack",
-            description="test_description",
-            website="test_website",
-            countries="TW",
-            tag=Banktrack.tag_prepend_str + "pending_king_george",
+
+class CommentaryTestCase(TestCase):
+    def setUp(self) -> None:
+        brand1, brand2 = create_test_brands()
+        brand3 = Brand.objects.create(
+            pk=300,
+            tag="another_brand_3",
+            name="Another Brand 3",
+            aliases="another brand, anotherb",
+            website="https://www.anotherbwebaaaasite.com/somepage",
+            permid="another permid",
+            viafid="another viafid",
+            lei="another lei",
+            rssd="another rssd",
         )
 
-        self.sad_aborted_pawn = Banktrack.objects.create(
-            source_id="test_non_matched_banktrack_source_id",
-            source_link="abc",
-            name="test_non_matched_banktrack",
-            description="test_description",
-            website="test_website",
-            countries="TW",
-            tag=Banktrack.tag_prepend_str + "sad_aborted_pawn",
+        brand4 = Brand.objects.create(
+            pk=400,
+            tag="another_brand_4",
+            name="Another Brand 4",
+            aliases="another brand, anotherb",
+            website="https://www.anotherbwebaaaasite.com/somepage",
+            permid="another permid",
+            viafid="another viafid",
+            lei="another lei",
+            rssd="another rssd",
         )
 
+        brand5 = Brand.objects.create(
+            pk=500,
+            tag="another_brand_5",
+            name="Another Brand 5",
+            aliases="another brand, anotherb",
+            website="https://www.anotherbwebaaaasite.com/somepage",
+            permid="another permid",
+            viafid="another viafid",
+            lei="another lei",
+            rssd="another rssd",
+        )
 
-# commented out until we finish reworking the brand-datasource association
-#
-#     def test_suggesting_datasources_from_a_brand(self):
-#         suggested_datasources = self.brand.return_suggested_brands_or_datasources()
+        self.commentary1 = Commentary.objects.create(
+            brand=brand1, rating=RatingChoice.INHERIT, inherit_brand_rating=None
+        )
 
-#         # already associated datasources should not be in suggested
-#         self.assertTrue(self.kinged_fred not in suggested_datasources)
+        self.commentary2 = Commentary.objects.create(
+            brand=brand2, rating=RatingChoice.INHERIT, inherit_brand_rating=brand1
+        )
 
-#         # brands should not be in suggested
-#         self.assertTrue(self.brand not in suggested_datasources)
+        self.commentary3 = Commentary.objects.create(
+            brand=brand3, rating=RatingChoice.INHERIT, inherit_brand_rating=brand2
+        )
 
-#         # some datasources should not match and should not be suggested
-#         self.assertTrue(self.sad_aborted_pawn not in suggested_datasources)
+        # brands 4 and 5 point at eachother for their ratings
+        self.commentary4 = Commentary.objects.create(brand=brand4, rating=RatingChoice.OK)
+        self.commentary5 = Commentary.objects.create(
+            brand=brand5, rating=RatingChoice.INHERIT, inherit_brand_rating=brand4
+        )
+        self.commentary4.inherit_brand_rating = brand5
+        self.commentary4.rating = RatingChoice.INHERIT
 
-#         # similarly named datasources should be in suggested_datasources
-#         self.assertTrue(self.pending_king_george in suggested_datasources)
+    def test_compute_inherited_rating_inherits_from_inherit(self):
+        inherited_rating = self.commentary3.compute_inherited_rating()
+        self.assertEqual(inherited_rating, RatingChoice.UNKNOWN)
 
-#         # def test_suggesting_brands_from_a_datasource(self):
-#         suggested_brands = self.pending_king_george.return_suggested_brands_or_datasources()
+    def test_compute_inherited_rating_happy_path(self):
+        self.commentary1.rating = RatingChoice.GREAT
+        self.commentary1.save()
+        inherited_rating = self.commentary3.compute_inherited_rating(throw_error=True)
+        self.assertEqual(inherited_rating, RatingChoice.GREAT)
 
-#         self.assertTrue(self.brand in suggested_brands)
+    def test_compute_inherited_rating_circular_path_raises(self):
+        with self.assertRaises(ValidationError):
+            self.commentary5.compute_inherited_rating(throw_error=True)
 
-#         # non-brands should not be suggested
-#         self.assertListEqual([], [x for x in suggested_brands if x.__class__ != Brand])
-
-#         # datasources should not recommend themselves
-#         self.assertTrue(self.pending_king_george not in suggested_brands)
+    def test_compute_inherited_rating_circular_path_can_return_unknown(self):
+        self.assertEqual(
+            self.commentary5.compute_inherited_rating(throw_error=False), RatingChoice.UNKNOWN
+        )
