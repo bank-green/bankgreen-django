@@ -201,13 +201,10 @@ class Commentary(models.Model):
         _ = self.compute_inherited_rating(throw_error=True)
 
     def save(self, *args, **kwargs):
-        if self.inherit_brand_rating and self.rating_inherited != RatingChoice.UNKNOWN:
+        if self.inherit_brand_rating:
             self.rating = RatingChoice.INHERIT
 
         if self.fossil_free_alliance and self.fossil_free_alliance_rating < 0:
             self.fossil_free_alliance_rating = 0
         elif not self.fossil_free_alliance:
             self.fossil_free_alliance_rating = -1
-
-        if self.rating_inherited != RatingChoice.UNKNOWN:
-            super(Commentary, self).save()
