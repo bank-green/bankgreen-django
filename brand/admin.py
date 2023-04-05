@@ -139,13 +139,23 @@ admin.site.unregister(SubRegion)
 @admin.register(BrandUpdate)
 class BrandUpdateAdmin(admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
-    fields = BrandUpdate.UPDATE_FIELDS + ["additional_info", "email", "consent"]
-    readonly_fields = ["name", "aliases", "website", "bank_features"]
+    fields = ["brand_link"] + BrandUpdate.UPDATE_FIELDS + ["additional_info", "email", "consent"]
+    readonly_fields = ["brand_link", "name", "aliases", "website", "bank_features"]
     inlines = [BrandFeaturesInline]
     autocomplete_fields = ["subregions"]
 
     list_display = ("short_name", "update_tag", "created", "email", "merged")
     list_filter = ("merged",)
+
+    def brand_link(self, obj):
+        """
+        Returns a link to the parent Brand object in the admin interface.
+        """
+        parent_brand = Brand.objects.get(tag=obj.update_tag)
+        url = reverse("admin:brand_brand_change", args=(str(parent_brand.pk),))
+        return format_html('<a href="{}">{}</a>', url, parent_brand)
+
+    brand_link.short_description = "Brand"
 
     def save_model(self, request, obj, form, change):
         original = Brand.objects.get(tag=obj.update_tag)
