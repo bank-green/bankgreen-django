@@ -85,62 +85,7 @@ class Commentary(models.Model):
     )
 
     # Neutral Commentary
-    # Deprecated. DO NOT USE. Will be deleted later.
-    unique_statement = models.CharField(
-        help_text="Positive/Negative. i.e. Despite introducing policies to restrict unconventional oil and gas finance, BNP Paribas recently ",
-        null=True,
-        max_length=300,
-        blank=True,
-    )
 
-    # Deprecated. DO NOT USE. Will be deleted later.
-    headline = models.CharField(
-        help_text="Positive/Negative. i.e. #1 in Coal", max_length=200, null=True, blank=True
-    )
-
-    # Deprecated. DO NOT USE. Will be deleted later.
-    top_blurb_headline = models.CharField(
-        help_text="Positive/Negative. i.e. Your money is being used to fund the climate crisis at an alarming rate.",
-        max_length=300,
-        blank=True,
-    )
-    # Deprecated. DO NOT USE. Will be deleted later.
-    top_blurb_subheadline = models.CharField(
-        help_text="Positive/Negative. i.e. According to the latest research*, in 2020 your bank was the 4th largest funder...",
-        max_length=500,
-        blank=True,
-    )
-
-    # Negative Commentary
-    snippet_1 = models.CharField(
-        max_length=300,
-        help_text="Negative. Custom fact about the brand. Used to fill in templates",
-        blank=True,
-        default="",
-    )
-    snippet_1_link = models.URLField(
-        help_text="link to dirty deal 1 detauls", blank=True, default=""
-    )
-    snippet_2 = models.CharField(
-        max_length=300,
-        help_text="Negative. Custom fact about the brand. Used to fill in templates",
-        blank=True,
-        default="",
-    )
-    snippet_2_link = models.URLField(
-        help_text="link to dirty deal 2 detauls", blank=True, default=""
-    )
-    snippet_3 = models.CharField(
-        max_length=300,
-        help_text="Negative. Custom fact about the brand. Used to fill in templates",
-        blank=True,
-        default="",
-    )
-    snippet_3_link = models.URLField(
-        help_text="link to dirty deal 3 detauls", blank=True, default=""
-    )
-
-    # Deprecated. DO NOT USE. Will be deleted later.
     amount_financed_since_2016 = models.CharField(
         max_length=150,
         help_text="Negative. Amount of fossil fuel investment the brand has financed since the paris accord, i.e. $382 billion USD",
@@ -151,16 +96,6 @@ class Commentary(models.Model):
 
     # Positive Commentary
 
-    # Deprecated. DO NOT USE. Will be deleted later.
-    top_three_ethical = models.BooleanField(
-        help_text="Positive. Is this bank recommended best banks of a country page?", default=False
-    )
-    # Deprecated. DO NOT USE. Will be deleted later.
-    recommended_in = CountryField(
-        multiple=True,
-        help_text="Positive. what countries will this bank be recommended in?",
-        blank=True,
-    )
     show_on_sustainable_banks_page = models.BooleanField(
         help_text="Positive. Check if bank should be shown on sustainable banks page.",
         default=False,

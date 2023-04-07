@@ -136,8 +136,6 @@ class DatasourceAdmin(admin.ModelAdmin):
 class BanktrackAdmin(admin.ModelAdmin):
     list_display = ["name", "tag", "website"]
     search_fields = ["name", "tag", "website"]
-    # raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4", "brand"]
-    # autocomplete_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4", "brand"]
 
     list_filter = (
         "created",

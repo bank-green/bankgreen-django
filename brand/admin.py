@@ -23,15 +23,9 @@ from datasource.models.datasource import Datasource, SuggestedAssociation
 from .models import Brand, Commentary
 
 
-class RecommendedInOverrideForm(forms.ModelForm):
-    class Meta:
-        widgets = {"recommended_in": FilteredSelectMultiple("recommended_in", is_stacked=False)}
-
-
 class CommentaryInline(admin.StackedInline):
     fk_name = "brand"
     model = Commentary
-    form = RecommendedInOverrideForm
     autocomplete_fields = ["inherit_brand_rating"]
 
     readonly_fields = ("rating_inherited",)
@@ -46,16 +40,7 @@ class CommentaryInline(admin.StackedInline):
                 )
             },
         ),
-        (
-            "READ ONLY text for negatively rated banks. This should be manually migrated to the description field.",
-            {
-                "fields": (
-                    ("snippet_1", "snippet_1_link"),
-                    ("snippet_2", "snippet_2_link"),
-                    ("snippet_3", "snippet_3_link"),
-                )
-            },
-        ),
+        ("Text used for negatively rated banks", {"fields": (("amount_financed_since_2016",))}),
         (
             "Text used for positively rated banks",
             {"fields": (("from_the_website",), ("our_take",))},
@@ -79,7 +64,7 @@ class BrandFeaturesInline(admin.StackedInline):
 class DatasourceInline(admin.StackedInline):
     model = Datasource
     extra = 0
-    # raw_id_fields = ["subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
+
     readonly_fields = ("name", "source_id")
     fields = [readonly_fields]
 
@@ -298,7 +283,6 @@ class BrandAdmin(admin.ModelAdmin):
         num = obj.datasources.count()
         return str(num) if num else ""
 
-    raw_id_fields = ["subsidiary_of_1", "subsidiary_of_2", "subsidiary_of_3", "subsidiary_of_4"]
     search_fields = ["name", "tag", "website"]
     readonly_fields = ["related_datasources", "suggested_associations", "created", "modified"]
     autocomplete_fields = ["subregions"]
@@ -314,10 +298,6 @@ class BrandAdmin(admin.ModelAdmin):
         ("rssd", "lei"),
         ("fdic_cert", "ncua"),
         ("permid"),
-        # ("subsidiary_of_1", "subsidiary_of_1_pct"),
-        # ("subsidiary_of_2", "subsidiary_of_2_pct"),
-        # ("subsidiary_of_3", "subsidiary_of_3_pct"),
-        # ("subsidiary_of_4", "subsidiary_of_4_pct"),
         # "suggested_datasource",
         ("created", "modified"),
     )
@@ -326,7 +306,6 @@ class BrandAdmin(admin.ModelAdmin):
         "commentary__display_on_website",
         "commentary__rating",
         "commentary__number_of_requests",
-        "commentary__top_three_ethical",
         HasSuggestionsFilter,
         LinkedDatasourcesFilter,
         ("countries", ChoiceDropdownFilter),

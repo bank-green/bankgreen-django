@@ -28,12 +28,6 @@ query BrandsQuery(
         aliases
         commentary @include(if: $withCommentary) {
           rating
-          uniqueStatement
-          headline
-          topThreeEthical
-          recommendedIn {
-            code
-          }
           fromTheWebsite
           ourTake
           amountFinancedSince2016
@@ -87,11 +81,6 @@ query BrandByTagQuery($tag: String!) {
     website
     commentary {
       rating
-      uniqueStatement
-      headline
-      recommendedIn {
-        code
-      }
       fromTheWebsite
       ourTake
       amountFinancedSince2016
@@ -167,11 +156,6 @@ query BrandsQuery(
         }
         commentary @include(if: $withCommentary) {
           rating
-          uniqueStatement
-          headline
-          recommendedIn {
-            code
-          }
           fromTheWebsite
           ourTake
           amountFinancedSince2016
