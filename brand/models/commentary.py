@@ -143,3 +143,5 @@ class Commentary(models.Model):
             self.fossil_free_alliance_rating = 0
         elif not self.fossil_free_alliance:
             self.fossil_free_alliance_rating = -1
+
+        return super().save(*args, **kwargs)
