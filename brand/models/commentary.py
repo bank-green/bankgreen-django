@@ -49,8 +49,26 @@ class Commentary(models.Model):
 
     @property
     def rating_inherited(self):
-        if self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
-            return self.inherit_brand_rating.commentary.rating_inherited
+        return self.compute_inherited_rating()
+
+    def compute_inherited_rating(self, inheritance_set=None, throw_error=False):
+
+        inheritance_set = set() if inheritance_set is None else inheritance_set
+        brand_in_inheritance_set = self.brand in inheritance_set
+
+        if throw_error and brand_in_inheritance_set:
+            raise ValidationError(
+                "Commentary rating is inherited from itself. Please assign a non-inherited rating."
+            )
+        elif not throw_error and brand_in_inheritance_set:
+            return RatingChoice.UNKNOWN
+        elif self.rating == RatingChoice.INHERIT and not self.inherit_brand_rating:
+            return RatingChoice.UNKNOWN
+        elif self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
+            inheritance_set.add(self.brand)
+            return self.inherit_brand_rating.commentary.compute_inherited_rating(
+                inheritance_set, throw_error=throw_error
+            )
 
         return self.rating
 
@@ -113,6 +131,10 @@ class Commentary(models.Model):
     def __str__(self):
         return f"Commentary: {self.brand.tag}"
 
+    def clean(self):
+        # Ensure no cycles when saving
+        _ = self.compute_inherited_rating(throw_error=True)
+
     def save(self, *args, **kwargs):
         if self.inherit_brand_rating:
             self.rating = RatingChoice.INHERIT
@@ -121,5 +143,3 @@ class Commentary(models.Model):
             self.fossil_free_alliance_rating = 0
         elif not self.fossil_free_alliance:
             self.fossil_free_alliance_rating = -1
-
-        super(Commentary, self).save()
