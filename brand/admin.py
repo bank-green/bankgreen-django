@@ -36,12 +36,12 @@ class CommentaryInline(admin.StackedInline):
             {
                 "fields": (
                     ("display_on_website", "fossil_free_alliance", "number_of_requests"),
-                    ("rating", "fossil_free_alliance_rating", "show_on_sustainable_banks_page"),
+                    ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
                 )
             },
         ),
-        ("Text used for negatively rated banks", {"fields": (("amount_financed_since_2016",))}),
+        ("Used for negatively rated banks", {"fields": (("amount_financed_since_2016",))}),
         (
             "Used for positively rated banks",
             {
