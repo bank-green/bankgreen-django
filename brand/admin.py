@@ -16,6 +16,7 @@ from brand.admin_utils import (
     raise_validation_error_for_missing_region,
 )
 from brand.models.brand_update import BrandUpdate
+from brand.models.commentary import InstitutionCredential, InstitutionType
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
@@ -35,15 +36,21 @@ class CommentaryInline(admin.StackedInline):
             {
                 "fields": (
                     ("display_on_website", "fossil_free_alliance", "number_of_requests"),
-                    ("rating", "fossil_free_alliance_rating", "show_on_sustainable_banks_page"),
+                    ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
                 )
             },
         ),
-        ("Text used for negatively rated banks", {"fields": (("amount_financed_since_2016",))}),
+        ("Used for negatively rated banks", {"fields": (("amount_financed_since_2016",))}),
         (
-            "Text used for positively rated banks",
-            {"fields": (("from_the_website",), ("our_take",))},
+            "Used for positively rated banks",
+            {
+                "fields": (
+                    ("from_the_website",),
+                    ("our_take"),
+                    ("institution_type", "institution_credentials"),
+                )
+            },
         ),
         ("CMS", {"fields": (("subtitle",), ("header",), ("summary",), ("details",))}),
         ("Meta", {"fields": ("comment",)}),
@@ -243,6 +250,16 @@ class HasSuggestionsFilter(admin.SimpleListFilter):
             ]
             return queryset.filter(pk__in=brand_pks)
         return queryset
+
+
+@admin.register(InstitutionType)
+class InstitutionTypes(admin.ModelAdmin):
+    model = InstitutionType
+
+
+@admin.register(InstitutionCredential)
+class InstitutionCredentials(admin.ModelAdmin):
+    model = InstitutionCredential
 
 
 @admin.register(Brand)

@@ -18,6 +18,26 @@ class RatingChoice(models.TextChoices):
     INHERIT = "inherit"
 
 
+class InstitutionType(models.Model):
+    name = models.CharField(max_length=50, blank=False)
+    description = models.CharField(
+        max_length=100, blank=True, help_text="description for internal use"
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class InstitutionCredential(models.Model):
+    name = models.CharField(max_length=50, blank=False)
+    description = models.CharField(
+        max_length=100, blank=True, help_text="description for internal use"
+    )
+
+    def __str__(self):
+        return self.name
+
+
 class Commentary(models.Model):
     # Metadata
     brand = models.OneToOneField(
@@ -76,6 +96,7 @@ class Commentary(models.Model):
         default=False, help_text="Is this brand in the fossil free alliance?"
     )
 
+    # Deprecated. may be deleted later
     fossil_free_alliance_rating = models.IntegerField(
         blank=False,
         null=False,
@@ -84,7 +105,7 @@ class Commentary(models.Model):
         validators=[MinValueValidator(-1), MaxValueValidator(5)],
     )
 
-    # Neutral Commentary
+    # Negative Commentary
 
     amount_financed_since_2016 = models.CharField(
         max_length=150,
@@ -107,6 +128,14 @@ class Commentary(models.Model):
     our_take = models.TextField(
         help_text="Positive. used to to give our take on green banks", blank=True
     )
+
+    institution_type = models.ManyToManyField(InstitutionType, blank=True, help_text="Positive")
+
+    institution_credentials = models.ManyToManyField(
+        InstitutionCredential, blank=True, help_text="Positive"
+    )
+
+    # General Commentary
 
     subtitle = models.TextField(
         help_text="Markdown. Displayed immediately under the bank name", blank=True
