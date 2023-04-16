@@ -29,7 +29,7 @@ jsonfield==3.1.0
 django-json-widget==1.1.1
 np==1.0.2
 Markdown==3.3.7
-markdown-link-attr-modifier==0.2.0
+markdown-link-attr-modifier==0.2.1
 django-cities-light==3.9.2
 symspellpy==6.7.7
 django-autocomplete-light==3.9.4
