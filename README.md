@@ -9,14 +9,13 @@ Data is harvested from a variety of "data sources." Datasources are then associa
 This project uses python 3.10. You will need to install "[pip](https://pip.pypa.io/en/stable/installation/)" (the python package management system) and "[virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)" (a python virtual environment manager) to your system. You can install virtualenv like: `sudo -H pip3 install virtualenv`
 
 
-
-There is a sample `db.sqlite3` file included in `sample_db/sample_db.sqlite3`. If you wish to use it, you will need to copy it into the project and create a superuser:
-`cp sample_db/sample_db.sqlite3 db.sqlite3`
-`python manage.py createsuperuser`
-
-If you did not use the sample database, you must run migrations and then download a list of countries and regions:
+To setup the database, you must run migrations, add sample data by installing the initial fixture and download a list of countries and regions:
 `python manage.py migrate`
+`python manage.py loaddata fixtures/initial/initial.json`
 `python manage.py cities_light`
+
+Then create a superuser:
+`python manage.py createsuperuser`
 
 ## Installing Packages
 
