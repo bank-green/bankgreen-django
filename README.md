@@ -14,7 +14,7 @@ To setup the database, you must run migrations, add sample data by installing th
 `python manage.py loaddata fixtures/initial/initial.json`   
 `python manage.py cities_light`   
 
-Then create a superuser:
+Then create a superuser:   
 `python manage.py createsuperuser`
 
 ## Installing Packages
