@@ -17,7 +17,7 @@ To setup the database, you must run migrations, add sample data by installing th
 Then create a superuser:   
 `python manage.py createsuperuser`
 
-## Creating a virtual environment <venv>
+## Creating a virtual environment \<venv\>
 
 `virtualenv <venv>`
 
