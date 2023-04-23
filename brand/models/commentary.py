@@ -74,7 +74,7 @@ class Commentary(models.Model):
     def compute_inherited_rating(self, inheritance_set=None, throw_error=False):
 
         inheritance_set = set() if inheritance_set is None else inheritance_set
-        brand_in_inheritance_set = self.brand in inheritance_set
+        brand_in_inheritance_set = self.brand.tag in inheritance_set
 
         if throw_error and brand_in_inheritance_set:
             raise ValidationError(
@@ -85,7 +85,7 @@ class Commentary(models.Model):
         elif self.rating == RatingChoice.INHERIT and not self.inherit_brand_rating:
             return RatingChoice.UNKNOWN
         elif self.rating == RatingChoice.INHERIT and self.inherit_brand_rating:
-            inheritance_set.add(self.brand)
+            inheritance_set.add(self.brand.tag)
             return self.inherit_brand_rating.commentary.compute_inherited_rating(
                 inheritance_set, throw_error=throw_error
             )
@@ -162,7 +162,7 @@ class Commentary(models.Model):
 
     def clean(self):
         # Ensure no cycles when saving
-        _ = self.compute_inherited_rating(throw_error=True)
+        self.compute_inherited_rating(throw_error=True)
 
     def save(self, *args, **kwargs):
         if self.inherit_brand_rating:

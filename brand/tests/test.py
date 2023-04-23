@@ -146,8 +146,7 @@ class CommentaryTestCase(TestCase):
             rssd="another rssd",
         )
 
-        brand5 = Brand.objects.create(
-            pk=500,
+        brand5 = Brand(
             tag="another_brand_5",
             name="Another Brand 5",
             aliases="another brand, anotherb",
@@ -172,7 +171,7 @@ class CommentaryTestCase(TestCase):
 
         # brands 4 and 5 point at eachother for their ratings
         self.commentary4 = Commentary.objects.create(brand=brand4, rating=RatingChoice.OK)
-        self.commentary5 = Commentary.objects.create(
+        self.commentary5 = Commentary(
             brand=brand5, rating=RatingChoice.INHERIT, inherit_brand_rating=brand4
         )
         self.commentary4.inherit_brand_rating = brand5
