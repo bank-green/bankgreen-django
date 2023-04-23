@@ -18,6 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, reverse_lazy
 from django.views.decorators.cache import cache_control
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import RedirectView
 
 from graphene_django.views import GraphQLView
@@ -33,7 +34,7 @@ urlpatterns = [
     path(
         "graphql",
         cache_control(max_age=settings.CACHE_MAX_AGE)(
-            GraphQLView.as_view(graphiql=True, schema=schema)
+            csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))
         ),
     ),
     path("region-autocomplete/", views.RegionAutocomplete.as_view(), name="region-autocomplete"),
