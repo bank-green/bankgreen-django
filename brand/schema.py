@@ -1,5 +1,4 @@
 import graphene
-from django_countries.graphql.types import Country
 from graphene import Scalar, relay
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
@@ -10,18 +9,23 @@ from django_filters import FilterSet, ChoiceFilter, BooleanFilter, MultipleChoic
 from django_countries import countries
 from brand.models.commentary import RatingChoice
 
-from datasource.models.datasource import Datasource
+from datasource.models.datasource import Datasource as DatasourceModel
 
-from .models import Brand, Commentary, BrandFeature, FeatureType
+from .models import (
+    Brand as BrandModel,
+    Commentary as CommentaryModel,
+    BrandFeature as BrandFeatureModel,
+    FeatureType as FeatureModel,
+)
 
 from django.db.models import Q
 from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
 
-from cities_light.models import Region, SubRegion
+from cities_light.models import Region as RegionModel, SubRegion as SubRegionModel
 
 
-class DatasourceType(DjangoObjectType):
+class Datasource(DjangoObjectType):
     subclass = graphene.String()
 
     def resolve_subclass(obj, info):
@@ -31,7 +35,7 @@ class DatasourceType(DjangoObjectType):
             return None
 
     class Meta:
-        model = Datasource
+        model = DatasourceModel
         fields = ("name", "source_link")
         interfaces = (relay.Node,)
 
@@ -89,7 +93,6 @@ class BrandFilter(FilterSet):
         )
 
     def filter_rating(self, queryset, name, value):
-
         # ratings matching the query exactly
         direct_matches_qs = queryset.filter(commentary__rating__in=value)
 
@@ -104,29 +107,29 @@ class BrandFilter(FilterSet):
         return direct_matches_qs | inheritors_qs
 
     class Meta:
-        model = Brand
+        model = BrandModel
         fields = []
 
 
-class RegionType(DjangoObjectType):
+class Region(DjangoObjectType):
     class Meta:
-        model = Region
+        model = RegionModel
 
 
-class SubregionType(DjangoObjectType):
+class SubRegion(DjangoObjectType):
     class Meta:
-        model = SubRegion
+        model = SubRegionModel
 
 
-class BrandNodeType(DjangoObjectType):
+class Brand(DjangoObjectType):
     """ """
 
     countries = graphene.List(Country)
-    regions = RegionType
-    subregions = SubregionType
+    regions = Region
+    subregions = SubRegion
 
     class Meta:
-        model = Brand
+        model = BrandModel
         fields = [
             "tag",
             "name",
@@ -143,29 +146,6 @@ class BrandNodeType(DjangoObjectType):
         filterset_class = BrandFilter
 
 
-class BrandType(DjangoObjectType):
-    """ " """
-
-    countries = graphene.List(Country)
-    regions = RegionType
-    subregions = SubregionType
-
-    class Meta:
-        model = Brand
-        # filter_fields = ["tag"]
-        fields = (
-            "tag",
-            "name",
-            "website",
-            "countries",
-            "commentary",
-            "bank_features",
-            "regions",
-            "subregions",
-            "datasources",
-        )
-
-
 class HtmlFromMarkdown(Scalar):
     """Markdown parsed into HTML"""
 
@@ -176,8 +156,7 @@ class HtmlFromMarkdown(Scalar):
         return markdown(md, extensions=extensions, extension_configs=extension_configs)
 
 
-class CommentaryType(DjangoObjectType):
-
+class Commentary(DjangoObjectType):
     summary = HtmlFromMarkdown()
     header = HtmlFromMarkdown()
     details = HtmlFromMarkdown()
@@ -187,19 +166,19 @@ class CommentaryType(DjangoObjectType):
     )
 
     class Meta:
-        model = Commentary
+        model = CommentaryModel
         filter_fields = ["rating", "display_on_website", "show_on_sustainable_banks_page"]
         interfaces = (relay.Node,)
         convert_choices_to_enum = False
 
 
-class FeatureTypeType(DjangoObjectType):
+class Feature(DjangoObjectType):
     class Meta:
-        model = FeatureType
+        model = FeatureModel
         fields = "__all__"
 
 
-class BrandFeatureType(DjangoObjectType):
+class BrandFeature(DjangoObjectType):
     name = graphene.String()
     description = graphene.String()
 
@@ -210,23 +189,24 @@ class BrandFeatureType(DjangoObjectType):
         return obj.feature.description
 
     class Meta:
-        model = BrandFeature
+        model = BrandFeatureModel
         fields = "__all__"
         convert_choices_to_enum = False
 
 
 class Query(graphene.ObjectType):
-    commentary = relay.Node.Field(CommentaryType)
-    commentaries = DjangoFilterConnectionField(CommentaryType)
+    node = relay.Node.Field()
+    commentary = relay.Node.Field(Commentary)
+    commentaries = DjangoFilterConnectionField(Commentary)
 
-    brand = graphene.Field(BrandType, tag=graphene.String())
+    brand = graphene.Field(Brand, tag=graphene.Argument(graphene.String, required=True))
 
     def resolve_brand(root, info, tag):
-        return Brand.objects.get(tag=tag)
+        return BrandModel.objects.get(tag=tag)
 
-    brands = DjangoFilterConnectionField(BrandNodeType)
+    brands = DjangoFilterConnectionField(Brand)
 
-    features = DjangoListField(FeatureTypeType)
+    features = DjangoListField(Feature)
 
 
 schema = graphene.Schema(query=Query)
