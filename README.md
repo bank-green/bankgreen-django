@@ -66,7 +66,7 @@ sudo journalctl -u gunicorn.socket
 ## Refreshing Data
 
 ### Updating initial fixture
-This assumes that only the data wanted for the initial fixture is in the current database. To update initial fixture, run `python3 manage.py dumpdata --indent 4 <database name> > fixtures/initial/initial.json` and remove entries added to the database by the migrate command. Specifically, this means any entries for the 'django_content_type' table, which has a UNIQUE constraint on it's fields, but more generally, refers to any internal Django tables not explicitly defined in the various models.   
+This assumes that only the data wanted for the initial fixture is in the current database. To update the initial fixture, run `python3 manage.py dumpdata --indent 4 <database name> > fixtures/initial/initial.json`. Remove internal django model entries from initial.json added to the database using the remove_django_internals.py script. Specifically, this means any entries for the 'django_content_type' table, which has a UNIQUE constraint on it's fields, but more generally, refers to any internal Django tables not explicitly defined in the various models.   
 
 ### Updating cities_light fixtures
 ```
