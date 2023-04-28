@@ -11,6 +11,7 @@ from brand.models import Brand
 
 class RatingChoice(models.TextChoices):
     GREAT = "great"
+    GOOD = "good"
     OK = "ok"
     BAD = "bad"
     WORST = "worst"
