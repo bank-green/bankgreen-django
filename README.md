@@ -9,16 +9,7 @@ Data is harvested from a variety of "data sources." Datasources are then associa
 This project uses python 3.10. You will need to install "[pip](https://pip.pypa.io/en/stable/installation/)" (the python package management system) and "[virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)" (a python virtual environment manager) to your system. You can install virtualenv like: `sudo -H pip3 install virtualenv`
 
 
-
-There is a sample `db.sqlite3` file included in `sample_db/sample_db.sqlite3`. If you wish to use it, you will need to copy it into the project and create a superuser:
-`cp sample_db/sample_db.sqlite3 db.sqlite3`
-`python manage.py createsuperuser`
-
-If you did not use the sample database, you must run migrations and then download a list of countries and regions:
-`python manage.py migrate`
-`python manage.py cities_light`
-
-## Installing Packages
+## Creating a virtual environment \<venv\>
 
 `virtualenv <venv>`
 
@@ -35,9 +26,18 @@ If you did not use the sample database, you must run migrations and then downloa
 `deactivate`
 
 ## Environment variables
-There's an .env file in the same path as settings.py
-where all environment variables are and should be placed.
-You should *call* them in settings.py and then import them like settings.KEYWORD
+There's an .env file in the same path as settings.py where all environment variables are and should be placed. You should *call* them in settings.py and then import them like settings.KEYWORD
+
+`cp bankgreen/.env.template bankgreen/.env`
+
+## Database
+To setup the database, you must run migrations, add sample data by installing the initial fixture and download a list of countries and regions:   
+`python manage.py migrate`   
+`python manage.py loaddata fixtures/initial/initial.json`   
+`python manage.py cities_light`   
+
+Then create a superuser:   
+`python manage.py createsuperuser`
 
 ## Django commands
 
@@ -65,6 +65,8 @@ sudo journalctl -u gunicorn.socket
 
 ## Refreshing Data
 
+### Updating initial fixture
+This assumes that only the data wanted for the initial fixture is in the current database. To update the initial fixture, run `python3 manage.py dumpdata --indent 4 > fixtures/initial/initial.json`. Remove internal django model entries from initial.json added to the database by running `python fixtures/initial/remove_django_internals.py` script. Specifically, this means any entries for the 'django_content_type' table, which has a UNIQUE constraint on it's fields, but more generally, refers to any internal Django tables not explicitly defined in the various models.   
 
 ### Updating cities_light fixtures
 ```
