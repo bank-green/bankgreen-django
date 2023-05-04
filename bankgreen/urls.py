@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, reverse_lazy
+from django.urls import path, re_path, reverse_lazy
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import RedirectView
@@ -31,8 +31,8 @@ from brand import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", RedirectView.as_view(url=reverse_lazy("admin:index"))),
-    path(
-        "graphql",
+    re_path(
+        "^graphql/?$",
         cache_control(max_age=settings.CACHE_MAX_AGE)(
             csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))
         ),
