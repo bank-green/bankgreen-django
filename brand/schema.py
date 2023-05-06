@@ -18,6 +18,11 @@ from .models import (
     FeatureType as FeatureModel,
 )
 
+from .models.commentary import (
+    InstitutionType as InstitutionTypeModel,
+    InstitutionCredential as InstitutionCredentialModel,
+)
+
 from django.db.models import Q
 from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
@@ -154,6 +159,16 @@ class HtmlFromMarkdown(Scalar):
         extensions = ["markdown_link_attr_modifier", FootnoteExtension()]
         extension_configs = {"markdown_link_attr_modifier": {"new_tab": "external_only"}}
         return markdown(md, extensions=extensions, extension_configs=extension_configs)
+
+
+class InstitutionTypeType(DjangoObjectType):
+    class Meta:
+        model = InstitutionTypeModel
+
+
+class InstitutionCredentialType(DjangoObjectType):
+    class Meta:
+        model = InstitutionCredentialModel
 
 
 class Commentary(DjangoObjectType):
