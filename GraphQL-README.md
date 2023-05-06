@@ -38,6 +38,12 @@ query BrandsQuery(
           details
           fossilFreeAllianceRating
           showOnSustainableBanksPage
+          institutionType {
+            name
+          }
+          institutionCredentials {
+            name
+          }
         }
         bankFeatures @include(if: $withFeatures) {
           offered
@@ -91,6 +97,12 @@ query BrandByTagQuery($tag: String!) {
       details
       fossilFreeAllianceRating
       showOnSustainableBanksPage
+      institutionType {
+        name
+      }
+      institutionCredentials {
+        name
+      }
     }
     bankFeatures {
       offered
