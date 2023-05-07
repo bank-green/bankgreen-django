@@ -36,8 +36,6 @@ query BrandsQuery(
           header
           summary
           details
-          institutionType
-          institutionCredentials
           fossilFreeAllianceRating
           showOnSustainableBanksPage
           institutionType {
@@ -97,8 +95,6 @@ query BrandByTagQuery($tag: String!) {
       header
       summary
       details
-      institutionType
-      institutionCredentials
       fossilFreeAllianceRating
       showOnSustainableBanksPage
       institutionType {
@@ -180,8 +176,6 @@ query BrandsQuery(
           header
           summary
           details
-          institutionType
-          institutionCredentials
           fossilFreeAllianceRating
           showOnSustainableBanksPage
         }
