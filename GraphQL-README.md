@@ -36,8 +36,16 @@ query BrandsQuery(
           header
           summary
           details
+          institutionType
+          institutionCredentials
           fossilFreeAllianceRating
           showOnSustainableBanksPage
+          institutionType {
+            name
+          }
+          institutionCredentials {
+            name
+          }
         }
         bankFeatures @include(if: $withFeatures) {
           offered
@@ -89,8 +97,16 @@ query BrandByTagQuery($tag: String!) {
       header
       summary
       details
+      institutionType
+      institutionCredentials
       fossilFreeAllianceRating
       showOnSustainableBanksPage
+      institutionType {
+        name
+      }
+      institutionCredentials {
+        name
+      }
     }
     bankFeatures {
       offered
@@ -164,6 +180,8 @@ query BrandsQuery(
           header
           summary
           details
+          institutionType
+          institutionCredentials
           fossilFreeAllianceRating
           showOnSustainableBanksPage
         }
@@ -196,8 +214,7 @@ query BrandsQuery(
   "country": "US",
   "fossilFreeAlliance": true,
   "features": [
-    "online_only",
-    "credit_cards"
+    "checking"
   ],
   "first": 300,
   "withCommentary": true,
