@@ -125,7 +125,7 @@ class Commentary(models.Model):
 
     # DEPRECATED
     from_the_website = models.TextField(
-        help_text="Deprecated. Text is not used in new SFI pages unless no other text is specified.",
+        help_text="Deprecated. Text is not used in new SFI pages unless no other text is specified in prismic.",
         blank=True,
     )
 
