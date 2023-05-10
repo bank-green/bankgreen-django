@@ -29,7 +29,7 @@ class CommentaryInline(admin.StackedInline):
     model = Commentary
     autocomplete_fields = ["inherit_brand_rating"]
 
-    readonly_fields = ("rating_inherited",)
+    readonly_fields = ("rating_inherited", "from_the_website")
     fieldsets = (
         (
             "Display Configuration",
