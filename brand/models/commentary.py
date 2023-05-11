@@ -122,8 +122,11 @@ class Commentary(models.Model):
         help_text="Positive. Check if bank should be shown on sustainable banks page.",
         default=False,
     )
+
+    # DEPRECATED
     from_the_website = models.TextField(
-        help_text="Positive. used to to describe green banks in their own words", blank=True
+        help_text="Deprecated. Text is not used in new SFI pages unless no other text is specified in prismic.",
+        blank=True,
     )
 
     our_take = models.TextField(
