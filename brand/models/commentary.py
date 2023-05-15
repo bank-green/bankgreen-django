@@ -147,20 +147,27 @@ class Commentary(models.Model):
 
     # General Commentary
 
+    # DEPRECATED. Text has been moved to BankPage in prismic
     subtitle = models.TextField(
-        help_text="Markdown. Displayed immediately under the bank name", blank=True
-    )
-
-    header = models.TextField(
-        help_text="Markdown. Displayed as the header to the summary on the first page of a bank's site.",
+        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
         blank=True,
     )
-    summary = models.TextField(
-        help_text="Markdown. Displayed as the first overview text on a bank's site.", blank=True
+
+    # DEPRECATED. Text has been moved to BankPage in prismic
+    header = models.TextField(
+        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
+        blank=True,
     )
 
+    # DEPRECATED. Text has been moved to BankPage in prismic
+    summary = models.TextField(
+        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
+        blank=True,
+    )
+
+    # DEPRECATED. Text has been moved to BankPage in prismic
     details = models.TextField(
-        help_text="Markdown. Displayed as the overview of a bank's activities once you scroll down to their second page.",
+        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
         blank=True,
     )
 
