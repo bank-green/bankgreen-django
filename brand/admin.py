@@ -44,13 +44,7 @@ class CommentaryInline(admin.StackedInline):
         ("Used for negatively rated banks", {"fields": (("amount_financed_since_2016",))}),
         (
             "Used for positively rated banks",
-            {
-                "fields": (
-                    ("from_the_website",),
-                    ("our_take"),
-                    ("institution_type", "institution_credentials"),
-                )
-            },
+            {"fields": (("from_the_website",), ("institution_type", "institution_credentials"))},
         ),
         ("CMS", {"fields": (("subtitle",), ("header",), ("summary",), ("details",))}),
         ("Meta", {"fields": ("comment",)}),

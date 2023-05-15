@@ -134,6 +134,7 @@ class Commentary(models.Model):
         blank=True,
     )
 
+    # DEPRECATED. Text has been moved to SFIPages in prismic
     our_take = models.TextField(
         help_text="Positive. used to to give our take on green banks", blank=True
     )
