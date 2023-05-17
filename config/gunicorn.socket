@@ -16,12 +16,3 @@ ExecStart=/home/django/bankgreen-django/venv/bin/gunicorn \
 
 [Install]
 WantedBy=multi-user.target
-root@BankGreen-prod:/etc/systemd/system# cat gunicorn.socket
-[Unit]
-Description=gunicorn socket
-
-[Socket]
-ListenStream=/home/django/gunicorn.sock
-
-[Install]
-WantedBy=sockets.target
