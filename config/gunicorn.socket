@@ -1,0 +1,27 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=django
+Group=django
+WorkingDirectory=/home/django/bankgreen-django
+ExecStart=/home/django/bankgreen-django/venv/bin/gunicorn \
+          --reload \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/home/django/gunicorn.sock \
+          bankgreen.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+root@BankGreen-prod:/etc/systemd/system# cat gunicorn.socket
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/home/django/gunicorn.sock
+
+[Install]
+WantedBy=sockets.target

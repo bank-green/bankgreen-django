@@ -1,0 +1,44 @@
+limit_req_zone $binary_remote_addr zone=ddos_limit:10m rate=10r/s;
+
+server {
+    server_name data.bank.green nocachedata.bank.green tempdata.bank.green;
+
+    location = /favicon.ico { access_log on; log_not_found off; }
+    location /static/ {
+        root /home/django/bankgreen-django;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/django/gunicorn.sock;
+    }
+
+    location /graphql {
+        limit_req zone=ddos_limit;
+	limit_req_status 429;
+        include proxy_params;
+        proxy_pass http://unix:/home/django/gunicorn.sock;
+    }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/data.bank.green/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/data.bank.green/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+
+}
+server {
+    if ($host = data.bank.green) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name data.bank.green;
+    return 404; # managed by Certbot
+
+
+}
