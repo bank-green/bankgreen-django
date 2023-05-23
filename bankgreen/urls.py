@@ -21,6 +21,8 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import RedirectView
 
+from django_prometheus import exports
+
 from graphene_django.views import GraphQLView
 
 from schema import schema
@@ -46,4 +48,5 @@ urlpatterns = [
     path("calendar/", views.calendar_redirect, name="calendar"),
     path("update/<str:tag>/", views.CreateUpdateView.as_view(), name="update"),
     path("update_success/", views.update_success, name="update_success"),
+    path("metrics/", exports.ExportToDjangoView, name="prometheus-django-metrics"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

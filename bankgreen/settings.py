@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     "django_json_widget",
     "corsheaders",
     "cities_light",
+    "django_prometheus",
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
+    *MIDDLEWARE,
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 ROOT_URLCONF = "bankgreen.urls"
