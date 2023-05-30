@@ -34,3 +34,6 @@ django-cities-light==3.9.2
 symspellpy==6.7.7
 django-autocomplete-light==3.9.4
 django-prometheus>=2.3.0,<2.4
+opentelemetry-instrumentation-django==0.39b0
+opentelemetry-sdk>=1.18.0,<1.19
+opentelemetry-exporter-otlp-proto-grpc>=1.18.0,<1.19

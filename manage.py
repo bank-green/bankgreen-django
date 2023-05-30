@@ -3,10 +3,32 @@
 import os
 import sys
 
+from opentelemetry import trace
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.django import DjangoInstrumentor
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
 
 def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bankgreen.settings")
+
+    OTLP_GRPC_ENDPOINT = os.environ.get("OTLP_GRPC_ENDPOINT", "http://localhost:4317")
+
+    resource = Resource(attributes={"service.name": "bank_green_django"})
+
+    tracer = TracerProvider(resource=resource)
+    trace.set_tracer_provider(tracer)
+
+    otlp_exporter = OTLPSpanExporter(endpoint=OTLP_GRPC_ENDPOINT, insecure=True)
+    span_processor = BatchSpanProcessor(otlp_exporter)
+
+    trace.get_tracer_provider().add_span_processor(span_processor)
+
+    DjangoInstrumentor().instrument(tracer_provider=tracer)
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
