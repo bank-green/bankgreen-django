@@ -1,17 +1,18 @@
 from uuid import uuid4
-from dal import autocomplete
+
 from django.conf import settings
-
-from django.shortcuts import redirect, render
-from django.views.generic import CreateView
-from django.forms.models import model_to_dict
 from django.forms import inlineformset_factory
-from django.urls import reverse_lazy
-
-from .models import Brand, BrandUpdate, BrandFeature
-from .forms import CreateUpdateForm, BrandFeaturesForm
+from django.forms.models import model_to_dict
+from django.http import Http404
+from django.shortcuts import redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView
 
 from cities_light.models import Region, SubRegion
+from dal import autocomplete
+
+from .forms import BrandFeaturesForm, CreateUpdateForm
+from .models import Brand, BrandFeature, BrandUpdate
 
 
 class RegionAutocomplete(autocomplete.Select2QuerySetView):
@@ -110,6 +111,15 @@ def update_success(request):
     template_name = "update_success.html"
 
     return render(request, template_name)
+
+
+def brand_redirect(request, tag):
+    try:
+        brand_id = Brand.objects.get(tag=tag).pk
+        admin_record_url = reverse("admin:brand_brand_change", args=[brand_id])
+        return redirect(admin_record_url)
+    except Brand.DoesNotExist:
+        raise Http404(f"A brand with the tag {tag} was not found")
 
 
 def calendar_redirect(request):
