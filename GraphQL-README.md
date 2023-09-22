@@ -91,6 +91,7 @@ query BrandByTagQuery($tag: String!) {
       ourTake
       amountFinancedSince2016
       fossilFreeAlliance
+      top_pick
       subtitle
       header
       summary

@@ -179,6 +179,10 @@ class Commentary(DjangoObjectType):
     rating_inherited = graphene.Field(
         graphene.String, resolver=lambda obj, info: obj.rating_inherited
     )
+    top_pick = graphene.Boolean()
+    
+    def resolve_top_pick(obj, info):
+        return obj.top_pick
 
     class Meta:
         model = CommentaryModel
