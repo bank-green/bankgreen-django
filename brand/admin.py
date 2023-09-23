@@ -42,7 +42,12 @@ class CommentaryInline(admin.StackedInline):
             "Display Configuration",
             {
                 "fields": (
-                    ("display_on_website", "fossil_free_alliance", "top_pick", "number_of_requests"),
+                    (
+                        "display_on_website",
+                        "fossil_free_alliance",
+                        "top_pick",
+                        "number_of_requests",
+                    ),
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
                 )
