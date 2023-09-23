@@ -72,6 +72,7 @@ class Commentary(models.Model):
         choices=RatingChoice.choices,
         default=RatingChoice.UNKNOWN,
     )
+    top_pick = models.BooleanField(default=False, help_text="Is this brand a top pick?")
 
     @property
     def rating_inherited(self):
