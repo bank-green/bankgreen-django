@@ -21,7 +21,7 @@ from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 
-from .models import Brand, Commentary
+from .models import Brand, Commentary, BrandSuggestion
 
 
 class CommentaryInline(admin.StackedInline):
@@ -372,3 +372,9 @@ class BrandAdmin(admin.ModelAdmin):
         extra_context = extra_context or {}
         extra_context["page_title"] = "Brands: "
         return super(BrandAdmin, self).changelist_view(request, extra_context=extra_context)
+
+
+@admin.register(BrandSuggestion)
+class BrandSuggestions(admin.ModelAdmin):
+    list_display = ["short_name", "submitter_name", "submitter_email"]
+
