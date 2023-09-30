@@ -4,7 +4,7 @@ from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
 from django_countries.graphql.types import Country
 from graphene_django import DjangoListField
-from django.db.models import Count
+from django.db.models import Count, Case, When
 from django_filters import FilterSet, ChoiceFilter, BooleanFilter, MultipleChoiceFilter
 from django_countries import countries
 from brand.models.commentary import RatingChoice
@@ -77,7 +77,36 @@ class BrandFilter(FilterSet):
 
     # rating_inherited = MultipleChoiceFilter(field_name="commentary__rating_inherited", choices=RatingChoice.choices)
 
-    recommended_only = BooleanFilter(field_name="commentary__top_three_ethical")
+    recommended_only = BooleanFilter(
+        field_name="commentary__show_on_sustainable_banks_page", method="filter_recommended"
+    )
+
+    def filter_recommended(self, queryset, name, value):
+        # Return banks with 'show_on_sustainable_banks_page' and order results
+        # by those with top_pick first, then fossil_free_alliance, then
+        # sort on direct ratings, and finally list those with inherited
+        # ratings if any. Since inherited ratings can't be accessed in db query,
+        # ordering that includes inherited rating would be better done on the
+        # client side. This provides a decent default though.
+
+        # Treat 'recommendedOnly: false' as if filter wasn't included
+        if value is False:
+            return queryset
+
+        recommended_qs = queryset.filter(commentary__show_on_sustainable_banks_page=True)
+
+        # Add a numerical rank for direct ratings so we can then use it to sort
+        # appropriately.
+        recommended_qs = recommended_qs.annotate(
+            rating_num=Case(
+                When(commentary__rating=RatingChoice.GREAT, then=1),
+                When(commentary__rating=RatingChoice.GOOD, then=10),
+                When(commentary__rating=RatingChoice.OK, then=100),
+                default=100000,
+            )
+        ).order_by("-commentary__top_pick", "-commentary__fossil_free_alliance", "rating_num")
+
+        return recommended_qs
 
     display_on_website = BooleanFilter(field_name="commentary__display_on_website")
 
@@ -107,7 +136,8 @@ class BrandFilter(FilterSet):
             for x in queryset.filter(commentary__rating=RatingChoice.INHERIT)
             if x.commentary.rating_inherited in value
         ]
-        inheritors_qs = Brand.objects.filter(Q(pk__in=inherited_matches_pks))
+
+        inheritors_qs = queryset.filter(Q(pk__in=inherited_matches_pks))
 
         return direct_matches_qs | inheritors_qs
 
