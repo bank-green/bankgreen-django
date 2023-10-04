@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
     # my apps
     "datasource",
     "brand",
@@ -168,3 +169,8 @@ GRAPHENE = {"RELAY_CONNECTION_MAX_LIMIT": 10000}
 
 CITIES_LIGHT_TRANSLATION_LANGUAGES = [""]
 CITIES_LIGHT_INCLUDE_CITY_TYPES = [""]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 1,
+}

@@ -18,7 +18,7 @@ class Marketforces(Datasource):
             print("Loading Banktrack data from local copy...")
             df = pd.read_csv("./datasource/local/marketforces/marketforces.csv")
         else:
-            print("Loading Banktrack data from API...")
+            print("Loading Banktrack data from api...")
             df = pd.read_csv("./datasource/local/marketforces/marketforces.csv")
             print(df)
             # r = requests.post(

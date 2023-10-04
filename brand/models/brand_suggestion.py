@@ -15,7 +15,5 @@ class BrandSuggestion(Brand):
 
     submission_date = models.DateTimeField(default=datetime.now, blank=True)
 
-    brand_suggestion_id = models.BigAutoField(primary_key=True)
-
     class Meta:
         verbose_name_plural = "Brand suggestions"

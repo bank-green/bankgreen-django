@@ -118,7 +118,7 @@ class Usnic(Datasource):
         if not load_from_api:
             print("Loading Usnic data from local copy...")
         else:
-            print("No Usnic API. Loading data from local copy...")
+            print("No Usnic api. Loading data from local copy...")
 
         attr_df = pd.read_csv(
             "./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV",

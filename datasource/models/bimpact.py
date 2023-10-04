@@ -20,14 +20,14 @@ class Bimpact(Datasource):
         df = None
 
         # hardcoded as false at the present time because of lack of
-        # access API credentials. Awaiting approval
+        # access api credentials. Awaiting approval
         load_from_api = False  # TODO: remove this line
 
         if not load_from_api:
             print("Loading Bimpact data from local copy...")
             df = pd.read_csv("./datasource/local/bimpact/bimpact.csv")
         else:
-            print("Loading Bimpact data from API...")
+            print("Loading Bimpact data from api...")
 
             with open("./datasource/local/bimpact/bimpact.sql") as f:
                 query = f.read()

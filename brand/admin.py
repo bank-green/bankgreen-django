@@ -375,6 +375,6 @@ class BrandAdmin(admin.ModelAdmin):
 
 
 @admin.register(BrandSuggestion)
-class BrandSuggestions(admin.ModelAdmin):
+class BrandSuggestionsAdmin(admin.ModelAdmin):
     list_display = ["short_name", "submitter_name", "submitter_email"]
 

@@ -20,7 +20,7 @@ class Fairfinance(Datasource):
             print("Loading Banktrack data from local copy...")
             df = pd.read_csv("./datasource/local/fairfinance/fairfinance.csv")
         else:
-            print("Loading Banktrack data from API...")
+            print("Loading Banktrack data from api...")
             df = pd.read_csv("./datasource/local/fairfinance/fairfinance.csv")
             print(df)
             # r = requests.post(

@@ -37,7 +37,7 @@ class InstitutionCredential(models.Model):
     prismic_api_id = models.CharField(
         max_length=100,
         blank=True,
-        help_text="the associated prismic API ID. Must match perfectly with the SFIDefaults type related image field. e.g. institution_credentials-gabv'",
+        help_text="the associated prismic api ID. Must match perfectly with the SFIDefaults type related image field. e.g. institution_credentials-gabv'",
     )
 
     def __str__(self):

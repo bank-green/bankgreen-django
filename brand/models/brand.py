@@ -15,7 +15,6 @@ from datasource.constants import lev_distance, model_names
 
 # from Levenshtein import distance as lev
 
-
 class Brand(TimeStampedModel):
     """
     A "Brand" is the instance shown to the end user.
