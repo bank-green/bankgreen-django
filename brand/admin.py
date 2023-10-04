@@ -378,3 +378,4 @@ class BrandAdmin(admin.ModelAdmin):
 class BrandSuggestionsAdmin(admin.ModelAdmin):
     list_display = ["short_name", "submitter_name", "submitter_email"]
 
+
