@@ -4,19 +4,29 @@ from django_countries.serializers import CountryFieldMixin
 from django_countries.fields import CountryField
 from django_countries.fields import Country
 
+
 # Serialization : It is the process of converting complex data into a format that can be easily
 #                 transmitted and stored. Examples : Json, XML etc.
 # ModelSerializer is used for serializing Django models into Json format.
 
 
 class MultipleCountryField(serializers.Field):
-
     def to_representation(self, obj):
+        """
+            Serialized method. Basically this method will convert the country field to serialized json
+            format which then can be returned as a api response.
+        """
         if isinstance(obj, list) and all(isinstance(item, Country) for item in obj):
+            print([country.code for country in obj])
             return [country.code for country in obj]
         return []
 
     def to_internal_value(self, data):
+        """
+            Deserialized method. Basically this method will convert country code from request
+            payload (json format) to the format understood by django.
+        """
+
         if not data:
             return []
         if isinstance(data, list):
@@ -37,6 +47,3 @@ class BrandSuggestionSerializer(serializers.ModelSerializer):
 
         # returns all fields from model
         fields = "__all__"
-
-
-

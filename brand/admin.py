@@ -16,12 +16,13 @@ from brand.admin_utils import (
     raise_validation_error_for_missing_region,
 )
 from brand.models.brand_update import BrandUpdate
+from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import InstitutionCredential, InstitutionType
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 
-from .models import Brand, Commentary, BrandSuggestion
+from .models import Brand, Commentary
 
 
 class CommentaryInline(admin.StackedInline):
@@ -93,7 +94,6 @@ class BrandFeaturesReadonlyInline(admin.StackedInline):
 
 @admin.register(FeatureType)
 class BrandFeatureAdmin(admin.ModelAdmin):
-
     search_fields = ("name", "description")
     list_display = ("name", "description")
 
@@ -351,7 +351,11 @@ class BrandAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         # filter out all but base class
-        qs = super(BrandAdmin, self).get_queryset(request).filter(brandupdate__isnull=True)
+        qs = (
+            super(BrandAdmin, self)
+            .get_queryset(request)
+            .filter(brandupdate__isnull=True, brandsuggestion__isnull=True)
+        )
         return qs
 
     def number_of_related_datasources(self, obj):
@@ -377,5 +381,3 @@ class BrandAdmin(admin.ModelAdmin):
 @admin.register(BrandSuggestion)
 class BrandSuggestionsAdmin(admin.ModelAdmin):
     list_display = ["short_name", "submitter_name", "submitter_email"]
-
-
