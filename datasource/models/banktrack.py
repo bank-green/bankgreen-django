@@ -7,7 +7,6 @@ from django.conf import settings
 from django.db import models
 from django_countries.fields import CountryField
 
-
 import pandas as pd
 import requests
 
@@ -30,7 +29,7 @@ class Banktrack(Datasource):
             print("Loading Banktrack data from local copy...")
             df = pd.read_csv("./datasource/local/banktrack/banktrack.csv")
         else:
-            print("Loading Banktrack data from api...")
+            print("Loading Banktrack data from API...")
             df = pd.read_csv("./datasource/local/banktrack/banktrack.csv")
             # r = requests.post(
             #     "https://www.banktrack.org/service/sections/Bankprofile/financedata",

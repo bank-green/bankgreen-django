@@ -23,7 +23,7 @@ class Command(BaseCommand):
         parser.add_argument("datasources", nargs="+", type=str, help="the data sources to refresh")
         parser.add_argument(
             "--local",
-            help="avoid api calls and load local data where possible. datasources for this option must be specified",
+            help="avoid API calls and load local data where possible. datasources for this option must be specified",
         )
 
     def handle(self, *args, **options):

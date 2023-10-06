@@ -15,6 +15,7 @@ from datasource.constants import lev_distance, model_names
 
 # from Levenshtein import distance as lev
 
+
 class Brand(TimeStampedModel):
     """
     A "Brand" is the instance shown to the end user.
@@ -239,13 +240,13 @@ class Brand(TimeStampedModel):
     @classmethod
     def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
         if (
-            value
-            and value != ""
-            and value != "0"
-            and key
-            and key != ""
-            and key != "0"
-            and not mydict.get(key)
+                value
+                and value != ""
+                and value != "0"
+                and key
+                and key != ""
+                and key != "0"
+                and not mydict.get(key)
         ):
             mydict[key] = value
         return mydict
@@ -293,20 +294,20 @@ class Brand(TimeStampedModel):
             spelling_dict = cls.website_into_spelling_dict(brand, spelling_dict)
 
             for identifier in (
-                brand.lei,
-                brand.permid,
-                brand.viafid,
-                brand.googleid,
-                brand.rssd,
-                brand.rssd_hd,
-                brand.cusip,
-                brand.thrift,
-                brand.thrift_hc,
-                brand.aba_prim,
-                brand.ncua,
-                brand.fdic_cert,
-                brand.occ,
-                brand.ein,
+                    brand.lei,
+                    brand.permid,
+                    brand.viafid,
+                    brand.googleid,
+                    brand.rssd,
+                    brand.rssd_hd,
+                    brand.cusip,
+                    brand.thrift,
+                    brand.thrift_hc,
+                    brand.aba_prim,
+                    brand.ncua,
+                    brand.fdic_cert,
+                    brand.occ,
+                    brand.ein,
             ):
                 spelling_dict = cls._non_replacing_insert(spelling_dict, identifier, brand.pk)
 

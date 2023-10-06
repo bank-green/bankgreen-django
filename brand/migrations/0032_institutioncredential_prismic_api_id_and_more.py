@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("brand", "0031_alter_commentary_rating")]
 
     operations = [
@@ -13,7 +12,7 @@ class Migration(migrations.Migration):
             name="prismic_api_id",
             field=models.CharField(
                 blank=True,
-                help_text="the associated prismic api ID. Must match perfectly with the SFIDefaults type related image field. e.g. institution_credentials-gabv'",
+                help_text="the associated prismic API ID. Must match perfectly with the SFIDefaults type related image field. e.g. institution_credentials-gabv'",
                 max_length=100,
             ),
         ),

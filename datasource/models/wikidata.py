@@ -3,7 +3,6 @@ from qwikidata.sparql import return_sparql_query_results
 from django.db import models
 from django_countries.fields import CountryField
 
-
 import pandas as pd
 import np
 
@@ -14,7 +13,7 @@ from datasource.local.wikidata.pycountry_util import find_country
 class Wikidata(Datasource):
     """
     Wikidata has a community sourced dataset of banks, various unique identifiers, and their countries of operation.
-    Data is collected via the Wikidata.org api. The api sometimes times out when hit too often, so be sure not to
+    Data is collected via the Wikidata.org api. The API sometimes times out when hit too often, so be sure not to
     do that.
     The most important things we collect from wikidata are subsidiary information and unique bank ids including
     - Legal Entity Identifier,
@@ -30,7 +29,7 @@ class Wikidata(Datasource):
             print("Loading Wikidata data from local copy...")
             df = pd.read_csv("./datasource/local/wikidata/wikidata.csv")
         else:
-            print("Loading Wikidata data from api...")
+            print("Loading Wikidata data from API...")
             with open("./datasource/local/wikidata/query.sparql") as query_file:
                 myquery = query_file.read()
             res = return_sparql_query_results(myquery)

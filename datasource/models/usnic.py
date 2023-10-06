@@ -118,7 +118,7 @@ class Usnic(Datasource):
         if not load_from_api:
             print("Loading Usnic data from local copy...")
         else:
-            print("No Usnic api. Loading data from local copy...")
+            print("No Usnic API. Loading data from local copy...")
 
         attr_df = pd.read_csv(
             "./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV",
@@ -304,9 +304,9 @@ class Usnic(Datasource):
 
                 # if the relationship is not controlling or has ended or parent is not in the dataset
                 if (
-                    row["CTRL_IND"] != 1
-                    or row["DT_END"] != 99991231
-                    or parent_rssd not in existing_rssds
+                        row["CTRL_IND"] != 1
+                        or row["DT_END"] != 99991231
+                        or parent_rssd not in existing_rssds
                 ):
                     continue
 

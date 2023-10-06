@@ -2,10 +2,8 @@ import json
 from datetime import datetime, timezone
 from django_countries.fields import CountryField
 
-
 from django.conf import settings
 from django.db import models
-
 
 import pandas as pd
 import requests
@@ -20,14 +18,14 @@ class Bimpact(Datasource):
         df = None
 
         # hardcoded as false at the present time because of lack of
-        # access api credentials. Awaiting approval
+        # access API credentials. Awaiting approval
         load_from_api = False  # TODO: remove this line
 
         if not load_from_api:
             print("Loading Bimpact data from local copy...")
             df = pd.read_csv("./datasource/local/bimpact/bimpact.csv")
         else:
-            print("Loading Bimpact data from api...")
+            print("Loading Bimpact data from API...")
 
             with open("./datasource/local/bimpact/bimpact.sql") as f:
                 query = f.read()
