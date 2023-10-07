@@ -49,5 +49,3 @@ class BrandFeaturesForm(forms.ModelForm):
     class Meta:
         model = BrandFeature
         fields = ["details", "feature"]
-
-

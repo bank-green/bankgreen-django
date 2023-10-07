@@ -13,8 +13,8 @@ from django_countries.fields import Country
 class MultipleCountryField(serializers.Field):
     def to_representation(self, obj):
         """
-            Serialized method. Basically this method will convert the country field to serialized json
-            format which then can be returned as a api response.
+        Serialized method. Basically this method will convert the country field to serialized json
+        format which then can be returned as a api response.
         """
         if isinstance(obj, list) and all(isinstance(item, Country) for item in obj):
             print([country.code for country in obj])
@@ -23,8 +23,8 @@ class MultipleCountryField(serializers.Field):
 
     def to_internal_value(self, data):
         """
-            Deserialized method. Basically this method will convert country code from request
-            payload (json format) to the format understood by django.
+        Deserialized method. Basically this method will convert country code from request
+        payload (json format) to the format understood by django.
         """
 
         if not data:

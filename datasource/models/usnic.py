@@ -304,9 +304,9 @@ class Usnic(Datasource):
 
                 # if the relationship is not controlling or has ended or parent is not in the dataset
                 if (
-                        row["CTRL_IND"] != 1
-                        or row["DT_END"] != 99991231
-                        or parent_rssd not in existing_rssds
+                    row["CTRL_IND"] != 1
+                    or row["DT_END"] != 99991231
+                    or parent_rssd not in existing_rssds
                 ):
                     continue
 
