@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.urls import reverse
 from django.utils.html import escape, format_html
+from django_object_actions import DjangoObjectActions
 
 from cities_light.admin import SubRegionAdmin
 from cities_light.models import Region, SubRegion
