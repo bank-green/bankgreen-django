@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.conf import settings
 from django.forms import inlineformset_factory
 from django.forms.models import model_to_dict
-from django.http import Http404, HttpResponse
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
