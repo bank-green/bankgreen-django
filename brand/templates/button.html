@@ -1,0 +1,14 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Possible Duplicates:</h1>
+    <ul>
+        {% for bank_to_match, possible_matches in suggested_duplicates.items %}
+            {% if value %}
+                <li><strong>{{ bank_to_match }}</strong></li>
+                {% for possible_match in possible_matches %}
+                    <a href={{possible_match.1}}> {{possible_match.0}}</a><br>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}
