@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "django_countries",
     "django_admin_listfilter_dropdown",
     "django_filters",
+    "django_object_actions",
     "django_json_widget",
     "corsheaders",
     "cities_light",
