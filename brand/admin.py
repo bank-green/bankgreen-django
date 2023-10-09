@@ -22,6 +22,7 @@ from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 
+from scripts.check_duplicates import return_all_duplicates
 from .models import Brand, Commentary
 
 
@@ -270,9 +271,17 @@ class InstitutionCredentials(admin.ModelAdmin):
 
 
 @admin.register(Brand)
-class BrandAdmin(admin.ModelAdmin):
+class BrandAdmin(DjangoObjectActions,admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
 
+    def Check_for_duplicates(self, request, query_set):
+        suggested_duplicates = return_all_duplicates()
+        return render(request,
+                      'button.html',
+                      context={"suggested_duplicates":suggested_duplicates})
+
+
+    changelist_actions = ('Check_for_duplicates',)
     @admin.display(description="related datasources")
     def related_datasources(self, obj):
         datasources = obj.datasources.filter(brand=obj)
