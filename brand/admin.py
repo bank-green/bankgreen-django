@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.urls import reverse
+from django.shortcuts import render
 from django.utils.html import escape, format_html
 from django_object_actions import DjangoObjectActions
 
