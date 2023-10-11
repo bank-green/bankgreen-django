@@ -2,10 +2,8 @@ import json
 from datetime import datetime, timezone
 from django_countries.fields import CountryField
 
-
 from django.conf import settings
 from django.db import models
-
 
 import pandas as pd
 import requests

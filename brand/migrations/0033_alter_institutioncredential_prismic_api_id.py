@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("brand", "0032_institutioncredential_prismic_api_id_and_more")]
 
     operations = [
