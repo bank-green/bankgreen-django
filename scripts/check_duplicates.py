@@ -15,7 +15,7 @@ def return_all_duplicates() :
     for object in all_objects:
         name_comparison.create_dictionary_entry(object.name, 1)
         tag_comparison.create_dictionary_entry(object.tag, 1)
-        name_or_tag_to_pk[object.name] = object.pk 
+        name_or_tag_to_pk[object.name] = object.pk
         name_or_tag_to_pk[object.tag] = object.pk
         pk_to_name[object.pk] = object.name
 

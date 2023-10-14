@@ -4,7 +4,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.urls import reverse
 from django.shortcuts import render
 from django.utils.html import escape, format_html
-from django_object_actions import DjangoObjectActions
+
 
 from cities_light.admin import SubRegionAdmin
 from cities_light.models import Region, SubRegion
@@ -272,17 +272,8 @@ class InstitutionCredentials(admin.ModelAdmin):
 
 
 @admin.register(Brand)
-class BrandAdmin(DjangoObjectActions,admin.ModelAdmin):
-    form = CountriesWidgetOverrideForm
-
-    def Check_for_duplicates(self, request, query_set):
-        suggested_duplicates = return_all_duplicates()
-        return render(request,
-                      'button.html',
-                      context={"suggested_duplicates":suggested_duplicates})
-
-
-    changelist_actions = ('Check_for_duplicates',)
+class BrandAdmin(admin.ModelAdmin):
+    form = CountriesWidgetOverrideForm  
     @admin.display(description="related datasources")
     def related_datasources(self, obj):
         datasources = obj.datasources.filter(brand=obj)
