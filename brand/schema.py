@@ -216,7 +216,12 @@ class Commentary(DjangoObjectType):
 
     class Meta:
         model = CommentaryModel
-        filter_fields = ["rating", "display_on_website", "show_on_sustainable_banks_page"]
+        filter_fields = [
+            "rating",
+            "display_on_website",
+            "show_on_sustainable_banks_page",
+            "semiautomatic_harassment",
+        ]
         interfaces = (relay.Node,)
         convert_choices_to_enum = False
 
