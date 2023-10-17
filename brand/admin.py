@@ -274,8 +274,7 @@ class InstitutionCredentials(admin.ModelAdmin):
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
     form = CountriesWidgetOverrideForm
-
-    change_list_template = "admin/brand/brand/change_list_template.html"
+    change_list_template = "change_list_template.html"
 
     @admin.display(description="related datasources")
     def related_datasources(self, obj):
