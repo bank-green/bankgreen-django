@@ -24,6 +24,8 @@ from datasource.models.datasource import Datasource, SuggestedAssociation
 
 from .models import Brand, Commentary
 
+from django.core.exceptions import ObjectDoesNotExist
+
 
 class CommentaryInline(admin.StackedInline):
     fk_name = "brand"
@@ -51,6 +53,7 @@ class CommentaryInline(admin.StackedInline):
                     ),
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
+                    ("semiautomatic_harassment"),
                 )
             },
         ),
@@ -348,6 +351,19 @@ class BrandAdmin(admin.ModelAdmin):
     list_per_page = 800
 
     inlines = [CommentaryInline, BrandFeaturesInline, DatasourceInline]
+
+    def save_model(self, request, obj, form, change):
+        """
+        This function is to create object of commentary model when default values are
+        provided by user in admin portal and save the data in respective database.
+        """
+        super().save_model(request, obj, form, change)
+        try:
+            obj.commentary
+        except ObjectDoesNotExist as e:
+            commentary_obj = Commentary.objects.create(brand_id=obj.id)
+            obj.commentary = commentary_obj
+            obj.save()
 
     def get_queryset(self, request):
         # filter out all but base class
