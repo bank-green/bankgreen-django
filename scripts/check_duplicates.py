@@ -2,8 +2,9 @@ from symspellpy import SymSpell, Verbosity
 from brand.models import Brand
 from django.urls import reverse
 
-def return_all_duplicates() :
-    #fetch all brands from Brand.models
+
+def return_all_duplicates():
+    # fetch all brands from Brand.models
     all_objects = Brand.objects.all()
 
     name_comparison = SymSpell()
@@ -11,7 +12,7 @@ def return_all_duplicates() :
     name_or_tag_to_pk = {}
     pk_to_name = {}
 
-    #For each object add its name and tag to dictionary and map them to pk and then map each pk to a name
+    # For each object add its name and tag to dictionary and map them to pk and then map each pk to a name
     for object in all_objects:
         name_comparison.create_dictionary_entry(object.name, 1)
         tag_comparison.create_dictionary_entry(object.tag, 1)
@@ -21,7 +22,7 @@ def return_all_duplicates() :
 
     relation_dictionary = {}
 
-    #Find all relations and then add a tuple of object name and url to dictionary
+    # Find all relations and then add a tuple of object name and url to dictionary
 
     for object in all_objects:
         name_matches = name_comparison.lookup(object.name, Verbosity.ALL)
@@ -32,7 +33,9 @@ def return_all_duplicates() :
         for possible_match in name_matches[1:] + tag_matches[1:]:
             possible_match_pk = name_or_tag_to_pk[possible_match.term]
             possible_match_name = pk_to_name[possible_match_pk]
-            possible_match_url =  reverse("admin:brand_brand_change", args=(str(possible_match_pk),))
-            relation_dictionary[(object.name, source_object_url)].add((possible_match_name, possible_match_url))
+            possible_match_url = reverse("admin:brand_brand_change", args=(str(possible_match_pk),))
+            relation_dictionary[(object.name, source_object_url)].add(
+                (possible_match_name, possible_match_url)
+            )
 
     return relation_dictionary
