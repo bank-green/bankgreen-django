@@ -16,12 +16,15 @@ from brand.admin_utils import (
     raise_validation_error_for_missing_region,
 )
 from brand.models.brand_update import BrandUpdate
+from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import InstitutionCredential, InstitutionType
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 
 from .models import Brand, Commentary
+
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class CommentaryInline(admin.StackedInline):
@@ -50,6 +53,7 @@ class CommentaryInline(admin.StackedInline):
                     ),
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
+                    ("semiautomatic_harassment"),
                 )
             },
         ),
@@ -93,7 +97,6 @@ class BrandFeaturesReadonlyInline(admin.StackedInline):
 
 @admin.register(FeatureType)
 class BrandFeatureAdmin(admin.ModelAdmin):
-
     search_fields = ("name", "description")
     list_display = ("name", "description")
 
@@ -349,9 +352,26 @@ class BrandAdmin(admin.ModelAdmin):
 
     inlines = [CommentaryInline, BrandFeaturesInline, DatasourceInline]
 
+    def save_model(self, request, obj, form, change):
+        """
+        This function is to create object of commentary model when default values are
+        provided by user in admin portal and save the data in respective database.
+        """
+        super().save_model(request, obj, form, change)
+        try:
+            obj.commentary
+        except ObjectDoesNotExist as e:
+            commentary_obj = Commentary.objects.create(brand_id=obj.id)
+            obj.commentary = commentary_obj
+            obj.save()
+
     def get_queryset(self, request):
         # filter out all but base class
-        qs = super(BrandAdmin, self).get_queryset(request).filter(brandupdate__isnull=True)
+        qs = (
+            super(BrandAdmin, self)
+            .get_queryset(request)
+            .filter(brandupdate__isnull=True, brandsuggestion__isnull=True)
+        )
         return qs
 
     def number_of_related_datasources(self, obj):
@@ -372,3 +392,8 @@ class BrandAdmin(admin.ModelAdmin):
         extra_context = extra_context or {}
         extra_context["page_title"] = "Brands: "
         return super(BrandAdmin, self).changelist_view(request, extra_context=extra_context)
+
+
+@admin.register(BrandSuggestion)
+class BrandSuggestionsAdmin(admin.ModelAdmin):
+    list_display = ["short_name", "submitter_name", "submitter_email"]

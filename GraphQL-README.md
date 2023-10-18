@@ -28,6 +28,7 @@ query BrandsQuery(
         aliases
         commentary @include(if: $withCommentary) {
           rating
+          semiautomaticHarassment
           fromTheWebsite
           ourTake
           amountFinancedSince2016
@@ -87,6 +88,7 @@ query BrandByTagQuery($tag: String!) {
     website
     commentary {
       rating
+      semiautomaticHarassment
       fromTheWebsite
       ourTake
       amountFinancedSince2016
@@ -169,6 +171,7 @@ query BrandsQuery(
         }
         commentary @include(if: $withCommentary) {
           rating
+          semiautomaticHarassment
           fromTheWebsite
           ourTake
           amountFinancedSince2016
@@ -214,5 +217,19 @@ query BrandsQuery(
   "first": 300,
   "withCommentary": true,
   "withFeatures": true
+}
+```
+
+## Filter the data based on semiautomatic_harassment field
+```
+ query{
+ commentaries(semiautomaticHarassment: "encourage new policy"){
+  edges {
+    node {
+      id
+      # you can add more fields as well like rating, topPick etc
+    }
+  }
+ }
 }
 ```

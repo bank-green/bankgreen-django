@@ -3,7 +3,6 @@ from qwikidata.sparql import return_sparql_query_results
 from django.db import models
 from django_countries.fields import CountryField
 
-
 import pandas as pd
 import np
 

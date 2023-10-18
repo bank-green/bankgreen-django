@@ -27,7 +27,6 @@ from schema import schema
 
 from brand import views
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", RedirectView.as_view(url=reverse_lazy("admin:index"))),
@@ -48,5 +47,6 @@ urlpatterns = [
     path("banks/<str:tag>/", views.brand_redirect, name="brand_quicklink"),
     path("sustainable-eco-banks/<str:tag>/", views.brand_redirect, name="brand_quicklink"),
     path("update_success/", views.update_success, name="update_success"),
+    path("rest_api_view/", include("api.urls")),
     re_path("", include("django_prometheus.urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
