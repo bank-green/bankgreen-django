@@ -2,8 +2,9 @@ from django.db import models
 from brand.models import Brand
 from django_countries.fields import CountryField
 
+from django_prometheus.models import ExportModelOperationsMixin
 
-class FeatureType(models.Model):
+class FeatureType(ExportModelOperationsMixin("feature_type"), models.Model):
     name = models.CharField(
         max_length=40, help_text="i.e. Free Checking account, Credit Card, etc."
     )

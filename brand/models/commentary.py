@@ -4,12 +4,14 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from django_prometheus.models import ExportModelOperationsMixin
+
 from django_countries.fields import CountryField
 
 from brand.models import Brand
 
 
-class RatingChoice(models.TextChoices):
+class RatingChoice(ExportModelOperationsMixin("rating_choice"), models.TextChoices):
     GREAT = "great"
     GOOD = "good"
     OK = "ok"

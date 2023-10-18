@@ -1,8 +1,10 @@
 from brand.models.brand import Brand
 from django.db import models
 
+from django_prometheus.models import ExportModelOperationsMixin
 
-class BrandUpdate(Brand):
+
+class BrandUpdate(ExportModelOperationsMixin("brand_update"), Brand):
     """
     A "BrandUpdate" is container for updates to an existing Brand submitted by a user
     """

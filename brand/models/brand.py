@@ -5,6 +5,8 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.template.defaultfilters import truncatechars
 
+from django_prometheus.models import ExportModelOperationsMixin
+
 from cities_light.models import Region, SubRegion
 from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
@@ -16,7 +18,7 @@ from datasource.constants import lev_distance, model_names
 # from Levenshtein import distance as lev
 
 
-class Brand(TimeStampedModel):
+class Brand(ExportModelOperationsMixin("brand"), TimeStampedModel):
     """
     A "Brand" is the instance shown to the end user.
     Multiple Datasources may be associated with a single brand.
