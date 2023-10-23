@@ -33,9 +33,11 @@ def return_all_duplicates():
         for possible_match in name_matches[1:] + tag_matches[1:]:
             possible_match_pk = name_or_tag_to_pk[possible_match.term]
             possible_match_name = pk_to_name[possible_match_pk]
-            possible_match_url = reverse("admin:brand_brand_change", args=(str(possible_match_pk),))
-            relation_dictionary[(object.name, source_object_url)].add(
+
+            if possible_match_pk < object.pk:
+                possible_match_url = reverse("admin:brand_brand_change", args=(str(possible_match_pk),))
+                relation_dictionary[(object.name, source_object_url)].add(
                 (possible_match_name, possible_match_url)
-            )
+                )
 
     return relation_dictionary

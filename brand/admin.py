@@ -2,8 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.urls import reverse
-from django.shortcuts import render
-from django.utils.html import escape, format_html
+from django.utils.html import format_html
 
 
 from cities_light.admin import SubRegionAdmin
