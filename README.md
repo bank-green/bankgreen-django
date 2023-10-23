@@ -82,6 +82,9 @@ sudo systemctl start gunicorn.socket
 sudo systemctl enable gunicorn.socket
 sudo journalctl -u gunicorn.socket
 ```
+## Formatting
+
+To automagically format your code, run `black .` from the root of the repo.
 
 ## Refreshing Data
 
