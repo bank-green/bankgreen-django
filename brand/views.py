@@ -155,7 +155,7 @@ def get_institution_data():
 
 def concat_brand_feature_data(brand_id):
     """
-    Return concateneted brand feature data fieldwise.
+    Return concatenated brand feature data fieldwise.
     """
     data_dict = {}
 
@@ -170,7 +170,7 @@ def concat_brand_feature_data(brand_id):
 
 def concat_commentary_data(brand_id):
     """
-    Return concateneted commentary data fieldwise.
+    Return concatenated commentary data fieldwise.
     """
     data_dict = {}
 
