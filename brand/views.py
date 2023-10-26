@@ -13,6 +13,7 @@ from dal import autocomplete
 
 from .forms import BrandFeaturesForm, CreateUpdateForm
 from .models import Brand, BrandFeature, BrandUpdate
+from scripts.check_duplicates import return_all_duplicates
 
 
 class RegionAutocomplete(autocomplete.Select2QuerySetView):
@@ -124,3 +125,8 @@ def brand_redirect(request, tag):
 
 def calendar_redirect(request):
     return redirect(settings.SEMI_PUBLIC_CALENDAR_URL)
+
+
+def check_duplicates(request):
+    suggested_duplicates = return_all_duplicates()
+    return render(request, "button.html", context={"suggested_duplicates": suggested_duplicates})
