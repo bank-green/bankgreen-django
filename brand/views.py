@@ -15,8 +15,15 @@ from .forms import BrandFeaturesForm, CreateUpdateForm
 from .models import Brand, BrandFeature, BrandUpdate, Commentary
 from .models.commentary import InstitutionCredential, InstitutionType
 
-import pathlib, pycountry, csv
+import pathlib, csv
 from datetime import datetime
+from scripts.check_duplicates import return_all_duplicates
+from utils.brand_utils import (
+    concat_commentary_data,
+    concat_brand_feature_data,
+    get_brand_data,
+    get_institution_data,
+)
 
 
 class RegionAutocomplete(autocomplete.Select2QuerySetView):
@@ -130,156 +137,27 @@ def calendar_redirect(request):
     return redirect(settings.SEMI_PUBLIC_CALENDAR_URL)
 
 
-def country_code_to_country_name(data):
-
-    return (
-        pycountry.countries.get(alpha_3=data).name
-        if len(data) == 3
-        else pycountry.countries.get(alpha_2=data).name
-    )
-
-
-def get_brand_data():
-    """
-    Retrieve all Brand data from the database.
-    """
-    return Brand.objects.all()
-
-
-def get_institution_data():
-    """
-    Retrieve all Institute data from the database.
-    """
-    return InstitutionType.objects.all(), InstitutionCredential.objects.all()
-
-
-def concat_brand_feature_data(brand_id):
-    """
-    Return concatenated brand feature data fieldwise.
-    """
-    data_dict = {}
-
-    brand_feature_data = BrandFeature.objects.filter(brand_id=brand_id)
-
-    if brand_feature_data:
-        data_dict["brand feature id"] = ",".join([str(x.id) for x in brand_feature_data])
-        data_dict["feature"] = ",".join([str(x.feature) for x in brand_feature_data])
-
-    return data_dict
-
-
-def concat_commentary_data(brand_id):
-    """
-    Return concatenated commentary data fieldwise.
-    """
-    data_dict = {}
-
-    commentary_data = Commentary.objects.filter(brand_id=brand_id)
-
-    if commentary_data:
-        data_dict["commentary id"] = ",".join([str(c_data.id) for c_data in commentary_data])
-        data_dict["inherit_brand_rating"] = ",".join(
-            [str(c_data.inherit_brand_rating) for c_data in commentary_data]
-        )
-        data_dict["display_on_website"] = ",".join(
-            [str(c_data.display_on_website) for c_data in commentary_data]
-        )
-        data_dict["number_of_requests"] = ",".join(
-            [str(c_data.number_of_requests) for c_data in commentary_data]
-        )
-        data_dict["comment"] = ",".join([c_data.comment for c_data in commentary_data])
-        data_dict["rating"] = ",".join([c_data.rating for c_data in commentary_data])
-        data_dict["top_pick"] = ",".join([str(c_data.top_pick) for c_data in commentary_data])
-        data_dict["semiautomatic_harassment"] = ",".join(
-            [c_data.semiautomatic_harassment for c_data in commentary_data]
-        )
-        data_dict["fossil_free_alliance"] = ",".join(
-            [str(c_data.fossil_free_alliance) for c_data in commentary_data]
-        )
-        data_dict["fossil_free_alliance_rating"] = ",".join(
-            [str(c_data.fossil_free_alliance_rating) for c_data in commentary_data]
-        )
-        data_dict["show_on_sustainable_banks_page"] = ",".join(
-            [str(c_data.show_on_sustainable_banks_page) for c_data in commentary_data]
-        )
-        data_dict["from_the_website"] = ",".join(
-            [str(c_data.from_the_website) for c_data in commentary_data]
-        )
-        data_dict["subtitle"] = ",".join([str(c_data.subtitle) for c_data in commentary_data])
-        data_dict["header"] = ",".join([str(c_data.header) for c_data in commentary_data])
-        data_dict["summary"] = ",".join([c_data.summary for c_data in commentary_data])
-        data_dict["details"] = ",".join([c_data.details for c_data in commentary_data])
-
-    return data_dict
-
-
 def export_csv(request):
     """
     This function is used to export Brand related data into the csv file.
     """
 
-    # csv file path
+    # csv file name
     csv_file_name = f"brand_export_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}.csv"
-    csv_file_path = str(pathlib.Path.home() / "Downloads") + f"/{csv_file_name}"
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = f"attachment; filename={csv_file_name}"
 
     # headers of the csv file
-    fieldnames = [
-        "brand id",
-        "commentary id",
-        "brand feature id",
-        "created",
-        "modified",
-        "name",
-        "name_locked",
-        "aliases",
-        "description",
-        "description_locked",
-        "website",
-        "website_locked",
-        "countries",
-        "tag",
-        "tag_locked",
-        "permid",
-        "isin",
-        "viafid",
-        "lei",
-        "googleid",
-        "rssd",
-        "rssd_hd",
-        "cusip",
-        "thrift",
-        "thrift_hc",
-        "aba_prim",
-        "ncua",
-        "fdic_cert",
-        "occ",
-        "ein",
-        "regions",
-        "subregions",
-        "inherit_brand_rating",
-        "display_on_website",
-        "number_of_requests",
-        "comment",
-        "rating",
-        "top_pick",
-        "semiautomatic_harassment",
-        "fossil_free_alliance",
-        "fossil_free_alliance_rating",
-        "amount_financed_since_2016",
-        "show_on_sustainable_banks_page",
-        "from_the_website",
-        "our_take",
-        "subtitle",
-        "header",
-        "summary",
-        "details",
-        "institution_type",
-        "institution_credentials",
-        "feature",
-    ]
+    brand_fields = [field.name for field in Brand._meta.get_fields()][10:]
+
+    commentary_fields = [field.name for field in Commentary._meta.get_fields()][2:]
+    commentary_fields[0] = "inherit_brand_rating_id"
+
+    fieldnames = ["brand_id", "commentary_id", "brand_feature_id"]
+    fieldnames.extend(brand_fields)
+    fieldnames.extend(commentary_fields)
+    fieldnames.append("feature")
 
     # reading model(Brand, InstitutionType and InstitutionCredential) data
     brand_all_data = get_brand_data()
@@ -296,7 +174,7 @@ def export_csv(request):
             [data.name for data in instutute_credential_data]
         )
 
-        data_dict["brand id"] = b_data.id
+        data_dict["brand_id"] = b_data.id
         data_dict["created"] = b_data.created
         data_dict["modified"] = b_data.modified
         data_dict["name"] = b_data.name
@@ -324,7 +202,7 @@ def export_csv(request):
         data_dict["occ"] = b_data.occ
         data_dict["ein"] = b_data.ein
 
-        brand_obj = Brand.objects.get(pk=data_dict["brand id"])
+        brand_obj = Brand.objects.get(pk=data_dict["brand_id"])
 
         concat_regions = ",".join(
             [
@@ -342,8 +220,8 @@ def export_csv(request):
         )
         data_dict["subregions"] = concat_subregions
 
-        commentary_data = concat_commentary_data(brand_id=data_dict["brand id"])
-        brand_feature_data = concat_brand_feature_data(brand_id=data_dict["brand id"])
+        commentary_data = concat_commentary_data(brand_id=data_dict["brand_id"])
+        brand_feature_data = concat_brand_feature_data(brand_id=data_dict["brand_id"])
 
         data_dict.update(commentary_data)
         data_dict.update(brand_feature_data)
@@ -351,3 +229,8 @@ def export_csv(request):
         writer.writerow(data_dict)
 
     return response
+
+
+def check_duplicates(request):
+    suggested_duplicates = return_all_duplicates()
+    return render(request, "button.html", context={"suggested_duplicates": suggested_duplicates})

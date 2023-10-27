@@ -48,5 +48,6 @@ urlpatterns = [
     path("sustainable-eco-banks/<str:tag>/", views.brand_redirect, name="brand_quicklink"),
     path("update_success/", views.update_success, name="update_success"),
     path("rest_api_view/", include("api.urls")),
+    path("check-duplicates/", views.check_duplicates, name="check_duplicates"),
     path("export_csv/", views.export_csv, name="export_csv"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
