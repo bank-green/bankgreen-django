@@ -50,4 +50,5 @@ urlpatterns = [
     path("rest_api_view/", include("api.urls")),
     path("check-duplicates/", views.check_duplicates, name="check_duplicates"),
     path("export_csv/", views.export_csv, name="export_csv"),
+    path("missing_tags/", views.missing_tags, name="missing_tags"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

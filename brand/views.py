@@ -18,6 +18,7 @@ from .models.commentary import InstitutionCredential, InstitutionType
 import pathlib, csv
 from datetime import datetime
 from scripts.check_duplicates import return_all_duplicates
+from scripts.find_missing_brands_vs_pages import return_missing_brand_vs_bankpage
 from utils.brand_utils import (
     concat_commentary_data,
     concat_brand_feature_data,
@@ -234,3 +235,9 @@ def export_csv(request):
 def check_duplicates(request):
     suggested_duplicates = return_all_duplicates()
     return render(request, "button.html", context={"suggested_duplicates": suggested_duplicates})
+
+def missing_tags(request):
+    missing_brands_pages = return_missing_brand_vs_bankpage()
+    # print(f"======> {missing_brands_pages['diff_tag']}")
+    # print(type(missing_brands_pages['diff_tag']))
+    return render(request, "missing_brand_vs_prismic_pages.html", context={"missing_brands_pages": missing_brands_pages})
