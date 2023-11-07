@@ -220,7 +220,7 @@ class Commentary(DjangoObjectType):
             "rating",
             "display_on_website",
             "show_on_sustainable_banks_page",
-            "semiautomatic_harassment",
+            "embrace",
         ]
         interfaces = (relay.Node,)
         convert_choices_to_enum = False
