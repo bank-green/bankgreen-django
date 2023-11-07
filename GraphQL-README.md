@@ -28,7 +28,7 @@ query BrandsQuery(
         aliases
         commentary @include(if: $withCommentary) {
           rating
-          semiautomaticHarassment
+          embrace
           fromTheWebsite
           ourTake
           amountFinancedSince2016
@@ -88,7 +88,7 @@ query BrandByTagQuery($tag: String!) {
     website
     commentary {
       rating
-      semiautomaticHarassment
+      embrace
       fromTheWebsite
       ourTake
       amountFinancedSince2016
@@ -171,7 +171,7 @@ query BrandsQuery(
         }
         commentary @include(if: $withCommentary) {
           rating
-          semiautomaticHarassment
+          embrace
           fromTheWebsite
           ourTake
           amountFinancedSince2016
@@ -220,10 +220,10 @@ query BrandsQuery(
 }
 ```
 
-## Filter the data based on semiautomatic_harassment field
+## Filter the data based on embrace field
 ```
  query{
- commentaries(semiautomaticHarassment: "encourage new policy"){
+ commentaries(embrace: "encourage new policy"){
   edges {
     node {
       id
