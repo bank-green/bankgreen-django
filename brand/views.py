@@ -7,24 +7,21 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
+from django.core.exceptions import ObjectDoesNotExist
 
 from cities_light.models import Region, SubRegion
 from dal import autocomplete
+from django.core import serializers
 
 from .forms import BrandFeaturesForm, CreateUpdateForm
-from .models import Brand, BrandFeature, BrandUpdate, Commentary
+from .models import Brand, BrandFeature, BrandUpdate
 from .models.commentary import InstitutionCredential, InstitutionType
 
-import pathlib, csv
+import pathlib, csv, json, os
 from datetime import datetime
 from scripts.check_duplicates import return_all_duplicates
-from scripts.find_missing_brands_vs_pages import return_missing_brand_vs_bankpage
-from utils.brand_utils import (
-    concat_commentary_data,
-    concat_brand_feature_data,
-    get_brand_data,
-    get_institution_data,
-)
+from utils.brand_utils import concat_brand_feature_data, get_institution_data
+
 
 
 class RegionAutocomplete(autocomplete.Select2QuerySetView):
@@ -137,97 +134,99 @@ def brand_redirect(request, tag):
 def calendar_redirect(request):
     return redirect(settings.SEMI_PUBLIC_CALENDAR_URL)
 
+def serialize_brand_model_to_json():
+    """
+    serialize brand, commentary, brandfeature models
+    save model into json format
+
+    """
+
+    results = []
+    institute_dict = {}
+
+    brand_instances = Brand.objects.select_related("commentary").all()
+    instutute_type_data, instutute_credential_data = get_institution_data()
+
+    for brand_instance in brand_instances:
+        brand_serialized_data = serializers.serialize(
+            "json", [brand_instance], use_natural_primary_keys=True, use_natural_foreign_keys=True
+        )
+        try:
+            commentary_serialized_data = serializers.serialize(
+                "json",
+                [brand_instance.commentary],
+                use_natural_primary_keys=True,
+                use_natural_foreign_keys=True,
+            )
+        except ObjectDoesNotExist:
+            pass
+
+        brand_data = json.loads(brand_serialized_data)
+        commentary_data = json.loads(commentary_serialized_data)
+
+        feature_data = concat_brand_feature_data(brand_id=brand_data[0]["pk"])
+
+        institute_dict["institution_type"] = ",".join([data.name for data in instutute_type_data])
+        institute_dict["institution_credentials"] = ",".join(
+            [data.name for data in instutute_credential_data]
+        )
+
+        brand_data[0]["fields"]["brand_id"] = brand_data[0]["pk"]
+        brand_data[0]["fields"]["countries"] = ",".join(
+            [country.name for country in brand_instance.countries]
+        )
+        brand_data[0]["fields"].update(commentary_data[0]["fields"])
+        brand_data[0]["fields"].update(feature_data)
+        brand_data[0]["fields"].update(institute_dict)
+        brand_data[0]["fields"]["regions"] = ",".join(
+            [
+                reg_dict["display_name"]
+                for reg_dict in brand_instance.regions.all().values("display_name")
+            ]
+        )
+        brand_data[0]["fields"]["subregions"] = ",".join(
+            [
+                reg_dict["display_name"]
+                for reg_dict in brand_instance.subregions.all().values("display_name")
+            ]
+        )
+        results.append(json.loads(json.dumps(brand_data[0])))
+
+    with open(r"data.json", "w") as file:
+        json.dump(results, file)
+
 
 def export_csv(request):
     """
     This function is used to export Brand related data into the csv file.
     """
 
-    # csv file name
-    csv_file_name = f"brand_export_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}.csv"
+    downloads_path = str(pathlib.Path.home() / "Downloads")
+    csv_file_name = f"data_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}.csv"
+
+    file_location = downloads_path + "/" + csv_file_name
 
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = f"attachment; filename={csv_file_name}"
+    response["Content-Disposition"] = f"attachment;filename={csv_file_name}"
 
-    # headers of the csv file
-    brand_fields = [field.name for field in Brand._meta.get_fields()][10:]
+    serialize_brand_model_to_json()
 
-    commentary_fields = [field.name for field in Commentary._meta.get_fields()][2:]
-    commentary_fields[0] = "inherit_brand_rating_id"
+    with open("data.json") as json_file:
+        data = json.loads(json_file.read())
 
-    fieldnames = ["brand_id", "commentary_id", "brand_feature_id"]
-    fieldnames.extend(brand_fields)
-    fieldnames.extend(commentary_fields)
-    fieldnames.append("feature")
+    # remove data.json file
+    os.remove("data.json")
 
-    # reading model(Brand, InstitutionType and InstitutionCredential) data
-    brand_all_data = get_brand_data()
-    instutute_type_data, instutute_credential_data = get_institution_data()
+    # Create a CSV writer object
+    csv_writer = csv.writer(response)
 
-    writer = csv.DictWriter(response, fieldnames=fieldnames, delimiter=";")
-    writer.writeheader()
+    # Write the header (column names)
+    header = sorted(data[0]["fields"].keys())
+    csv_writer.writerow(header)
 
-    for b_data in brand_all_data:
-        data_dict = {}
-
-        data_dict["institution_type"] = ",".join([data.name for data in instutute_type_data])
-        data_dict["institution_credentials"] = ",".join(
-            [data.name for data in instutute_credential_data]
-        )
-
-        data_dict["brand_id"] = b_data.id
-        data_dict["created"] = b_data.created
-        data_dict["modified"] = b_data.modified
-        data_dict["name"] = b_data.name
-        data_dict["name_locked"] = b_data.name_locked
-        data_dict["aliases"] = b_data.aliases
-        data_dict["description"] = b_data.description
-        data_dict["description_locked"] = b_data.description_locked
-        data_dict["website"] = b_data.website
-        data_dict["website_locked"] = b_data.website_locked
-        data_dict["countries"] = ",".join([country.name for country in b_data.countries])
-        data_dict["tag"] = b_data.tag
-        data_dict["tag_locked"] = b_data.tag_locked
-        data_dict["permid"] = b_data.permid
-        data_dict["isin"] = b_data.isin
-        data_dict["viafid"] = b_data.viafid
-        data_dict["lei"] = b_data.lei
-        data_dict["googleid"] = b_data.googleid
-        data_dict["rssd"] = b_data.rssd
-        data_dict["rssd_hd"] = b_data.rssd_hd
-        data_dict["cusip"] = b_data.cusip
-        data_dict["thrift"] = b_data.thrift
-        data_dict["aba_prim"] = b_data.aba_prim
-        data_dict["ncua"] = b_data.ncua
-        data_dict["fdic_cert"] = b_data.fdic_cert
-        data_dict["occ"] = b_data.occ
-        data_dict["ein"] = b_data.ein
-
-        brand_obj = Brand.objects.get(pk=data_dict["brand_id"])
-
-        concat_regions = ",".join(
-            [
-                reg_dict["display_name"]
-                for reg_dict in brand_obj.regions.all().values("display_name")
-            ]
-        )
-        data_dict["regions"] = concat_regions
-
-        concat_subregions = ",".join(
-            [
-                reg_dict["display_name"]
-                for reg_dict in brand_obj.subregions.all().values("display_name")
-            ]
-        )
-        data_dict["subregions"] = concat_subregions
-
-        commentary_data = concat_commentary_data(brand_id=data_dict["brand_id"])
-        brand_feature_data = concat_brand_feature_data(brand_id=data_dict["brand_id"])
-
-        data_dict.update(commentary_data)
-        data_dict.update(brand_feature_data)
-
-        writer.writerow(data_dict)
+    # Write the data rows
+    for item in data:
+        csv_writer.writerow(dict(sorted(item["fields"].items())).values())
 
     return response
 
