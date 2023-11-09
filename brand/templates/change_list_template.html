@@ -2,7 +2,8 @@
 
 {% block object-tools%}
     {{block.super}}
-    <form method="get" action="{% url 'check_duplicates' %}">
-        <input type="submit" value="Check Duplicates" class="button">
+    <form method="get">  
+        <input type="submit" formaction="{% url 'check_duplicates' %}" value="Check Duplicates" class="button">
+        <input type="submit" formaction="{% url 'export_csv' %}"value="Export CSV" class="button">
     </form>
 {% endblock %}

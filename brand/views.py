@@ -3,17 +3,23 @@ from uuid import uuid4
 from django.conf import settings
 from django.forms import inlineformset_factory
 from django.forms.models import model_to_dict
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
+from django.core.exceptions import ObjectDoesNotExist
 
 from cities_light.models import Region, SubRegion
 from dal import autocomplete
+from django.core import serializers
 
 from .forms import BrandFeaturesForm, CreateUpdateForm
 from .models import Brand, BrandFeature, BrandUpdate
+
+import pathlib, csv, json, os
+from datetime import datetime
 from scripts.check_duplicates import return_all_duplicates
+from utils.brand_utils import concat_brand_feature_data, get_institution_data
 
 
 class RegionAutocomplete(autocomplete.Select2QuerySetView):
@@ -125,6 +131,103 @@ def brand_redirect(request, tag):
 
 def calendar_redirect(request):
     return redirect(settings.SEMI_PUBLIC_CALENDAR_URL)
+
+
+def serialize_brand_model_to_json():
+    """
+    serialize brand, commentary, brandfeature models
+    save model into json format
+
+    """
+
+    results = []
+    institute_dict = {}
+
+    brand_instances = Brand.objects.select_related("commentary").all()
+    instutute_type_data, instutute_credential_data = get_institution_data()
+
+    for brand_instance in brand_instances:
+        brand_serialized_data = serializers.serialize(
+            "json", [brand_instance], use_natural_primary_keys=True, use_natural_foreign_keys=True
+        )
+        try:
+            commentary_serialized_data = serializers.serialize(
+                "json",
+                [brand_instance.commentary],
+                use_natural_primary_keys=True,
+                use_natural_foreign_keys=True,
+            )
+        except ObjectDoesNotExist:
+            pass
+
+        brand_data = json.loads(brand_serialized_data)
+        commentary_data = json.loads(commentary_serialized_data)
+
+        feature_data = concat_brand_feature_data(brand_id=brand_data[0]["pk"])
+
+        institute_dict["institution_type"] = ",".join([data.name for data in instutute_type_data])
+        institute_dict["institution_credentials"] = ",".join(
+            [data.name for data in instutute_credential_data]
+        )
+
+        brand_data[0]["fields"]["brand_id"] = brand_data[0]["pk"]
+        brand_data[0]["fields"]["countries"] = ",".join(
+            [country.name for country in brand_instance.countries]
+        )
+        brand_data[0]["fields"].update(commentary_data[0]["fields"])
+        brand_data[0]["fields"].update(feature_data)
+        brand_data[0]["fields"].update(institute_dict)
+        brand_data[0]["fields"]["regions"] = ",".join(
+            [
+                reg_dict["display_name"]
+                for reg_dict in brand_instance.regions.all().values("display_name")
+            ]
+        )
+        brand_data[0]["fields"]["subregions"] = ",".join(
+            [
+                reg_dict["display_name"]
+                for reg_dict in brand_instance.subregions.all().values("display_name")
+            ]
+        )
+        results.append(json.loads(json.dumps(brand_data[0])))
+
+    with open(r"data.json", "w") as file:
+        json.dump(results, file)
+
+
+def export_csv(request):
+    """
+    This function is used to export Brand related data into the csv file.
+    """
+
+    downloads_path = str(pathlib.Path.home() / "Downloads")
+    csv_file_name = f"data_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}.csv"
+
+    file_location = downloads_path + "/" + csv_file_name
+
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = f"attachment;filename={csv_file_name}"
+
+    serialize_brand_model_to_json()
+
+    with open("data.json") as json_file:
+        data = json.loads(json_file.read())
+
+    # remove data.json file
+    os.remove("data.json")
+
+    # Create a CSV writer object
+    csv_writer = csv.writer(response)
+
+    # Write the header (column names)
+    header = sorted(data[0]["fields"].keys())
+    csv_writer.writerow(header)
+
+    # Write the data rows
+    for item in data:
+        csv_writer.writerow(dict(sorted(item["fields"].items())).values())
+
+    return response
 
 
 def check_duplicates(request):
