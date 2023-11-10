@@ -22,4 +22,3 @@ def concat_brand_feature_data(brand_id):
         data_dict["feature"] = ",".join([str(x.feature) for x in brand_feature_data])
 
     return data_dict
-

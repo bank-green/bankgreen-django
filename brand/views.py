@@ -20,8 +20,12 @@ from .models.commentary import InstitutionCredential, InstitutionType
 import pathlib, csv, json, os
 from datetime import datetime
 from scripts.check_duplicates import return_all_duplicates
+from scripts.find_missing_brands_vs_pages import (
+    get_missing_brand_and_bankpages,
+    get_missing_sfi_brands_and_pages,
+    get_ref_id,
+)
 from utils.brand_utils import concat_brand_feature_data, get_institution_data
-
 
 
 class RegionAutocomplete(autocomplete.Select2QuerySetView):
@@ -134,6 +138,7 @@ def brand_redirect(request, tag):
 def calendar_redirect(request):
     return redirect(settings.SEMI_PUBLIC_CALENDAR_URL)
 
+
 def serialize_brand_model_to_json():
     """
     serialize brand, commentary, brandfeature models
@@ -235,8 +240,19 @@ def check_duplicates(request):
     suggested_duplicates = return_all_duplicates()
     return render(request, "button.html", context={"suggested_duplicates": suggested_duplicates})
 
-def missing_tags(request):
-    missing_brands_pages = return_missing_brand_vs_bankpage()
-    # print(f"======> {missing_brands_pages['diff_tag']}")
-    # print(type(missing_brands_pages['diff_tag']))
-    return render(request, "missing_brand_vs_prismic_pages.html", context={"missing_brands_pages": missing_brands_pages})
+
+def check_prismic_mismatches(request):
+    """
+    Return dict of mismatched brands, sfi brands, bankpages and sfipages
+    """
+    missing_brands_pages = {}
+    ref = get_ref_id()
+
+    missing_brands_pages.update(get_missing_brand_and_bankpages(ref))
+    missing_brands_pages.update(get_missing_sfi_brands_and_pages(ref))
+
+    return render(
+        request,
+        "missing_brand_vs_prismic_pages.html",
+        context={"missing_brands_pages": missing_brands_pages},
+    )
