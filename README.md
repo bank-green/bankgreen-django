@@ -46,6 +46,8 @@ scrape_configs:
 ```
 ## Running Prometheus
 
+Before running Django, change your `bankgreen/.env` file to read `ENVIRONMENT="prod"`. Start Django.
+
 In your Prometheus directory, run: `./prometheus --config.file=prometheus.yml`.
 
 To query metrics graphs, go to localhost:9090.
