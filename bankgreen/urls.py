@@ -60,4 +60,8 @@ base_urlpatterns = [
     path("export_csv/", views.export_csv, name="export_csv"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-urlpatterns = base_urlpatterns + [path("", include("django_prometheus.urls")),] if ENVIRONMENT == "prod" else base_urlpatterns
+urlpatterns = (
+    base_urlpatterns + [path("", include("django_prometheus.urls"))]
+    if ENVIRONMENT == "prod"
+    else base_urlpatterns
+)
