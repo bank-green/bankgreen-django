@@ -42,6 +42,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG") == "True"
 
+# Before deploying, change your .env file to ENV="prod" or else Prometheus won't work!
+ENVIRONMENT = os.environ.get("ENV")
+
 ALLOWED_HOSTS = (
     os.environ.get("ALLOWED_HOSTS").split(" ") if os.environ.get("ALLOWED_HOSTS") else []
 )
@@ -49,7 +52,7 @@ ALLOWED_HOSTS = (
 # Calendar URL
 SEMI_PUBLIC_CALENDAR_URL = os.environ.get("CALENDAR_URL")
 
-INSTALLED_APPS = [
+installed_apps = [
     "dal",
     "dal_select2",
     "django.contrib.admin",
@@ -68,13 +71,14 @@ INSTALLED_APPS = [
     "django_admin_listfilter_dropdown",
     "django_filters",
     "django_json_widget",
-    "django_prometheus",
     "corsheaders",
     "cities_light",
 ]
 
-MIDDLEWARE = [
-    "django_prometheus.middleware.PrometheusBeforeMiddleware",
+# Ignore Prometheus if in local env
+INSTALLED_APPS = installed_apps + ["django_prometheus"] if ENVIRONMENT == "prod" else installed_apps
+
+middleware = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -83,8 +87,17 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
+
+# Order of Prometheus middleware is important
+if ENVIRONMENT == "prod":
+    MIDDLEWARE = (
+        ["django_prometheus.middleware.PrometheusBeforeMiddleware"]
+        + middleware
+        + ["django_prometheus.middleware.PrometheusAfterMiddleware"]
+    )
+else:
+    MIDDLEWARE = middleware
 
 ROOT_URLCONF = "bankgreen.urls"
 
@@ -110,9 +123,12 @@ WSGI_APPLICATION = "bankgreen.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {"ENGINE": "django_prometheus.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
-}
+engine = (
+    "django_prometheus.db.backends.sqlite3"
+    if ENVIRONMENT == "prod"
+    else "django.db.backends.sqlite3"
+)
+DATABASES = {"default": {"ENGINE": engine, "NAME": BASE_DIR / "db.sqlite3"}}
 
 
 # Password validation

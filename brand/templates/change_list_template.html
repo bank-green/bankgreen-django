@@ -1,0 +1,9 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools%}
+    {{block.super}}
+    <form method="get">  
+        <input type="submit" formaction="{% url 'check_duplicates' %}" value="Check Duplicates" class="button">
+        <input type="submit" formaction="{% url 'export_csv' %}"value="Export CSV" class="button">
+    </form>
+{% endblock %}

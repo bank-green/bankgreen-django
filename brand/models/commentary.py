@@ -21,7 +21,7 @@ class RatingChoice(ExportModelOperationsMixin("rating_choice"), models.TextChoic
     INHERIT = "inherit"
 
 
-class SemiautomaticHarassmentChoices(models.TextChoices):
+class EmbraceChoices(models.TextChoices):
     ENCOURAGE_NEW_POLICY = "encourage new policy"
     NONE = "none"
 
@@ -81,11 +81,8 @@ class Commentary(models.Model):
     )
     top_pick = models.BooleanField(default=False, help_text="Is this brand a top pick?")
 
-    semiautomatic_harassment = models.CharField(
-        max_length=20,
-        null=True,
-        default=SemiautomaticHarassmentChoices.NONE,
-        choices=SemiautomaticHarassmentChoices.choices,
+    embrace = models.CharField(
+        max_length=20, null=True, default=EmbraceChoices.NONE, choices=EmbraceChoices.choices
     )
 
     @property
