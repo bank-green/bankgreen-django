@@ -195,3 +195,34 @@ class CommentaryTestCase(TestCase):
         self.assertEqual(
             self.commentary5.compute_inherited_rating(throw_error=False), RatingChoice.UNKNOWN
         )
+
+
+class BrandTagTestCase(TestCase):
+
+    # test for a Valid Tag
+    def test_brand_valid_tag(self):
+        brand1 = Brand(
+            name="Test Brand 1",
+            tag="Tag_Brand-1"
+        )
+        brand1.save()
+
+        # test for Invalid Tag
+
+    # test for an Invalid Tag
+    def test_brand_invalid_tag(self):
+
+        with self.assertRaises(Exception):
+            brand1 = Brand(
+                name="Test Brand 1",
+                tag="Tag_Brand-1$"
+            )
+            brand1.save()
+
+        # test case with the spaces
+        with self.assertRaises(Exception):
+            brand1 = Brand(
+                name="Test Brand 1",
+                tag="Tag Brand 1"
+            )
+            brand1.save()

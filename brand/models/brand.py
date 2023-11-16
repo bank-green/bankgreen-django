@@ -318,3 +318,9 @@ class Brand(TimeStampedModel):
         }
 
         return spelling_dict
+
+    def save(self, *args, **kwargs):
+        if not re.match("^[A-Za-z0-9_-]*$", str(self.tag)):
+            raise Exception("Tag can contain only alpha-numeric characters, underscores and dashes")
+
+        return super().save(*args, **kwargs)
