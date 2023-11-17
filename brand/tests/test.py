@@ -205,24 +205,23 @@ class BrandTagTestCase(TestCase):
             name="Test Brand 1",
             tag="Tag_Brand-1"
         )
+        # this should not raise any errors
         brand1.save()
 
-        # test for Invalid Tag
-
-    # test for an Invalid Tag
+    # test for an Invalid Tags
     def test_brand_invalid_tag(self):
+        # test case with not allowed characters
+        brand1 = Brand(
+            name="Test Brand 1",
+            tag="TagBrand%$1")
 
-        with self.assertRaises(Exception):
-            brand1 = Brand(
-                name="Test Brand 1",
-                tag="Tag_Brand-1$"
-            )
+        with self.assertRaises(ValidationError):
             brand1.save()
 
         # test case with the spaces
-        with self.assertRaises(Exception):
-            brand1 = Brand(
-                name="Test Brand 1",
-                tag="Tag Brand 1"
-            )
+        brand1 = Brand(
+            name="Test Brand 1",
+            tag="Tag Brand 1")
+
+        with self.assertRaises(ValidationError):
             brand1.save()
