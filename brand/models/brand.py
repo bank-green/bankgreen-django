@@ -16,12 +16,15 @@ from datasource.constants import lev_distance, model_names
 
 # from Levenshtein import distance as lev
 
+
 def validate_tag(value):
-    """ This is the function that is used to validate the TAG """
+    """This is the function that is used to validate the TAG"""
     if re.match("^[A-Za-z0-9_-]*$", str(value)):
         return value
     else:
-        raise ValidationError("Tag can contain only alpha-numeric characters, underscores and dashes")
+        raise ValidationError(
+            "Tag can contain only alpha-numeric characters, underscores and dashes"
+        )
 
 
 class Brand(TimeStampedModel):
@@ -76,7 +79,7 @@ class Brand(TimeStampedModel):
         editable=True,
         unique=True,
         help_text="the tag we use or this brand record at Bank.Green. ",
-        validators=[validate_tag]
+        validators=[validate_tag],
     )
     tag_locked = models.BooleanField(default=True)
 
