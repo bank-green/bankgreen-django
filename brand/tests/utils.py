@@ -7,7 +7,7 @@ def create_test_brands():
         tag="test_brand_1",
         name="Test Brand 1",
         aliases="test brand, testb",
-        website="www.testbrand.com",
+        website="http://www.testbrand.com",
         permid="test permid",
         viafid="test viafid",
         lei="test lei",
