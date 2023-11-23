@@ -4,6 +4,7 @@ from typing import List, Tuple
 from django.db import models
 from django.db.models.query import QuerySet
 from django.template.defaultfilters import truncatechars
+from django.core.exceptions import ValidationError
 
 from django_prometheus.models import ExportModelOperationsMixin
 
@@ -16,6 +17,14 @@ from datasource.constants import lev_distance, model_names
 
 
 # from Levenshtein import distance as lev
+def validate_tag(value):
+    """This is the function that is used to validate the TAG"""
+    if re.match("^[A-Za-z0-9_-]*$", str(value)):
+        return value
+    else:
+        raise ValidationError(
+            "Tag can contain only alpha-numeric characters, underscores and dashes"
+        )
 
 
 class Brand(ExportModelOperationsMixin("brand"), TimeStampedModel):
@@ -70,6 +79,7 @@ class Brand(ExportModelOperationsMixin("brand"), TimeStampedModel):
         editable=True,
         unique=True,
         help_text="the tag we use or this brand record at Bank.Green. ",
+        validators=[validate_tag],
     )
     tag_locked = models.BooleanField(default=True)
 
@@ -320,3 +330,7 @@ class Brand(ExportModelOperationsMixin("brand"), TimeStampedModel):
         }
 
         return spelling_dict
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
