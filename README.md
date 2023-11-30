@@ -44,13 +44,13 @@ scrape_configs:
     static_configs:
       - targets: ["localhost:8000"]
 ```
-## Running Prometheus
 
-Before running Django, change your `bankgreen/.env` file to read `ENVIRONMENT="prod"`. Start Django.
+To run Prometheus locally:
 
-In your Prometheus directory, run: `./prometheus --config.file=prometheus.yml`.
-
-To query metrics graphs, go to localhost:9090.
+1. Change your `bankgreen/.env` file to read `ENVIRONMENT="prod"`.
+2. In your Prometheus directory, run: `./prometheus --config.file=prometheus.yml`.
+3. Start Django and the Nuxt app.
+4. To query metrics graphs, go to `localhost:9090`.
 
 ## Database
 To setup the database, you must run migrations, add sample data by installing the initial fixture and download a list of countries and regions:   
