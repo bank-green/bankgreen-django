@@ -28,6 +28,7 @@ def get_ref_id():
 def get_prismic_documents(document_type, ref_number):
 
     bank_uids = []
+    responses = []
 
     if (not document_type) or (not ref_number):
         print(f"Error message : Please provide the document_type and reference number")
@@ -45,7 +46,6 @@ def get_prismic_documents(document_type, ref_number):
             params = None
             if response.status_code == 200:
                 response_body = response.json()
-
                 for result in response_body["results"]:
                     bank_uids.append(result["uid"])
                     # if result["uid"] == "sfi_credit_cooperatif":
@@ -57,11 +57,6 @@ def get_prismic_documents(document_type, ref_number):
             raise SystemExit(e)
 
     return bank_uids
-
-
-def get_dict(data):
-
-    return {re.sub("[^A-Za-z0-9]+", "", tag).lower(): tag for tag in data if not tag.isalpha()}
 
 
 def calculate_missing_tags(list_brand_tags, list_prismic_pages, find_missing_brands_flag=False):
@@ -93,14 +88,8 @@ def get_missing_brand_and_bankpages(ref):
     output_dict = {}
 
     # Make an API call to fetch all BankPages from PRISMIC
-    before = time.time()
-    print("before-----> ", before)
     list_prismic_bankpage_tags = get_prismic_documents("bankpage", ref)
     list_prismic_bankpage_tags = [ele.strip() for ele in list_prismic_bankpage_tags]
-
-    after = time.time()
-    print("after-----> ", after)
-    print(f"-----------diff {int(after - before)}")
 
     # Fetch all brands
     list_brand_tags = list(Brand.objects.values_list("tag", flat=True))
@@ -115,9 +104,6 @@ def get_missing_brand_and_bankpages(ref):
     output_dict["missing_brands"] = sorted(output_dict["missing_brands"])
     output_dict["missing_bank_pages"] = sorted(output_dict["missing_bank_pages"])
 
-    print(len(output_dict["missing_brands"]))
-    print(len(output_dict["missing_bank_pages"]))
-
     return output_dict
 
 
@@ -129,14 +115,8 @@ def get_missing_sfi_brands_and_pages(ref):
     output_dict = {}
 
     # Make an API call to fetch all BankPages from PRISMIC
-    before = time.time()
-    print("SFI before-----> ", before)
     list_prismic_sfipage_tags = get_prismic_documents("sfipage", ref)
     list_prismic_sfipage_tags = [ele.strip() for ele in list_prismic_sfipage_tags]
-
-    after = time.time()
-    print("SFI after-----> ", after)
-    print(f"-----------diff {int(after - before)}")
 
     # Fetch all SFI brands
     brand_ids = list(
