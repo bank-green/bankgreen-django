@@ -8,8 +8,8 @@
 </ul>
 <ul>
     <h1>Brands that do not have accompanying BankPages</h1>
-    {% for bnk_pg in missing_brands_pages.missing_bank_pages %}
-           <li><strong>{{bnk_pg}}</a><br></strong></li>
+    {% for bnk_pg, link in missing_brands_pages.missing_bank_pages %}
+           <li><strong><a href={{link}}>{{bnk_pg}}</a><br></strong></li>
     {% endfor %} 
 </ul>
 <ul>
@@ -20,8 +20,8 @@
 </ul>
 <ul>
     <h1>Brands that do not have accompanying SFIPages</h1>
-    {% for bnk_pg in missing_brands_pages.missing_sfi_pages %}
-           <li><strong>{{bnk_pg}}</a><br></strong></li>
+    {% for bnk_pg, link in missing_brands_pages.missing_sfi_pages %}
+           <li><strong><a href={{link}}>{{bnk_pg}}</a><br></strong></li>
     {% endfor %} 
 </ul>
 {% endblock %}

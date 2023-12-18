@@ -1,8 +1,8 @@
 import json, re, requests, time
 from brand.models import Brand, Commentary
 from unidecode import unidecode
-
-# read json response from the api call
+from django.urls import reverse
+import itertools
 
 
 prismic_base_url = "https://bankgreen.cdn.prismic.io/api/v2"
@@ -28,7 +28,6 @@ def get_ref_id():
 def get_prismic_documents(document_type, ref_number):
 
     bank_uids = []
-    responses = []
 
     if (not document_type) or (not ref_number):
         print(f"Error message : Please provide the document_type and reference number")
@@ -46,10 +45,10 @@ def get_prismic_documents(document_type, ref_number):
             params = None
             if response.status_code == 200:
                 response_body = response.json()
+
                 for result in response_body["results"]:
                     bank_uids.append(result["uid"])
-                    # if result["uid"] == "sfi_credit_cooperatif":
-                    # 	print(f"================url =============== {url}")
+
                 url = response_body["next_page"]
             else:
                 return bank_uids
@@ -98,9 +97,18 @@ def get_missing_brand_and_bankpages(ref):
     output_dict["missing_brands"] = calculate_missing_tags(
         list_brand_tags, list_prismic_bankpage_tags, find_missing_brands_flag=True
     )
-    output_dict["missing_bank_pages"] = calculate_missing_tags(
-        list_brand_tags, list_prismic_bankpage_tags
-    )
+    missing_bank_pages = calculate_missing_tags(list_brand_tags, list_prismic_bankpage_tags)
+
+    output_dict["missing_bank_pages"] = []
+    for i in missing_bank_pages:
+        try:
+            brand_id = Brand.objects.get(tag=i).pk
+            output_dict["missing_bank_pages"].append(
+                (i, reverse("admin:brand_brand_change", args=[brand_id]))
+            )
+        except:
+            output_dict["missing_bank_pages"].append((i, None))
+
     output_dict["missing_brands"] = sorted(output_dict["missing_brands"])
     output_dict["missing_bank_pages"] = sorted(output_dict["missing_bank_pages"])
 
@@ -131,9 +139,19 @@ def get_missing_sfi_brands_and_pages(ref):
         list_of_sfi_brand_tags, list_prismic_sfipage_tags, find_missing_brands_flag=True
     )
     output_dict["sfi_missing_brands"] = sorted(output_dict["sfi_missing_brands"])
-    output_dict["missing_sfi_pages"] = calculate_missing_tags(
-        list_of_sfi_brand_tags, list_prismic_sfipage_tags
-    )
+
+    missing_sfi_pages = calculate_missing_tags(list_of_sfi_brand_tags, list_prismic_sfipage_tags)
+
+    output_dict["missing_sfi_pages"] = []
+    for i in missing_sfi_pages:
+        try:
+            brand_id = Brand.objects.get(tag=i).pk
+            output_dict["missing_sfi_pages"].append(
+                (i, reverse("admin:brand_brand_change", args=[brand_id]))
+            )
+        except:
+            output_dict["missing_sfi_pages"].append((i, None))
+
     output_dict["missing_sfi_pages"] = sorted(output_dict["missing_sfi_pages"])
 
     return output_dict
