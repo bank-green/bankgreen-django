@@ -9,7 +9,11 @@
 <ul>
     <h1>Brands that do not have accompanying BankPages</h1>
     {% for bnk_pg, link in missing_brands_pages.missing_bank_pages %}
+        {% if link is None%}
+           <li><strong>{{bnk_pg}}<br></strong></li>
+        {% else %}
            <li><strong><a href={{link}}>{{bnk_pg}}</a><br></strong></li>
+        {% endif %}
     {% endfor %} 
 </ul>
 <ul>

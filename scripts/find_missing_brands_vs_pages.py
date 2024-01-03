@@ -62,21 +62,21 @@ def calculate_missing_tags(list_brand_tags, list_prismic_pages, find_missing_bra
     """
     Returns missing brands and pages
     """
-    missing_brands = []
 
     # make it lowercase
-    list_brand_tags = [tag.lower() for tag in list_brand_tags]
-    list_prismic_pages = [tag.lower() for tag in list_prismic_pages]
+    tag_dict = {ele.lower(): ele for ele in list_brand_tags}
+    prsimic_page_dict = {ele.lower(): ele for ele in list_prismic_pages}
 
-    # convert list to set
-    set_brand_tags = set(list_brand_tags)
-    set_prismic_pages = set(list_prismic_pages)
+    # make a list of brand tags and prismic pages
+    set_brand_tags = set(list(tag_dict.keys()))
+    set_prismic_pages = set(list(prsimic_page_dict.keys()))
 
     # perform set difference to find out missing
     if find_missing_brands_flag:
         return set_prismic_pages.difference(set_brand_tags)
 
-    return set_brand_tags.difference(set_prismic_pages)
+    missing_bank_pages = set_brand_tags.difference(set_prismic_pages)
+    return [tag_dict[ele] for ele in missing_bank_pages]
 
 
 def get_missing_brand_and_bankpages(ref):
@@ -92,7 +92,7 @@ def get_missing_brand_and_bankpages(ref):
 
     # Fetch all brands
     list_brand_tags = list(Brand.objects.values_list("tag", flat=True))
-    list_brand_tags = [ele.strip() for ele in list_brand_tags]
+    # list_brand_tags = [ele.strip() for ele in list_brand_tags]
 
     output_dict["missing_brands"] = calculate_missing_tags(
         list_brand_tags, list_prismic_bankpage_tags, find_missing_brands_flag=True
@@ -100,14 +100,13 @@ def get_missing_brand_and_bankpages(ref):
     missing_bank_pages = calculate_missing_tags(list_brand_tags, list_prismic_bankpage_tags)
 
     output_dict["missing_bank_pages"] = []
-    for i in missing_bank_pages:
+    for tag in missing_bank_pages:
         try:
-            brand_id = Brand.objects.get(tag=i).pk
             output_dict["missing_bank_pages"].append(
-                (i, reverse("admin:brand_brand_change", args=[brand_id]))
+                (tag, reverse("admin:brand_brand_change", args=[tag]))
             )
         except:
-            output_dict["missing_bank_pages"].append((i, None))
+            output_dict["missing_bank_pages"].append((tag, None))
 
     output_dict["missing_brands"] = sorted(output_dict["missing_brands"])
     output_dict["missing_bank_pages"] = sorted(output_dict["missing_bank_pages"])
@@ -143,14 +142,13 @@ def get_missing_sfi_brands_and_pages(ref):
     missing_sfi_pages = calculate_missing_tags(list_of_sfi_brand_tags, list_prismic_sfipage_tags)
 
     output_dict["missing_sfi_pages"] = []
-    for i in missing_sfi_pages:
+    for tag in missing_sfi_pages:
         try:
-            brand_id = Brand.objects.get(tag=i).pk
             output_dict["missing_sfi_pages"].append(
-                (i, reverse("admin:brand_brand_change", args=[brand_id]))
+                (tag, reverse("admin:brand_brand_change", args=[tag]))
             )
         except:
-            output_dict["missing_sfi_pages"].append((i, None))
+            output_dict["missing_sfi_pages"].append((tag, None))
 
     output_dict["missing_sfi_pages"] = sorted(output_dict["missing_sfi_pages"])
 
