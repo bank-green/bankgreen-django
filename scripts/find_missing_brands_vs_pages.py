@@ -102,8 +102,9 @@ def get_missing_brand_and_bankpages(ref):
     output_dict["missing_bank_pages"] = []
     for tag in missing_bank_pages:
         try:
+            brand_id = Brand.objects.get(tag=tag).pk
             output_dict["missing_bank_pages"].append(
-                (tag, reverse("admin:brand_brand_change", args=[tag]))
+                (tag, reverse("admin:brand_brand_change", args=[brand_id]))
             )
         except:
             output_dict["missing_bank_pages"].append((tag, None))
@@ -144,8 +145,9 @@ def get_missing_sfi_brands_and_pages(ref):
     output_dict["missing_sfi_pages"] = []
     for tag in missing_sfi_pages:
         try:
+            brand_id = Brand.objects.get(tag=tag).pk
             output_dict["missing_sfi_pages"].append(
-                (tag, reverse("admin:brand_brand_change", args=[tag]))
+                (tag, reverse("admin:brand_brand_change", args=[brand_id]))
             )
         except:
             output_dict["missing_sfi_pages"].append((tag, None))
