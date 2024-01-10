@@ -1,0 +1,31 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<ul>
+    <h1>BankPages that do not have accompanying brands</h1>
+    {% for brand in missing_brands_pages.missing_brands %}
+           <li><strong>{{brand}}</a><br></strong></li>
+    {% endfor %} 
+</ul>
+<ul>
+    <h1>Brands that do not have accompanying BankPages</h1>
+    {% for bnk_pg, link in missing_brands_pages.missing_bank_pages %}
+        {% if link is None%}
+           <li><strong>{{bnk_pg}}<br></strong></li>
+        {% else %}
+           <li><strong><a href={{link}}>{{bnk_pg}}</a><br></strong></li>
+        {% endif %}
+    {% endfor %} 
+</ul>
+<ul>
+    <h1>SFIPages that do not have accompanying brands</h1>
+    {% for brand in missing_brands_pages.sfi_missing_brands %}
+           <li><strong>{{brand}}</a><br></strong></li>
+    {% endfor %} 
+</ul>
+<ul>
+    <h1>Brands that do not have accompanying SFIPages</h1>
+    {% for bnk_pg, link in missing_brands_pages.missing_sfi_pages %}
+           <li><strong><a href={{link}}>{{bnk_pg}}</a><br></strong></li>
+    {% endfor %} 
+</ul>
+{% endblock %}

@@ -50,4 +50,7 @@ urlpatterns = [
     path("rest_api_view/", include("api.urls")),
     path("check-duplicates/", views.check_duplicates, name="check_duplicates"),
     path("export_csv/", views.export_csv, name="export_csv"),
+    path(
+        "check_prismic_mismatches/", views.check_prismic_mismatches, name="check_prismic_mismatches"
+    ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
