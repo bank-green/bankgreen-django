@@ -30,7 +30,6 @@ def get_prismic_documents(document_type, ref_number):
     bank_uids = []
 
     if (not document_type) or (not ref_number):
-        print(f"Error message : Please provide the document_type and reference number")
         return None
 
     # document_url = prismic_filter_documents_url.replace("DOCUMENTTYPE", document_type.lower()).replace('RRRR', ref_number).replace('PGNUMBER', pg_number)
