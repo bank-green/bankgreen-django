@@ -114,6 +114,8 @@ class BrandFilter(FilterSet):
         method="filter_features", lookup_expr="in", input_type=graphene.List(graphene.String)
     )
 
+    top_pick = BooleanFilter(field_name="commentary__top_pick")
+
     fossil_free_alliance = BooleanFilter(field_name="commentary__fossil_free_alliance")
 
     def filter_features(self, queryset, name, value):
