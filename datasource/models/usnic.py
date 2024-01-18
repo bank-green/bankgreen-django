@@ -113,7 +113,6 @@ class Usnic(Datasource):
 
     @classmethod
     def load_and_create(cls, load_from_api=False):
-
         # load from api or from local disk.
         if not load_from_api:
             print("Loading Usnic data from local copy...")
@@ -235,7 +234,6 @@ class Usnic(Datasource):
 
     @classmethod
     def _supplement_with_branch_information(cls, row):
-
         branch_bank_rssd = row["ID_RSSD_HD_OFF"]
 
         try:
@@ -265,14 +263,12 @@ class Usnic(Datasource):
 
     @classmethod
     def _add_relationships(cls, relationship_df):
-
         threads = []
 
         # cycle through banks again, this time adding owner relationships
         existing_rssds = [int(x) for x in Usnic.objects.values_list("rssd", flat=True)]
 
         for child_id in existing_rssds:
-
             # if "test" in sys.argv:
             if True:
                 cls._add_individual_relationship(relationship_df, child_id, existing_rssds)

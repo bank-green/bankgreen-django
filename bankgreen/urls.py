@@ -13,6 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -27,7 +31,11 @@ from schema import schema
 
 from brand import views
 
-urlpatterns = [
+ENV_DIR = str(Path().cwd() / "bankgreen/.env")
+load_dotenv(ENV_DIR)
+ENVIRONMENT = os.environ.get("ENV")
+
+base_urlpatterns = [
     path("admin/", admin.site.urls),
     path("", RedirectView.as_view(url=reverse_lazy("admin:index"))),
     re_path(
@@ -54,3 +62,9 @@ urlpatterns = [
         "check_prismic_mismatches/", views.check_prismic_mismatches, name="check_prismic_mismatches"
     ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns = (
+    base_urlpatterns + [path("", include("django_prometheus.urls"))]
+    if ENVIRONMENT == "prod"
+    else base_urlpatterns
+)

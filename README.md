@@ -30,6 +30,28 @@ There's an .env file in the same path as settings.py where all environment varia
 
 `cp bankgreen/.env.template bankgreen/.env`
 
+## Monitoring
+
+Monitoring is done via [Django Prometheus](https://github.com/korfuri/django-prometheus). To set this up locally, do the following:
+
+1. Download and install [Prometheus](https://prometheus.io/docs/introduction/first_steps/). Prometheus should be in a separate directory from the Bank Green Django application.
+2. In `prometheus.yml`, replace the `scrape_configs` section with:
+```
+scrape_configs:
+  - job_name: bank-green
+    scrape_interval: 10s
+
+    static_configs:
+      - targets: ["localhost:8000"]
+```
+
+To run Prometheus locally:
+
+1. Change your `bankgreen/.env` file to read `ENVIRONMENT="prod"`.
+2. In your Prometheus directory, run: `./prometheus --config.file=prometheus.yml`.
+3. Start Django and the Nuxt app.
+4. To query metrics graphs, go to `localhost:9090`.
+
 ## Database
 To setup the database, you must run migrations, add sample data by installing the initial fixture and download a list of countries and regions:   
 `python manage.py migrate`   
@@ -62,6 +84,9 @@ sudo systemctl start gunicorn.socket
 sudo systemctl enable gunicorn.socket
 sudo journalctl -u gunicorn.socket
 ```
+## Formatting
+
+To automagically format your code, run `black .` from the root of the repo.
 
 ## Refreshing Data
 

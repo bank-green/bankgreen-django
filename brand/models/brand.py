@@ -6,6 +6,8 @@ from django.db.models.query import QuerySet
 from django.template.defaultfilters import truncatechars
 from django.core.exceptions import ValidationError
 
+from django_prometheus.models import ExportModelOperationsMixin
+
 from cities_light.models import Region, SubRegion
 from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
@@ -15,8 +17,6 @@ from datasource.constants import lev_distance, model_names
 
 
 # from Levenshtein import distance as lev
-
-
 def validate_tag(value):
     """This is the function that is used to validate the TAG"""
     if re.match("^[A-Za-z0-9_-]*$", str(value)):
@@ -27,7 +27,7 @@ def validate_tag(value):
         )
 
 
-class Brand(TimeStampedModel):
+class Brand(ExportModelOperationsMixin("brand"), TimeStampedModel):
     """
     A "Brand" is the instance shown to the end user.
     Multiple Datasources may be associated with a single brand.

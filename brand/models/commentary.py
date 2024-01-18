@@ -4,12 +4,14 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from django_prometheus.models import ExportModelOperationsMixin
+
 from django_countries.fields import CountryField
 
 from brand.models import Brand
 
 
-class RatingChoice(models.TextChoices):
+class RatingChoice(ExportModelOperationsMixin("rating_choice"), models.TextChoices):
     GREAT = "great"
     GOOD = "good"
     OK = "ok"
@@ -88,7 +90,6 @@ class Commentary(models.Model):
         return self.compute_inherited_rating()
 
     def compute_inherited_rating(self, inheritance_set=None, throw_error=False):
-
         inheritance_set = set() if inheritance_set is None else inheritance_set
         brand_in_inheritance_set = self.brand.tag in inheritance_set
 

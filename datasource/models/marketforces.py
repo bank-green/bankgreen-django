@@ -11,7 +11,6 @@ class Marketforces(Datasource):
 
     @classmethod
     def load_and_create(cls, load_from_api=False):
-
         # load from api or from local disk.
         df = None
         if not load_from_api:

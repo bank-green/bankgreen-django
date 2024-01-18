@@ -91,7 +91,6 @@ class CreateUpdateView(CreateView):
             return model_to_dict(self.original)
 
     def get_context_data(self, **kwargs):
-
         # set tag
         tag = self.kwargs.get("tag")
         original = Brand.objects.get(tag=tag)
