@@ -1,0 +1,5 @@
+{% extends 'registration/password_reset_form.html' %}
+
+{% block content %}
+    <p class="error">The email <strong>{{ email }}</strong> does not belong to a registered user.</p>
+{% endblock %}

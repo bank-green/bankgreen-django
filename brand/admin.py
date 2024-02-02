@@ -137,6 +137,7 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
 
 
 admin.site.unregister(SubRegion)
+admin.site.login_template = "registration/login.html"
 
 
 @admin.register(BrandUpdate)

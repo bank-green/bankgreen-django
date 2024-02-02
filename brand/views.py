@@ -1,6 +1,8 @@
 from uuid import uuid4
 
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordResetView
 from django.forms import inlineformset_factory
 from django.forms.models import model_to_dict
 from django.http import Http404, HttpResponse
@@ -256,3 +258,13 @@ def check_prismic_mismatches(request):
         "missing_brand_vs_prismic_pages.html",
         context={"missing_brands_pages": missing_brands_pages},
     )
+
+
+class CustomPasswordResetView(PasswordResetView):
+    def form_valid(self, form):
+        # Verifying if the email belong to registered user
+        email = form.cleaned_data["email"]
+        if User.objects.filter(email=email).exists():
+            return super().form_valid(form)
+        else:
+            return render(self.request, "registration/email_not_found.html", {"email": email})
