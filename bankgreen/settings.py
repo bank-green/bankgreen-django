@@ -70,6 +70,8 @@ INSTALLED_APPS = [
     "django_json_widget",
     "corsheaders",
     "cities_light",
+    "reversion",
+    "simple_history",
 ]
 
 MIDDLEWARE = [
@@ -81,6 +83,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 ROOT_URLCONF = "bankgreen.urls"

@@ -4,11 +4,11 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.urls import reverse
 from django.utils.html import format_html
 
-
 from cities_light.admin import SubRegionAdmin
 from cities_light.models import Region, SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 from django_countries.fields import Country
+from reversion.admin import VersionAdmin
 
 from brand.admin_utils import (
     LinkedDatasourcesFilter,
@@ -67,7 +67,6 @@ class CommentaryInline(admin.StackedInline):
         ("CMS", {"fields": (("subtitle",), ("header",), ("summary",), ("details",))}),
         ("Meta", {"fields": ("comment",)}),
     )
-
 
 class BrandFeaturesInline(admin.StackedInline):
     model = BrandFeature
@@ -272,9 +271,8 @@ class InstitutionTypes(admin.ModelAdmin):
 class InstitutionCredentials(admin.ModelAdmin):
     model = InstitutionCredential
 
-
 @admin.register(Brand)
-class BrandAdmin(admin.ModelAdmin):
+class BrandAdmin(VersionAdmin):
     form = CountriesWidgetOverrideForm
     change_list_template = "change_list_template.html"
 
