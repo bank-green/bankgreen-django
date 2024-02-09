@@ -4,6 +4,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.urls import reverse
 from django.utils.html import format_html
 
+
 from cities_light.admin import SubRegionAdmin
 from cities_light.models import Region, SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
@@ -67,6 +68,7 @@ class CommentaryInline(admin.StackedInline):
         ("CMS", {"fields": (("subtitle",), ("header",), ("summary",), ("details",))}),
         ("Meta", {"fields": ("comment",)}),
     )
+
 
 class BrandFeaturesInline(admin.StackedInline):
     model = BrandFeature
@@ -270,6 +272,7 @@ class InstitutionTypes(admin.ModelAdmin):
 @admin.register(InstitutionCredential)
 class InstitutionCredentials(admin.ModelAdmin):
     model = InstitutionCredential
+
 
 @admin.register(Brand)
 class BrandAdmin(VersionAdmin):
