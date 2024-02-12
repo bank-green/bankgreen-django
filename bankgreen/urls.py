@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.template.defaulttags import url
 from django.urls import path, re_path, reverse_lazy, include
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
@@ -69,7 +68,7 @@ urlpatterns = [
         name="password_reset_done",
     ),
     path(
-        r"^reset/<uidb64>/<token>/",
+        "reset/<uidb64>/<token>/",
         auth_views.PasswordResetConfirmView.as_view(),
         name="password_reset_confirm",
     ),
