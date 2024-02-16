@@ -43,7 +43,6 @@ urlpatterns = [
         name="subregion-autocomplete",
     ),
     path("calendar/", views.calendar_redirect, name="calendar"),
-    path("update/<str:tag>/", views.CreateUpdateView.as_view(), name="update"),
     path("banks/<str:tag>/", views.brand_redirect, name="brand_quicklink"),
     path("sustainable-eco-banks/<str:tag>/", views.brand_redirect, name="brand_quicklink"),
     path("update_success/", views.update_success, name="update_success"),
