@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "django_json_widget",
     "corsheaders",
     "cities_light",
+    "reversion",
 ]
 
 MIDDLEWARE = [

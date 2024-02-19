@@ -9,6 +9,7 @@ from cities_light.admin import SubRegionAdmin
 from cities_light.models import Region, SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 from django_countries.fields import Country
+from reversion.admin import VersionAdmin
 
 from brand.admin_utils import (
     LinkedDatasourcesFilter,
@@ -274,7 +275,7 @@ class InstitutionCredentials(admin.ModelAdmin):
 
 
 @admin.register(Brand)
-class BrandAdmin(admin.ModelAdmin):
+class BrandAdmin(VersionAdmin):
     form = CountriesWidgetOverrideForm
     change_list_template = "change_list_template.html"
 
