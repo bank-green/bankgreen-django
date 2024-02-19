@@ -20,9 +20,10 @@ from django.urls import path, re_path, reverse_lazy, include
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import RedirectView
-
+from django.contrib.auth import views as auth_views
 from graphene_django.views import GraphQLView
 
+from brand.views import CustomPasswordResetView
 from schema import schema
 
 from brand import views
@@ -52,5 +53,30 @@ urlpatterns = [
     path("export_csv/", views.export_csv, name="export_csv"),
     path(
         "check_prismic_mismatches/", views.check_prismic_mismatches, name="check_prismic_mismatches"
+    ),
+    path(
+        "password_reset/",
+        CustomPasswordResetView.as_view(
+            html_email_template_name="registration/custom_password_reset_email.html",
+            subject_template_name="registration/custom_password_reset_subject.txt",
+        ),
+        name="password_reset",
+    ),
+    path(
+        "password_reset/done/",
+        auth_views.PasswordResetDoneView.as_view(),
+        name="password_reset_done",
+    ),
+    path(
+        "reset/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
+    path(
+        "reset/complete/",
+        auth_views.PasswordResetCompleteView.as_view(
+            template_name="registration/custom_password_reset_complete.html"
+        ),
+        name="password_reset_complete",
     ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
