@@ -115,7 +115,7 @@ Then restart Nginx and Gunicorn:
 
 # Deploying
 Deployment uses the `Justfile`, which you can also copy and paste into your terminal if you prefer. Otherwise, this will require
-1. Installing the `just` package (`brew install just` for mac, other instructions [here](https://just.systems/))
+1. Installing the `just` ([packages here](https://github.com/casey/just?tab=readme-ov-file#packages))
 2. Entering the following into `~/.ssh/config`:
 
 ```
