@@ -17,7 +17,6 @@ from brand.admin_utils import (
     raise_validation_error_for_missing_country,
     raise_validation_error_for_missing_region,
 )
-from brand.models.brand_update import BrandUpdate
 from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import InstitutionCredential, InstitutionType
 from brand.models.features import BrandFeature, FeatureType
@@ -139,82 +138,6 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
 
 admin.site.unregister(SubRegion)
 admin.site.login_template = "registration/login.html"
-
-
-@admin.register(BrandUpdate)
-class BrandUpdateAdmin(admin.ModelAdmin):
-    form = CountriesWidgetOverrideForm
-    fields = ["brand_link"] + BrandUpdate.UPDATE_FIELDS + ["additional_info", "email", "consent"]
-    readonly_fields = ["brand_link", "name", "aliases", "website", "bank_features"]
-    inlines = [BrandFeaturesInline]
-    autocomplete_fields = ["subregions"]
-
-    list_display = ("short_name", "update_tag", "created", "email", "merged")
-    list_filter = ("merged",)
-
-    def brand_link(self, obj):
-        """
-        Returns a link to the parent Brand object in the admin interface.
-        """
-        parent_brand = Brand.objects.get(tag=obj.update_tag)
-        url = reverse("admin:brand_brand_change", args=(str(parent_brand.pk),))
-        return format_html('<a href="{}">{}</a>', url, parent_brand)
-
-    brand_link.short_description = "Brand"
-
-    def save_model(self, request, obj, form, change):
-        original = Brand.objects.get(tag=obj.update_tag)
-
-        # overwrite all fields with values from updates
-        for field in BrandUpdate.UPDATE_FIELDS:
-            if field != "regions" and field != "subregions":
-                value = getattr(obj, field)
-                setattr(original, field, value)
-
-        # combine country, regions, and subregions
-        # if a country or region is not explicitly specified, add it
-        combined_subregions = obj.subregions.all() | original.subregions.all()
-        original.subregions.set(combined_subregions.distinct())
-
-        combined_regions = (
-            obj.regions.all()
-            | original.regions.all()
-            | Region.objects.filter(id__in=[x.region.id for x in combined_subregions])
-        ).distinct()
-        original.regions.set(combined_regions)
-
-        implied_countries = set([x.country.code2 for x in combined_regions])
-        implied_countries = set([Country(x) for x in implied_countries])
-
-        combined_countries = set(obj.countries).union(implied_countries)
-        original.countries = list(combined_countries)
-
-        # It's possible for there to be duplicate feature types.
-        # in these cases, delete the original bank features with the same type
-        og_features = original.bank_features.all()
-        new_features = obj.bank_features.all()
-
-        new_feature_set = set([x.feature for x in new_features])
-        intersecting_features = [x.feature for x in og_features if x.feature in new_feature_set]
-
-        for x in intersecting_features:
-            og = og_features.filter(feature=x).first()
-            og_features = og_features.exclude(id=og.id)
-
-        new_combined_features = og_features | new_features
-
-        original.bank_features.all().delete()
-        original.bank_features.set(new_combined_features)
-
-        original.save()
-
-        obj.merged = True
-        obj.save()
-
-        # deleting the object results in a an error with regions in forms/models.py _save_m2m
-        # and creates a validation error. This has to do with how regions and subregions are configured.
-        # It's comented out for now.
-        # obj.delete()
 
 
 @admin.register(SubRegion)
@@ -372,11 +295,7 @@ class BrandAdmin(VersionAdmin):
 
     def get_queryset(self, request):
         # filter out all but base class
-        qs = (
-            super(BrandAdmin, self)
-            .get_queryset(request)
-            .filter(brandupdate__isnull=True, brandsuggestion__isnull=True)
-        )
+        qs = super(BrandAdmin, self).get_queryset(request).filter(brandsuggestion__isnull=True)
         return qs
 
     def number_of_related_datasources(self, obj):
