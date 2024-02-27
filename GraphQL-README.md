@@ -223,7 +223,7 @@ query BrandsQuery(
 ## Filter the data based on embrace field
 ```
  query{
- commentaries(embrace: "encourage new policy"){
+ commentaries(embrace: "breakup letter"){
   edges {
     node {
       id
