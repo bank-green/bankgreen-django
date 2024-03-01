@@ -20,7 +20,7 @@ class RatingChoice(models.TextChoices):
 
 
 class EmbraceChoices(models.TextChoices):
-    ENCOURAGE_NEW_POLICY = "encourage new policy"
+    BREAKUP_LETTER = "breakup letter"
     NONE = "none"
 
 
