@@ -1,4 +1,8 @@
+import json, sys
+import os
+
 from django.test import TestCase
+from django.core.management import call_command
 
 import np
 import pandas as pd
@@ -302,3 +306,43 @@ class UsnicTestCase(TestCase):
         self.assertTrue(
             SuggestedAssociation.objects.get(brand=brand2, datasource=usnic5).certainty > 0
         )
+
+
+class FixtureLoadingTestCase(TestCase):
+    def setUp(self):
+        """
+        This method will generate the sample_initial.json file which contains exactly one entry
+        for each module. The size of this file will be very small as compared to the original
+        initial.json
+        """
+
+        file = open("fixtures/initial/initial.json", "r")
+        json_file = json.load(file)
+
+        sample_initial_json = list({data["model"]: data for data in json_file}.values())
+
+        for data in sample_initial_json:
+            data["pk"] = 1
+            for field, field_val in data["fields"].items():
+                if isinstance(field_val, int):
+                    data["fields"][field] = 1
+
+        with open("fixtures/initial/sample_initial.json", "w") as file:
+            json.dump(sample_initial_json, file)
+
+    def tearDown(self):
+        """
+        Just remove the sample_initial.json file after executing the test case.
+        """
+        os.remove("fixtures/initial/sample_initial.json")
+
+    def test_can_import_fixtures(self):
+        """
+        Verify that it is always possible to import initial.json file
+        """
+        try:
+            call_command("loaddata", "fixtures/initial/sample_initial.json", verbosity=0)
+            exit_code = sys.exc_info()[0]
+            self.assertIsNone(exit_code)
+        except Exception as error:
+            self.fail(error)
