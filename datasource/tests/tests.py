@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.core.management import call_command
 
 import np
 import pandas as pd
@@ -302,3 +303,17 @@ class UsnicTestCase(TestCase):
         self.assertTrue(
             SuggestedAssociation.objects.get(brand=brand2, datasource=usnic5).certainty > 0
         )
+
+
+class FixtureLoadingTestCase(TestCase):
+    def setUp(self):
+        pass
+
+    def test_can_import_fixtures(self):
+        """
+        Verify that it is always possible to import initial.json file
+        """
+        try:
+            call_command("loaddata", "fixtures/initial/initial.json", verbosity=0)
+        except Exception as error:
+            self.fail(error)
