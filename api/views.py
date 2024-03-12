@@ -32,7 +32,7 @@ class BrandSuggestionAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BrandGetMethod(APIView):
+class BrandGetTag(APIView):
     def get(self,request):
         requested_bank = self.request.query_params.get("bank_name")
         data = Brand.objects.all().filter(name=requested_bank)
