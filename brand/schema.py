@@ -261,7 +261,7 @@ class Query(graphene.ObjectType):
 
     def resolve_brand_by_tag(root, info, tag):
         return BrandModel.objects.get(tag=tag)
-    
+
     def resolve_brand_by_name(root, info, name):
         return BrandModel.objects.get(name=name)
 
