@@ -76,7 +76,7 @@ query BrandsQuery(
 }
 ```
 
-## individual bank
+## individual bank by tag
 
 **query**
 
@@ -127,6 +127,7 @@ query BrandByTagQuery($tag: String!) {
 }
 ```
 
+
 **variables**
 
 ```graphql
@@ -134,6 +135,67 @@ query BrandByTagQuery($tag: String!) {
   "tag": "atmos"
 }
 ```
+
+## individual bank by name
+
+**query**
+
+```graphql
+query BrandByTagQuery($name: String!) {
+  brand(name: $name) {
+    tag
+    name
+    website
+    commentary {
+      rating
+      embrace
+      fromTheWebsite
+      ourTake
+      amountFinancedSince2016
+      fossilFreeAlliance
+      top_pick
+      subtitle
+      header
+      summary
+      details
+      fossilFreeAllianceRating
+      showOnSustainableBanksPage
+      institutionType {
+        name
+      }
+      institutionCredentials {
+        name
+      }
+    }
+    bankFeatures {
+      offered
+      feature {
+        name
+      }
+      details
+    }
+    datasources {
+      edges {
+        node {
+          name
+          sourceLink
+          subclass
+        }
+      }
+    }
+  }
+}
+```
+
+
+**variables**
+
+```graphql
+{
+  "name": "Ecobank"
+}
+```
+
 
 ## filter banks by features
 
