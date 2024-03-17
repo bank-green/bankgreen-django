@@ -93,7 +93,7 @@ query BrandByTagQuery($tag: String!) {
       ourTake
       amountFinancedSince2016
       fossilFreeAlliance
-      top_pick
+      topPick
       subtitle
       header
       summary
@@ -141,8 +141,8 @@ query BrandByTagQuery($tag: String!) {
 **query**
 
 ```graphql
-query BrandByTagQuery($name: String!) {
-  brand(name: $name) {
+query BrandByNameQuery($name: String!) {
+  brandByName(name: $name) {
     tag
     name
     website
@@ -153,7 +153,7 @@ query BrandByTagQuery($name: String!) {
       ourTake
       amountFinancedSince2016
       fossilFreeAlliance
-      top_pick
+      topPick
       subtitle
       header
       summary
@@ -192,7 +192,7 @@ query BrandByTagQuery($name: String!) {
 
 ```graphql
 {
-  "name": "Ecobank"
+  "name": "Vanbank"
 }
 ```
 
