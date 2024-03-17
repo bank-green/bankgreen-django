@@ -257,8 +257,13 @@ class Query(graphene.ObjectType):
 
     brand = graphene.Field(Brand, tag=graphene.Argument(graphene.String, required=True))
 
+    brand_by_name = graphene.Field(Brand, name=graphene.Argument(graphene.String, required=True))
+
     def resolve_brand(root, info, tag):
         return BrandModel.objects.get(tag=tag)
+
+    def resolve_brand_by_name(root, info, name):
+        return BrandModel.objects.get(name=name)
 
     brands = DjangoFilterConnectionField(Brand)
 
