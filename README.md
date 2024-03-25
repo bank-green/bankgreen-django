@@ -50,6 +50,10 @@ python manage.py cities_light # refresh country/region database
 python manage.py runserver
 ```
 
+## Formatting
+
+To automagically format your code, run `black .` from the root of the repo.
+
 ## Nginx and Gunicorn userful commands
 
 ```
