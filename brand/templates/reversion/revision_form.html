@@ -1,0 +1,8 @@
+{% extends "reversion/revision_form.html" %}
+{% load i18n admin_urls %}
+
+{% block submit_buttons_bottom %}{% with is_popup=1 %}
+{% block submit-row %}
+  <input type="submit" value="{% translate 'Revert to this version' %}" class="default" name="_save">
+{% endblock %}
+{% endwith %}{% endblock %}
