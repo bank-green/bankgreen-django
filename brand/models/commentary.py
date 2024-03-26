@@ -7,6 +7,7 @@ from django.db import models
 from django_countries.fields import CountryField
 
 from brand.models import Brand
+from brand.models.embrace_campaign import EmbraceCampaign
 
 
 class RatingChoice(models.TextChoices):
@@ -82,6 +83,8 @@ class Commentary(models.Model):
     embrace = models.CharField(
         max_length=20, null=True, default=EmbraceChoices.NONE, choices=EmbraceChoices.choices
     )
+
+    embrace_campaign = models.ManyToManyField(EmbraceCampaign, blank=True)
 
     @property
     def rating_inherited(self):

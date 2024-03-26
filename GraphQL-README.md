@@ -29,6 +29,7 @@ query BrandsQuery(
         commentary @include(if: $withCommentary) {
           rating
           embrace
+          embrace
           fromTheWebsite
           ourTake
           amountFinancedSince2016
@@ -43,6 +44,9 @@ query BrandsQuery(
             name
           }
           institutionCredentials {
+            name
+          }
+          embraceCampaign {
             name
           }
         }
@@ -106,6 +110,9 @@ query BrandByTagQuery($tag: String!) {
       institutionCredentials {
         name
       }
+      embraceCampaign {
+        name
+      }
     }
     bankFeatures {
       offered
@@ -164,6 +171,9 @@ query BrandByNameQuery($name: String!) {
         name
       }
       institutionCredentials {
+        name
+      }
+      embraceCampaign {
         name
       }
     }
@@ -293,5 +303,17 @@ query BrandsQuery(
     }
   }
  }
+}
+```
+
+## all embrace campaigns
+```
+ qquery{
+  embraceCampaigns{
+    id
+    name
+    description
+    configuration
+  }
 }
 ```
