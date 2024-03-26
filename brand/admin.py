@@ -20,6 +20,7 @@ from brand.admin_utils import (
 from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import InstitutionCredential, InstitutionType
 from brand.models.features import BrandFeature, FeatureType
+from brand.models.embrace_campaign import EmbraceCampaign
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 
@@ -49,6 +50,7 @@ class CommentaryInline(admin.StackedInline):
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
                     ("embrace"),
+                    ("embrace_campaign"),
                 )
             },
         ),
@@ -314,3 +316,15 @@ class BrandAdmin(VersionAdmin):
 @admin.register(BrandSuggestion)
 class BrandSuggestionsAdmin(admin.ModelAdmin):
     list_display = ["short_name", "submitter_name", "submitter_email"]
+
+
+@admin.register(EmbraceCampaign)
+class EmbraceCampaignAdmin(admin.ModelAdmin):
+    """
+    This EmbraceCampaignAdmin will add EmbraceCampaign model data into
+    Admin interface
+    """
+
+    model = EmbraceCampaign
+
+    list_display = ["name", "description"]
