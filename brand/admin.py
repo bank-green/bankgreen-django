@@ -6,9 +6,8 @@ from django.utils.html import format_html
 
 
 from cities_light.admin import SubRegionAdmin
-from cities_light.models import Region, SubRegion
+from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
-from django_countries.fields import Country
 from reversion.admin import VersionAdmin
 
 from brand.admin_utils import (
@@ -28,6 +27,7 @@ from scripts.check_duplicates import return_all_duplicates
 from .models import Brand, Commentary
 
 from django.core.exceptions import ObjectDoesNotExist
+from brand.forms import EmbraceCampaignForm
 
 
 class CommentaryInline(admin.StackedInline):
@@ -325,6 +325,16 @@ class EmbraceCampaignAdmin(admin.ModelAdmin):
     Admin interface
     """
 
+    form = EmbraceCampaignForm
     model = EmbraceCampaign
 
-    list_display = ["name", "description"]
+    list_display = ["id", "name", "configuration"]
+
+    def get_form(self, request, obj=None, *args, **kwargs):
+        form = super(EmbraceCampaignAdmin, self).get_form(request, *args, **kwargs)
+        form.base_fields["configuration"].initial = {
+            "email": "write email address here",
+            "system_prompt": "Write the system instructions here",
+            "user_prompt": "write your question here",
+        }
+        return form

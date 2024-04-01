@@ -276,7 +276,6 @@ class Query(graphene.ObjectType):
         return BrandModel.objects.get(name=name)
 
     def resolve_embrace_campaigns(root, info):
-        print(EmbraceCampaignModel.objects.all())
         return EmbraceCampaignModel.objects.all()
 
     brands = DjangoFilterConnectionField(Brand)

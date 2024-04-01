@@ -17,7 +17,6 @@ class MultipleCountryField(serializers.Field):
         format which then can be returned as a api response.
         """
         if isinstance(obj, list) and all(isinstance(item, Country) for item in obj):
-            print([country.code for country in obj])
             return [country.code for country in obj]
         return []
 

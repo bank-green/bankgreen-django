@@ -3,9 +3,6 @@ from enum import Enum
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-
-from django_countries.fields import CountryField
-
 from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
 
