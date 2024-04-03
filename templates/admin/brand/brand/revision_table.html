@@ -1,1 +1,29 @@
-<p>{{ action_list }}</p>
+{% load i18n %}
+
+<table id="change-history" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">{% trans 'Date/time' %}</th>
+            <th scope="col">{% trans 'User' %}</th>
+            <th scope="col">{% trans 'Action' %}</th>
+            <th scope="col">{% trans 'Rating' %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for action in action_list %}
+            <tr>
+                <th scope="row"><a href="{{action.url}}">{{action.revision.date_created|date:"DATETIME_FORMAT"}}</a></th>
+                <td>
+                    {% if action.revision.user %}
+                        {{action.revision.user.get_username}}
+                        {% if action.revision.user.get_full_name %} ({{action.revision.user.get_full_name}}){% endif %}
+                    {% else %}
+                        &mdash;
+                    {% endif %}
+                </td>
+                <td>{{action.revision.get_comment|linebreaksbr|default:""}}</td>
+                <td>{{action.rating}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
