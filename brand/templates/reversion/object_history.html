@@ -1,23 +1,14 @@
 {% extends "admin/object_history.html" %}
+{% load bankgreen_tags %}
 {% load i18n %}
-
 
 {% block content %}
     <div id="content-main">
 
         <p>{% blocktrans %}Choose a date from the list below to revert to a previous version of this object.{% endblocktrans %}</p>
-
+{% render_revision_table action_list %}
         <div class="module">
             {% if action_list %}
-            <p>we want version.field_dict</p>
-            <p> but we only have the version.reversion in this data</p>
-            <p>how do we override the existing data method?</p>
-            <p>in theory we can use an insert template to do this</p>
-            <p>but in practice, we don't know how to get the info about ratings</p>
-            <p>is it in the revision? do we have to get it from the db? it seems like there's a method to update the revision but what's happenign w/ that data?</p>
-            {% for action in action_list %}
-              <p>{{action.revision}}</p>
-            {% endfor %}
                 <table id="change-history" class="table table-striped table-bordered">
                     <thead>
                         <tr>
