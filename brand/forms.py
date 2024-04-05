@@ -1,7 +1,6 @@
-from dal import autocomplete
 from django import forms
-
 from .models import BrandFeature
+from utils import brand_utils
 
 
 class BrandFeaturesForm(forms.ModelForm):
@@ -14,3 +13,7 @@ class BrandFeaturesForm(forms.ModelForm):
     class Meta:
         model = BrandFeature
         fields = ["details", "feature"]
+
+
+class EmbraceCampaignForm(forms.ModelForm):
+    configuration = forms.JSONField(encoder=brand_utils.PrettyJSONEncoder)

@@ -1,5 +1,6 @@
 from brand.models import BrandFeature
 from brand.models.commentary import InstitutionCredential, InstitutionType
+from json import JSONEncoder
 
 
 def get_institution_data():
@@ -22,3 +23,8 @@ def concat_brand_feature_data(brand_id):
         data_dict["feature"] = ",".join([str(x.feature) for x in brand_feature_data])
 
     return data_dict
+
+
+class PrettyJSONEncoder(JSONEncoder):
+    def __init__(self, *args, indent, sort_keys, **kwargs):
+        super().__init__(*args, indent=2, sort_keys=False, **kwargs)

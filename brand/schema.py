@@ -16,6 +16,7 @@ from .models import (
     Commentary as CommentaryModel,
     BrandFeature as BrandFeatureModel,
     FeatureType as FeatureModel,
+    EmbraceCampaign as EmbraceCampaignModel,
 )
 
 from .models.commentary import (
@@ -223,6 +224,7 @@ class Commentary(DjangoObjectType):
             "display_on_website",
             "show_on_sustainable_banks_page",
             "embrace",
+            "embrace_campaign",
         ]
         interfaces = (relay.Node,)
         convert_choices_to_enum = False
@@ -250,6 +252,12 @@ class BrandFeature(DjangoObjectType):
         convert_choices_to_enum = False
 
 
+class EmbraceCampaignType(DjangoObjectType):
+    class Meta:
+        model = EmbraceCampaignModel
+        fields = ("id", "name", "description", "configuration")
+
+
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
     commentary = relay.Node.Field(Commentary)
@@ -259,11 +267,16 @@ class Query(graphene.ObjectType):
 
     brand_by_name = graphene.Field(Brand, name=graphene.Argument(graphene.String, required=True))
 
+    embrace_campaigns = graphene.List(EmbraceCampaignType)
+
     def resolve_brand(root, info, tag):
         return BrandModel.objects.get(tag=tag)
 
     def resolve_brand_by_name(root, info, name):
         return BrandModel.objects.get(name=name)
+
+    def resolve_embrace_campaigns(root, info):
+        return EmbraceCampaignModel.objects.all()
 
     brands = DjangoFilterConnectionField(Brand)
 

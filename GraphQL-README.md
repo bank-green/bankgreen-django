@@ -45,6 +45,9 @@ query BrandsQuery(
           institutionCredentials {
             name
           }
+          embraceCampaign {
+            id
+          }
         }
         bankFeatures @include(if: $withFeatures) {
           offered
@@ -106,6 +109,9 @@ query BrandByTagQuery($tag: String!) {
       institutionCredentials {
         name
       }
+      embraceCampaign {
+        id
+      }
     }
     bankFeatures {
       offered
@@ -165,6 +171,9 @@ query BrandByNameQuery($name: String!) {
       }
       institutionCredentials {
         name
+      }
+      embraceCampaign {
+        id
       }
     }
     bankFeatures {
@@ -293,5 +302,17 @@ query BrandsQuery(
     }
   }
  }
+}
+```
+
+## all embrace campaigns
+```
+ query{
+  embraceCampaigns{
+    id
+    name
+    description
+    configuration
+  }
 }
 ```

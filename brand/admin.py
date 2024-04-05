@@ -1,14 +1,12 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.urls import reverse
 from django.utils.html import format_html
 
 
 from cities_light.admin import SubRegionAdmin
-from cities_light.models import Region, SubRegion
+from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
-from django_countries.fields import Country
 from reversion.admin import VersionAdmin
 
 from brand.admin_utils import (
@@ -20,13 +18,14 @@ from brand.admin_utils import (
 from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import InstitutionCredential, InstitutionType
 from brand.models.features import BrandFeature, FeatureType
+from brand.models.embrace_campaign import EmbraceCampaign
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 
-from scripts.check_duplicates import return_all_duplicates
 from .models import Brand, Commentary
 
 from django.core.exceptions import ObjectDoesNotExist
+from brand.forms import EmbraceCampaignForm
 
 
 class CommentaryInline(admin.StackedInline):
@@ -49,6 +48,7 @@ class CommentaryInline(admin.StackedInline):
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
                     ("embrace"),
+                    ("embrace_campaign"),
                 )
             },
         ),
@@ -314,3 +314,25 @@ class BrandAdmin(VersionAdmin):
 @admin.register(BrandSuggestion)
 class BrandSuggestionsAdmin(admin.ModelAdmin):
     list_display = ["short_name", "submitter_name", "submitter_email"]
+
+
+@admin.register(EmbraceCampaign)
+class EmbraceCampaignAdmin(admin.ModelAdmin):
+    """
+    This EmbraceCampaignAdmin will add EmbraceCampaign model data into
+    Admin interface
+    """
+
+    form = EmbraceCampaignForm
+    model = EmbraceCampaign
+
+    list_display = ["id", "name", "configuration"]
+
+    def get_form(self, request, obj=None, *args, **kwargs):
+        form = super(EmbraceCampaignAdmin, self).get_form(request, *args, **kwargs)
+        form.base_fields["configuration"].initial = {
+            "email": "embracecampaign@bank.green",
+            "system_prompt": "Write the system instructions here",
+            "user_prompt": "write your question here",
+        }
+        return form
