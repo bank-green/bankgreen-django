@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.urls import reverse
 from django.utils.html import format_html
 
 
@@ -23,7 +22,6 @@ from brand.models.embrace_campaign import EmbraceCampaign
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 
-from scripts.check_duplicates import return_all_duplicates
 from .models import Brand, Commentary
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -333,7 +331,7 @@ class EmbraceCampaignAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, *args, **kwargs):
         form = super(EmbraceCampaignAdmin, self).get_form(request, *args, **kwargs)
         form.base_fields["configuration"].initial = {
-            "email": "write email address here",
+            "email": "embracecampaign@bank.green",
             "system_prompt": "Write the system instructions here",
             "user_prompt": "write your question here",
         }
