@@ -77,10 +77,6 @@ class Commentary(models.Model):
     )
     top_pick = models.BooleanField(default=False, help_text="Is this brand a top pick?")
 
-    embrace = models.CharField(
-        max_length=20, null=True, default=EmbraceChoices.NONE, choices=EmbraceChoices.choices
-    )
-
     embrace_campaign = models.ManyToManyField(EmbraceCampaign, blank=True)
 
     @property
