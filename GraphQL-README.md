@@ -302,7 +302,7 @@ query BrandsQuery(
 ## Filter brands and countries with embrace campaigns id
 ```
 query{
-  brandsByEmbraceCampaign(id: 1){
+  brandsFilteredByEmbraceCampaign(id: 1){
     name
     countries 
     {
