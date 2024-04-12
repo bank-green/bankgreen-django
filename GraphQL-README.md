@@ -28,7 +28,6 @@ query BrandsQuery(
         aliases
         commentary @include(if: $withCommentary) {
           rating
-          embrace
           fromTheWebsite
           ourTake
           amountFinancedSince2016
@@ -91,7 +90,6 @@ query BrandByTagQuery($tag: String!) {
     website
     commentary {
       rating
-      embrace
       fromTheWebsite
       ourTake
       amountFinancedSince2016
@@ -154,7 +152,6 @@ query BrandByNameQuery($name: String!) {
     website
     commentary {
       rating
-      embrace
       fromTheWebsite
       ourTake
       amountFinancedSince2016
@@ -242,7 +239,6 @@ query BrandsQuery(
         }
         commentary @include(if: $withCommentary) {
           rating
-          embrace
           fromTheWebsite
           ourTake
           amountFinancedSince2016
@@ -291,20 +287,6 @@ query BrandsQuery(
 }
 ```
 
-## Filter the data based on embrace field
-```
- query{
- commentaries(embrace: "breakup letter"){
-  edges {
-    node {
-      id
-      # you can add more fields as well like rating, topPick etc
-    }
-  }
- }
-}
-```
-
 ## all embrace campaigns
 ```
  query{
@@ -313,6 +295,19 @@ query BrandsQuery(
     name
     description
     configuration
+  }
+}
+```
+
+## Filter brands and countries with embrace campaigns id
+```
+query{
+  brandsFilteredByEmbraceCampaign(id: 1){
+    name
+    countries 
+    {
+      name
+    }
   }
 }
 ```

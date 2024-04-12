@@ -19,7 +19,7 @@ def validate_configuration(json_config):
 
     try:
         validate_email(json_config["email"])
-    except:
+    except ValidationError as e:
         raise ValidationError("Enter a valid email address")
 
     for key, value in json_config.items():

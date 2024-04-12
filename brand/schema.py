@@ -223,7 +223,6 @@ class Commentary(DjangoObjectType):
             "rating",
             "display_on_website",
             "show_on_sustainable_banks_page",
-            "embrace",
             "embrace_campaign",
         ]
         interfaces = (relay.Node,)
@@ -269,6 +268,10 @@ class Query(graphene.ObjectType):
 
     embrace_campaigns = graphene.List(EmbraceCampaignType)
 
+    brands_filtered_by_embrace_campaign = graphene.List(
+        Brand, id=graphene.Argument(graphene.Int, required=True)
+    )
+
     def resolve_brand(root, info, tag):
         return BrandModel.objects.get(tag=tag)
 
@@ -277,6 +280,15 @@ class Query(graphene.ObjectType):
 
     def resolve_embrace_campaigns(root, info):
         return EmbraceCampaignModel.objects.all()
+
+    def resolve_brands_filtered_by_embrace_campaign(root, info, id):
+        embrace_campaign_obj = EmbraceCampaignModel.objects.get(id=id)
+        brand_countries = []
+        for commentary_obj in embrace_campaign_obj.commentary_set.all():
+            brand_countries.append(
+                {"name": commentary_obj.brand.name, "countries": commentary_obj.brand.countries}
+            )
+        return [Brand(**brand_data) for brand_data in brand_countries]
 
     brands = DjangoFilterConnectionField(Brand)
 
