@@ -286,7 +286,12 @@ class Query(graphene.ObjectType):
         brand_countries = []
         for commentary_obj in embrace_campaign_obj.commentary_set.all():
             brand_countries.append(
-                {"name": commentary_obj.brand.name, "countries": commentary_obj.brand.countries}
+                {
+                    "name": commentary_obj.brand.name,
+                    "website": commentary_obj.brand.website,
+                    "aliases": commentary_obj.brand.aliases,
+                    "countries": commentary_obj.brand.countries,
+                }
             )
         return [Brand(**brand_data) for brand_data in brand_countries]
 

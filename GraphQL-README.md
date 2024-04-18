@@ -304,6 +304,8 @@ query BrandsQuery(
 query{
   brandsFilteredByEmbraceCampaign(id: 1){
     name
+    website
+    aliases
     countries 
     {
       name
