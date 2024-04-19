@@ -299,11 +299,14 @@ query BrandsQuery(
 }
 ```
 
-## Filter brands and countries with embrace campaigns id
+## Filter brands, website, aliases and countries with embrace campaigns id
 ```
 query{
   brandsFilteredByEmbraceCampaign(id: 1){
     name
+    website
+    aliases
+    tag
     countries 
     {
       name
