@@ -289,6 +289,7 @@ class Query(graphene.ObjectType):
                 {
                     "name": commentary_obj.brand.name,
                     "website": commentary_obj.brand.website,
+                    "tag": commentary_obj.brand.tag,
                     "aliases": commentary_obj.brand.aliases,
                     "countries": commentary_obj.brand.countries,
                 }

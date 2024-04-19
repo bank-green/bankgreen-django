@@ -306,6 +306,7 @@ query{
     name
     website
     aliases
+    tag
     countries 
     {
       name
