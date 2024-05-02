@@ -4,9 +4,12 @@ from django.test import TestCase
 from brand.models.commentary import Commentary, RatingChoice
 from brand.tests.utils import create_test_brands
 from datasource.models import Banktrack, Usnic
+from django.urls import reverse
+from rest_framework.test import APIClient
+from django.contrib.auth.models import User
+from brand.models.contact import Contact
 
 from ..models import Brand
-
 
 class BrandTestCase(TestCase):
     def setUp(self):
@@ -217,3 +220,40 @@ class BrandTagTestCase(TestCase):
 
         with self.assertRaises(ValidationError):
             brand1.save()
+
+class GetContactsAPITestCase(TestCase):
+    token = None
+    def setUp(self):
+        self.client = APIClient()
+        User.objects.create_user(username='test', password='test123')
+        brand_obj = Brand.objects.create(name='test_brand', tag='test_tag', )
+        contact_obj = Contact.objects.create(fullname='test_contact', email='test@contact.com', 
+                                             brand_tag='test_tag', brand_name='test_brand')
+        commentary_obj = Commentary.objects.create(brand=brand_obj)
+        commentary_obj.contacts.set([contact_obj])
+
+        url = reverse('rest_api:api-token-auth')
+        data = {'username': 'test', 'password': 'test123'}
+        response = self.client.post(path=url, data=data)
+        self.__class__.token = response.json()['token']
+
+    def test_generate_token(self):
+        # url = reverse('rest_api:api-token-auth')
+        # data = {'username': 'test', 'password': 'test123'}
+        # response = self.client.post(path=url, data=data)
+        # self.__class__.token = response.json()['token']
+        self.assertIsNotNone(self.__class__.token )
+
+    def test_get_contacts(self):
+        url = reverse('rest_api:contacts')
+        headers = {"HTTP_AUTHORIZATION": f'Token {self.__class__.token}'}
+        response = self.client.get(path=url, **headers)
+        
+
+    def test_get_contacts_param_brand(self):
+        url = reverse('rest_api:contacts')
+        headers = {"HTTP_AUTHORIZATION": f'Token {self.__class__.token}'}
+        response = self.client.get(path=url, QUERY_STRING='brand=test_tag',**headers)
+        self.assertEquals('test@contact.com', response.json()[0])
+
+

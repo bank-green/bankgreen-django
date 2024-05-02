@@ -22,7 +22,7 @@ from brand.models.embrace_campaign import EmbraceCampaign
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 
-from .models import Brand, Commentary
+from .models import Brand, Commentary, Contact
 
 from django.core.exceptions import ObjectDoesNotExist
 from brand.forms import EmbraceCampaignForm
@@ -32,7 +32,7 @@ class CommentaryInline(admin.StackedInline):
     fk_name = "brand"
     model = Commentary
     autocomplete_fields = ["inherit_brand_rating"]
-
+    filter_horizontal = ["contacts"]
     readonly_fields = ("rating_inherited", "subtitle", "header", "summary", "details")
     fieldsets = (
         (
@@ -48,6 +48,7 @@ class CommentaryInline(admin.StackedInline):
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
                     ("embrace_campaign"),
+                    ("contacts"),
                 )
             },
         ),
@@ -335,3 +336,13 @@ class EmbraceCampaignAdmin(admin.ModelAdmin):
             "user_prompt": "write your question here",
         }
         return form
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    """
+    This ContactAdmin class helps manage data from the Contact model in the admin interface.
+    """
+
+    list_display = ["id", "fullname", "email", "brand_tag", "brand_name"]
+    search_fields = ["email"]
