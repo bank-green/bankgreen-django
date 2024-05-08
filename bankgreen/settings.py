@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "cities_light",
     "reversion",
+    "nested_admin",
 ]
 
 MIDDLEWARE = [
@@ -166,6 +167,8 @@ USERNAME = os.environ.get("USERNAME")
 TOKEN = os.environ.get("TOKEN")
 PASSWORD = os.environ.get("PASSWORD")
 
+REST_API_CONTACT_SINGLE_TOKEN = os.environ.get("REST_API_CONTACT_SINGLE_TOKEN")
+
 CORS_ALLOWED_ORIGIN_REGEXES = (
     os.environ.get("CORS_ALLOWED_ORIGIN_REGEXES").split(" ")
     if os.environ.get("CORS_ALLOWED_ORIGIN_REGEXES")
@@ -186,6 +189,6 @@ REST_FRAMEWORK = {
 }
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework.authentication.TokenAuthentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": ["api.authentication.SingleTokenAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
 }

@@ -4,39 +4,10 @@ from brand.models import BrandSuggestion
 from brand.models.contact import Contact
 from .serializers import BrandSuggestionSerializer
 from rest_framework import permissions, status
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
-from .serializers import UserSerializer
+from .serializers import ContactSerializer
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
-
-
-class GenerateUserAuthToken(ObtainAuthToken):
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-
-        if not serializer.is_valid(self):
-            return Response(
-                {"status": False, "message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
-            )
-
-        user = authenticate(
-            username=serializer.data["username"], password=serializer.data["password"]
-        )
-
-        if not user:
-            return Response(
-                {"status": False, "message": "Invalid credentials"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        token, created = Token.objects.get_or_create(user=user)
-
-        return Response(
-            {"status": 200, "message": "Token generated", "token": str(token)},
-            status=status.HTTP_201_CREATED,
-        )
+from rest_framework.renderers import JSONRenderer
+from .authentication import SingleTokenAuthentication
 
 
 class BrandSuggestionAPIView(APIView):
@@ -67,14 +38,16 @@ class BrandSuggestionAPIView(APIView):
 
 
 class ContactView(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    permission_classes = []
+    authentication_classes = [SingleTokenAuthentication]
+    renderer_classes = [JSONRenderer]
 
     def get(self, request):
-        brand = request.query_params.get("brand")
-        contacts = (
-            [contact.email for contact in Contact.objects.filter(brand_tag=brand)]
-            if brand
-            else [contact.email for contact in Contact.objects.all()]
+        brand_tag = request.query_params.get("brandTag")
+        contacts_qs = (
+            Contact.objects.all()
+            if not brand_tag
+            else Contact.objects.filter(commentary__brand__tag=brand_tag)
         )
-        return Response(contacts)
+        serializer = ContactSerializer(contacts_qs, many=True)
+        return Response(serializer.data)

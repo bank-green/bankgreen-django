@@ -1,11 +1,8 @@
-from enum import Enum
-
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
-from brand.models.contact import Contact
 
 
 class RatingChoice(models.TextChoices):
@@ -79,8 +76,6 @@ class Commentary(models.Model):
     top_pick = models.BooleanField(default=False, help_text="Is this brand a top pick?")
 
     embrace_campaign = models.ManyToManyField(EmbraceCampaign, blank=True)
-
-    contacts = models.ManyToManyField(Contact, blank=True)
 
     @property
     def rating_inherited(self):

@@ -50,6 +50,7 @@ class BrandSuggestionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UserSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField()
+class ContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = ["fullname", "email", "brand_tag"]

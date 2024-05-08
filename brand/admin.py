@@ -7,7 +7,8 @@ from django.utils.html import format_html
 from cities_light.admin import SubRegionAdmin
 from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
-from reversion.admin import VersionAdmin
+
+# from reversion.admin import VersionAdmin
 
 from brand.admin_utils import (
     LinkedDatasourcesFilter,
@@ -26,13 +27,50 @@ from .models import Brand, Commentary, Contact
 
 from django.core.exceptions import ObjectDoesNotExist
 from brand.forms import EmbraceCampaignForm
+from nested_admin import NestedStackedInline, NestedModelAdmin
+from django import forms
 
 
-class CommentaryInline(admin.StackedInline):
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ["email"]
+        widgets = {"email": forms.SelectMultiple()}
+
+    def __init__(self, *args, **kwargs):
+        super(ContactForm, self).__init__(*args, **kwargs)
+        if self.instance.commentary:
+            self.fields["email"] = forms.ModelMultipleChoiceField(
+                queryset=Contact.objects.filter(
+                    commentary__brand__id=self.instance.commentary.brand.id
+                ),
+                widget=forms.SelectMultiple,
+                label="emails:",
+            )
+
+
+class ContactInline(NestedStackedInline):
+    model = Contact
+    exclude = ["fullname"]
+    extra = 0
+    form = ContactForm
+
+    def get_max_num(self, request, obj=None, **kwargs):
+        return 1
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class CommentaryInline(NestedStackedInline):
     fk_name = "brand"
     model = Commentary
+    extra = 0
+    inlines = [ContactInline]
     autocomplete_fields = ["inherit_brand_rating"]
-    filter_horizontal = ["contacts"]
     readonly_fields = ("rating_inherited", "subtitle", "header", "summary", "details")
     fieldsets = (
         (
@@ -48,7 +86,6 @@ class CommentaryInline(admin.StackedInline):
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
                     ("embrace_campaign"),
-                    ("contacts"),
                 )
             },
         ),
@@ -62,7 +99,8 @@ class CommentaryInline(admin.StackedInline):
     )
 
 
-class BrandFeaturesInline(admin.StackedInline):
+# class BrandFeaturesInline(admin.StackedInline):
+class BrandFeaturesInline(NestedStackedInline):
     model = BrandFeature
     fields = (("feature", "details"),)
 
@@ -73,7 +111,8 @@ class BrandFeaturesInline(admin.StackedInline):
 
 
 # TODO make this a series of dropdowns
-class DatasourceInline(admin.StackedInline):
+# class DatasourceInline(admin.StackedInline):
+class DatasourceInline(NestedStackedInline):
     model = Datasource
     extra = 0
 
@@ -191,8 +230,10 @@ class InstitutionCredentials(admin.ModelAdmin):
     model = InstitutionCredential
 
 
+# @admin.register(Brand)
+# class BrandAdmin(VersionAdmin):
 @admin.register(Brand)
-class BrandAdmin(VersionAdmin):
+class BrandAdmin(NestedModelAdmin):
     form = CountriesWidgetOverrideForm
     change_list_template = "change_list_template.html"
 
@@ -308,6 +349,7 @@ class BrandAdmin(VersionAdmin):
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         extra_context["page_title"] = "Brands: "
+        extra_context["show_contact_inline"] = True
         return super(BrandAdmin, self).changelist_view(request, extra_context=extra_context)
 
 
@@ -345,4 +387,6 @@ class ContactAdmin(admin.ModelAdmin):
     """
 
     list_display = ["id", "fullname", "email", "brand_tag", "brand_name"]
+    fields = ["fullname", "email", "commentary"]
+    readonly_fields = ["brand_tag", "brand_name"]
     search_fields = ["email"]
