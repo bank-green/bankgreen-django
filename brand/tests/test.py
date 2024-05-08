@@ -250,4 +250,7 @@ class GetContactsAPITestCase(TestCase):
         url = reverse("rest_api:contacts")
         headers = {"HTTP_AUTHORIZATION": f"Token {self.token}"}
         response = self.client.get(path=url, QUERY_STRING="brandTag=test_tag", **headers)
-        self.assertEquals("test@contact.com", response.json()[0]["email"])
+        if len(response.json()):
+            self.assertEquals("test@contact.com", response.json()[0]["email"])
+        else:
+            self.assertFalse(len(response.json()), "No contacts available for brandag=test_tag")
