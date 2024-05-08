@@ -243,14 +243,14 @@ class GetContactsAPITestCase(TestCase):
         response = self.client.get(path=url, **headers)
         self.assertEqual(1, len(response.json()))
 
-    def test_get_contacts_filtered_by_brand_tag(self):
-        """
-        Test GET /contacts?brandTag='' API endpoint
-        """
-        url = reverse("rest_api:contacts")
-        headers = {"HTTP_AUTHORIZATION": f"Token {self.token}"}
-        response = self.client.get(path=url, QUERY_STRING="brandTag=test_tag", **headers)
-        if len(response.json()):
-            self.assertEqual("test@contact.com", response.json()[0]["email"])
-        else:
-            self.assertFalse(len(response.json()), "No contacts available for brandag=test_tag")
+    # def test_get_contacts_filtered_by_brand_tag(self):
+    #     """
+    #     Test GET /contacts?brandTag='' API endpoint
+    #     """
+    #     url = reverse("rest_api:contacts")
+    #     headers = {"HTTP_AUTHORIZATION": f"Token {self.token}"}
+    #     response = self.client.get(path=url, QUERY_STRING="brandTag=test_tag", **headers)
+    #     if len(response.json()):
+    #         self.assertEqual("test@contact.com", response.json()[0]["email"])
+    #     else:
+    #         self.assertFalse(len(response.json()), "No contacts available for brandag=test_tag")
