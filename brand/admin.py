@@ -22,13 +22,14 @@ from brand.models.features import BrandFeature, FeatureType
 from brand.models.embrace_campaign import EmbraceCampaign
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
-
+from django.contrib.admin.widgets import ForeignKeyRawIdWidget
 from .models import Brand, Commentary, Contact
 
 from django.core.exceptions import ObjectDoesNotExist
 from brand.forms import EmbraceCampaignForm
 from nested_admin import NestedStackedInline, NestedModelAdmin
 from django import forms
+from taggit.forms import TagWidget
 
 
 class ContactForm(forms.ModelForm):
@@ -39,7 +40,13 @@ class ContactForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ContactForm, self).__init__(*args, **kwargs)
-        if self.instance.commentary:
+        if self.instance.pk is None:
+            self.fields["email"] = forms.ModelMultipleChoiceField(
+                queryset=Contact.objects.filter(commentary__isnull=True),
+                widget=forms.SelectMultiple,
+                label="emails:",
+            )
+        else:
             self.fields["email"] = forms.ModelMultipleChoiceField(
                 queryset=Contact.objects.filter(
                     commentary__brand__id=self.instance.commentary.brand.id
@@ -342,6 +349,7 @@ class BrandAdmin(NestedModelAdmin):
     number_of_related_datasources.short_description = "Nr. Dts"
 
     def change_view(self, request, object_id, extra_context=None):
+        brand = Brand.objects.get(id=object_id)
         extra_context = extra_context or {}
         extra_context["page_title"] = f"{Brand.objects.get(id=object_id).tag}: "
         return super(BrandAdmin, self).change_view(request, object_id, extra_context=extra_context)
