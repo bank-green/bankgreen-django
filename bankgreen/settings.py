@@ -71,7 +71,6 @@ INSTALLED_APPS = [
     "corsheaders",
     "cities_light",
     "reversion",
-    "nested_admin",
 ]
 
 MIDDLEWARE = [
