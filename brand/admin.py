@@ -8,11 +8,12 @@ from cities_light.admin import SubRegionAdmin
 from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 
-# from reversion.admin import VersionAdmin
+from reversion.admin import VersionAdmin
 
 from brand.admin_utils import (
     LinkedDatasourcesFilter,
     link_datasources,
+    link_contacts,
     raise_validation_error_for_missing_country,
     raise_validation_error_for_missing_region,
 )
@@ -22,63 +23,34 @@ from brand.models.features import BrandFeature, FeatureType
 from brand.models.embrace_campaign import EmbraceCampaign
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
-from django.contrib.admin.widgets import ForeignKeyRawIdWidget
 from .models import Brand, Commentary, Contact
 
 from django.core.exceptions import ObjectDoesNotExist
 from brand.forms import EmbraceCampaignForm
-from nested_admin import NestedStackedInline, NestedModelAdmin
 from django import forms
-from taggit.forms import TagWidget
 
 
-class ContactForm(forms.ModelForm):
-    class Meta:
-        model = Contact
-        fields = ["email"]
-        widgets = {"email": forms.SelectMultiple()}
-
-    def __init__(self, *args, **kwargs):
-        super(ContactForm, self).__init__(*args, **kwargs)
-        if self.instance.pk is None:
-            self.fields["email"] = forms.ModelMultipleChoiceField(
-                queryset=Contact.objects.filter(commentary__isnull=True),
-                widget=forms.SelectMultiple,
-                label="emails:",
-            )
-        else:
-            self.fields["email"] = forms.ModelMultipleChoiceField(
-                queryset=Contact.objects.filter(
-                    commentary__brand__id=self.instance.commentary.brand.id
-                ),
-                widget=forms.SelectMultiple,
-                label="emails:",
-            )
-
-
-class ContactInline(NestedStackedInline):
-    model = Contact
-    exclude = ["fullname"]
-    extra = 0
-    form = ContactForm
-
-    def get_max_num(self, request, obj=None, **kwargs):
-        return 1
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-
-class CommentaryInline(NestedStackedInline):
+class CommentaryInline(admin.StackedInline):
     fk_name = "brand"
     model = Commentary
-    extra = 0
-    inlines = [ContactInline]
+
+    @admin.display(description="Associated contact emails")
+    def associated_contacts(self, obj):
+        associated_contacts_qs = obj.contact_set.all()
+        links = []
+        links += link_contacts(associated_contacts_qs)
+        links += link_contacts()
+        return format_html("<br />".join(links))
+
     autocomplete_fields = ["inherit_brand_rating"]
-    readonly_fields = ("rating_inherited", "subtitle", "header", "summary", "details")
+    readonly_fields = (
+        "rating_inherited",
+        "subtitle",
+        "header",
+        "summary",
+        "details",
+        "associated_contacts",
+    )
     fieldsets = (
         (
             "Display Configuration",
@@ -93,6 +65,7 @@ class CommentaryInline(NestedStackedInline):
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
                     ("embrace_campaign"),
+                    ("associated_contacts"),
                 )
             },
         ),
@@ -106,8 +79,7 @@ class CommentaryInline(NestedStackedInline):
     )
 
 
-# class BrandFeaturesInline(admin.StackedInline):
-class BrandFeaturesInline(NestedStackedInline):
+class BrandFeaturesInline(admin.StackedInline):
     model = BrandFeature
     fields = (("feature", "details"),)
 
@@ -118,8 +90,7 @@ class BrandFeaturesInline(NestedStackedInline):
 
 
 # TODO make this a series of dropdowns
-# class DatasourceInline(admin.StackedInline):
-class DatasourceInline(NestedStackedInline):
+class DatasourceInline(admin.StackedInline):
     model = Datasource
     extra = 0
 
@@ -237,10 +208,8 @@ class InstitutionCredentials(admin.ModelAdmin):
     model = InstitutionCredential
 
 
-# @admin.register(Brand)
-# class BrandAdmin(VersionAdmin):
 @admin.register(Brand)
-class BrandAdmin(NestedModelAdmin):
+class BrandAdmin(VersionAdmin):
     form = CountriesWidgetOverrideForm
     change_list_template = "change_list_template.html"
 

@@ -1,6 +1,5 @@
 from django.forms import ValidationError
 from django.test import TestCase
-from django.conf import settings
 
 from brand.models.commentary import Commentary, RatingChoice
 from brand.tests.utils import create_test_brands
@@ -224,33 +223,44 @@ class BrandTagTestCase(TestCase):
 
 
 class GetContactsAPITestCase(TestCase):
-    def setUp(self):
-        self.client = APIClient()
-        self.token = settings.REST_API_CONTACT_SINGLE_TOKEN
+    @classmethod
+    def setUpClass(cls):
+        super(GetContactsAPITestCase, cls).setUpClass()
         User.objects.create_user(username="test", password="test123")
+
         brand_obj = Brand.objects.create(name="test_brand", tag="test_tag")
         commentary_obj = Commentary.objects.create(brand=brand_obj)
         Contact.objects.create(
             fullname="test_contact", email="test@contact.com", commentary=commentary_obj
         )
 
+    def setUp(self):
+        self.client = APIClient()
+
     def test_get_contacts(self):
         """
         Test GET /contacts API endpoint
         """
-        url = reverse("rest_api:contacts")
-        headers = {"HTTP_AUTHORIZATION": f"Token {self.token}"}
-        response = self.client.get(path=url, **headers)
-        self.assertEqual(1, len(response.json()))
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN="XYZSSAAA"):
+            token = "XYZSSAAA"
+            url = reverse("rest_api:contacts")
+            headers = {"HTTP_AUTHORIZATION": f"Token {token}"}
+            response = self.client.get(path=url, **headers)
+            self.assertEqual(1, len(response.json()))
 
-    # def test_get_contacts_filtered_by_brand_tag(self):
-    #     """
-    #     Test GET /contacts?brandTag='' API endpoint
-    #     """
-    #     url = reverse("rest_api:contacts")
-    #     headers = {"HTTP_AUTHORIZATION": f"Token {self.token}"}
-    #     response = self.client.get(path=url, QUERY_STRING="brandTag=test_tag", **headers)
-    #     if len(response.json()):
-    #         self.assertEqual("test@contact.com", response.json()[0]["email"])
-    #     else:
-    #         self.assertFalse(len(response.json()), "No contacts available for brandag=test_tag")
+    def test_get_contacts_filtered_by_brand_tag(self):
+        """
+        Test GET /contacts?brandTag='' API endpoint
+        """
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN="XYZSSAAA"):
+            token = "XYZSSAAA"
+            url = reverse("rest_api:contacts")
+            headers = {"HTTP_AUTHORIZATION": f"Token {token}"}
+            with self.subTest():
+                response = self.client.get(path=url, QUERY_STRING="brandTag=test_tag", **headers)
+                self.assertEqual("test@contact.com", response.json()[0]["email"])
+                self.assertEqual(200, response.status_code)
+            with self.subTest():
+                response = self.client.get(path=url, QUERY_STRING="brandTag=xyz", **headers)
+                self.assertFalse(len(response.json()), "No contacts available for brandag=test_tag")
+                self.assertEqual(200, response.status_code)

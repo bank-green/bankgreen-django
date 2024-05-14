@@ -1,10 +1,7 @@
 from rest_framework import serializers
 from brand.models.brand_suggestion import BrandSuggestion
-from django_countries.serializers import CountryFieldMixin
-from django_countries.fields import CountryField
 from django_countries.fields import Country
 from brand.models.contact import Contact
-from django.contrib.auth.models import User
 
 
 # Serialization : It is the process of converting complex data into a format that can be easily
