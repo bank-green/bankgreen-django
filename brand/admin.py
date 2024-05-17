@@ -31,7 +31,6 @@ from django import forms
 from django.urls import reverse
 
 
-
 class CommentaryInline(admin.StackedInline):
     fk_name = "brand"
     model = Commentary
@@ -372,10 +371,14 @@ class ContactAdmin(admin.ModelAdmin):
 
     def brand_tag(self, obj):
         if obj.brand_tag:
-            brand_link = reverse("admin:%s_%s_change" % ("brand", "brand"),args=(obj.commentary.brand_id,))
+            brand_link = reverse(
+                "admin:%s_%s_change" % ("brand", "brand"), args=(obj.commentary.brand_id,)
+            )
             return format_html(f'<a href="{brand_link}">{obj.brand_tag}</a>')
-        
+
     def brand_name(self, obj):
         if obj.brand_name:
-            brand_link = reverse("admin:%s_%s_change" % ("brand", "brand"),args=(obj.commentary.brand_id,))
+            brand_link = reverse(
+                "admin:%s_%s_change" % ("brand", "brand"), args=(obj.commentary.brand_id,)
+            )
             return format_html(f'<a href="{brand_link}">{obj.brand_name}</a>')
