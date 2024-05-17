@@ -239,7 +239,7 @@ class GetContactsAPITestCase(TestCase):
 
     def test_get_contacts(self):
         """
-        Test GET /contacts API endpoint
+        Test GET /api/bank-contacts API endpoint
         """
         with self.settings(REST_API_CONTACT_SINGLE_TOKEN="XYZSSAAA"):
             token = "XYZSSAAA"
@@ -250,7 +250,7 @@ class GetContactsAPITestCase(TestCase):
 
     def test_get_contacts_filtered_by_brand_tag(self):
         """
-        Test GET /contacts?brandTag='' API endpoint
+        Test GET /api/bank-contacts?brandTag='' API endpoint
         """
         with self.settings(REST_API_CONTACT_SINGLE_TOKEN="XYZSSAAA"):
             token = "XYZSSAAA"
