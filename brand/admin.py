@@ -28,6 +28,8 @@ from .models import Brand, Commentary, Contact
 from django.core.exceptions import ObjectDoesNotExist
 from brand.forms import EmbraceCampaignForm
 from django import forms
+from django.urls import reverse
+
 
 
 class CommentaryInline(admin.StackedInline):
@@ -367,3 +369,13 @@ class ContactAdmin(admin.ModelAdmin):
     fields = ["fullname", "email", "commentary"]
     readonly_fields = ["brand_tag", "brand_name"]
     search_fields = ["email"]
+
+    def brand_tag(self, obj):
+        if obj.brand_tag:
+            brand_link = reverse("admin:%s_%s_change" % ("brand", "brand"),args=(obj.commentary.brand_id,))
+            return format_html(f'<a href="{brand_link}">{obj.brand_tag}</a>')
+        
+    def brand_name(self, obj):
+        if obj.brand_name:
+            brand_link = reverse("admin:%s_%s_change" % ("brand", "brand"),args=(obj.commentary.brand_id,))
+            return format_html(f'<a href="{brand_link}">{obj.brand_name}</a>')
