@@ -162,8 +162,9 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 
 USERNAME = os.environ.get("USERNAME")
-TOKEN = os.environ.get("TOKEN")
 PASSWORD = os.environ.get("PASSWORD")
+
+REST_API_CONTACT_SINGLE_TOKEN = os.environ.get("REST_API_CONTACT_SINGLE_TOKEN")
 
 CORS_ALLOWED_ORIGIN_REGEXES = (
     os.environ.get("CORS_ALLOWED_ORIGIN_REGEXES").split(" ")
@@ -182,4 +183,9 @@ CITIES_LIGHT_INCLUDE_CITY_TYPES = [""]
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 1,
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ["api.authentication.SingleTokenAuthentication"],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
 }

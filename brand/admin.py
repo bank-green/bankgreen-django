@@ -7,11 +7,13 @@ from django.utils.html import format_html
 from cities_light.admin import SubRegionAdmin
 from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
+
 from reversion.admin import VersionAdmin
 
 from brand.admin_utils import (
     LinkedDatasourcesFilter,
     link_datasources,
+    link_contacts,
     raise_validation_error_for_missing_country,
     raise_validation_error_for_missing_region,
 )
@@ -21,19 +23,35 @@ from brand.models.features import BrandFeature, FeatureType
 from brand.models.embrace_campaign import EmbraceCampaign
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
-
-from .models import Brand, Commentary
+from .models import Brand, Commentary, Contact
 
 from django.core.exceptions import ObjectDoesNotExist
 from brand.forms import EmbraceCampaignForm
+from django import forms
+from django.urls import reverse
 
 
 class CommentaryInline(admin.StackedInline):
     fk_name = "brand"
     model = Commentary
-    autocomplete_fields = ["inherit_brand_rating"]
 
-    readonly_fields = ("rating_inherited", "subtitle", "header", "summary", "details")
+    @admin.display(description="Associated contact emails")
+    def associated_contacts(self, obj):
+        associated_contacts_qs = obj.contact_set.all()
+        links = []
+        links += link_contacts(associated_contacts_qs)
+        links += link_contacts()
+        return format_html("<br />".join(links))
+
+    autocomplete_fields = ["inherit_brand_rating"]
+    readonly_fields = (
+        "rating_inherited",
+        "subtitle",
+        "header",
+        "summary",
+        "details",
+        "associated_contacts",
+    )
     fieldsets = (
         (
             "Display Configuration",
@@ -48,6 +66,7 @@ class CommentaryInline(admin.StackedInline):
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
                     ("embrace_campaign"),
+                    ("associated_contacts"),
                 )
             },
         ),
@@ -300,6 +319,7 @@ class BrandAdmin(VersionAdmin):
     number_of_related_datasources.short_description = "Nr. Dts"
 
     def change_view(self, request, object_id, extra_context=None):
+        brand = Brand.objects.get(id=object_id)
         extra_context = extra_context or {}
         extra_context["page_title"] = f"{Brand.objects.get(id=object_id).tag}: "
         return super(BrandAdmin, self).change_view(request, object_id, extra_context=extra_context)
@@ -307,6 +327,7 @@ class BrandAdmin(VersionAdmin):
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         extra_context["page_title"] = "Brands: "
+        extra_context["show_contact_inline"] = True
         return super(BrandAdmin, self).changelist_view(request, extra_context=extra_context)
 
 
@@ -335,3 +356,29 @@ class EmbraceCampaignAdmin(admin.ModelAdmin):
             "user_prompt": "write your question here",
         }
         return form
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    """
+    This ContactAdmin class helps manage data from the Contact model in the admin interface.
+    """
+
+    list_display = ["id", "fullname", "email", "brand_tag", "brand_name"]
+    fields = ["fullname", "email", "commentary"]
+    readonly_fields = ["brand_tag", "brand_name"]
+    search_fields = ["email"]
+
+    def brand_tag(self, obj):
+        if obj.brand_tag:
+            brand_link = reverse(
+                "admin:%s_%s_change" % ("brand", "brand"), args=(obj.commentary.brand_id,)
+            )
+            return format_html(f'<a href="{brand_link}">{obj.brand_tag}</a>')
+
+    def brand_name(self, obj):
+        if obj.brand_name:
+            brand_link = reverse(
+                "admin:%s_%s_change" % ("brand", "brand"), args=(obj.commentary.brand_id,)
+            )
+            return format_html(f'<a href="{brand_link}">{obj.brand_name}</a>')

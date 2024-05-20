@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from brand.models.brand_suggestion import BrandSuggestion
-from django_countries.serializers import CountryFieldMixin
-from django_countries.fields import CountryField
 from django_countries.fields import Country
+from brand.models.contact import Contact
 
 
 # Serialization : It is the process of converting complex data into a format that can be easily
@@ -46,3 +45,9 @@ class BrandSuggestionSerializer(serializers.ModelSerializer):
 
         # returns all fields from model
         fields = "__all__"
+
+
+class ContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = ["fullname", "email", "brand_tag"]

@@ -1,8 +1,13 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from brand.models import BrandSuggestion
+from brand.models.contact import Contact
 from .serializers import BrandSuggestionSerializer
 from rest_framework import permissions, status
+from .serializers import ContactSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
+from .authentication import SingleTokenAuthentication
 
 
 class BrandSuggestionAPIView(APIView):
@@ -30,3 +35,19 @@ class BrandSuggestionAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ContactView(APIView):
+    permission_classes = []
+    authentication_classes = [SingleTokenAuthentication]
+    renderer_classes = [JSONRenderer]
+
+    def get(self, request):
+        brand_tag = request.query_params.get("brandTag")
+        contacts_qs = (
+            Contact.objects.all()
+            if not brand_tag
+            else Contact.objects.filter(commentary__brand__tag=brand_tag)
+        )
+        serializer = ContactSerializer(contacts_qs, many=True)
+        return Response(serializer.data)

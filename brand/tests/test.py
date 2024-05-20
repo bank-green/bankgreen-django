@@ -4,7 +4,10 @@ from django.test import TestCase
 from brand.models.commentary import Commentary, RatingChoice
 from brand.tests.utils import create_test_brands
 from datasource.models import Banktrack, Usnic
-
+from django.urls import reverse
+from rest_framework.test import APIClient
+from django.contrib.auth.models import User
+from brand.models.contact import Contact
 from ..models import Brand
 
 
@@ -217,3 +220,47 @@ class BrandTagTestCase(TestCase):
 
         with self.assertRaises(ValidationError):
             brand1.save()
+
+
+class GetContactsAPITestCase(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(GetContactsAPITestCase, cls).setUpClass()
+        User.objects.create_user(username="test", password="test123")
+
+        brand_obj = Brand.objects.create(name="test_brand", tag="test_tag")
+        commentary_obj = Commentary.objects.create(brand=brand_obj)
+        Contact.objects.create(
+            fullname="test_contact", email="test@contact.com", commentary=commentary_obj
+        )
+
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_get_contacts(self):
+        """
+        Test GET /api/bank-contacts API endpoint
+        """
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN="XYZSSAAA"):
+            token = "XYZSSAAA"
+            url = reverse("rest_api:contacts")
+            headers = {"HTTP_AUTHORIZATION": f"Token {token}"}
+            response = self.client.get(path=url, **headers)
+            self.assertEqual(1, len(response.json()))
+
+    def test_get_contacts_filtered_by_brand_tag(self):
+        """
+        Test GET /api/bank-contacts?brandTag='' API endpoint
+        """
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN="XYZSSAAA"):
+            token = "XYZSSAAA"
+            url = reverse("rest_api:contacts")
+            headers = {"HTTP_AUTHORIZATION": f"Token {token}"}
+            with self.subTest():
+                response = self.client.get(path=url, QUERY_STRING="brandTag=test_tag", **headers)
+                self.assertEqual("test@contact.com", response.json()[0]["email"])
+                self.assertEqual(200, response.status_code)
+            with self.subTest():
+                response = self.client.get(path=url, QUERY_STRING="brandTag=xyz", **headers)
+                self.assertFalse(len(response.json()), "No contacts available for brandag=test_tag")
+                self.assertEqual(200, response.status_code)
