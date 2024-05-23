@@ -47,6 +47,7 @@ python manage.py createsuperuser
 python manage.py collectstatic
 python manage.py refresh_datasources banktrack --local all
 python manage.py cities_light # refresh country/region database
+python manage.py update_contacts datasource/tests/test_data/contacts.csv
 python manage.py runserver
 ```
 
