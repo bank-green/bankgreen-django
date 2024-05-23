@@ -3,7 +3,7 @@ from django.core.management import call_command
 
 import np
 import pandas as pd
-from brand.models.brand import Brand
+from brand.models.contact import Contact
 from brand.tests.utils import create_test_brands
 from datasource.models.datasource import SuggestedAssociation
 
@@ -317,3 +317,17 @@ class FixtureLoadingTestCase(TestCase):
             call_command("loaddata", "fixtures/initial/initial.json", verbosity=0)
         except Exception as error:
             self.fail(error)
+
+
+class TestUpdateContacts(TestCase):
+    def setUp(self):
+        pass
+
+    def test_update_contacts_command(self):
+        """
+        Verify that it is always possible to update contact model with notion contacts
+        """
+        contact_model_length_before = len(list(Contact.objects.all()))
+        call_command("update_contacts", "datasource/tests/test_data/contacts.csv")
+        contact_model_length_after = len(list(Contact.objects.all()))
+        self.assertNotEqual(contact_model_length_before, contact_model_length_after)
