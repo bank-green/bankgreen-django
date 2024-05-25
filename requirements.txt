@@ -20,7 +20,7 @@ requests==2.27.1
 django-crispy-forms==1.13.0
 unidecode
 django-countries==7.2.1
-gunicorn==20.1.0
+gunicorn==22.0.0
 django-admin-list-filter-dropdown==1.0.3
 python-Levenshtein==0.12.2
 graphene==3.2.1
