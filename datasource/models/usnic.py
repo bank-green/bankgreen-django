@@ -204,9 +204,11 @@ class Usnic(Datasource):
         defaults = {
             "name": row.NM_SHORT.strip(),
             "legal_name": row.NM_LGL.strip(),
-            "entity_type": row.ENTITY_TYPE
-            if row.ENTITY_TYPE.strip() in [x.name for x in EntityTypes]
-            else EntityTypes.UNK,
+            "entity_type": (
+                row.ENTITY_TYPE
+                if row.ENTITY_TYPE.strip() in [x.name for x in EntityTypes]
+                else EntityTypes.UNK
+            ),
             "country": pycountries.get(row.CNTRY_NM.lower().strip(), None),
             "website": "" if row.URL == "0" else row.URL,
             "rssd": row["#ID_RSSD"],
