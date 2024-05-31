@@ -25,7 +25,7 @@ django-admin-list-filter-dropdown==1.0.3
 python-Levenshtein==0.12.2
 graphene==3.3
 graphene-django==3.2.1
-django-filter==21.1
+django-filter==24.2
 jsonfield==3.1.0
 django-json-widget==1.1.1
 np==1.0.2
