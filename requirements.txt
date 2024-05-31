@@ -1,13 +1,13 @@
 black==24.3.0
 isort==5.10.1
-django==4.1.13
+Django==5.0.6
 django-ajax-selects==2.2.0
 django-braces==1.15.0
 django-cryptography==1.0
 django-debug-toolbar==3.2.4
 django-extensions==3.1.5
 django-model-utils==4.2.0
-djangorestframework==3.13.1
+djangorestframework==3.14.0
 django-reversion==5.0.12
 django-cors-headers==3.12.0
 django-json-widget==1.1.1
@@ -23,8 +23,8 @@ django-countries==7.2.1
 gunicorn==22.0.0
 django-admin-list-filter-dropdown==1.0.3
 python-Levenshtein==0.12.2
-graphene==3.2.1
-graphene-django>=3.0.2,<3.1
+graphene==3.3
+graphene-django==3.2.1
 django-filter==21.1
 jsonfield==3.1.0
 django-json-widget==1.1.1
@@ -35,3 +35,4 @@ django-cities-light==3.9.2
 symspellpy==6.7.7
 django-autocomplete-light==3.9.4
 jsonschema==4.21.1
+graphql-core== 3.2.3
