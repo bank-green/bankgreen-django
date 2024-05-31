@@ -38,9 +38,9 @@ class Brand(TimeStampedModel):
     name = models.CharField(
         "Name of this brand", max_length=200, null=False, blank=False, default="-unnamed-"
     )
+
     class Meta:
         ordering = ["name"]
-
 
     @property
     def short_name(self):
