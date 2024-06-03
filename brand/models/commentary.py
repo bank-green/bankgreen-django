@@ -54,6 +54,9 @@ class Commentary(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        ordering = ["brand"]
+
     inherit_brand_rating = models.ForeignKey(
         Brand,
         on_delete=models.SET_NULL,
