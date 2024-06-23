@@ -235,6 +235,10 @@ class BrandAdmin(VersionAdmin):
         num = SuggestedAssociation.objects.filter(brand=obj).count()
         return str(num) if num else ""
 
+    @admin.display(ordering="-commentary__rating_inherited")
+    def rating_inherited(self, obj):
+        return obj.commentary.rating_inherited
+
     @admin.display(ordering="-commentary__number_of_requests")
     def num_requests(self, obj):
         num_requests = obj.commentary.number_of_requests
@@ -278,11 +282,11 @@ class BrandAdmin(VersionAdmin):
     list_display = (
         "short_name",
         "short_tag",
+        "rating_inherited",
         "num_requests",
         "pk",
         "website",
         "num_linked",
-        "num_suggest",
     )
     list_display_links = ("short_name", "short_tag")
     # list_editable=('website',)
