@@ -67,7 +67,6 @@ class Commentary(models.Model):
     )
 
     display_on_website = models.BooleanField(default=False)
-    number_of_requests = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     comment = models.TextField(help_text="Meta. Comments for staff and/or editors", blank=True)
     rating = models.CharField(
         max_length=8,

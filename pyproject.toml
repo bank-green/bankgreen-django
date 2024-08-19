@@ -1,7 +1,7 @@
 [tool.black]
 line-length = 100
 skip-magic-trailing-comma = "True"
-target-version = ['py38']
+target-version = ['py311']
 extend-exclude = '''
 /(
   # The following are specific to Black, you probably don't want those.
