@@ -7,12 +7,13 @@ django-cryptography==1.0
 django-debug-toolbar==3.2.4
 django-extensions==3.1.5
 django-model-utils==4.2.0
-djangorestframework==3.14.0
+djangorestframework==3.15.2
 django-reversion==5.0.12
 django-cors-headers==3.12.0
 django-json-widget==1.1.1
 networkx==2.5.1
-pandas==2.2
+numpy>=1.21.0,<2.0.0
+pandas>=2.2
 pycountry==22.1.10
 python-dotenv==0.19.2
 qwikidata==0.4.0
