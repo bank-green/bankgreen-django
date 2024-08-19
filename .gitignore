@@ -19,6 +19,7 @@ venv
 
 # database
 db.sqlite3
+*.sqlite3
 
 # Pyenv
 .python-version
