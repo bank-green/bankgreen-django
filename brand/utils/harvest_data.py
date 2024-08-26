@@ -32,7 +32,7 @@ def update_commentary_feature_data(commentary, overwrite=False):
         data = fetch_harvest_data(
             brand_tag=commentary.brand.tag,
             brand_url=commentary.brand.website,
-            brand_country=commentary.brand.countries.first().name if commentary.brand.countries.exists() else "",
+            brand_country=commentary.brand.countries[0].name if commentary.brand.countries else "",
             brand_name=commentary.brand.name
         )
         if data:
