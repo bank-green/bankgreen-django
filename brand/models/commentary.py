@@ -6,6 +6,7 @@ from brand.models.embrace_campaign import EmbraceCampaign
 import json
 import yaml
 
+
 class RatingChoice(models.TextChoices):
     GREAT = "great"
     GOOD = "good"
