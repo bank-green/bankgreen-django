@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.html import format_html
-
+from django.urls import reverse
 
 from cities_light.admin import SubRegionAdmin
 from cities_light.models import SubRegion
@@ -18,17 +18,47 @@ from brand.admin_utils import (
     raise_validation_error_for_missing_region,
 )
 from brand.models.brand_suggestion import BrandSuggestion
-from brand.models.commentary import InstitutionCredential, InstitutionType
+from brand.models.commentary import InstitutionCredential, InstitutionType, Commentary
 from brand.models.features import BrandFeature, FeatureType
 from brand.models.embrace_campaign import EmbraceCampaign
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
-from .models import Brand, Commentary, Contact
+from .models import Brand, Contact
+from .utils.harvest_data import update_commentary_feature_data
 
 from django.core.exceptions import ObjectDoesNotExist
 from brand.forms import EmbraceCampaignForm
-from django import forms
-from django.urls import reverse
+
+
+@admin.register(Commentary)
+class CommentaryAdmin(admin.ModelAdmin):
+    list_display = ['brand', 'rating', 'display_on_website', 'feature_refresh_date']
+    readonly_fields = ['feature_yaml', 'feature_refresh_date']
+    
+    def feature_yaml(self, obj):
+        return format_html("<pre>{}</pre>", obj.feature_yaml)
+    
+    feature_yaml.short_description = "Feature Data (YAML)"
+
+    def refresh_feature_data(self, request, queryset):
+        for commentary in queryset:
+            update_commentary_feature_data(commentary, overwrite=True)
+        self.message_user(request, f"Refreshed feature data for {queryset.count()} commentaries.")
+
+    refresh_feature_data.short_description = "Refresh feature data"
+
+    actions = [refresh_feature_data]
+
+    fieldsets = (
+        # ... (keep existing fieldsets)
+        ("Harvest Data", {"fields": ("feature_yaml", "feature_refresh_date")}),
+    )
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        for commentary in queryset:
+            update_commentary_feature_data(commentary)
+        return queryset
 
 
 class CommentaryInline(admin.StackedInline):
@@ -51,6 +81,8 @@ class CommentaryInline(admin.StackedInline):
         "summary",
         "details",
         "associated_contacts",
+        "feature_yaml",
+        "feature_refresh_date",
     )
     fieldsets = (
         (
@@ -71,8 +103,14 @@ class CommentaryInline(admin.StackedInline):
             {"fields": (("from_the_website",), ("institution_type", "institution_credentials"))},
         ),
         ("CMS", {"fields": (("subtitle",), ("header",), ("summary",), ("details",))}),
+        ("Harvest Data", {"fields": ("feature_yaml", "feature_refresh_date")}),
         ("Meta", {"fields": ("comment",)}),
     )
+
+    def feature_yaml(self, obj):
+        return format_html("<pre>{}</pre>", obj.feature_yaml)
+    
+    feature_yaml.short_description = "Feature Data (YAML)"
 
 
 class BrandFeaturesInline(admin.StackedInline):
@@ -288,6 +326,7 @@ class BrandAdmin(VersionAdmin):
             commentary_obj = Commentary.objects.create(brand_id=obj.id)
             obj.commentary = commentary_obj
             obj.save()
+        update_commentary_feature_data(obj.commentary)
 
     def get_queryset(self, request):
         # filter out all but base class
