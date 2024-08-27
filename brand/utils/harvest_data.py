@@ -1,7 +1,9 @@
-import requests
 from datetime import datetime, timedelta
-from django.conf import settings
 from urllib.parse import quote
+
+from django.conf import settings
+
+import requests
 
 
 def fetch_harvest_data(brand_tag, brand_url="", brand_country="", brand_name=""):

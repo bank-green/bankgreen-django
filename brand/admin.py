@@ -1,63 +1,56 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.utils.html import format_html
-from django.urls import reverse, path
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
+from django.urls import path, reverse
+from django.utils.html import format_html
 
 from cities_light.admin import SubRegionAdmin
 from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
-
 from reversion.admin import VersionAdmin
 
-from brand.admin_utils import (
-    LinkedDatasourcesFilter,
-    link_datasources,
-    link_contacts,
-    raise_validation_error_for_missing_country,
-    raise_validation_error_for_missing_region,
-)
+from brand.admin_utils import LinkedDatasourcesFilter, link_contacts, link_datasources
+from brand.forms import EmbraceCampaignForm
 from brand.models.brand_suggestion import BrandSuggestion
-from brand.models.commentary import InstitutionCredential, InstitutionType, Commentary
-from brand.models.features import BrandFeature, FeatureType
+from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
 from brand.models.embrace_campaign import EmbraceCampaign
+from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
+
 from .models import Brand, Contact
 from .utils.harvest_data import update_commentary_feature_data
-
-from django.core.exceptions import ObjectDoesNotExist
-from brand.forms import EmbraceCampaignForm
 
 
 @admin.register(Commentary)
 class CommentaryAdmin(admin.ModelAdmin):
-    change_form_template = 'admin/brand/commentary/change_form.html'
-    
-    list_display = ['brand', 'rating', 'display_on_website', 'feature_refresh_date']
-    readonly_fields = ['feature_yaml', 'feature_refresh_date']
-    
+    change_form_template = "admin/brand/commentary/change_form.html"
+
+    list_display = ["brand", "rating", "display_on_website", "feature_refresh_date"]
+    readonly_fields = ["feature_yaml", "feature_refresh_date"]
+
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
             path(
-                '<path:object_id>/refresh/',
+                "<path:object_id>/refresh/",
                 self.admin_site.admin_view(self.refresh_harvest_data),
-                name='refresh_harvest_data',
-            ),
+                name="refresh_harvest_data",
+            )
         ]
         return custom_urls + urls
-    
+
     def refresh_harvest_data(self, request, object_id):
         commentary = self.get_object(request, object_id)
         update_commentary_feature_data(commentary, overwrite=True)
         self.message_user(request, "Harvest data refreshed successfully.")
-        return redirect('admin:brand_commentary_change', object_id=object_id)
+        return redirect("admin:brand_commentary_change", object_id=object_id)
 
     def feature_yaml(self, obj):
         return format_html("<pre>{}</pre>", obj.feature_yaml)
-    
+
     feature_yaml.short_description = "Feature Data (YAML)"
 
     def refresh_feature_data(self, request, queryset):
@@ -123,7 +116,7 @@ class CommentaryInline(admin.StackedInline):
 
     def feature_yaml(self, obj):
         return format_html("<pre>{}</pre>", obj.feature_yaml)
-    
+
     feature_yaml.short_description = "Feature Data (YAML)"
 
 

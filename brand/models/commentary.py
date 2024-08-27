@@ -1,10 +1,11 @@
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+import yaml
+
 from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
-import json
-import yaml
 
 
 class RatingChoice(models.TextChoices):
