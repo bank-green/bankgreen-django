@@ -1,12 +1,15 @@
 from datetime import datetime, timedelta
-from urllib.parse import quote
+from typing import Dict, Union
+from urllib.parse import urlencode
 
 from django.conf import settings
 
 import requests
 
 
-def fetch_harvest_data(brand_tag, brand_url="", brand_country="", brand_name=""):
+def fetch_harvest_data(
+    brand_tag, brand_url="", brand_country="", brand_name=""
+) -> Union[Dict, Exception]:
     base_url = "https://bank.green/harvest"
 
     params = {
@@ -17,16 +20,20 @@ def fetch_harvest_data(brand_tag, brand_url="", brand_country="", brand_name="")
     }
 
     # URL encode the parameters
-    encoded_params = "&".join(f"{k}={quote(v)}" for k, v in params.items() if v)
+    encoded_params = urlencode(params, doseq=True)
 
     url = f"{base_url}?{encoded_params}"
 
-    response = requests.get(url, headers={"Authorization": f"Token {settings.HARVEST_API_TOKEN}"})
+    try:
+        response = requests.get(
+            url,
+            headers={"Authorization": f"Token {settings.REST_API_CONTACT_SINGLE_TOKEN}"},
+            timeout=600,
+        )
 
-    if response.status_code == 200:
         return response.json()
-    else:
-        return None
+    except Exception as e:
+        return e
 
 
 def update_commentary_feature_data(commentary, overwrite=False):

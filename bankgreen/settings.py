@@ -190,5 +190,3 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["api.authentication.SingleTokenAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
 }
-
-HARVEST_API_TOKEN = os.environ.get("HARVEST_API_TOKEN")
