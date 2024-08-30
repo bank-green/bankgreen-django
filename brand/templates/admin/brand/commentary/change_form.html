@@ -1,13 +1,11 @@
 {% extends "admin/change_form.html" %}
 {% load i18n admin_urls %}
 
-{% block object-tools-items %}
+{% block object-tools %}
 {{ block.super }}
-<li>
-    <a href="{% url 'admin:refresh_harvest_data' original.pk %}" class="refreshlink">
-        {% trans "Refresh Harvest Data" %}
-    </a>
-</li>
+<form method="get">  
+    <input type="submit" formaction="{% url 'admin:refresh_harvest_data' original.pk %}" value="{% trans 'Refresh Harvest Data' %}" class="button">
+</form>
 {% endblock %}
 
 {% block after_field_sets %}
