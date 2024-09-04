@@ -3,6 +3,7 @@ from typing import Dict, Union
 from urllib.parse import urlencode
 
 from django.conf import settings
+from django.utils import timezone
 
 import requests
 
@@ -26,9 +27,7 @@ def fetch_harvest_data(
 
     try:
         response = requests.get(
-            url,
-            headers={"Authorization": f"Token {settings.REST_API_CONTACT_SINGLE_TOKEN}"},
-            timeout=600,
+            url, headers={"Authorization": f"Token {settings.HARVEST_TOKEN}"}, timeout=600
         )
 
         return response.json()
@@ -40,7 +39,7 @@ def update_commentary_feature_data(commentary, overwrite=False):
     if (
         overwrite
         or not commentary.feature_refresh_date
-        or commentary.feature_refresh_date < datetime.now() - timedelta(days=90)
+        or commentary.feature_refresh_date < timezone.now() - timedelta(days=90)
     ):
         data = fetch_harvest_data(
             brand_tag=commentary.brand.tag,
