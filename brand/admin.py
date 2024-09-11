@@ -52,6 +52,7 @@ class CommentaryInline(admin.StackedInline):
         "details",
         "associated_contacts",
     )
+    exclude = ('from_the_website', 'subtitle', 'header', 'summary', 'details')
     fieldsets = (
         (
             "Display Configuration",
@@ -241,7 +242,7 @@ class BrandAdmin(VersionAdmin):
     def num_linked(self, obj):
         num = obj.datasources.count()
         return str(num) if num else ""
-
+    exclude = ('description',)
     search_fields = ["name", "tag", "website"]
     readonly_fields = ["related_datasources", "suggested_associations", "created", "modified"]
     autocomplete_fields = ["subregions"]
