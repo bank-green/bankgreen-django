@@ -166,6 +166,7 @@ USERNAME = os.environ.get("USERNAME")
 PASSWORD = os.environ.get("PASSWORD")
 
 REST_API_CONTACT_SINGLE_TOKEN = os.environ.get("REST_API_CONTACT_SINGLE_TOKEN")
+HARVEST_TOKEN = os.environ.get("HARVEST_TOKEN")
 
 CORS_ALLOWED_ORIGIN_REGEXES = (
     os.environ.get("CORS_ALLOWED_ORIGIN_REGEXES").split(" ")

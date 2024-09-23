@@ -1,6 +1,9 @@
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+import yaml
+
 from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
 
@@ -176,6 +179,15 @@ class Commentary(models.Model):
         help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
         blank=True,
     )
+
+    feature_refresh_date = models.DateTimeField(null=True, blank=True)
+    feature_json = models.JSONField(null=True, blank=True, default=dict)
+
+    @property
+    def feature_yaml(self):
+        if self.feature_json:
+            return yaml.dump(self.feature_json, default_flow_style=False)
+        return ""
 
     def __repr__(self):
         return f"Commentary: {self.brand.tag}"

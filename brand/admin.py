@@ -1,34 +1,75 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import redirect
+from django.urls import path, reverse
 from django.utils.html import format_html
-
 
 from cities_light.admin import SubRegionAdmin
 from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
-
 from reversion.admin import VersionAdmin
 
-from brand.admin_utils import (
-    LinkedDatasourcesFilter,
-    link_datasources,
-    link_contacts,
-    raise_validation_error_for_missing_country,
-    raise_validation_error_for_missing_region,
-)
+from brand.admin_utils import LinkedDatasourcesFilter, link_contacts, link_datasources
+from brand.forms import EmbraceCampaignForm
 from brand.models.brand_suggestion import BrandSuggestion
-from brand.models.commentary import InstitutionCredential, InstitutionType
-from brand.models.features import BrandFeature, FeatureType
+from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
 from brand.models.embrace_campaign import EmbraceCampaign
+from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
-from .models import Brand, Commentary, Contact
 
-from django.core.exceptions import ObjectDoesNotExist
-from brand.forms import EmbraceCampaignForm
-from django import forms
-from django.urls import reverse
+from .models import Brand, Contact
+from .utils.harvest_data import update_commentary_feature_data
+
+
+@admin.register(Commentary)
+class CommentaryAdmin(admin.ModelAdmin):
+    change_form_template = "admin/brand/commentary/change_form.html"
+
+    list_display = ["brand", "rating", "display_on_website", "feature_refresh_date"]
+    readonly_fields = ["feature_yaml", "feature_refresh_date"]
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "<path:object_id>/refresh/",
+                self.admin_site.admin_view(self.refresh_harvest_data),
+                name="refresh_harvest_data",
+            )
+        ]
+        return custom_urls + urls
+
+    def refresh_harvest_data(self, request, object_id):
+        commentary = self.get_object(request, object_id)
+        if update_commentary_feature_data(commentary, overwrite=False) is None:
+            self.message_user(request, "Could not refresh Harvest data.")
+        else:
+            self.message_user(request, "Harvest data refreshed successfully.")
+        if request.GET.get("model") == "brand":
+            return redirect("admin:brand_brand_change", object_id=object_id)
+        return redirect("admin:brand_commentary_change", object_id=object_id)
+
+    def feature_yaml(self, obj):
+        return format_html("<pre>{}</pre>", obj.feature_yaml)
+
+    feature_yaml.short_description = "Feature Data (YAML)"
+
+    def refresh_feature_data(self, request, queryset):
+        for commentary in queryset:
+            update_commentary_feature_data(commentary, overwrite=True)
+        self.message_user(request, f"Refreshed feature data for {queryset.count()} commentaries.")
+
+    refresh_feature_data.short_description = "Refresh feature data"
+
+    actions = [refresh_feature_data]
+
+    fieldsets = (
+        # ... (keep existing fieldsets)
+        ("Harvest Data", {"fields": ("feature_yaml", "feature_refresh_date")}),
+    )
 
 
 class CommentaryInline(admin.StackedInline):
@@ -51,6 +92,8 @@ class CommentaryInline(admin.StackedInline):
         "summary",
         "details",
         "associated_contacts",
+        "feature_yaml",
+        "feature_refresh_date",
     )
     fieldsets = (
         (
@@ -71,8 +114,14 @@ class CommentaryInline(admin.StackedInline):
             {"fields": (("from_the_website",), ("institution_type", "institution_credentials"))},
         ),
         ("CMS", {"fields": (("subtitle",), ("header",), ("summary",), ("details",))}),
+        ("Harvest Data", {"fields": ("feature_yaml", "feature_refresh_date")}),
         ("Meta", {"fields": ("comment",)}),
     )
+
+    def feature_yaml(self, obj):
+        return format_html("<pre>{}</pre>", obj.feature_yaml)
+
+    feature_yaml.short_description = "Feature Data (YAML)"
 
 
 class BrandFeaturesInline(admin.StackedInline):
@@ -208,6 +257,7 @@ class InstitutionCredentials(admin.ModelAdmin):
 class BrandAdmin(VersionAdmin):
     form = CountriesWidgetOverrideForm
     change_list_template = "change_list_template.html"
+    change_form_template = "brand_change_form.html"
 
     @admin.display(description="related datasources")
     def related_datasources(self, obj):
@@ -288,6 +338,7 @@ class BrandAdmin(VersionAdmin):
             commentary_obj = Commentary.objects.create(brand_id=obj.id)
             obj.commentary = commentary_obj
             obj.save()
+        update_commentary_feature_data(obj.commentary)
 
     def get_queryset(self, request):
         # filter out all but base class

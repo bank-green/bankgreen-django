@@ -16,6 +16,7 @@ secret.py
 
 # virtualenv
 venv
+.venv
 
 # database
 db.sqlite3
