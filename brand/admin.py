@@ -11,10 +11,12 @@ from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 from reversion.admin import VersionAdmin
 
-from brand.admin_utils import LinkedDatasourcesFilter, link_contacts, link_datasources
+from brand.admin_utils import (LinkedDatasourcesFilter, link_contacts,
+                               link_datasources)
 from brand.forms import EmbraceCampaignForm
 from brand.models.brand_suggestion import BrandSuggestion
-from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
+from brand.models.commentary import (Commentary, InstitutionCredential,
+                                     InstitutionType)
 from brand.models.embrace_campaign import EmbraceCampaign
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
@@ -44,8 +46,12 @@ class CommentaryAdmin(admin.ModelAdmin):
 
     def refresh_harvest_data(self, request, object_id):
         commentary = self.get_object(request, object_id)
-        update_commentary_feature_data(commentary, overwrite=False)
-        self.message_user(request, "Harvest data refreshed successfully.")
+        if update_commentary_feature_data(commentary, overwrite=False) is None:
+            self.message_user(request, "Could not refresh Harvest data.")
+        else:
+            self.message_user(request, "Harvest data refreshed successfully.")
+        if request.GET.get("model") == "brand":
+            return redirect("admin:brand_brand_change", object_id=object_id)
         return redirect("admin:brand_commentary_change", object_id=object_id)
 
     def feature_yaml(self, obj):
@@ -253,6 +259,7 @@ class InstitutionCredentials(admin.ModelAdmin):
 class BrandAdmin(VersionAdmin):
     form = CountriesWidgetOverrideForm
     change_list_template = "change_list_template.html"
+    change_form_template = "brand_change_form.html"
 
     @admin.display(description="related datasources")
     def related_datasources(self, obj):
