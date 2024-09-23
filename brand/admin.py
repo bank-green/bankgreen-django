@@ -11,12 +11,10 @@ from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 from reversion.admin import VersionAdmin
 
-from brand.admin_utils import (LinkedDatasourcesFilter, link_contacts,
-                               link_datasources)
+from brand.admin_utils import LinkedDatasourcesFilter, link_contacts, link_datasources
 from brand.forms import EmbraceCampaignForm
 from brand.models.brand_suggestion import BrandSuggestion
-from brand.models.commentary import (Commentary, InstitutionCredential,
-                                     InstitutionType)
+from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
 from brand.models.embrace_campaign import EmbraceCampaign
 from brand.models.features import BrandFeature, FeatureType
 from datasource.constants import model_names
