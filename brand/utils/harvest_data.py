@@ -3,6 +3,7 @@ from typing import Dict, Union
 from urllib.parse import urlencode
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 import requests
@@ -35,7 +36,10 @@ def fetch_harvest_data(
         return e
 
 
-def update_commentary_feature_data(commentary, overwrite=False):
+def update_commentary_feature_data(commentary, overwrite=False) -> None:
+    if commentary is None:
+        return None
+
     if (
         overwrite
         or not commentary.feature_refresh_date
@@ -47,7 +51,9 @@ def update_commentary_feature_data(commentary, overwrite=False):
             brand_country=commentary.brand.countries[0].name if commentary.brand.countries else "",
             brand_name=commentary.brand.name,
         )
-        if data:
+        if isinstance(data, dict):
             commentary.feature_json = data
             commentary.feature_refresh_date = datetime.now()
             commentary.save()
+        else:
+            raise ValidationError({"data": "harvest data needs to be in dict format"})
