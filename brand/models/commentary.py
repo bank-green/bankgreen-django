@@ -181,7 +181,7 @@ class Commentary(models.Model):
     )
 
     feature_refresh_date = models.DateTimeField(null=True, blank=True)
-    feature_json = models.JSONField(null=True, blank=True)
+    feature_json = models.JSONField(null=True, blank=True, default=dict)
 
     @property
     def feature_yaml(self):
