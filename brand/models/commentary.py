@@ -1,11 +1,48 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils.safestring import mark_safe
 
 import yaml
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError as YamlValidationError
+from yamlfield.fields import YAMLField
 
 from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
+
+
+def validate_feature_override_yaml(feature_yaml) -> None:
+    # Ensure feature_yaml format is of dict/yaml type
+    if isinstance(feature_yaml, dict):
+        feature_override_schema = {
+            "type": "object",
+            "patternProperties": {
+                "^[a-zA-Z0-9 _]*$": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^[a-zA-Z0-9 _]*$": {
+                            "type": "object",
+                            "properties": {
+                                "offered": {"type": "boolean"},
+                                "additional details": {"type": "string", "minLength": 1},
+                                "urls": {"type": "array"},
+                            },
+                            "required": ["offered"],
+                            "additionalProperties": True,
+                        }
+                    },
+                    "additionalProperties": False,
+                }
+            },
+            "additionalProperties": False,
+        }
+        try:
+            validate(feature_yaml, feature_override_schema)
+        except YamlValidationError as err:
+            raise ValidationError(err.message)
+    else:
+        raise ValidationError(f"Only yaml format is accepted")
 
 
 class RatingChoice(models.TextChoices):
@@ -182,6 +219,27 @@ class Commentary(models.Model):
 
     feature_refresh_date = models.DateTimeField(null=True, blank=True)
     feature_json = models.JSONField(null=True, blank=True, default=dict)
+    feature_override = YAMLField(
+        blank=True,
+        default=dict,
+        verbose_name="Update Feature (Yaml)",
+        validators=[validate_feature_override_yaml],
+        help_text=mark_safe(
+            "Sample feature yaml : \n<pre>{}<pre>".format(
+                yaml.dump(
+                    {
+                        "Feature": {
+                            "Service": {
+                                "offered": True,
+                                "Additional details": "some details",
+                                "urls": [],
+                            }
+                        }
+                    }
+                )
+            )
+        ),
+    )
 
     @property
     def feature_yaml(self):
