@@ -114,7 +114,7 @@ class CommentaryInline(admin.StackedInline):
             {"fields": (("from_the_website",), ("institution_type", "institution_credentials"))},
         ),
         ("CMS", {"fields": (("subtitle",), ("header",), ("summary",), ("details",))}),
-        ("Harvest Data", {"fields": ("feature_yaml", "feature_refresh_date")}),
+        ("Harvest Data", {"fields": ("feature_override", "feature_yaml", "feature_refresh_date")}),
         ("Meta", {"fields": ("comment",)}),
     )
 
