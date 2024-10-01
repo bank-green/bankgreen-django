@@ -1,7 +1,8 @@
+import json
+
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.utils.safestring import mark_safe
 
 import yaml
 from jsonschema import validate
@@ -14,35 +15,19 @@ from brand.models.embrace_campaign import EmbraceCampaign
 
 def validate_feature_override_yaml(feature_yaml) -> None:
     # Ensure feature_yaml format is of dict/yaml type
-    if isinstance(feature_yaml, dict):
-        feature_override_schema = {
-            "type": "object",
-            "patternProperties": {
-                "^[a-zA-Z0-9 _]*$": {
-                    "type": "object",
-                    "patternProperties": {
-                        "^[a-zA-Z0-9 _]*$": {
-                            "type": "object",
-                            "properties": {
-                                "offered": {"type": "boolean"},
-                                "additional details": {"type": "string", "minLength": 1},
-                                "urls": {"type": "array"},
-                            },
-                            "required": ["offered"],
-                            "additionalProperties": True,
-                        }
-                    },
-                    "additionalProperties": False,
-                }
-            },
-            "additionalProperties": False,
-        }
-        try:
-            validate(feature_yaml, feature_override_schema)
-        except YamlValidationError as err:
-            raise ValidationError(err.message)
-    else:
+    if not isinstance(feature_yaml, dict):
         raise ValidationError(f"Only yaml format is accepted")
+
+    with open("./config/harvest_validation_schema.json", "r") as harvest_json_file:
+        harvest_feature_schema = json.load(harvest_json_file)
+
+    try:
+        for feature, _ in feature_yaml.items():
+            if not feature in harvest_feature_schema["properties"].keys():
+                raise ValidationError(f"{feature} is not a valid feature")
+            validate(feature_yaml[feature], harvest_feature_schema["properties"][feature])
+    except YamlValidationError as err:
+        raise ValidationError(err.message)
 
 
 class RatingChoice(models.TextChoices):
@@ -224,21 +209,7 @@ class Commentary(models.Model):
         default=dict,
         verbose_name="Update Feature (Yaml)",
         validators=[validate_feature_override_yaml],
-        help_text=mark_safe(
-            "Sample feature yaml : \n<pre>{}<pre>".format(
-                yaml.dump(
-                    {
-                        "Feature": {
-                            "Service": {
-                                "offered": True,
-                                "Additional details": "some details",
-                                "urls": [],
-                            }
-                        }
-                    }
-                )
-            )
-        ),
+        help_text="Provide harvest features in yaml format with valid keys",
     )
 
     @property
