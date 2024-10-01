@@ -87,7 +87,6 @@ class CommentaryInline(admin.StackedInline):
     autocomplete_fields = ["inherit_brand_rating"]
     readonly_fields = (
         "rating_inherited",
-        "subtitle",
         "header",
         "summary",
         "details",
@@ -103,18 +102,15 @@ class CommentaryInline(admin.StackedInline):
                     ("display_on_website", "fossil_free_alliance", "top_pick"),
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
-                    ("embrace_campaign"),
-                    ("associated_contacts"),
+                    ("embrace_campaign", "associated_contacts"),
                 )
             },
         ),
         ("Used for negatively rated banks", {"fields": (("amount_financed_since_2016",))}),
         (
             "Used for positively rated banks",
-            {"fields": (("from_the_website",), ("institution_type", "institution_credentials"))},
+            {"fields": ("institution_type", "institution_credentials")},
         ),
-        ("CMS", {"fields": (("subtitle",), ("header",), ("summary",), ("details",))}),
-        ("Harvest Data", {"fields": ("feature_yaml", "feature_refresh_date")}),
         ("Meta", {"fields": ("comment",)}),
     )
 
@@ -303,7 +299,6 @@ class BrandAdmin(VersionAdmin):
         ("countries"),
         ("regions"),
         ("subregions"),
-        ("description"),
         ("rssd", "lei"),
         ("fdic_cert", "ncua"),
         ("permid"),
