@@ -1,4 +1,5 @@
 import json
+from functools import lru_cache
 
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -13,21 +14,34 @@ from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
 
 
+@lru_cache(maxsize=1)
+def load_harvest_validation_schema():
+    """
+    read harvest_validation_schema.json file
+    """
+    try:
+        with open("./config/harvest_validation_schema.json", "r") as harvest_json_file:
+            return json.load(harvest_json_file)
+    except FileNotFoundError as file_err:
+        raise Exception(file_err)
+    except IOError as io_err:
+        raise Exception(io_err)
+
+
 def validate_feature_override_yaml(feature_yaml) -> None:
     # Ensure feature_yaml format is of dict/yaml type
     if not isinstance(feature_yaml, dict):
         raise ValidationError(f"Only yaml format is accepted")
-
-    with open("./config/harvest_validation_schema.json", "r") as harvest_json_file:
-        harvest_feature_schema = json.load(harvest_json_file)
-
     try:
+        harvest_feature_schema = load_harvest_validation_schema()
         for feature, _ in feature_yaml.items():
             if not feature in harvest_feature_schema["properties"].keys():
                 raise ValidationError(f"{feature} is not a valid feature")
             validate(feature_yaml[feature], harvest_feature_schema["properties"][feature])
     except YamlValidationError as err:
         raise ValidationError(err.message)
+    except Exception as err:
+        raise Exception(err)
 
 
 class RatingChoice(models.TextChoices):
