@@ -314,3 +314,50 @@ query{
   }
 }
 ```
+
+## New Endpoint: harvestData
+
+Allows you to fetch and filter harvest data for sustainable banks.
+
+### Query
+
+```graphql
+query {
+  harvestData(
+    tag: String!
+    customersServed: String
+    depositProducts: String
+    financialFeatures: String
+    services: String
+    institutionalInformation: String
+    policies: String
+    loanProducts: String
+    interestRates: String
+  ) {
+    customersServed
+    depositProducts
+    financialFeatures
+    services
+    institutionalInformation
+    policies
+    loanProducts
+    interestRates
+  }
+}
+```
+
+- *tag* is required and should be the tag of the bank you want to fetch data for.
+- All other parameters are optional and can be used for filtering the respective fields.
+
+### Example
+
+```graphql
+query {
+  harvestData(tag: "atmos", customersServed: "corporate") {
+    customersServed
+    depositProducts
+  }
+}
+```
+
+This query will return the customersServed and depositProducts data for the bank with the tag "atmos", filtering the customersServed field to only include entries containing the word "corporate".
