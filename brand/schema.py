@@ -1,39 +1,36 @@
-import graphene
-import json
 import ast
+import json
 import logging
+
+from django.db.models import Case, Count, Q, When
+
+import graphene
+from cities_light.models import Region as RegionModel
+from cities_light.models import SubRegion as SubRegionModel
+from django_countries import countries
+from django_countries.graphql.types import Country
+from django_filters import (BooleanFilter, ChoiceFilter, FilterSet,
+                            MultipleChoiceFilter)
 from graphene import Scalar, relay
-from graphene_django import DjangoObjectType
+from graphene_django import DjangoListField, DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
 from graphql import GraphQLError
-from django_countries.graphql.types import Country
-from graphene_django import DjangoListField
-from django.db.models import Count, Case, When
-from django_filters import FilterSet, ChoiceFilter, BooleanFilter, MultipleChoiceFilter
-from django_countries import countries
-from brand.models.commentary import RatingChoice
-from utils.brand_utils import filter_json_field, fetch_cached_harvest_data
-
-from datasource.models.datasource import Datasource as DatasourceModel
-
-from .models import (
-    Brand as BrandModel,
-    Commentary as CommentaryModel,
-    BrandFeature as BrandFeatureModel,
-    FeatureType as FeatureModel,
-    EmbraceCampaign as EmbraceCampaignModel,
-)
-
-from .models.commentary import (
-    InstitutionType as InstitutionTypeModel,
-    InstitutionCredential as InstitutionCredentialModel,
-)
-
-from django.db.models import Q
 from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
 
-from cities_light.models import Region as RegionModel, SubRegion as SubRegionModel
+from brand.models.commentary import RatingChoice
+from datasource.models.datasource import Datasource as DatasourceModel
+from utils.brand_utils import fetch_cached_harvest_data, filter_json_field
+
+from .models import Brand as BrandModel
+from .models import BrandFeature as BrandFeatureModel
+from .models import Commentary as CommentaryModel
+from .models import EmbraceCampaign as EmbraceCampaignModel
+from .models import FeatureType as FeatureModel
+from .models.commentary import \
+    InstitutionCredential as InstitutionCredentialModel
+from .models.commentary import InstitutionType as InstitutionTypeModel
+
 
 logger = logging.getLogger(__name__)
 

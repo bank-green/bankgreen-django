@@ -1,8 +1,10 @@
+import logging
+from json import JSONEncoder
+
+import requests
+
 from brand.models import BrandFeature
 from brand.models.commentary import InstitutionCredential, InstitutionType
-from json import JSONEncoder
-import requests
-import logging
 
 
 def get_institution_data():
