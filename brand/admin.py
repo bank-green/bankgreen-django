@@ -353,6 +353,7 @@ class BrandAdmin(VersionAdmin):
         brand = Brand.objects.get(id=object_id)
         extra_context = extra_context or {}
         extra_context["page_title"] = f"{Brand.objects.get(id=object_id).tag}: "
+        extra_context["is_change_view"] = True
         return super(BrandAdmin, self).change_view(request, object_id, extra_context=extra_context)
 
     def changelist_view(self, request, extra_context=None):
