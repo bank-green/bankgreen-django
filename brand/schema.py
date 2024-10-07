@@ -1,34 +1,36 @@
+import ast
+import json
+import logging
+
+from django.db.models import Case, Count, Q, When
+
 import graphene
-from graphene import Scalar, relay
-from graphene_django import DjangoObjectType
-from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
-from django_countries.graphql.types import Country
-from graphene_django import DjangoListField
-from django.db.models import Count, Case, When
-from django_filters import FilterSet, ChoiceFilter, BooleanFilter, MultipleChoiceFilter
+from cities_light.models import Region as RegionModel
+from cities_light.models import SubRegion as SubRegionModel
 from django_countries import countries
-from brand.models.commentary import RatingChoice
-
-from datasource.models.datasource import Datasource as DatasourceModel
-
-from .models import (
-    Brand as BrandModel,
-    Commentary as CommentaryModel,
-    BrandFeature as BrandFeatureModel,
-    FeatureType as FeatureModel,
-    EmbraceCampaign as EmbraceCampaignModel,
-)
-
-from .models.commentary import (
-    InstitutionType as InstitutionTypeModel,
-    InstitutionCredential as InstitutionCredentialModel,
-)
-
-from django.db.models import Q
+from django_countries.graphql.types import Country
+from django_filters import BooleanFilter, ChoiceFilter, FilterSet, MultipleChoiceFilter
+from graphene import Scalar, relay
+from graphene_django import DjangoListField, DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
+from graphql import GraphQLError
 from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
 
-from cities_light.models import Region as RegionModel, SubRegion as SubRegionModel
+from brand.models.commentary import RatingChoice
+from datasource.models.datasource import Datasource as DatasourceModel
+from utils.brand_utils import fetch_cached_harvest_data, filter_json_field
+
+from .models import Brand as BrandModel
+from .models import BrandFeature as BrandFeatureModel
+from .models import Commentary as CommentaryModel
+from .models import EmbraceCampaign as EmbraceCampaignModel
+from .models import FeatureType as FeatureModel
+from .models.commentary import InstitutionCredential as InstitutionCredentialModel
+from .models.commentary import InstitutionType as InstitutionTypeModel
+
+
+logger = logging.getLogger(__name__)
 
 
 class Datasource(DjangoObjectType):
@@ -204,6 +206,32 @@ class InstitutionCredentialType(DjangoObjectType):
         model = InstitutionCredentialModel
 
 
+class JSONScalar(Scalar):
+    @staticmethod
+    def serialize(value):
+        return json.loads(value)
+
+    @staticmethod
+    def parse_literal(node):
+        if isinstance(node, ast.StringValue):
+            return json.loads(node.value)
+
+    @staticmethod
+    def parse_value(value):
+        return json.loads(value)
+
+
+class HarvestData(graphene.ObjectType):
+    customers_served = JSONScalar()
+    deposit_products = JSONScalar()
+    financial_features = JSONScalar()
+    services = JSONScalar()
+    institutional_information = JSONScalar()
+    policies = JSONScalar()
+    loan_products = JSONScalar()
+    interest_rates = JSONScalar()
+
+
 class Commentary(DjangoObjectType):
     summary = HtmlFromMarkdown()
     header = HtmlFromMarkdown()
@@ -213,9 +241,17 @@ class Commentary(DjangoObjectType):
         graphene.String, resolver=lambda obj, info: obj.rating_inherited
     )
     top_pick = graphene.Boolean()
+    harvest_data = graphene.Field(HarvestData)
 
     def resolve_top_pick(obj, info):
         return obj.top_pick
+
+    def resolve_harvest_data(self, info):
+        try:
+            return fetch_cached_harvest_data(self.brand.tag)
+        except Exception as e:
+            logging.error(f"Error fetching harvest data for {self.brand.tag}: {str(e)}")
+            return None
 
     class Meta:
         model = CommentaryModel
@@ -272,6 +308,19 @@ class Query(graphene.ObjectType):
         Brand, id=graphene.Argument(graphene.Int, required=True)
     )
 
+    harvest_data = graphene.Field(
+        HarvestData,
+        tag=graphene.String(required=True),
+        customers_served=graphene.String(),
+        deposit_products=graphene.String(),
+        financial_features=graphene.String(),
+        services=graphene.String(),
+        institutional_information=graphene.String(),
+        policies=graphene.String(),
+        loan_products=graphene.String(),
+        interest_rates=graphene.String(),
+    )
+
     def resolve_brand(root, info, tag):
         return BrandModel.objects.get(tag=tag)
 
@@ -295,6 +344,33 @@ class Query(graphene.ObjectType):
                 }
             )
         return [Brand(**brand_data) for brand_data in brand_countries]
+
+    def resolve_harvest_data(self, info, tag, **kwargs):
+        try:
+            cached_data = fetch_cached_harvest_data(tag)
+
+            # Apply filters
+            filtered_data = {}
+            for field, value in kwargs.items():
+                if field in cached_data:
+                    filtered_data[field] = filter_json_field(cached_data[field], value)
+                else:
+                    logger.warning(f"Field '{field}' not found for brand tag: {tag}")
+
+            # If no fields were successfully filtered, raise an error
+            if not filtered_data:
+                raise GraphQLError(f"No matching data found for brand tag: {tag}")
+
+            return HarvestData(**filtered_data)
+        except requests.RequestException as e:
+            logger.error(f"Error fetching harvest data for {tag}: {str(e)}")
+            raise GraphQLError(f"Failed to fetch harvest data: {str(e)}") from e
+        except json.JSONDecodeError as e:
+            logger.error(f"Error decoding harvest data for {tag}: {str(e)}")
+            raise GraphQLError("Invalid data received from harvest API") from e
+        except Exception as e:
+            logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
+            raise GraphQLError("An unexpected error occurred while fetching harvest data") from e
 
     brands = DjangoFilterConnectionField(Brand)
 
