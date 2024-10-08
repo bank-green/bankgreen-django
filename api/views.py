@@ -1,8 +1,9 @@
+from brand.models.brand import Brand
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from brand.models import BrandSuggestion
 from brand.models.contact import Contact
-from .serializers import BrandSuggestionSerializer
+from .serializers import BrandSerializer, BrandSuggestionSerializer
 from rest_framework import permissions, status
 from .serializers import ContactSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -51,3 +52,21 @@ class ContactView(APIView):
         )
         serializer = ContactSerializer(contacts_qs, many=True)
         return Response(serializer.data)
+
+class BrandsView(APIView):
+    permission_classes = []
+    authentication_classes = [SingleTokenAuthentication]
+    renderer_classes = [JSONRenderer]
+
+    def post(self, request):
+        """
+        This function is being called when user makes POST http call. This function is responsible
+        to add the data sent in the POST call into the database.
+        return : serialized data if successful
+               : error message if not successful.
+        """
+        serializer = BrandSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

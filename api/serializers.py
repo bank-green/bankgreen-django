@@ -1,3 +1,4 @@
+from brand.models.brand import Brand
 from rest_framework import serializers
 from brand.models.brand_suggestion import BrandSuggestion
 from django_countries.fields import Country
@@ -51,3 +52,9 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = ["fullname", "email", "brand_tag"]
+
+class BrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Brand
+        # returns all fields from model
+        fields = "__all__"
