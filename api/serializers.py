@@ -53,6 +53,7 @@ class ContactSerializer(serializers.ModelSerializer):
         model = Contact
         fields = ["fullname", "email", "brand_tag"]
 
+
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand

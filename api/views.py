@@ -53,6 +53,7 @@ class ContactView(APIView):
         serializer = ContactSerializer(contacts_qs, many=True)
         return Response(serializer.data)
 
+
 class BrandsView(APIView):
     permission_classes = []
     authentication_classes = [SingleTokenAuthentication]
@@ -60,15 +61,20 @@ class BrandsView(APIView):
 
     def put(self, request):
         # Fetching the 'tag' from request.data, which is used to identify the brand
-        tag = request.data.get('tag')
+        tag = request.data.get("tag")
         if not tag:
-            return Response({'error': 'Tag is required for updating a brand.'}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response(
+                {"error": "Tag is required for updating a brand."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         # Try to retrieve an existing brand by 'tag'
         brand_instance = Brand.objects.filter(tag=tag).first()
 
         # Initialize the serializer with the instance (if found) or None (if not found)
-        serializer = BrandSerializer(brand_instance, data=request.data, partial=True)  # Allows partial updates
+        serializer = BrandSerializer(
+            brand_instance, data=request.data, partial=True
+        )  # Allows partial updates
 
         if serializer.is_valid():
             serializer.save()
