@@ -1,8 +1,9 @@
+from brand.models.brand import Brand
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from brand.models import BrandSuggestion
 from brand.models.contact import Contact
-from .serializers import BrandSuggestionSerializer
+from .serializers import BrandSerializer, BrandSuggestionSerializer
 from rest_framework import permissions, status
 from .serializers import ContactSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -51,3 +52,32 @@ class ContactView(APIView):
         )
         serializer = ContactSerializer(contacts_qs, many=True)
         return Response(serializer.data)
+
+
+class BrandsView(APIView):
+    permission_classes = []
+    authentication_classes = [SingleTokenAuthentication]
+    renderer_classes = [JSONRenderer]
+
+    def put(self, request):
+        # Fetching the 'tag' from request.data, which is used to identify the brand
+        tag = request.data.get("tag")
+        if not tag:
+            return Response(
+                {"error": "Tag is required for updating a brand."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Try to retrieve an existing brand by 'tag'
+        brand_instance = Brand.objects.filter(tag=tag).first()
+
+        # Initialize the serializer with the instance (if found) or None (if not found)
+        serializer = BrandSerializer(
+            brand_instance, data=request.data, partial=True
+        )  # Allows partial updates
+
+        if serializer.is_valid():
+            serializer.save()
+            status_code = status.HTTP_200_OK if brand_instance else status.HTTP_201_CREATED
+            return Response(serializer.data, status=status_code)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
