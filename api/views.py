@@ -58,7 +58,7 @@ class BrandsView(APIView):
     authentication_classes = [SingleTokenAuthentication]
     renderer_classes = [JSONRenderer]
 
-    def put(self, request, *args, **kwargs):
+    def put(self, request):
         # Fetching the 'tag' from request.data, which is used to identify the brand
         tag = request.data.get('tag')
         if not tag:
