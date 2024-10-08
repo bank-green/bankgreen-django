@@ -1,6 +1,7 @@
+from json import JSONEncoder
+
 from brand.models import BrandFeature
 from brand.models.commentary import InstitutionCredential, InstitutionType
-from json import JSONEncoder
 
 
 def get_institution_data():

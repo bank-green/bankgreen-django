@@ -1,13 +1,14 @@
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from brand.models import BrandSuggestion
-from brand.models.contact import Contact
-from .serializers import BrandSuggestionSerializer
 from rest_framework import permissions, status
-from .serializers import ContactSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from brand.models import BrandSuggestion
+from brand.models.contact import Contact
+
 from .authentication import SingleTokenAuthentication
+from .serializers import BrandSuggestionSerializer, ContactSerializer
 
 
 class BrandSuggestionAPIView(APIView):

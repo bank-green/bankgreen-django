@@ -2,10 +2,10 @@ import json
 from datetime import datetime, timezone
 
 import pandas as pd
+from django_countries.fields import CountryField
 
 from datasource.models.datasource import Datasource, classproperty
 from datasource.pycountry_utils import pycountries
-from django_countries.fields import CountryField
 
 
 class Fairfinance(Datasource):

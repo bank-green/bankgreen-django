@@ -1,21 +1,21 @@
-from collections import defaultdict
 import re
 import threading
+from collections import defaultdict
 from typing import Dict
 
 from django.db import models
-from django_countries.fields import CountryField
 from django.db.utils import IntegrityError
 
-from brand.models.brand import Brand
-
-from cities_light.models import Country, Region, SubRegion
-from jsonfield import JSONField
 import pandas as pd
+from cities_light.models import Country, Region, SubRegion
+from django_countries.fields import CountryField
+from jsonfield import JSONField
 from symspellpy import SymSpell, Verbosity
 
+from brand.models.brand import Brand
 from datasource.models.datasource import Datasource, SuggestedAssociation
 from datasource.pycountry_utils import pycountries
+
 
 MAX_DICT_EDIT_DISTANCE = 4
 

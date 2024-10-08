@@ -1,6 +1,8 @@
 from django.db import models
-from brand.models import Brand
+
 from django_countries.fields import CountryField
+
+from brand.models import Brand
 
 
 class FeatureType(models.Model):

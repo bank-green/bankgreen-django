@@ -1,6 +1,7 @@
-from django.db import models
-from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+from django.db import models
+
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError as JsonValidationError
 

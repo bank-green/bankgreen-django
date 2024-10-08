@@ -1,13 +1,14 @@
 import traceback
-from qwikidata.sparql import return_sparql_query_results
+
 from django.db import models
-from django_countries.fields import CountryField
 
-import pandas as pd
 import np
+import pandas as pd
+from django_countries.fields import CountryField
+from qwikidata.sparql import return_sparql_query_results
 
-from datasource.models.datasource import Datasource, classproperty
 from datasource.local.wikidata.pycountry_util import find_country
+from datasource.models.datasource import Datasource, classproperty
 
 
 class Wikidata(Datasource):

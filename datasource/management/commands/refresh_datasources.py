@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 
 from brand.models import Brand
-
 from datasource.constants import model_names
 from datasource.models import (
     Banktrack,

@@ -17,17 +17,18 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, re_path, reverse_lazy, include
+from django.contrib.auth import views as auth_views
+from django.urls import include, path, re_path, reverse_lazy
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import RedirectView
-from django.contrib.auth import views as auth_views
+
 from graphene_django.views import GraphQLView
 
+from brand import views
 from brand.views import CustomPasswordResetView
 from schema import schema
 
-from brand import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),

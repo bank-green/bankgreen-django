@@ -1,6 +1,8 @@
 from django import forms
-from .models import BrandFeature
+
 from utils import brand_utils
+
+from .models import BrandFeature
 
 
 class BrandFeaturesForm(forms.ModelForm):

@@ -1,8 +1,14 @@
-import json, re, requests, time
-from brand.models import Brand, Commentary
-from unidecode import unidecode
-from django.urls import reverse
 import itertools
+import json
+import re
+import time
+
+from django.urls import reverse
+
+import requests
+from unidecode import unidecode
+
+from brand.models import Brand, Commentary
 
 
 prismic_base_url = "https://bankgreen.cdn.prismic.io/api/v2"

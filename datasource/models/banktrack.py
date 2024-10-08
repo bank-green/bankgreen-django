@@ -5,10 +5,10 @@ from re import I
 
 from django.conf import settings
 from django.db import models
-from django_countries.fields import CountryField
 
 import pandas as pd
 import requests
+from django_countries.fields import CountryField
 
 # from datasource.local.banktrack.secret import PASSWORD as banktrack_password
 from datasource.models.datasource import Datasource, classproperty

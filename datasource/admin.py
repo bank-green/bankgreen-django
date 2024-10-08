@@ -5,10 +5,6 @@ from django.utils.html import escape, format_html
 
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter, DropdownFilter
 
-# from django_json_widget.widgets import JSONEditorWidget
-
-# from jsonfield import JSONField
-
 from brand.admin import CountriesWidgetOverrideForm
 from brand.models import Brand
 from datasource.models.datasource import SuggestedAssociation
@@ -28,6 +24,11 @@ from .models import (
     Usnic,
     Wikidata,
 )
+
+
+# from django_json_widget.widgets import JSONEditorWidget
+
+# from jsonfield import JSONField
 
 
 class IsLinkedToBrandFilter(admin.SimpleListFilter):

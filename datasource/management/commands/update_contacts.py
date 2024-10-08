@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
-from brand.models import Contact
-from brand.models import Brand, Contact, Commentary
+
 import pandas as pd
+
+from brand.models import Brand, Commentary, Contact
 
 
 class Command(BaseCommand):

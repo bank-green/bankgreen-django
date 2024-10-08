@@ -1,34 +1,27 @@
+from django.db.models import Case, Count, Q, When
+
 import graphene
-from graphene import Scalar, relay
-from graphene_django import DjangoObjectType
-from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
-from django_countries.graphql.types import Country
-from graphene_django import DjangoListField
-from django.db.models import Count, Case, When
-from django_filters import FilterSet, ChoiceFilter, BooleanFilter, MultipleChoiceFilter
+from cities_light.models import Region as RegionModel
+from cities_light.models import SubRegion as SubRegionModel
 from django_countries import countries
-from brand.models.commentary import RatingChoice
-
-from datasource.models.datasource import Datasource as DatasourceModel
-
-from .models import (
-    Brand as BrandModel,
-    Commentary as CommentaryModel,
-    BrandFeature as BrandFeatureModel,
-    FeatureType as FeatureModel,
-    EmbraceCampaign as EmbraceCampaignModel,
-)
-
-from .models.commentary import (
-    InstitutionType as InstitutionTypeModel,
-    InstitutionCredential as InstitutionCredentialModel,
-)
-
-from django.db.models import Q
+from django_countries.graphql.types import Country
+from django_filters import BooleanFilter, ChoiceFilter, FilterSet, MultipleChoiceFilter
+from graphene import Scalar, relay
+from graphene_django import DjangoListField, DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
 from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
 
-from cities_light.models import Region as RegionModel, SubRegion as SubRegionModel
+from brand.models.commentary import RatingChoice
+from datasource.models.datasource import Datasource as DatasourceModel
+
+from .models import Brand as BrandModel
+from .models import BrandFeature as BrandFeatureModel
+from .models import Commentary as CommentaryModel
+from .models import EmbraceCampaign as EmbraceCampaignModel
+from .models import FeatureType as FeatureModel
+from .models.commentary import InstitutionCredential as InstitutionCredentialModel
+from .models.commentary import InstitutionType as InstitutionTypeModel
 
 
 class Datasource(DjangoObjectType):

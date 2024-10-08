@@ -1,5 +1,6 @@
 from datasource.models.usnic import *
 
+
 attr_df = pd.read_csv("./datasource/local/usnic/CSV_ATTRIBUTES_ACTIVE.CSV")
 banks = []
 num_created = 0
@@ -25,6 +26,7 @@ del num_created
 ###############
 
 from datasource.models.usnic import *
+
 
 existing_rssds = [int(x) for x in Usnic.objects.all().values_list("rssd", flat=True)]
 branch_df = pd.read_csv(

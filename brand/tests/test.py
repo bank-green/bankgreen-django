@@ -1,13 +1,15 @@
+from django.contrib.auth.models import User
 from django.forms import ValidationError
 from django.test import TestCase
+from django.urls import reverse
+
+from rest_framework.test import APIClient
 
 from brand.models.commentary import Commentary, RatingChoice
+from brand.models.contact import Contact
 from brand.tests.utils import create_test_brands
 from datasource.models import Banktrack, Usnic
-from django.urls import reverse
-from rest_framework.test import APIClient
-from django.contrib.auth.models import User
-from brand.models.contact import Contact
+
 from ..models import Brand
 
 

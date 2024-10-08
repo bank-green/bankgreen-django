@@ -1,10 +1,10 @@
 import re
 from typing import List, Tuple
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.query import QuerySet
 from django.template.defaultfilters import truncatechars
-from django.core.exceptions import ValidationError
 
 from cities_light.models import Region, SubRegion
 from django_countries.fields import CountryField

@@ -1,6 +1,8 @@
-from symspellpy import SymSpell, Verbosity
-from brand.models import Brand
 from django.urls import reverse
+
+from symspellpy import SymSpell, Verbosity
+
+from brand.models import Brand
 
 
 def return_all_duplicates():
