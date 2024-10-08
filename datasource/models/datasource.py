@@ -1,9 +1,10 @@
 import re
-from django.db import models
+
 from django.core.validators import MaxValueValidator, MinValueValidator
-from model_utils.models import TimeStampedModel
+from django.db import models
 
 from Levenshtein import distance as lev
+from model_utils.models import TimeStampedModel
 
 from brand.models.brand import Brand
 

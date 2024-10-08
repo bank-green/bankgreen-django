@@ -1,5 +1,7 @@
 import csv
+
 from brand.models import Commentary
+
 
 cs = Commentary.objects.all()
 # cs = [

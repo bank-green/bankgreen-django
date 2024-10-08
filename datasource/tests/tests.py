@@ -1,12 +1,12 @@
-from django.test import TestCase
 from django.core.management import call_command
+from django.test import TestCase
 
 import np
 import pandas as pd
+
 from brand.models.contact import Contact
 from brand.tests.utils import create_test_brands
 from datasource.models.datasource import SuggestedAssociation
-
 from datasource.models.usnic import Usnic
 from datasource.models.wikidata import Wikidata
 from datasource.tests.utils import create_test_usnic

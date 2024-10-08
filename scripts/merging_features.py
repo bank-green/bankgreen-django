@@ -1,5 +1,6 @@
 from brand.models import *
 
+
 # This code takes one FeatureType and merges all instances of BrandFeatures with that FeatureType
 # into FeatureType. In instances where the BrandFeature didn't already exist, it creates one
 

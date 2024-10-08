@@ -1,9 +1,11 @@
 import re
 
 from django import template
-from reversion.models import Version, Revision
+
+from reversion.models import Revision, Version
 
 from brand.models.brand import Brand
+
 
 register = template.Library()
 
