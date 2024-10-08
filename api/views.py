@@ -58,9 +58,20 @@ class BrandsView(APIView):
     authentication_classes = [SingleTokenAuthentication]
     renderer_classes = [JSONRenderer]
 
-    def put(self, request):
-        serializer = BrandSerializer(data=request.data)
+    def put(self, request, *args, **kwargs):
+        # Fetching the 'tag' from request.data, which is used to identify the brand
+        tag = request.data.get('tag')
+        if not tag:
+            return Response({'error': 'Tag is required for updating a brand.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Try to retrieve an existing brand by 'tag'
+        brand_instance = Brand.objects.filter(tag=tag).first()
+
+        # Initialize the serializer with the instance (if found) or None (if not found)
+        serializer = BrandSerializer(brand_instance, data=request.data, partial=True)  # Allows partial updates
+
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            status_code = status.HTTP_200_OK if brand_instance else status.HTTP_201_CREATED
+            return Response(serializer.data, status=status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
