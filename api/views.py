@@ -58,13 +58,7 @@ class BrandsView(APIView):
     authentication_classes = [SingleTokenAuthentication]
     renderer_classes = [JSONRenderer]
 
-    def post(self, request):
-        """
-        This function is being called when user makes POST http call. This function is responsible
-        to add the data sent in the POST call into the database.
-        return : serialized data if successful
-               : error message if not successful.
-        """
+    def put(self, request):
         serializer = BrandSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
