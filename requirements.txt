@@ -1,6 +1,6 @@
 black==24.3.0
 isort==5.10.1
-Django==5.0.6
+Django==5.0.9
 django-ajax-selects==2.2.0
 django-braces==1.15.0
 django-cryptography==1.0
