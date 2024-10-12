@@ -272,7 +272,9 @@ class BankAPITestCase(TestCase):
     def setUpClass(cls):
         super(BankAPITestCase, cls).setUpClass()
         User.objects.create_user(username="test", password="test123")
-        Brand.objects.create(name="Existing bank", tag="existing_tag", description="Existing Description")
+        Brand.objects.create(
+            name="Existing bank", tag="existing_tag", description="Existing Description"
+        )
 
     def test_create_bank(self):
         """
@@ -316,4 +318,3 @@ class BankAPITestCase(TestCase):
             self.assertEqual("Existing bank new name", brand_instance[0].name)
             # test that existing data is not overwritten
             self.assertEqual("Existing Description", brand_instance[0].description)
-
