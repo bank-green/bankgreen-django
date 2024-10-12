@@ -1,4 +1,5 @@
 from brand.models.brand import Brand
+from brand.models.commentary import Commentary
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from brand.models import BrandSuggestion
@@ -53,7 +54,6 @@ class ContactView(APIView):
         serializer = ContactSerializer(contacts_qs, many=True)
         return Response(serializer.data)
 
-
 class BrandsView(APIView):
     permission_classes = []
     authentication_classes = [SingleTokenAuthentication]
@@ -74,10 +74,19 @@ class BrandsView(APIView):
         # Initialize the serializer with the instance (if found) or None (if not found)
         serializer = BrandSerializer(
             brand_instance, data=request.data, partial=True
-        )  # Allows partial updates
+        )
 
         if serializer.is_valid():
-            serializer.save()
+            # Save the brand instance
+            brand_instance = serializer.save()
+
+            # Update or create the related commentary if it's provided in the request data
+            commentary_data = request.data.get("commentary")
+            if commentary_data:
+                commentary_instance, _ = Commentary.objects.update_or_create(
+                    brand=brand_instance, defaults=commentary_data
+                )
+
             status_code = status.HTTP_200_OK if brand_instance else status.HTTP_201_CREATED
             return Response(serializer.data, status=status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
