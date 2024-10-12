@@ -1,7 +1,8 @@
-import openpyxl
 import markdown
-import pyth.plugins.rtf15.reader
+import openpyxl
 import pyth.plugins.plaintext.writer
+import pyth.plugins.rtf15.reader
+
 
 # Load the Excel file
 workbook = openpyxl.load_workbook("commentaries.xlsx")
@@ -33,8 +34,9 @@ workbook.save("output.xlsx")
 #
 
 
-import openpyxl
 import html2text
+import openpyxl
+
 
 # Load the Excel file
 workbook = openpyxl.load_workbook("output.xlsx")
@@ -62,6 +64,7 @@ workbook.save("output2.xlsx")
 #######
 
 import openpyxl
+
 
 # Load the Excel file
 workbook = openpyxl.load_workbook("output.xlsx")

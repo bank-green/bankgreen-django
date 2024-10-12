@@ -1,6 +1,7 @@
+from django.conf import settings
+
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import AuthenticationFailed
-from django.conf import settings
 
 
 class SingleTokenAuthentication(TokenAuthentication):
