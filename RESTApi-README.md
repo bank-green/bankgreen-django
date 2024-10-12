@@ -48,11 +48,15 @@ updates the bank at the specified tag.  fields not specified in the body will no
                   "name": "New Bank",
                   "tag": "bank_tag"
                 }
-  response: json object reflecting the updated bank information or an error message
+  response: json object reflecting the updated bank information
             example: {
-              "success": true,
-              "message": "Bank information updated successfully"
-            }
+              "id": 754,
+              "created": "2024-10-11T04:20:01.421975Z",
+              "modified": "2024-10-11T04:20:01.421975Z",
+              "name": "New Bank",
+              "tag": "bank_tag"
+              ...
+          }
 ```
 
   curl command : `curl --location --request PUT 'http://127.0.0.1:8000/api/bank' \ --header 'Authorization: YOUR_TOKEN_HERE' \ --header 'Content-Type: application/json' \ --data '{ "name": "New Bank", "tag": "bank_tag" }'`
