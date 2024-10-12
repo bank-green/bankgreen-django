@@ -331,4 +331,4 @@ class BankTestCase(TestCase):
             self.assertEqual("good", brand_instance[0].commentary.rating)
             # Test that existing data is not overwritten
             self.assertEqual("Existing Summary", brand_instance[0].commentary.summary)
-            self.assertEqual("good", brand_instance[0].commentary.rating)
+            self.assertEqual("Existing Description", brand_instance[0].description)
