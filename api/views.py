@@ -54,6 +54,7 @@ class ContactView(APIView):
         serializer = ContactSerializer(contacts_qs, many=True)
         return Response(serializer.data)
 
+
 class BrandsView(APIView):
     permission_classes = []
     authentication_classes = [SingleTokenAuthentication]
@@ -72,9 +73,7 @@ class BrandsView(APIView):
         brand_instance = Brand.objects.filter(tag=tag).first()
 
         # Initialize the serializer with the instance (if found) or None (if not found)
-        serializer = BrandSerializer(
-            brand_instance, data=request.data, partial=True
-        )
+        serializer = BrandSerializer(brand_instance, data=request.data, partial=True)
 
         if serializer.is_valid():
             # Save the brand instance

@@ -54,14 +54,18 @@ class ContactSerializer(serializers.ModelSerializer):
         model = Contact
         fields = ["fullname", "email", "brand_tag"]
 
+
 class CommentarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Commentary
         fields = "__all__"  # Specify the fields you want to include
 
+
 class BrandSerializer(serializers.ModelSerializer):
     countries = MultipleCountryField(required=True)
-    commentary = CommentarySerializer(read_only=True)  # Add the related Commentary object as a nested serializer
+    commentary = CommentarySerializer(
+        read_only=True
+    )  # Add the related Commentary object as a nested serializer
 
     class Meta:
         model = Brand
