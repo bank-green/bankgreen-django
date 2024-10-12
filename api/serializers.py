@@ -56,6 +56,7 @@ class ContactSerializer(serializers.ModelSerializer):
 
 class BrandSerializer(serializers.ModelSerializer):
     countries = MultipleCountryField(required=True)
+
     class Meta:
         model = Brand
         # returns all fields from model
