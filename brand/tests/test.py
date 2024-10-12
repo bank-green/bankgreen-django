@@ -199,6 +199,7 @@ class CommentaryTestCase(TestCase):
             self.commentary5.compute_inherited_rating(throw_error=False), RatingChoice.UNKNOWN
         )
 
+
 class BrandTagTestCase(TestCase):
     # test for a Valid Tag
     def test_brand_valid_tag(self):
