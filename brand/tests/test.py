@@ -45,7 +45,6 @@ class BrandTestCase(TestCase):
 
     def test_create_spelling_dictionary(self):
         spelling_dict = Brand.create_spelling_dictionary()
-        # print(spelling_dict)
 
         self.assertTrue(spelling_dict.get("test brand 1"), 100)
         self.assertTrue(spelling_dict.get("test brand"), 100)
@@ -200,7 +199,6 @@ class CommentaryTestCase(TestCase):
             self.commentary5.compute_inherited_rating(throw_error=False), RatingChoice.UNKNOWN
         )
 
-
 class BrandTagTestCase(TestCase):
     # test for a Valid Tag
     def test_brand_valid_tag(self):
@@ -331,5 +329,5 @@ class BankTestCase(TestCase):
             # Test that the commentary object is updated
             self.assertEqual("good", brand_instance[0].commentary.rating)
             # Test that existing data is not overwritten
-            self.assertEqual("Existing Summary", brand_instance[0].summary)
+            self.assertEqual("Existing Summary", brand_instance[0].commentary.summary)
             self.assertEqual("good", brand_instance[0].commentary.rating)
