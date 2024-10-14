@@ -1,0 +1,30 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black isort
+      
+      # Dependency Sort with Black 
+      - name: Run Black
+        run: black --check .
+      #  Dependency sort with isort in comparison with black to check the difference between them
+      - name: Run isort
+        uses: isort/isort-action@v1
+        with:
+          configuration: "--profile black --check-only --diff"

@@ -1,14 +1,16 @@
 import json
+from django.contrib.auth.models import User
 from django.forms import ValidationError
 from django.test import TestCase
+from django.urls import reverse
+
+from rest_framework.test import APIClient
 
 from brand.models.commentary import Commentary, RatingChoice
+from brand.models.contact import Contact
 from brand.tests.utils import create_test_brands
 from datasource.models import Banktrack, Usnic
-from django.urls import reverse
-from rest_framework.test import APIClient
-from django.contrib.auth.models import User
-from brand.models.contact import Contact
+
 from ..models import Brand
 
 
@@ -198,6 +200,65 @@ class CommentaryTestCase(TestCase):
         self.assertEqual(
             self.commentary5.compute_inherited_rating(throw_error=False), RatingChoice.UNKNOWN
         )
+
+    def test_feature_override_failure(self):
+        """
+        Test validation error raised when user tries to update feature_override field with invalid harvest feture yaml.
+        """
+        brand6 = Brand.objects.create(
+            tag="another_brand_6",
+            name="Another Brand 6",
+            aliases="another brand, anotherb",
+            website="https://www.anotherbwebaaaasite.com/somepage",
+            permid="another permid",
+            viafid="another viafid",
+            lei="another lei",
+            rssd="another rssd",
+        )
+
+        data = {
+            "customers_served": {
+                "business_and_corporate": {
+                    "offered": True,
+                    "additional_details": "some additional details",
+                    "urls": [],
+                }
+            }
+        }
+        with self.assertRaises(ValidationError):
+            commentary_obj = Commentary(brand=brand6, feature_override=data)
+            commentary_obj.full_clean()
+
+    def test_feature_override_success(self):
+        """
+        Test commentary object is saved successfully when user tries to update feature_override field with valid harvest feture yaml.
+        """
+        brand7 = Brand.objects.create(
+            tag="another_brand_7",
+            name="Another Brand 7",
+            aliases="another brand, anotherb",
+            website="https://www.anotherbwebaaaasite.com/somepage",
+            permid="another permid",
+            viafid="another viafid",
+            lei="another lei",
+            rssd="another rssd",
+        )
+
+        data = {
+            "customers_served": {
+                "corporate": {
+                    "offered": True,
+                    "additional_details": "some additional details",
+                    "urls": [],
+                }
+            }
+        }
+
+        commentary_obj = Commentary(brand=brand7, feature_override=data)
+        commentary_obj.full_clean()
+        commentary_obj.save()
+
+        self.assertEquals(commentary_obj.feature_override, data)
 
 
 class BrandTagTestCase(TestCase):

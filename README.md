@@ -62,8 +62,16 @@ python manage.py runserver
 ```
 
 ## Formatting
+To ensure consistent code formatting and import sorting, follow these steps:
 
-To automagically format your code, run `black .` from the root of the repo.
+1. **Run Black** (takes precedence):
+   ```bash
+   black .
+   ```
+2. **Run isort** (after Black):
+    ```bash
+    isort .
+    ```
 
 ## Nginx and Gunicorn userful commands
 

@@ -1,5 +1,6 @@
-from django.db import models
 from django.core.validators import validate_email
+from django.db import models
+
 from brand.models.brand import Brand
 from brand.models.commentary import Commentary
 

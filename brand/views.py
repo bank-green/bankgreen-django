@@ -1,26 +1,25 @@
+import csv
+import json
+import os
+import pathlib
+from datetime import datetime
 from uuid import uuid4
 
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
+from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 from django.forms import inlineformset_factory
 from django.forms.models import model_to_dict
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
-from django.core.exceptions import ObjectDoesNotExist
 
 from cities_light.models import Region, SubRegion
 from dal import autocomplete
-from django.core import serializers
 
-from .forms import BrandFeaturesForm
-from .models import Brand, BrandFeature
-from .models.commentary import InstitutionCredential, InstitutionType
-
-import pathlib, csv, json, os
-from datetime import datetime
 from scripts.check_duplicates import return_all_duplicates
 from scripts.find_missing_brands_vs_pages import (
     get_missing_brand_and_bankpages,
@@ -28,6 +27,10 @@ from scripts.find_missing_brands_vs_pages import (
     get_ref_id,
 )
 from utils.brand_utils import concat_brand_feature_data, get_institution_data
+
+from .forms import BrandFeaturesForm
+from .models import Brand, BrandFeature
+from .models.commentary import InstitutionCredential, InstitutionType
 
 
 class RegionAutocomplete(autocomplete.Select2QuerySetView):

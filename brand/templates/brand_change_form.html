@@ -3,8 +3,10 @@
 
 {% block object-tools %}
 {{ block.super }}
-<form method="get">  
-    <input type="hidden" name="model" value="brand">
-    <input type="submit" formaction="{% url 'admin:refresh_harvest_data' original.pk %}" value="{% trans 'Refresh Harvest Data' %}" class="button" style="margin-top: -48px; float: right; margin-right: 80px; border-radius: 25px; padding: 8px;">     
-</form>
+{% if is_change_view %}
+    <form method="get">  
+        <input type="hidden" name="model" value="brand">
+        <input type="submit" formaction="{% url 'admin:refresh_harvest_data' original.pk %}" value="{% trans 'Refresh Harvest Data' %}" class="button" style="margin-top: -48px; float: right; margin-right: 80px; border-radius: 25px; padding: 8px;">     
+    </form>
+{% endif %}
 {% endblock %}

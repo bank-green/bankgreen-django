@@ -1,5 +1,6 @@
-from .country_map import country_map
 import pycountry
+
+from .country_map import country_map
 
 
 def find_country(mystr=None, country_code=None):
