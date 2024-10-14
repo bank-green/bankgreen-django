@@ -39,6 +39,16 @@ To setup the database, you must run migrations, add sample data by installing th
 Then create a superuser:   
 `python manage.py createsuperuser`
 
+## Unit Testing
+
+To run all tests:
+
+`python manage.py test`
+
+To run the API endpoint tests:
+
+`python manage.py test brand`
+
 ## Django commands
 
 ```

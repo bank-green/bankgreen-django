@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.models import User
 from django.forms import ValidationError
 from django.test import TestCase
@@ -324,3 +326,71 @@ class GetContactsAPITestCase(TestCase):
                 response = self.client.get(path=url, QUERY_STRING="brandTag=xyz", **headers)
                 self.assertFalse(len(response.json()), "No contacts available for brandag=test_tag")
                 self.assertEqual(200, response.status_code)
+
+
+class BankAPITestCase(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(BankAPITestCase, cls).setUpClass()
+        User.objects.create_user(username="test", password="test123")
+        Brand.objects.create(
+            name="Existing bank",
+            tag="existing_tag",
+            description="Existing Description",
+            commentary={"rating": "bad"},
+        )
+
+
+class BankTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.token = "XYZSSAAA"
+        self.headers = {
+            "content_type": "application/json",
+            "HTTP_AUTHORIZATION": f"Token {self.token}",
+        }
+        # Create an existing brand instance for update tests
+        self.existing_brand = Brand.objects.create(
+            name="Existing bank", tag="existing_tag", description="Existing Description"
+        )
+        Commentary.objects.create(
+            brand=self.existing_brand, rating="worst", summary="Existing Summary"
+        )
+
+    def test_create_bank(self):
+        """
+        Test PUT /api/bank API endpoint creates a new entry for a non-existing tag
+        """
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            url = reverse("rest_api:bank")
+            data = {"name": "New bank", "tag": "new_tag", "commentary": {"rating": "good"}}
+            response = self.client.put(path=url, data=json.dumps(data), **self.headers)
+
+            brand_instance = Brand.objects.filter(tag="new_tag")
+            self.assertEqual(1, len(brand_instance))
+            self.assertEqual("New bank", brand_instance[0].name)
+            self.assertEqual("good", brand_instance[0].commentary.rating)
+
+    def test_update_bank(self):
+        """
+        Test PUT /api/bank API endpoint updates an entry on an existing tag
+        """
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            url = reverse("rest_api:bank")
+            data = {
+                "name": "Existing bank new name",
+                "tag": "existing_tag",
+                "commentary": {"rating": "good"},
+            }
+            response = self.client.put(path=url, data=json.dumps(data), **self.headers)
+
+            brand_instance = Brand.objects.filter(tag="existing_tag")
+            # Test that it doesn't make an extra copy
+            self.assertEqual(1, len(brand_instance))
+            # Test that the name is updated
+            self.assertEqual("Existing bank new name", brand_instance[0].name)
+            # Test that the commentary object is updated
+            self.assertEqual("good", brand_instance[0].commentary.rating)
+            # Test that existing data is not overwritten
+            self.assertEqual("Existing Summary", brand_instance[0].commentary.summary)
+            self.assertEqual("Existing Description", brand_instance[0].description)
