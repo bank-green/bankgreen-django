@@ -1,11 +1,9 @@
-from brand.models.brand import Brand
-from brand.models.commentary import Commentary
-from rest_framework import serializers
-from brand.models.brand_suggestion import BrandSuggestion
 from django_countries.fields import Country
 from rest_framework import serializers
 
+from brand.models.brand import Brand
 from brand.models.brand_suggestion import BrandSuggestion
+from brand.models.commentary import Commentary
 from brand.models.contact import Contact
 
 
