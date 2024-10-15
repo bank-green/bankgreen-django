@@ -39,6 +39,16 @@ To setup the database, you must run migrations, add sample data by installing th
 Then create a superuser:   
 `python manage.py createsuperuser`
 
+## Unit Testing
+
+To run all tests:
+
+`python manage.py test`
+
+To run the API endpoint tests:
+
+`python manage.py test brand`
+
 ## Django commands
 
 ```
@@ -52,8 +62,16 @@ python manage.py runserver
 ```
 
 ## Formatting
+To ensure consistent code formatting and import sorting, follow these steps:
 
-To automagically format your code, run `black .` from the root of the repo.
+1. **Run Black** (takes precedence):
+   ```bash
+   black .
+   ```
+2. **Run isort** (after Black):
+    ```bash
+    isort .
+    ```
 
 ## Nginx and Gunicorn userful commands
 

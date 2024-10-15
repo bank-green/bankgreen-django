@@ -38,3 +38,4 @@ django-autocomplete-light==3.9.4
 jsonschema==4.21.1
 graphql-core== 3.2.3
 PyYAML==6.0.2
+django-yamlfield==1.2.2

@@ -1,10 +1,10 @@
 import json
 from datetime import datetime, timezone
-from django.db import models
-from django_countries.fields import CountryField
 
+from django.db import models
 
 import pandas as pd
+from django_countries.fields import CountryField
 
 from datasource.models.datasource import Datasource, classproperty
 from datasource.pycountry_utils import pycountries

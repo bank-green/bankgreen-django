@@ -1,5 +1,7 @@
-from brand.models import *
 from django.db.models import Q
+
+from brand.models import *
+
 
 # this script deletes redundant headings
 

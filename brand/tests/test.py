@@ -1,13 +1,17 @@
+import json
+
+from django.contrib.auth.models import User
 from django.forms import ValidationError
 from django.test import TestCase
+from django.urls import reverse
+
+from rest_framework.test import APIClient
 
 from brand.models.commentary import Commentary, RatingChoice
+from brand.models.contact import Contact
 from brand.tests.utils import create_test_brands
 from datasource.models import Banktrack, Usnic
-from django.urls import reverse
-from rest_framework.test import APIClient
-from django.contrib.auth.models import User
-from brand.models.contact import Contact
+
 from ..models import Brand
 
 
@@ -44,7 +48,6 @@ class BrandTestCase(TestCase):
 
     def test_create_spelling_dictionary(self):
         spelling_dict = Brand.create_spelling_dictionary()
-        # print(spelling_dict)
 
         self.assertTrue(spelling_dict.get("test brand 1"), 100)
         self.assertTrue(spelling_dict.get("test brand"), 100)
@@ -199,6 +202,65 @@ class CommentaryTestCase(TestCase):
             self.commentary5.compute_inherited_rating(throw_error=False), RatingChoice.UNKNOWN
         )
 
+    def test_feature_override_failure(self):
+        """
+        Test validation error raised when user tries to update feature_override field with invalid harvest feture yaml.
+        """
+        brand6 = Brand.objects.create(
+            tag="another_brand_6",
+            name="Another Brand 6",
+            aliases="another brand, anotherb",
+            website="https://www.anotherbwebaaaasite.com/somepage",
+            permid="another permid",
+            viafid="another viafid",
+            lei="another lei",
+            rssd="another rssd",
+        )
+
+        data = {
+            "customers_served": {
+                "business_and_corporate": {
+                    "offered": True,
+                    "additional_details": "some additional details",
+                    "urls": [],
+                }
+            }
+        }
+        with self.assertRaises(ValidationError):
+            commentary_obj = Commentary(brand=brand6, feature_override=data)
+            commentary_obj.full_clean()
+
+    def test_feature_override_success(self):
+        """
+        Test commentary object is saved successfully when user tries to update feature_override field with valid harvest feture yaml.
+        """
+        brand7 = Brand.objects.create(
+            tag="another_brand_7",
+            name="Another Brand 7",
+            aliases="another brand, anotherb",
+            website="https://www.anotherbwebaaaasite.com/somepage",
+            permid="another permid",
+            viafid="another viafid",
+            lei="another lei",
+            rssd="another rssd",
+        )
+
+        data = {
+            "customers_served": {
+                "corporate": {
+                    "offered": True,
+                    "additional_details": "some additional details",
+                    "urls": [],
+                }
+            }
+        }
+
+        commentary_obj = Commentary(brand=brand7, feature_override=data)
+        commentary_obj.full_clean()
+        commentary_obj.save()
+
+        self.assertEquals(commentary_obj.feature_override, data)
+
 
 class BrandTagTestCase(TestCase):
     # test for a Valid Tag
@@ -264,3 +326,71 @@ class GetContactsAPITestCase(TestCase):
                 response = self.client.get(path=url, QUERY_STRING="brandTag=xyz", **headers)
                 self.assertFalse(len(response.json()), "No contacts available for brandag=test_tag")
                 self.assertEqual(200, response.status_code)
+
+
+class BankAPITestCase(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(BankAPITestCase, cls).setUpClass()
+        User.objects.create_user(username="test", password="test123")
+        Brand.objects.create(
+            name="Existing bank",
+            tag="existing_tag",
+            description="Existing Description",
+            commentary={"rating": "bad"},
+        )
+
+
+class BankTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.token = "XYZSSAAA"
+        self.headers = {
+            "content_type": "application/json",
+            "HTTP_AUTHORIZATION": f"Token {self.token}",
+        }
+        # Create an existing brand instance for update tests
+        self.existing_brand = Brand.objects.create(
+            name="Existing bank", tag="existing_tag", description="Existing Description"
+        )
+        Commentary.objects.create(
+            brand=self.existing_brand, rating="worst", summary="Existing Summary"
+        )
+
+    def test_create_bank(self):
+        """
+        Test PUT /api/bank API endpoint creates a new entry for a non-existing tag
+        """
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            url = reverse("rest_api:bank")
+            data = {"name": "New bank", "tag": "new_tag", "commentary": {"rating": "good"}}
+            response = self.client.put(path=url, data=json.dumps(data), **self.headers)
+
+            brand_instance = Brand.objects.filter(tag="new_tag")
+            self.assertEqual(1, len(brand_instance))
+            self.assertEqual("New bank", brand_instance[0].name)
+            self.assertEqual("good", brand_instance[0].commentary.rating)
+
+    def test_update_bank(self):
+        """
+        Test PUT /api/bank API endpoint updates an entry on an existing tag
+        """
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            url = reverse("rest_api:bank")
+            data = {
+                "name": "Existing bank new name",
+                "tag": "existing_tag",
+                "commentary": {"rating": "good"},
+            }
+            response = self.client.put(path=url, data=json.dumps(data), **self.headers)
+
+            brand_instance = Brand.objects.filter(tag="existing_tag")
+            # Test that it doesn't make an extra copy
+            self.assertEqual(1, len(brand_instance))
+            # Test that the name is updated
+            self.assertEqual("Existing bank new name", brand_instance[0].name)
+            # Test that the commentary object is updated
+            self.assertEqual("good", brand_instance[0].commentary.rating)
+            # Test that existing data is not overwritten
+            self.assertEqual("Existing Summary", brand_instance[0].commentary.summary)
+            self.assertEqual("Existing Description", brand_instance[0].description)

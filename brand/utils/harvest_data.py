@@ -42,8 +42,8 @@ def update_commentary_feature_data(commentary, overwrite=False) -> None:
 
     if (
         overwrite
-        or not commentary.feature_refresh_date
-        or commentary.feature_refresh_date < timezone.now() - timedelta(days=90)
+        # or not commentary.feature_refresh_date
+        # or commentary.feature_refresh_date < timezone.now() - timedelta(days=90)
     ):
         data = fetch_harvest_data(
             brand_tag=commentary.brand.tag,

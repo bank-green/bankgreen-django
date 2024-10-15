@@ -1,0 +1,1021 @@
+{
+    "type": "object",
+    "properties": {
+      "customers_served": {
+        "type": "object",
+        "properties": {
+          "corporate": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered"
+            ],
+            "additionalProperties": false
+          },
+          "sme": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered"
+            ],
+            "additionalProperties": false
+          },
+          "retail_and_individual": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered"
+            ],
+            "additionalProperties": false
+          },
+          "nonprofit": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered"
+            ],
+            "additionalProperties": false
+          },
+          "government": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "minProperties": 1,
+        "additionalProperties": false
+      },
+      "institutional_information": {
+        "type": "object",
+        "properties": {
+          "year_founded": {
+            "type": "object",
+            "properties": {
+              "founded": {
+                "type": "integer"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "founded"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "year_founded"
+        ],
+        "additionalProperties": false
+      },
+      "services": {
+        "type": "object",
+        "properties": {
+          "mobile_banking": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "urls"
+            ],
+            "additionalProperties": false
+          },
+          "local_branches": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "urls"
+            ],
+            "additionalProperties": false
+          },
+          "ATM_network": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "urls"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "minProperties": 1,
+        "additionalProperties": false
+      },
+      "policies": {
+        "type": "object",
+        "properties": {
+          "environmental_policy": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered"
+            ],
+            "additionalProperties": false
+          },
+          "deposit_protection": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "urls"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "minProperties": 1,
+        "additionalProperties": false
+      },
+      "deposit_products": {
+        "type": "object",
+        "properties": {
+          "checkings_or_current": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "offered_to": {
+                "type": "object",
+                "properties": {
+                  "customer_type": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "corporate",
+                        "sme",
+                        "retail_and_individual",
+                        "nonprofit",
+                        "government"
+                      ]
+                    }
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "customer_type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "offered_to"
+            ],
+            "additionalProperties": false
+          },
+          "savings": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "offered_to": {
+                "type": "object",
+                "properties": {
+                  "customer_type": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "corporate",
+                        "sme",
+                        "retail_and_individual",
+                        "nonprofit",
+                        "government"
+                      ]
+                    }
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "customer_type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "offered_to"
+            ],
+            "additionalProperties": false
+          },
+          "ISAs": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "offered_to": {
+                "type": "object",
+                "properties": {
+                  "customer_type": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "corporate",
+                        "sme",
+                        "retail_and_individual",
+                        "nonprofit",
+                        "government"
+                      ]
+                    }
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "customer_type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "offered_to"
+            ],
+            "additionalProperties": false
+          },
+          "CDs": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "offered_to": {
+                "type": "object",
+                "properties": {
+                  "customer_type": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "corporate",
+                        "sme",
+                        "retail_and_individual",
+                        "nonprofit",
+                        "government"
+                      ]
+                    }
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "customer_type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "offered_to"
+            ],
+            "additionalProperties": false
+          },
+          "wealth_management": {
+            "type": "object",
+            "properties": {
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "offered_to": {
+                "type": "object",
+                "properties": {
+                  "customer_type": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "corporate",
+                        "sme",
+                        "retail_and_individual",
+                        "nonprofit",
+                        "government"
+                      ]
+                    }
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "customer_type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "offered_to"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "minProperties": 1,
+        "additionalProperties": false
+      },
+      "loan_products": {
+        "type": "object",
+        "properties": {
+          "corporate_lending": {
+            "type": "object",
+            "properties": {
+              "explanation": {
+                "type": "string"
+              },
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "offered_to": {
+                "type": "array",
+                "properties": {
+                  "customer_type": {
+                    "type": "string",
+                    "enum": [
+                      "corporate",
+                      "sme",
+                      "retail_and_individual",
+                      "nonprofit",
+                      "government"
+                    ]
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "additional_details": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "customer_type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "offered_to",
+              "explanation"
+            ],
+            "additionalProperties": false
+          },
+          "small_business_lending": {
+            "type": "object",
+            "properties": {
+              "explanation": {
+                "type": "string"
+              },
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "offered_to": {
+                "type": "array",
+                "properties": {
+                  "customer_type": {
+                    "type": "string",
+                    "enum": [
+                      "corporate",
+                      "sme",
+                      "retail_and_individual",
+                      "nonprofit",
+                      "government"
+                    ]
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "additional_details": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "customer_type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "offered_to",
+              "explanation"
+            ],
+            "additionalProperties": false
+          },
+          "equipment_lending": {
+            "type": "object",
+            "properties": {
+              "explanation": {
+                "type": "string"
+              },
+              "offered": {
+                "type": "boolean"
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "offered_to": {
+                "type": "array",
+                "properties": {
+                  "customer_type": {
+                    "type": "string",
+                    "enum": [
+                      "corporate",
+                      "sme",
+                      "retail_and_individual",
+                      "nonprofit",
+                      "government"
+                    ]
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "additional_details": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "customer_type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "offered_to",
+              "explanation"
+            ],
+            "additionalProperties": false
+          },
+          "credit_cards": {
+            "type": "object",
+            "properties": {
+              "explanation": {
+                "type": "string"
+              },
+              "offered": {
+                "type": "boolean"
+              },
+              "offered_to": {
+                "type": "array",
+                "properties": {
+                  "customer_type": {
+                    "type": "string",
+                    "enum": [
+                      "corporate",
+                      "sme",
+                      "retail_and_individual",
+                      "nonprofit",
+                      "government"
+                    ]
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "additional_details": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "customer_type"
+                ],
+                "additionalProperties": false
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "rates": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "customer_type": {
+                      "type": "string",
+                      "enum": [
+                        "corporate",
+                        "sme",
+                        "retail_and_individual",
+                        "nonprofit",
+                        "government"
+                      ]
+                    },
+                    "additional_details": {
+                      "type": "string"
+                    },
+                    "high_rate": {
+                      "type": "number"
+                    },
+                    "low_rate": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "additional_details",
+                    "high_rate",
+                    "low_rate",
+                    "customer_type"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered_to",
+              "offered",
+              "rates",
+              "explanation"
+            ],
+            "additionalProperties": false
+          },
+          "mortgages_or_loans": {
+            "type": "object",
+            "properties": {
+              "explanation": {
+                "type": "string"
+              },
+              "offered": {
+                "type": "boolean"
+              },
+              "offered_to": {
+                "type": "array",
+                "properties": {
+                  "customer_type": {
+                    "type": "string",
+                    "enum": [
+                      "corporate",
+                      "sme",
+                      "retail_and_individual",
+                      "nonprofit",
+                      "government"
+                    ]
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "additional_details": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "customer_type"
+                ],
+                "additionalProperties": false
+              },
+              "additional_details": {
+                "type": "string"
+              },
+              "rates": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "customer_type": {
+                      "type": "string",
+                      "enum": [
+                        "corporate",
+                        "sme",
+                        "retail_and_individual",
+                        "nonprofit",
+                        "government"
+                      ]
+                    },
+                    "additional_details": {
+                      "type": "string"
+                    },
+                    "high_rate": {
+                      "type": "number"
+                    },
+                    "low_rate": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "additional_details",
+                    "high_rate",
+                    "low_rate",
+                    "customer_type"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "additional_details",
+              "offered",
+              "offered_to",
+              "rates",
+              "explanation"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "minProperties": 1,
+        "additionalProperties": false
+      },
+      "financial_features": {
+        "type": "object",
+        "properties": {
+          "interest_rates": {
+            "type": "object",
+            "properties": {
+              "explanation": {
+                "type": "string"
+              },
+              "urls": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "rates": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "customer_type": {
+                      "type": "string",
+                      "enum": [
+                        "corporate",
+                        "sme",
+                        "retail_and_individual",
+                        "nonprofit",
+                        "government"
+                      ]
+                    },
+                    "deposit_product": {
+                      "type": "string",
+                      "enum": [
+                        "checkings_or_current",
+                        "savings",
+                        "ISAs",
+                        "CDs",
+                        "wealth_management"
+                      ]
+                    },
+                    "additional_details": {
+                      "type": "string"
+                    },
+                    "high_rate": {
+                      "type": "number"
+                    },
+                    "low_rate": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "additional_details",
+                    "high_rate",
+                    "low_rate",
+                    "customer_type",
+                    "deposit_product"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "rates",
+              "explanation"
+            ],
+            "additionalProperties": false
+          },
+          "fees": {
+            "type": "object",
+            "properties": {
+              "available_without_overdraft_fees": {
+                "type": "object",
+                "properties": {
+                  "explanation": {
+                    "type": "string"
+                  },
+                  "offered_to": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "customer_type": {
+                          "type": "string",
+                          "enum": [
+                            "corporate",
+                            "sme",
+                            "retail_and_individual",
+                            "nonprofit",
+                            "government"
+                          ]
+                        },
+                        "deposit_product": {
+                          "type": "string",
+                          "enum": [
+                            "checkings_or_current",
+                            "savings",
+                            "ISAs",
+                            "CDs",
+                            "wealth_management"
+                          ]
+                        },
+                        "available": {
+                          "type": "boolean"
+                        },
+                        "additional_details": {
+                          "type": "string"
+                        },
+                        "urls": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "additional_details",
+                        "available",
+                        "customer_type",
+                        "deposit_product"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "offered_to",
+                  "explanation"
+                ],
+                "additionalProperties": false
+              },
+              "available_without_account_maintenance_fee": {
+                "type": "object",
+                "properties": {
+                  "explanation": {
+                    "type": "string"
+                  },
+                  "offered_to": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "customer_type": {
+                          "type": "string",
+                          "enum": [
+                            "corporate",
+                            "sme",
+                            "retail_and_individual",
+                            "nonprofit",
+                            "government"
+                          ]
+                        },
+                        "deposit_product": {
+                          "type": "string",
+                          "enum": [
+                            "checkings_or_current",
+                            "savings",
+                            "ISAs",
+                            "CDs",
+                            "wealth_management"
+                          ]
+                        },
+                        "available": {
+                          "type": "boolean"
+                        },
+                        "additional_details": {
+                          "type": "string"
+                        },
+                        "urls": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "additional_details",
+                        "available",
+                        "customer_type",
+                        "deposit_product"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "offered_to",
+                  "explanation"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "minProperties": 1,
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": false
+  }

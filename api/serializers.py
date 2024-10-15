@@ -1,6 +1,9 @@
-from rest_framework import serializers
-from brand.models.brand_suggestion import BrandSuggestion
 from django_countries.fields import Country
+from rest_framework import serializers
+
+from brand.models.brand import Brand
+from brand.models.brand_suggestion import BrandSuggestion
+from brand.models.commentary import Commentary
 from brand.models.contact import Contact
 
 
@@ -51,3 +54,20 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = ["fullname", "email", "brand_tag"]
+
+
+class CommentarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Commentary
+        fields = "__all__"  # Specify the fields you want to include
+
+
+class BrandSerializer(serializers.ModelSerializer):
+    countries = MultipleCountryField(required=True)
+    commentary = CommentarySerializer(
+        read_only=True
+    )  # Add the related Commentary object as a nested serializer
+
+    class Meta:
+        model = Brand
+        fields = "__all__"
