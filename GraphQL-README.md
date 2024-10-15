@@ -353,11 +353,20 @@ query {
 
 ```graphql
 query {
-  harvestData(tag: "atmos", customersServed: "corporate") {
+  harvestData(tag: "atmos", customersServed: "corporate", financialFeatures: "interest_rates") {
     customersServed
     depositProducts
   }
 }
 ```
 
+```
+{
+  commentary(id: "Q29tbWVudGFyeTozMzc="){
+    harvestData(customersServed: "corporate"){
+      customersServed
+    }
+  }
+}
+```
 This query will return the customersServed and depositProducts data for the bank with the tag "atmos", filtering the customersServed field to only include entries containing the word "corporate".
