@@ -1,6 +1,7 @@
 import ast
 import json
 import logging
+import re
 
 from django.db.models import Case, Count, Q, When
 
@@ -9,7 +10,8 @@ from cities_light.models import Region as RegionModel
 from cities_light.models import SubRegion as SubRegionModel
 from django_countries import countries
 from django_countries.graphql.types import Country
-from django_filters import BooleanFilter, ChoiceFilter, FilterSet, MultipleChoiceFilter
+from django_filters import (BooleanFilter, ChoiceFilter, FilterSet,
+                            MultipleChoiceFilter)
 from graphene import Scalar, relay
 from graphene_django import DjangoListField, DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
@@ -19,14 +21,15 @@ from markdown.extensions.footnotes import FootnoteExtension
 
 from brand.models.commentary import RatingChoice
 from datasource.models.datasource import Datasource as DatasourceModel
-from utils.brand_utils import fetch_cached_harvest_data, filter_json_field
+from utils.brand_utils import filter_json_field
 
 from .models import Brand as BrandModel
 from .models import BrandFeature as BrandFeatureModel
 from .models import Commentary as CommentaryModel
 from .models import EmbraceCampaign as EmbraceCampaignModel
 from .models import FeatureType as FeatureModel
-from .models.commentary import InstitutionCredential as InstitutionCredentialModel
+from .models.commentary import \
+    InstitutionCredential as InstitutionCredentialModel
 from .models.commentary import InstitutionType as InstitutionTypeModel
 
 
@@ -209,7 +212,7 @@ class InstitutionCredentialType(DjangoObjectType):
 class JSONScalar(Scalar):
     @staticmethod
     def serialize(value):
-        return json.loads(value)
+        return value
 
     @staticmethod
     def parse_literal(node):
@@ -241,14 +244,29 @@ class Commentary(DjangoObjectType):
         graphene.String, resolver=lambda obj, info: obj.rating_inherited
     )
     top_pick = graphene.Boolean()
-    harvest_data = graphene.Field(HarvestData)
+    harvest_data = graphene.Field(
+        HarvestData,
+        customers_served=graphene.String(),
+        deposit_products=graphene.String(),
+        financial_features=graphene.String(),
+        services=graphene.String(),
+        institutional_information=graphene.String(),
+        policies=graphene.String(),
+        loan_products=graphene.String(),
+        interest_rates=graphene.String(),
+    )
 
     def resolve_top_pick(obj, info):
         return obj.top_pick
 
-    def resolve_harvest_data(self, info):
+    def resolve_harvest_data(self, info, **kwargs):
+        """returns filtered feature yaml"""
         try:
-            return fetch_cached_harvest_data(self.brand.tag)
+            if not self.feature_json:
+                raise GraphQLError(f"No harvest data found for brand tag: {self.brand.tag}")
+
+            filtered_data = filter_harvest_data(self.feature_json, info, **kwargs)
+            return HarvestData(**filtered_data)
         except Exception as e:
             logging.error(f"Error fetching harvest data for {self.brand.tag}: {str(e)}")
             return None
@@ -291,6 +309,32 @@ class EmbraceCampaignType(DjangoObjectType):
     class Meta:
         model = EmbraceCampaignModel
         fields = ("id", "name", "description", "configuration")
+
+
+def filter_harvest_data(cached_harvest_data, info, **kwargs):
+    # Apply filters
+    filtered_data = {}
+    try:
+        # fetch request fields from  the query
+        requested_fields = [
+            field.name.value for field in info.field_nodes[0].selection_set.selections
+        ]
+        requested_fields = [
+            re.sub("([a-z])([A-Z])", r"\1_\2", field).lower() for field in requested_fields
+        ]
+
+        # iterate over query params
+        for field, value in kwargs.items():
+            filtered_data[field] = filter_json_field(cached_harvest_data[field], value)
+
+        # iterate over query requested fields
+        for field in set(requested_fields) - (set(kwargs.keys())):
+            field = re.sub("([a-z])([A-Z])", r"\1_\2", field).lower()
+            filtered_data[field] = cached_harvest_data[field]
+
+        return filtered_data
+    except Exception as error:
+        raise GraphQLError("An unexpected error occurred") from error
 
 
 class Query(graphene.ObjectType):
@@ -347,30 +391,25 @@ class Query(graphene.ObjectType):
 
     def resolve_harvest_data(self, info, tag, **kwargs):
         try:
-            cached_data = fetch_cached_harvest_data(tag)
+            # fetch feature yaml data from commentary model filtered by tag
+            brand_qs = BrandModel.objects.get(tag=tag)
+            cached_data = brand_qs.commentary.feature_json
 
-            # Apply filters
-            filtered_data = {}
-            for field, value in kwargs.items():
-                if field in cached_data:
-                    filtered_data[field] = filter_json_field(cached_data[field], value)
-                else:
-                    logger.warning(f"Field '{field}' not found for brand tag: {tag}")
+            # if feature yaml is null, raise graphql error for not found
+            if not cached_data:
+                raise GraphQLError(f"No harvest data found for brand tag: {tag}")
 
-            # If no fields were successfully filtered, raise an error
+            filtered_data = filter_harvest_data(cached_data, info, **kwargs)
             if not filtered_data:
                 raise GraphQLError(f"No matching data found for brand tag: {tag}")
 
             return HarvestData(**filtered_data)
-        except requests.RequestException as e:
-            logger.error(f"Error fetching harvest data for {tag}: {str(e)}")
-            raise GraphQLError(f"Failed to fetch harvest data: {str(e)}") from e
         except json.JSONDecodeError as e:
             logger.error(f"Error decoding harvest data for {tag}: {str(e)}")
-            raise GraphQLError("Invalid data received from harvest API") from e
+            raise GraphQLError("Error decoding harvest data") from e
         except Exception as e:
             logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
-            raise GraphQLError("An unexpected error occurred while fetching harvest data") from e
+            raise GraphQLError("An unexpected error occurred") from e
 
     brands = DjangoFilterConnectionField(Brand)
 
