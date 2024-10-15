@@ -35,12 +35,11 @@ class PrettyJSONEncoder(JSONEncoder):
 
 
 def filter_json_field(json_data, filter_value):
+    if filter_value not in json_data.keys():
+        return f"{filter_value} is not the correct filtered value"
+
     if isinstance(json_data, dict):
-        return {
-            k: filter_json_field(v, filter_value)
-            for k, v in json_data.items()
-            if filter_json_field(v, filter_value) is not None
-        }
+        return {filter_value: json_data[filter_value]}
     elif isinstance(json_data, list):
         return [
             filter_json_field(item, filter_value)
@@ -52,13 +51,3 @@ def filter_json_field(json_data, filter_value):
     elif isinstance(json_data, (int, float)) and filter_value.lower() in str(json_data).lower():
         return json_data
     return None
-
-
-def fetch_cached_harvest_data(tag):
-    try:
-        response = requests.get(f"https://data.bank.green/api/harvest/{tag}")
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as e:
-        logging.error(f"Error fetching harvest data for {tag}: {str(e)}")
-        raise
