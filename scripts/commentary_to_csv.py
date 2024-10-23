@@ -36,10 +36,10 @@ with open(csv_file, "w", newline="") as file:
             {
                 "brand_tag": c.brand.tag,
                 "rating": c.rating_inherited,
-                "headline/header": c.header,
+                "headline/header": c.headline,
                 "custom subtitle/subtitle": c.subtitle,
-                "description1/summary": c.summary,
-                "description2/details": c.details,
+                "description1/summary": c.description1,
+                "description2/details": c.description2,
             }
         )
 
