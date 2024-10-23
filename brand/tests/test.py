@@ -354,7 +354,7 @@ class BankTestCase(TestCase):
             name="Existing bank", tag="existing_tag", description="Existing Description"
         )
         Commentary.objects.create(
-            brand=self.existing_brand, rating="worst", summary="Existing Summary"
+            brand=self.existing_brand, rating="worst", description1="Existing Summary"
         )
 
     def test_create_bank(self):
@@ -392,5 +392,5 @@ class BankTestCase(TestCase):
             # Test that the commentary object is updated
             self.assertEqual("good", brand_instance[0].commentary.rating)
             # Test that existing data is not overwritten
-            self.assertEqual("Existing Summary", brand_instance[0].commentary.summary)
+            self.assertEqual("Existing Summary", brand_instance[0].commentary.description1)
             self.assertEqual("Existing Description", brand_instance[0].description)

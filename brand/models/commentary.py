@@ -183,31 +183,31 @@ class Commentary(models.Model):
 
     # subtitle shown on bank pages
     subtitle = models.TextField(
-        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
+        help_text="subtitle shown on bank pages.",
         blank=True,
     )
 
     # Formerly header, shown on the bank page in the first section
     headline = models.TextField(
-        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
+        help_text="Formerly header, shown on the bank page in the first section.",
         blank=True,
     )
 
-    # Formerly details, shown on the bank page in the first section
+    # Formerly summary, shown on the bank page in the first section
     description1 = models.TextField(
-        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
+        help_text="Formerly summary, shown on the bank page in the first section.",
         blank=True,
     )
 
     # Formerly details, shown on the bank page in the second section
     description2 = models.TextField(
-        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
+        help_text="Formerly details, shown on the bank page in the second section.",
         blank=True,
     )
 
     # formerly from_the_website, shown on the bank page in the third section
     description3 = models.TextField(
-        help_text="Deprecated. Text is not used in new SFI pages unless no other text is specified in prismic.",
+        help_text="formerly from_the_website, shown on the bank page in the third section.",
         blank=True,
     )
 
