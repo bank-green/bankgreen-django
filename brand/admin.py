@@ -22,6 +22,7 @@ from datasource.models.datasource import Datasource, SuggestedAssociation
 
 from .models import Brand, Contact
 from .utils.harvest_data import update_commentary_feature_data
+from django.contrib import messages 
 
 
 @admin.register(Commentary)
@@ -326,7 +327,11 @@ class BrandAdmin(VersionAdmin):
         This function is to create object of commentary model when default values are
         provided by user in admin portal and save the data in respective database.
         """
-        super().save_model(request, obj, form, change)
+        # Check if there's already a brand with the same tag
+        if Brand.objects.filter(tag=obj.tag).exists() and not change:  # `change` is False for new objects
+            messages.error(request, f"A brand with tag '{obj.tag}' already exists. Please edit that brand instead.")
+        else:
+            super().save_model(request, obj, form, change)
         try:
             obj.commentary
         except ObjectDoesNotExist as e:
@@ -334,6 +339,7 @@ class BrandAdmin(VersionAdmin):
             obj.commentary = commentary_obj
             obj.save()
         update_commentary_feature_data(obj.commentary)
+        
 
     def get_queryset(self, request):
         # filter out all but base class
