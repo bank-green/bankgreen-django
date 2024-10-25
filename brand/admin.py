@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
@@ -22,7 +22,6 @@ from datasource.models.datasource import Datasource, SuggestedAssociation
 
 from .models import Brand, Contact
 from .utils.harvest_data import update_commentary_feature_data
-from django.contrib import messages
 
 
 @admin.register(Commentary)
