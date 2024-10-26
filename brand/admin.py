@@ -87,9 +87,6 @@ class CommentaryInline(admin.StackedInline):
     autocomplete_fields = ["inherit_brand_rating"]
     readonly_fields = (
         "rating_inherited",
-        "header",
-        "summary",
-        "details",
         "associated_contacts",
         "feature_yaml",
         "feature_refresh_date",

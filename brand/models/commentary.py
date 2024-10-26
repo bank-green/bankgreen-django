@@ -123,7 +123,6 @@ class Commentary(models.Model):
         return self.compute_inherited_rating()
 
     def compute_inherited_rating(self, inheritance_set=None, throw_error=False):
-
         inheritance_set = set() if inheritance_set is None else inheritance_set
         brand_in_inheritance_set = self.brand.tag in inheritance_set
 
@@ -173,47 +172,41 @@ class Commentary(models.Model):
         default=False,
     )
 
-    # DEPRECATED
-    from_the_website = models.TextField(
-        help_text="Deprecated. Text is not used in new SFI pages unless no other text is specified in prismic.",
-        blank=True,
-    )
-
-    # DEPRECATED. Text has been moved to SFIPages in prismic
-    our_take = models.TextField(
-        help_text="Positive. used to to give our take on green banks", blank=True
-    )
-
     institution_type = models.ManyToManyField(InstitutionType, blank=True, help_text="Positive")
 
     institution_credentials = models.ManyToManyField(
         InstitutionCredential, blank=True, help_text="Positive"
     )
 
-    # General Commentary
+    # Fields shown on the website
 
-    # DEPRECATED. Text has been moved to BankPage in prismic
-    subtitle = models.TextField(
-        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
+    # subtitle shown on bank pages
+    subtitle = models.TextField(help_text="subtitle shown on bank pages.", blank=True)
+
+    # Formerly header, shown on the bank page in the first section
+    headline = models.TextField(
+        help_text="Formerly header, shown on the bank page in the first section.", blank=True
+    )
+
+    # Formerly summary, shown on the bank page in the first section
+    description1 = models.TextField(
+        help_text="Formerly summary, shown on the bank page in the first section.", blank=True
+    )
+
+    # Formerly details, shown on the bank page in the second section
+    description2 = models.TextField(
+        help_text="Formerly details, shown on the bank page in the second section.", blank=True
+    )
+
+    # formerly from_the_website, shown on the bank page in the third section
+    description3 = models.TextField(
+        help_text="formerly from_the_website, shown on the bank page in the third section.",
         blank=True,
     )
 
-    # DEPRECATED. Text has been moved to BankPage in prismic
-    header = models.TextField(
-        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
-        blank=True,
-    )
-
-    # DEPRECATED. Text has been moved to BankPage in prismic
-    summary = models.TextField(
-        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
-        blank=True,
-    )
-
-    # DEPRECATED. Text has been moved to BankPage in prismic
-    details = models.TextField(
-        help_text="This text has been or is in the process of being migrated to prismic and is now read only.",
-        blank=True,
+    # Shown on the sustainable banks pages
+    our_take = models.TextField(
+        help_text="Positive. used to to give our take on green banks", blank=True
     )
 
     feature_refresh_date = models.DateTimeField(null=True, blank=True)
