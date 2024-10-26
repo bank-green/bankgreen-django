@@ -201,7 +201,7 @@ class Commentary(DjangoObjectType):
     description1 = HtmlFromMarkdown()
     description2 = HtmlFromMarkdown()
     description3 = HtmlFromMarkdown()
-    headline = HtmlFromMarkdown()   
+    headline = HtmlFromMarkdown()
     subtitle = HtmlFromMarkdown()
     rating_inherited = graphene.Field(
         graphene.String, resolver=lambda obj, info: obj.rating_inherited

@@ -123,7 +123,6 @@ class Commentary(models.Model):
         return self.compute_inherited_rating()
 
     def compute_inherited_rating(self, inheritance_set=None, throw_error=False):
-
         inheritance_set = set() if inheritance_set is None else inheritance_set
         brand_in_inheritance_set = self.brand.tag in inheritance_set
 

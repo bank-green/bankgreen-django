@@ -11,7 +11,6 @@ class Switchit(Datasource):
 
     @classmethod
     def load_and_create(cls):
-
         with open("./datasource/local/switchit/providers.json") as json_file:
             data = json.load(json_file)
             # print(data['bank_providers'])
