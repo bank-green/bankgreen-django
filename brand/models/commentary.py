@@ -204,11 +204,7 @@ class Commentary(models.Model):
         blank=True,
     )
 
-    from_the_website = models.TextField(
-        help_text="needed for site compatibility",
-        blank=True,
-    )
-
+    from_the_website = models.TextField(help_text="needed for site compatibility", blank=True)
 
     # Shown on the sustainable banks pages
     our_take = models.TextField(
