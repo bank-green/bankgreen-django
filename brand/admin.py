@@ -328,7 +328,7 @@ class BrandAdmin(VersionAdmin):
         """
         # Check if there's already a brand with the same tag
         if (
-            Brand.objects.filter(tag=obj.tag).exists() and not change
+            not change and Brand.objects.filter(tag=obj.tag).exists()
         ):  # `change` is False for new objects
             messages.error(
                 request,
