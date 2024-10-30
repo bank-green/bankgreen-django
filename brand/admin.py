@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib import admin, messages
+from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
@@ -326,16 +326,7 @@ class BrandAdmin(VersionAdmin):
         This function is to create object of commentary model when default values are
         provided by user in admin portal and save the data in respective database.
         """
-        # Check if there's already a brand with the same tag
-        if (
-            not change and Brand.objects.filter(tag=obj.tag).exists()
-        ):  # `change` is False for new objects
-            messages.error(
-                request,
-                f"A brand with tag '{obj.tag}' already exists. Please edit that brand instead.",
-            )
-        else:
-            super().save_model(request, obj, form, change)
+        super().save_model(request, obj, form, change)
         try:
             obj.commentary
         except ObjectDoesNotExist as e:

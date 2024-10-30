@@ -20,7 +20,12 @@ from datasource.constants import lev_distance, model_names
 def validate_tag(value):
     """This is the function that is used to validate the TAG"""
     if re.match("^[A-Za-z0-9_-]*$", str(value)):
-        return value
+        if Brand.objects.filter(tag=value).exists():
+            raise ValidationError(
+                f"A brand with tag '{value}' already exists. Please edit that brand instead."
+            )
+        else:
+            return value          
     else:
         raise ValidationError(
             "Tag can contain only alpha-numeric characters, underscores and dashes"
