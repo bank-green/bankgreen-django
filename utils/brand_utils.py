@@ -1,7 +1,4 @@
-import logging
 from json import JSONEncoder
-
-import requests
 
 from brand.models import BrandFeature
 from brand.models.commentary import InstitutionCredential, InstitutionType
@@ -36,7 +33,7 @@ class PrettyJSONEncoder(JSONEncoder):
 
 def filter_json_field(json_data, filter_value):
     if filter_value not in json_data.keys():
-        return f"{filter_value} is not the correct filtered value"
+        return f"No data available for '{filter_value}' "
 
     if isinstance(json_data, dict):
         return {filter_value: json_data[filter_value]}
