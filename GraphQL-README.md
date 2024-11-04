@@ -369,4 +369,16 @@ query {
   }
 }
 ```
+
+```
+{
+  allHarvestData(depositProducts: "wealth_management"){
+    tag
+    features{
+      customersServed
+      depositProducts
+    }
+  }
+}
+```
 This query will return the customersServed and depositProducts data for the bank with the tag "atmos", filtering the customersServed field to only include entries containing the word "corporate".
