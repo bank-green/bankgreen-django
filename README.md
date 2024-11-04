@@ -12,10 +12,11 @@ This project uses python 3.10. You will need to install "[pip](https://pip.pypa.
 ## Creating a virtual environment \<venv\>
 
 `virtualenv <venv>`
-
+(For windows:  python -m venv venv)
 ## Activating the virtual environment
 
 `source <venv>/bin/activate`
+(For windows: venv\Scripts\activate)
 
 ## Installing packages
 

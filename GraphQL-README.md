@@ -28,14 +28,14 @@ query BrandsQuery(
         aliases
         commentary @include(if: $withCommentary) {
           rating
-          fromTheWebsite
           ourTake
           amountFinancedSince2016
           fossilFreeAlliance
           subtitle
-          header
-          summary
-          details
+          headline
+          description1
+          description2
+          description3
           fossilFreeAllianceRating
           showOnSustainableBanksPage
           institutionType {
@@ -90,15 +90,15 @@ query BrandByTagQuery($tag: String!) {
     website
     commentary {
       rating
-      fromTheWebsite
       ourTake
       amountFinancedSince2016
       fossilFreeAlliance
       topPick
       subtitle
-      header
-      summary
-      details
+      headline
+      description1
+      description2
+      description3
       fossilFreeAllianceRating
       showOnSustainableBanksPage
       institutionType {
@@ -152,15 +152,15 @@ query BrandByNameQuery($name: String!) {
     website
     commentary {
       rating
-      fromTheWebsite
       ourTake
       amountFinancedSince2016
       fossilFreeAlliance
       topPick
       subtitle
-      header
-      summary
-      details
+      headline
+      description1
+      description2
+      description3
       fossilFreeAllianceRating
       showOnSustainableBanksPage
       institutionType {
@@ -239,14 +239,14 @@ query BrandsQuery(
         }
         commentary @include(if: $withCommentary) {
           rating
-          fromTheWebsite
           ourTake
           amountFinancedSince2016
           fossilFreeAlliance
           subtitle
-          header
-          summary
-          details
+          headline
+          description1
+          description2
+          description3
           fossilFreeAllianceRating
           showOnSustainableBanksPage
         }

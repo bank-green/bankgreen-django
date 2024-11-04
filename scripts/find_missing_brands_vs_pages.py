@@ -16,7 +16,6 @@ prismic_filter_documents_url = "/documents/search"
 
 
 def get_ref_id():
-
     try:
         response = requests.get(prismic_base_url)
         if response.status_code == 200:
@@ -32,7 +31,6 @@ def get_ref_id():
 
 
 def get_prismic_documents(document_type, ref_number):
-
     bank_uids = []
 
     if (not document_type) or (not ref_number):
@@ -43,7 +41,6 @@ def get_prismic_documents(document_type, ref_number):
     url = prismic_base_url + prismic_filter_documents_url
 
     while url:
-
         try:
             response = requests.get(url, params=params)
 

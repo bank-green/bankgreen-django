@@ -239,9 +239,11 @@ class HarvestDataDictionary(graphene.ObjectType):
 
 
 class Commentary(DjangoObjectType):
-    summary = HtmlFromMarkdown()
-    header = HtmlFromMarkdown()
-    details = HtmlFromMarkdown()
+    description1 = HtmlFromMarkdown()
+    description2 = HtmlFromMarkdown()
+    description3 = HtmlFromMarkdown()
+    from_the_website = HtmlFromMarkdown()
+    headline = HtmlFromMarkdown()
     subtitle = HtmlFromMarkdown()
     rating_inherited = graphene.Field(
         graphene.String, resolver=lambda obj, info: obj.rating_inherited

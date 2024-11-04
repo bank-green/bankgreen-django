@@ -19,12 +19,11 @@ from datasource.constants import lev_distance, model_names
 
 def validate_tag(value):
     """This is the function that is used to validate the TAG"""
-    if re.match("^[A-Za-z0-9_-]*$", str(value)):
-        return value
-    else:
+    if not re.match("^[A-Za-z0-9_-]*$", str(value)):
         raise ValidationError(
             "Tag can contain only alpha-numeric characters, underscores and dashes"
         )
+    return value
 
 
 class Brand(TimeStampedModel):
@@ -109,6 +108,13 @@ class Brand(TimeStampedModel):
 
     def __repr__(self):
         return f"<{type(self).__name__}: {self.tag}: {self.pk}>"
+
+    def clean(self):
+        super().clean()
+        if Brand.objects.filter(tag=self.tag).exclude(pk=self.pk).exists():
+            raise ValidationError(
+                f"A brand with tag {self.tag} already exists. Please edit that brand instead."
+            )
 
     def refresh_name(self, overwrite_existing=False):
         # if the existing name is the default, we are overwriting
