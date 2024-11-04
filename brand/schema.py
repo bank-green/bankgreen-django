@@ -233,6 +233,11 @@ class HarvestData(graphene.ObjectType):
     interest_rates = JSONScalar()
 
 
+class HarvestDataDictionary(graphene.ObjectType):
+    features = graphene.Field(HarvestData)
+    tag = graphene.String()
+
+
 class Commentary(DjangoObjectType):
     summary = HtmlFromMarkdown()
     header = HtmlFromMarkdown()
@@ -262,8 +267,11 @@ class Commentary(DjangoObjectType):
         try:
             if not self.feature_json:
                 raise GraphQLError(f"No harvest data found for brand tag: {self.brand.tag}")
+            requested_fields = [
+                field.name.value for field in info.field_nodes[0].selection_set.selections
+            ]
 
-            filtered_data = filter_harvest_data(self.feature_json, info, **kwargs)
+            filtered_data = filter_harvest_data(self.feature_json, requested_fields, **kwargs)
             return HarvestData(**filtered_data)
         except Exception as e:
             logging.error(f"Error fetching harvest data for {self.brand.tag}: {str(e)}")
@@ -309,14 +317,10 @@ class EmbraceCampaignType(DjangoObjectType):
         fields = ("id", "name", "description", "configuration")
 
 
-def filter_harvest_data(cached_harvest_data, info, **kwargs):
+def filter_harvest_data(cached_harvest_data, requested_fields, **kwargs):
     # Apply filters
     filtered_data = {}
     try:
-        # fetch request fields from  the query
-        requested_fields = [
-            field.name.value for field in info.field_nodes[0].selection_set.selections
-        ]
         requested_fields = [
             re.sub("([a-z])([A-Z])", r"\1_\2", field).lower() for field in requested_fields
         ]
@@ -328,7 +332,10 @@ def filter_harvest_data(cached_harvest_data, info, **kwargs):
         # iterate over query requested fields
         for field in set(requested_fields) - (set(kwargs.keys())):
             field = re.sub("([a-z])([A-Z])", r"\1_\2", field).lower()
-            filtered_data[field] = cached_harvest_data[field]
+            try:
+                filtered_data[field] = cached_harvest_data[field]
+            except KeyError:
+                continue
 
         return filtered_data
     except Exception as error:
@@ -353,6 +360,19 @@ class Query(graphene.ObjectType):
     harvest_data = graphene.Field(
         HarvestData,
         tag=graphene.String(required=True),
+        customers_served=graphene.String(),
+        deposit_products=graphene.String(),
+        financial_features=graphene.String(),
+        services=graphene.String(),
+        institutional_information=graphene.String(),
+        policies=graphene.String(),
+        loan_products=graphene.String(),
+        interest_rates=graphene.String(),
+    )
+
+    all_harvest_data = graphene.List(
+        HarvestDataDictionary,
+        tag=graphene.String(required=False),
         customers_served=graphene.String(),
         deposit_products=graphene.String(),
         financial_features=graphene.String(),
@@ -392,12 +412,15 @@ class Query(graphene.ObjectType):
             # fetch feature yaml data from commentary model filtered by tag
             brand_qs = BrandModel.objects.get(tag=tag)
             cached_data = brand_qs.commentary.feature_json
+            requested_fields = [
+                field.name.value for field in info.field_nodes[0].selection_set.selections
+            ]
 
             # if feature yaml is null, raise graphql error for not found
             if not cached_data:
                 raise GraphQLError(f"No harvest data found for brand tag: {tag}")
 
-            filtered_data = filter_harvest_data(cached_data, info, **kwargs)
+            filtered_data = filter_harvest_data(cached_data, requested_fields, **kwargs)
             if not filtered_data:
                 raise GraphQLError(f"No matching data found for brand tag: {tag}")
 
@@ -405,6 +428,44 @@ class Query(graphene.ObjectType):
         except json.JSONDecodeError as e:
             logger.error(f"Error decoding harvest data for {tag}: {str(e)}")
             raise GraphQLError("Error decoding harvest data") from e
+        except Exception as e:
+            logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
+            raise GraphQLError("An unexpected error occurred") from e
+
+    def resolve_all_harvest_data(self, info, **kwargs):
+        commentary_queries = CommentaryModel.objects.all()
+        tag_feature_json_dict = {
+            query.brand.tag: query.feature_json for query in commentary_queries
+        }
+
+        filtered_data = []
+
+        try:
+            features_field = next(
+                (
+                    field
+                    for field in info.field_nodes[0].selection_set.selections
+                    if field.name.value == "features"
+                ),
+                None,
+            )
+            if features_field and features_field.selection_set:
+                requested_fields = features_field.selection_set.selections
+                requested_fields = [field.name.value for field in requested_fields]
+
+            for tag, feature_json in tag_feature_json_dict.items():
+                filtered_data.append(
+                    {
+                        "tag": tag,
+                        "features": (
+                            filter_harvest_data(feature_json, requested_fields, **kwargs)
+                            if feature_json
+                            else {}
+                        ),
+                    }
+                )
+
+            return [HarvestDataDictionary(**data) for data in filtered_data]
         except Exception as e:
             logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
             raise GraphQLError("An unexpected error occurred") from e
