@@ -374,7 +374,6 @@ class Query(graphene.ObjectType):
 
     all_harvest_data = graphene.List(
         HarvestDataDictionary,
-        tag=graphene.String(required=False),
         customers_served=graphene.String(),
         deposit_products=graphene.String(),
         financial_features=graphene.String(),
