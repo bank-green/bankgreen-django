@@ -314,3 +314,98 @@ query{
   }
 }
 ```
+
+## New Endpoint: harvestData
+
+Allows you to fetch and filter harvest data for sustainable banks.
+
+### Query
+
+```graphql
+query {
+  harvestData(
+    tag: String!
+    customersServed: String
+    depositProducts: String
+    financialFeatures: String
+    services: String
+    institutionalInformation: String
+    policies: String
+    loanProducts: String
+    interestRates: String
+  ) {
+    customersServed
+    depositProducts
+    financialFeatures
+    services
+    institutionalInformation
+    policies
+    loanProducts
+    interestRates
+  }
+}
+```
+```graphql
+query {
+  allHarvestData(
+    customersServed: String
+    depositProducts: String
+    financialFeatures: String
+    services: String
+    institutionalInformation: String
+    policies: String
+    loanProducts: String
+    interestRates: String
+  ) {
+    tag,
+    features{
+      customersServed
+      depositProducts
+      financialFeatures
+      services
+      institutionalInformation
+      policies
+      loanProducts
+      interestRates
+    }
+  }
+}
+```
+- *tag* is not required for **allHarvestData** query but required for **harvestData**. In **harvestData** query, you should pass tag of the bank (as param) you want to fetch data for.
+- All other parameters are optional and can be used for filtering the respective fields.
+
+### Example
+
+```graphql
+query {
+  harvestData(tag: "atmos", customersServed: "corporate", financialFeatures: "interest_rates") {
+    customersServed
+    depositProducts
+  }
+}
+```
+
+```
+{
+  commentary(id: "Q29tbWVudGFyeTozMzc="){
+    harvestData(customersServed: "corporate"){
+      customersServed
+      depositProducts
+    }
+  }
+}
+```
+
+The above two queries will return the customersServed and depositProducts data for the bank with the tag "atmos", filtering the customersServed field to only include entries containing the word "corporate".
+
+```
+{
+  allHarvestData(depositProducts: "wealth_management"){
+    tag
+    features{
+      depositProducts
+    }
+  }
+}
+```
+The above query will return the depositProducts data for all banks, filtering the depositProducts field to only include entries containing the word "wealth_management".
