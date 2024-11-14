@@ -341,7 +341,7 @@ def filter_harvest_data(cached_harvest_data, requested_fields, **kwargs):
 
         return filtered_data
     except Exception as error:
-        raise GraphQLError("An unexpected error occurred") from error
+        raise GraphQLError(str(error))
 
 
 class Query(graphene.ObjectType):
@@ -428,10 +428,10 @@ class Query(graphene.ObjectType):
             return HarvestData(**filtered_data)
         except json.JSONDecodeError as e:
             logger.error(f"Error decoding harvest data for {tag}: {str(e)}")
-            raise GraphQLError("Error decoding harvest data") from e
+            raise GraphQLError(str(e))
         except Exception as e:
             logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
-            raise GraphQLError("An unexpected error occurred") from e
+            raise GraphQLError(str(e))
 
     def resolve_all_harvest_data(self, info, **kwargs):
         commentary_queries = CommentaryModel.objects.all()
@@ -469,7 +469,7 @@ class Query(graphene.ObjectType):
             return [HarvestDataDictionary(**data) for data in filtered_data]
         except Exception as e:
             logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
-            raise GraphQLError("An unexpected error occurred") from e
+            raise GraphQLError(str(e))
 
     brands = DjangoFilterConnectionField(Brand)
 
