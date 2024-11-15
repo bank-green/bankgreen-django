@@ -431,7 +431,7 @@ class Query(graphene.ObjectType):
             raise GraphQLError(str(e))
         except Exception as e:
             logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
-            raise GraphQLError(str(e))
+            return
 
     def resolve_all_harvest_data(self, info, **kwargs):
         commentary_queries = CommentaryModel.objects.all()
