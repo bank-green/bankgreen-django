@@ -19,9 +19,9 @@ from datasource.constants import lev_distance, model_names
 
 def validate_tag(value):
     """This is the function that is used to validate the TAG"""
-    if not re.match("^[A-Za-z0-9_-]*$", str(value)):
+    if not re.match("^[a-z0-9_-]*$", str(value)):
         raise ValidationError(
-            "Tag can contain only alpha-numeric characters, underscores and dashes"
+            "Tag can contain only lower case alpha-numeric characters, underscores and dashes"
         )
     return value
 
