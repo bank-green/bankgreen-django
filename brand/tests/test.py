@@ -265,20 +265,26 @@ class CommentaryTestCase(TestCase):
 class BrandTagTestCase(TestCase):
     # test for a Valid Tag
     def test_brand_valid_tag(self):
-        brand1 = Brand(name="Test Brand 1", tag="Tag_Brand-1")
+        brand1 = Brand(name="Test Brand 1", tag="tag_brand-1")
         # this should not raise any errors
         brand1.save()
 
     # test for an Invalid Tags
-    def test_brand_invalid_tag(self):
+    def test_brand_invalid_tag_lowercase_chars(self):
         # test case with not allowed characters
-        brand1 = Brand(name="Test Brand 1", tag="TagBrand%$1")
+        brand1 = Brand(name="Test Brand 1", tag="tagbrand%$1")
 
         with self.assertRaises(ValidationError):
             brand1.save()
 
         # test case with the spaces
-        brand1 = Brand(name="Test Brand 1", tag="Tag Brand 1")
+        brand1 = Brand(name="Test Brand 1", tag="tag brand 1")
+
+        with self.assertRaises(ValidationError):
+            brand1.save()
+
+        # test case with uppercase charachters
+        brand1 = Brand(name="Test Brand 1", tag="TagBrand")
 
         with self.assertRaises(ValidationError):
             brand1.save()
