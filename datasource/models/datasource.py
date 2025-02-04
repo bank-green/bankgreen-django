@@ -3,12 +3,11 @@ import re
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from Levenshtein import distance as lev
 from model_utils.models import TimeStampedModel
 
 from brand.models.brand import Brand
 
-from ..constants import lev_distance, model_names, read_only_fields
+from ..constants import model_names
 
 
 class classproperty(property):
