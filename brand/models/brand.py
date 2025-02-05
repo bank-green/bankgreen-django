@@ -13,6 +13,7 @@ from model_utils.models import TimeStampedModel
 import datasource.models as dsm
 from datasource.constants import model_names
 
+
 def validate_tag(value):
     """This is the function that is used to validate the TAG"""
     if not re.match("^[a-z0-9_-]*$", str(value)):
