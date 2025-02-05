@@ -1,6 +1,6 @@
 black==24.3.0
 isort==5.10.1
-Django==5.0.6
+Django==5.1.5
 django-ajax-selects==2.2.0
 django-braces==1.15.0
 django-cryptography==1.0
@@ -8,7 +8,7 @@ django-debug-toolbar==3.2.4
 django-extensions==3.1.5
 django-model-utils==4.2.0
 djangorestframework==3.15.2
-django-reversion==5.0.12
+django-reversion==5.1.0
 django-cors-headers==3.12.0
 django-json-widget==1.1.1
 networkx==2.5.1
