@@ -36,5 +36,3 @@ model_names = [
     "usnic",
     "wikidata",
 ]
-
-lev_distance = 3
