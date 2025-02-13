@@ -7,8 +7,7 @@ from django.db import models
 
 import yaml
 from jsonschema import validate
-from jsonschema.exceptions import ValidationError as YamlValidationError
-from yamlfield.fields import YAMLField
+from jsonschema.exceptions import ValidationError as JSONValidationError
 
 from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
@@ -28,17 +27,14 @@ def load_harvest_validation_schema():
         raise Exception(io_err)
 
 
-def validate_feature_override_yaml(feature_yaml) -> None:
-    # Ensure feature_yaml format is of dict/yaml type
-    if not isinstance(feature_yaml, dict):
-        raise ValidationError(f"Only yaml format is accepted")
+def validate_feature_override(feature_override) -> None:
     try:
         harvest_feature_schema = load_harvest_validation_schema()
-        for feature, _ in feature_yaml.items():
+        for feature, _ in feature_override.items():
             if not feature in harvest_feature_schema["properties"].keys():
                 raise ValidationError(f"{feature} is not a valid feature")
-            validate(feature_yaml[feature], harvest_feature_schema["properties"][feature])
-    except YamlValidationError as err:
+            validate(feature_override[feature], harvest_feature_schema["properties"][feature])
+    except JSONValidationError as err:
         raise ValidationError(err.message)
     except Exception as err:
         raise Exception(err)
@@ -213,12 +209,12 @@ class Commentary(models.Model):
 
     feature_refresh_date = models.DateTimeField(null=True, blank=True)
     feature_json = models.JSONField(null=True, blank=True, default=dict)
-    feature_override = YAMLField(
+    feature_override = models.JSONField(
         blank=True,
         default=dict,
-        verbose_name="Update Feature (Yaml)",
-        validators=[validate_feature_override_yaml],
-        help_text="Provide harvest features in yaml format with valid keys",
+        verbose_name="Update Feature",
+        validators=[validate_feature_override],
+        help_text="Provide harvest features in json with valid keys",
     )
 
     @property
