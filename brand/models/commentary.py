@@ -9,7 +9,6 @@ import yaml
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError as JSONValidationError
 
-
 from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
 
