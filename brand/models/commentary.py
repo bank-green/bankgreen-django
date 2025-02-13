@@ -28,13 +28,13 @@ def load_harvest_validation_schema():
         raise Exception(io_err)
 
 
-def validate_feature_override(feature_yaml) -> None:
+def validate_feature_override(feature_override) -> None:
     try:
         harvest_feature_schema = load_harvest_validation_schema()
-        for feature, _ in feature_yaml.items():
+        for feature, _ in feature_override.items():
             if not feature in harvest_feature_schema["properties"].keys():
                 raise ValidationError(f"{feature} is not a valid feature")
-            validate(feature_yaml[feature], harvest_feature_schema["properties"][feature])
+            validate(feature_override[feature], harvest_feature_schema["properties"][feature])
     except JSONValidationError as err:
         raise ValidationError(err.message)
     except Exception as err:
