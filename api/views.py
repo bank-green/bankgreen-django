@@ -10,7 +10,12 @@ from brand.models.commentary import Commentary
 from brand.models.contact import Contact
 
 from .authentication import SingleTokenAuthentication
-from .serializers import BrandSerializer, BrandSuggestionSerializer, ContactSerializer
+from .serializers import (
+    BrandSerializer,
+    BrandSuggestionSerializer,
+    CommentaryFeatureOverrideSerializer,
+    ContactSerializer,
+)
 
 
 class BrandSuggestionAPIView(APIView):
@@ -90,3 +95,24 @@ class BrandsView(APIView):
             status_code = status.HTTP_200_OK if brand_instance else status.HTTP_201_CREATED
             return Response(serializer.data, status=status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CommentaryFeatureOverride(APIView):
+    permission_classes = []
+    authentication_classes = [SingleTokenAuthentication]
+    renderer_classes = [JSONRenderer]
+
+    def get(self, request, pk):
+        if not pk:
+            return Response(
+                {"error": "Commentary Id missing in request url."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        commentary_instance = Commentary.objects.filter(pk=pk).first()
+        if not commentary_instance:
+            return Response(
+                {"error": "Commentary does not exsist"}, status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = CommentaryFeatureOverrideSerializer(commentary_instance)
+
+        return Response(serializer.data.get("feature_override"))

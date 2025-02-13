@@ -400,3 +400,48 @@ class BankTestCase(TestCase):
             # Test that existing data is not overwritten
             self.assertEqual("Existing Summary", brand_instance[0].commentary.description1)
             self.assertEqual("Existing Description", brand_instance[0].description)
+
+
+class CommentaryFeatureOverrideTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.token = "XYZSSAAA"
+        self.headers = {
+            "content_type": "application/json",
+            "HTTP_AUTHORIZATION": f"Token {self.token}",
+        }
+        self.existing_brand = Brand.objects.create(
+            name="Existing bank", tag="existing_tag", description="Existing Description"
+        )
+        self.existing_brand_commentary = Commentary.objects.create(
+            brand=self.existing_brand,
+            rating="worst",
+            description1="Existing Summary",
+            feature_override={
+                "customers_served": {
+                    "corporate": {
+                        "additional_details": "some additional details",
+                        "offered": True,
+                        "urls": [],
+                    }
+                }
+            },
+        )
+
+    def test_get_success(self):
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            url = reverse("rest_api:commentary_feature_override", kwargs={"pk": 1})
+            response = self.client.get(path=url, **self.headers)
+            expected = self.existing_brand_commentary.feature_override
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json(), expected)
+
+    def test_get_missing_commentary_failure(self):
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            nonexsistant_commentary_id = 9999
+            url = reverse(
+                "rest_api:commentary_feature_override", kwargs={"pk": nonexsistant_commentary_id}
+            )
+            response = self.client.get(path=url, **self.headers)
+            self.assertEqual(response.status_code, 404)
+            self.assertEqual(response.json(), {"error": "Commentary does not exsist"})
