@@ -213,13 +213,6 @@ class Commentary(models.Model):
 
     feature_refresh_date = models.DateTimeField(null=True, blank=True)
     feature_json = models.JSONField(null=True, blank=True, default=dict)
-    feature_override = YAMLField(
-        blank=True,
-        default=dict,
-        verbose_name="Update Feature (Yaml)",
-        validators=[validate_feature_override_yaml],
-        help_text="Provide harvest features in yaml format with valid keys",
-    )
 
     @property
     def feature_yaml(self):
