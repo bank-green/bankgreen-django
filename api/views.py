@@ -116,3 +116,24 @@ class CommentaryFeatureOverride(APIView):
         serializer = CommentaryFeatureOverrideSerializer(commentary_instance)
 
         return Response(serializer.data.get("feature_override"))
+
+    def put(self, request, pk):
+        if not pk:
+            return Response(
+                {"error": "Commentary Id missing in request url."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        commentary_instance = Commentary.objects.filter(pk=pk).first()
+        if not commentary_instance:
+            return Response(
+                {"error": "Commentary does not exsist"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        commentary_instance = Commentary.objects.filter(pk=pk).first()
+        serializer = CommentaryFeatureOverrideSerializer(
+            commentary_instance, data={"feature_override": request.data}, partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data["feature_override"], status=status.HTTP_200_OK)
+        return Response(serializer.errors["feature_override"], status=status.HTTP_400_BAD_REQUEST)
