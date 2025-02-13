@@ -12,7 +12,7 @@ from yamlfield.fields import YAMLField
 
 from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
-
+from django.utils.timezone import now
 
 @lru_cache(maxsize=1)
 def load_harvest_validation_schema():
@@ -107,6 +107,15 @@ class Commentary(models.Model):
 
     display_on_website = models.BooleanField(default=False)
     comment = models.TextField(help_text="Meta. Comments for staff and/or editors", blank=True)
+
+    # date reviewed field
+    last_reviewed = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="date of last rating update"
+    )
+
+
     rating = models.CharField(
         max_length=8,
         null=False,
@@ -237,7 +246,13 @@ class Commentary(models.Model):
         # Ensure no cycles when saving
         self.compute_inherited_rating(throw_error=True)
 
+    # updating last_viewed
     def save(self, *args, **kwargs):
+        if self.pk: 
+            original = Commentary.objects.get(pk=self.pk)
+            if original.rating != self.rating: #Only update last viewed
+                self.last_reviewed = now()
+        
         if self.inherit_brand_rating:
             self.rating = RatingChoice.INHERIT
 
