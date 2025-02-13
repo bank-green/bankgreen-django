@@ -259,7 +259,7 @@ class CommentaryTestCase(TestCase):
         commentary_obj.full_clean()
         commentary_obj.save()
 
-        self.assertEquals(commentary_obj.feature_override, data)
+        self.assertEqual(commentary_obj.feature_override, data)
 
 
 class BrandTagTestCase(TestCase):
