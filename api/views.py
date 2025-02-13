@@ -136,4 +136,6 @@ class CommentaryFeatureOverride(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data["feature_override"], status=status.HTTP_200_OK)
-        return Response(serializer.errors["feature_override"], status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": serializer.errors["feature_override"]}, status=status.HTTP_400_BAD_REQUEST
+        )

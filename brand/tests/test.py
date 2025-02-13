@@ -450,17 +450,17 @@ class CommentaryFeatureOverrideTestCase(TestCase):
             self.assertEqual(response.json(), {"error": "Commentary does not exsist"})
 
     def test_put_combines_feature_success(self):
-        valid_feature_data = {
-            "policies": {
-                "environmental_policy": {
-                    "additional_details": "Comprehensive testing on mocking, mockdiversity, and climate stub.",
-                    "offered": True,
-                    "urls": ["https://www.somebankurl.url/"],
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            valid_feature_data = {
+                "policies": {
+                    "environmental_policy": {
+                        "additional_details": "Comprehensive testing on mocking, mockdiversity, and climate stub.",
+                        "offered": True,
+                        "urls": ["https://www.somebankurl.url/"],
+                    }
                 }
             }
-        }
-        expected_updated = {**self.mock_feature_override, **valid_feature_data}
-        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            expected_updated = {**self.mock_feature_override, **valid_feature_data}
             url = reverse(
                 "rest_api:commentary_feature_override", kwargs={"pk": self.exisitng_commentary.id}
             )
@@ -468,7 +468,6 @@ class CommentaryFeatureOverrideTestCase(TestCase):
                 path=url, data=json.dumps(valid_feature_data), **self.headers
             )
             updated = Commentary.objects.get(id=self.exisitng_commentary.id)
-
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.json(), expected_updated, updated.feature_override)
 
@@ -511,5 +510,9 @@ class CommentaryFeatureOverrideTestCase(TestCase):
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
                 response.json(),
-                ["Additional properties are not allowed ('business_and_corporate' was unexpected)"],
+                {
+                    "error": [
+                        "Additional properties are not allowed ('business_and_corporate' was unexpected)"
+                    ]
+                },
             )
