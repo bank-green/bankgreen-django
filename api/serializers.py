@@ -77,12 +77,3 @@ class CommentaryFeatureOverrideSerializer(serializers.ModelSerializer):
     class Meta:
         model = Commentary
         fields = ["feature_override"]
-
-    def update(self, instance, validated_data):
-        # we want to update feature_override with new values while preserving the existing ones
-        if "feature_override" in validated_data:
-            for k, v in validated_data.get("feature_override", instance.feature_override).items():
-                instance.feature_override[k] = v
-        instance.save()
-
-        return instance

@@ -449,7 +449,7 @@ class CommentaryFeatureOverrideTestCase(TestCase):
             self.assertEqual(response.status_code, 404)
             self.assertEqual(response.json(), {"error": "Commentary does not exsist"})
 
-    def test_put_combines_feature_success(self):
+    def test_put_override_feature_success(self):
         with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
             valid_feature_data = {
                 "policies": {
@@ -460,7 +460,6 @@ class CommentaryFeatureOverrideTestCase(TestCase):
                     }
                 }
             }
-            expected_updated = {**self.mock_feature_override, **valid_feature_data}
             url = reverse(
                 "rest_api:commentary_feature_override", kwargs={"pk": self.exisitng_commentary.id}
             )
@@ -469,7 +468,7 @@ class CommentaryFeatureOverrideTestCase(TestCase):
             )
             updated = Commentary.objects.get(id=self.exisitng_commentary.id)
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.json(), expected_updated, updated.feature_override)
+            self.assertEqual(response.json(), valid_feature_data, updated.feature_override)
 
     def test_put_creates_feature_success(self):
         with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
