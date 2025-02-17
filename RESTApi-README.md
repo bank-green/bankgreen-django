@@ -61,9 +61,9 @@ updates the bank at the specified tag.  fields not specified in the body will no
 
   curl command : `curl --location --request PUT 'http://127.0.0.1:8000/api/bank' \ --header 'Authorization: YOUR_TOKEN_HERE' \ --header 'Content-Type: application/json' \ --data '{ "name": "New Bank", "tag": "bank_tag" }'`
 
-# Fetch Commentary `feature_override`
+# Fetch Brand's Commentary `feature_override`
 ```
-  endpoint : /commentaries/[commentary id]/feature_override/
+  endpoint : /commentaries/[brand id]/feature_override/
              example : /commentaries/22/feature_override/
   method : GET
   authentication: token required
@@ -78,7 +78,7 @@ updates the bank at the specified tag.  fields not specified in the body will no
   failure response returns json with an "error" key
             example : { "error": "Commentary does not exsist" }
 ```
-  curl command : `curl --location 'http://127.0.0.1:8000/api/commentaries/someId/feature_override' --header 'Authorization: YOUR_TOKEN_HERE'`
+  curl command : `curl --location 'http://127.0.0.1:8000/api/commentaries/someBrandId/feature_override' --header 'Authorization: YOUR_TOKEN_HERE'`
 
 # Create or update a Brand's Commentary's `feature_override`
 
