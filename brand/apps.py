@@ -7,4 +7,3 @@ class BrandConfig(AppConfig):
 
     def ready(self):
         import brand.signals
-

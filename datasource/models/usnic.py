@@ -9,7 +9,9 @@ from django.db.utils import IntegrityError
 import pandas as pd
 from cities_light.models import Country, Region, SubRegion
 from django_countries.fields import CountryField
-from jsonfield import JSONField
+from django_jsonfield_backport.models import JSONField
+
+# from jsonfield import JSONField
 from symspellpy import SymSpell, Verbosity
 
 from brand.models.brand import Brand

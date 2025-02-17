@@ -14,6 +14,7 @@ from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
 from django.utils.timezone import now
 
+
 @lru_cache(maxsize=1)
 def load_harvest_validation_schema():
     """
@@ -110,11 +111,8 @@ class Commentary(models.Model):
 
     # date reviewed field
     last_reviewed = models.DateTimeField(
-        null=True,
-        blank=True,
-        help_text="date of last rating update"
+        null=True, blank=True, help_text="date of last rating update"
     )
-
 
     rating = models.CharField(
         max_length=8,
@@ -248,11 +246,11 @@ class Commentary(models.Model):
 
     # updating last_viewed
     def save(self, *args, **kwargs):
-        if self.pk: 
+        if self.pk:
             old = Commentary.objects.filter(pk=self.pk).first()
-            if old and old.rating != self.rating: #Only update last viewed
+            if old and old.rating != self.rating:  # Only update last viewed
                 self.last_reviewed = now()
-        
+
         if self.inherit_brand_rating:
             self.rating = RatingChoice.INHERIT
 

@@ -37,6 +37,7 @@ from rest_framework.response import Response
 from brand.models import Commentary
 from api.serializers import CommentarySerializer
 
+
 class RegionAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         # Don't forget to filter out results depending on the visitor !
@@ -202,7 +203,8 @@ def check_prismic_mismatches(request):
         context={"missing_brands_pages": missing_brands_pages},
     )
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 def get_bank_commentary(request, bank_id):
     try:
         commentary = Commentary.objects.get(brand_id=bank_id)

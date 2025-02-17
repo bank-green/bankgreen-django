@@ -2,7 +2,7 @@ import traceback
 
 from django.db import models
 
-import np
+import numpy as np
 import pandas as pd
 from django_countries.fields import CountryField
 from qwikidata.sparql import return_sparql_query_results

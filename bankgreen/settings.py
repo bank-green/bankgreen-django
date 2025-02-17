@@ -47,6 +47,7 @@ ALLOWED_HOSTS = (
     os.environ.get("ALLOWED_HOSTS").split(" ") if os.environ.get("ALLOWED_HOSTS") else []
 )
 
+
 # Calendar URL
 SEMI_PUBLIC_CALENDAR_URL = os.environ.get("CALENDAR_URL")
 

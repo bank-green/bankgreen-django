@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from django.utils.timezone import now
 from .models import Commentary
 
+
 @receiver(pre_save, sender=Commentary)
 def update_last_reviewed(sender, instance, **kwargs):
     """
