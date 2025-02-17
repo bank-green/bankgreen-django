@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 blank=True,
                 default=dict,
                 help_text="Provide harvest features in yaml format with valid keys",
-                validators=[brand.models.commentary.validate_feature_override],
+                validators=[],
                 verbose_name="Update Feature (Yaml)",
             ),
         )
