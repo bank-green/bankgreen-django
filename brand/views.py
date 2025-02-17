@@ -32,6 +32,10 @@ from .forms import BrandFeaturesForm
 from .models import Brand, BrandFeature
 from .models.commentary import InstitutionCredential, InstitutionType
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from brand.models import Commentary
+from api.serializers import CommentarySerializer
 
 class RegionAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -197,6 +201,15 @@ def check_prismic_mismatches(request):
         "missing_brand_vs_prismic_pages.html",
         context={"missing_brands_pages": missing_brands_pages},
     )
+
+@api_view(['GET'])
+def get_bank_commentary(request, bank_id):
+    try:
+        commentary = Commentary.objects.get(brand_id=bank_id)
+        serializer = CommentarySerializer(commentary)
+        return Response(serializer.data)
+    except Commentary.DoesNotExist:
+        return Response({"error": "Bank commentary not found"}, status=404)
 
 
 class CustomPasswordResetView(PasswordResetView):
