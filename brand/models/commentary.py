@@ -249,8 +249,8 @@ class Commentary(models.Model):
     # updating last_viewed
     def save(self, *args, **kwargs):
         if self.pk: 
-            original = Commentary.objects.get(pk=self.pk)
-            if original.rating != self.rating: #Only update last viewed
+            old = Commentary.objects.filter(pk=self.pk).first()
+            if old and old.rating != self.rating: #Only update last viewed
                 self.last_reviewed = now()
         
         if self.inherit_brand_rating:
