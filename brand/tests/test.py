@@ -432,7 +432,7 @@ class CommentaryFeatureOverrideTestCase(TestCase):
     def test_get_success(self):
         with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
             url = reverse(
-                "rest_api:commentary_feature_override", kwargs={"pk": self.exisitng_commentary.id}
+                "rest_api:brand_feature_override", kwargs={"brand_id": self.exisitng_commentary.id}
             )
             response = self.client.get(path=url, **self.headers)
             expected = self.exisitng_commentary.feature_override
@@ -443,11 +443,11 @@ class CommentaryFeatureOverrideTestCase(TestCase):
         with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
             nonexsistant_commentary_id = 9999
             url = reverse(
-                "rest_api:commentary_feature_override", kwargs={"pk": nonexsistant_commentary_id}
+                "rest_api:brand_feature_override", kwargs={"brand_id": nonexsistant_commentary_id}
             )
             response = self.client.get(path=url, **self.headers)
             self.assertEqual(response.status_code, 404)
-            self.assertEqual(response.json(), {"error": "Commentary does not exsist"})
+            self.assertEqual(response.json(), {"error": "Brand's Commentary does not exsist"})
 
     def test_put_override_feature_success(self):
         with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
@@ -461,7 +461,7 @@ class CommentaryFeatureOverrideTestCase(TestCase):
                 }
             }
             url = reverse(
-                "rest_api:commentary_feature_override", kwargs={"pk": self.exisitng_commentary.id}
+                "rest_api:brand_feature_override", kwargs={"brand_id": self.exisitng_commentary.id}
             )
             response = self.client.put(
                 path=url, data=json.dumps(valid_feature_data), **self.headers
@@ -478,8 +478,8 @@ class CommentaryFeatureOverrideTestCase(TestCase):
                 description1="Existing Summary",
             )
             url = reverse(
-                "rest_api:commentary_feature_override",
-                kwargs={"pk": commentary_without_feature_override.id},
+                "rest_api:brand_feature_override",
+                kwargs={"brand_id": commentary_without_feature_override.id},
             )
             response = self.client.put(
                 path=url, data=json.dumps(self.mock_feature_override), **self.headers
@@ -500,7 +500,7 @@ class CommentaryFeatureOverrideTestCase(TestCase):
                 }
             }
             url = reverse(
-                "rest_api:commentary_feature_override", kwargs={"pk": self.exisitng_commentary.id}
+                "rest_api:brand_feature_override", kwargs={"brand_id": self.exisitng_commentary.id}
             )
             response = self.client.put(
                 path=url, data=json.dumps(invalid_feature_data), **self.headers

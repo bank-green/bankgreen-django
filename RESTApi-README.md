@@ -80,10 +80,10 @@ updates the bank at the specified tag.  fields not specified in the body will no
 ```
   curl command : `curl --location 'http://127.0.0.1:8000/api/commentaries/someId/feature_override' --header 'Authorization: YOUR_TOKEN_HERE'`
 
-# Create or update a Commentary's `feature_override`
+# Create or update a Brand's Commentary's `feature_override`
 
 ```
-  endpoint : /commentaries/[commentary id]/feature_override/
+  endpoint : /commentaries/[brand id]/feature_override/
              example : /commentaries/22/feature_override/
   method : PUT
   authentication: token required
@@ -102,15 +102,10 @@ updates the bank at the specified tag.  fields not specified in the body will no
                             "additional_details": "Comprehensive testing on mocking, mockdiversity, and climate stub.",
                         }
                       },
-                    "customers_served": {
-                        "corporate": {
-                            "additional_details": "some additional details",
-                        }
-                      },
-                    }
+                     }
   failure response returns json with an "error" key
             example : {
                         "error": ["Additional properties are not allowed ('business_and_corporate' was unexpected)"]
                       }
 ```
-  curl command : `curl --location --request PUT 'http://127.0.0.1:8000/api/commentaries/someId/feature_override' \ --header 'Authorization: YOUR_TOKEN_HERE' \ --header 'Content-Type: application/json' \ --data '{"policies":{"environmental_policy":{"additional_details":"Comprehensive testing on mocking, mockdiversity, and climate stub."}}}'`
+  curl command : `curl --location --request PUT 'http://127.0.0.1:8000/api/commentaries/someBrandId/feature_override' \ --header 'Authorization: YOUR_TOKEN_HERE' \ --header 'Content-Type: application/json' \ --data '{"policies":{"environmental_policy":{"additional_details":"Comprehensive testing on mocking, mockdiversity, and climate stub."}}}'`
