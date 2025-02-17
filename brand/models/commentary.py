@@ -4,6 +4,7 @@ from functools import lru_cache
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils.timezone import now
 
 import yaml
 from jsonschema import validate
@@ -12,7 +13,6 @@ from yamlfield.fields import YAMLField
 
 from brand.models import Brand
 from brand.models.embrace_campaign import EmbraceCampaign
-from django.utils.timezone import now
 
 
 @lru_cache(maxsize=1)

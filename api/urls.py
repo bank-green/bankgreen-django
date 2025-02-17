@@ -1,7 +1,8 @@
 from django.urls import path
 
-from . import views
 from brand.views import get_bank_commentary
+
+from . import views
 
 
 app_name = "rest_api"

@@ -19,7 +19,11 @@ from django.views.generic import CreateView
 
 from cities_light.models import Region, SubRegion
 from dal import autocomplete
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
+from api.serializers import CommentarySerializer
+from brand.models import Commentary
 from scripts.check_duplicates import return_all_duplicates
 from scripts.find_missing_brands_vs_pages import (
     get_missing_brand_and_bankpages,
@@ -31,11 +35,6 @@ from utils.brand_utils import concat_brand_feature_data, get_institution_data
 from .forms import BrandFeaturesForm
 from .models import Brand, BrandFeature
 from .models.commentary import InstitutionCredential, InstitutionType
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from brand.models import Commentary
-from api.serializers import CommentarySerializer
 
 
 class RegionAutocomplete(autocomplete.Select2QuerySetView):
