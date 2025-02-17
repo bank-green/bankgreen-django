@@ -259,7 +259,7 @@ class CommentaryTestCase(TestCase):
         commentary_obj.full_clean()
         commentary_obj.save()
 
-        self.assertEquals(commentary_obj.feature_override, data)
+        self.assertEqual(commentary_obj.feature_override, data)
 
 
 class BrandTagTestCase(TestCase):
@@ -400,3 +400,118 @@ class BankTestCase(TestCase):
             # Test that existing data is not overwritten
             self.assertEqual("Existing Summary", brand_instance[0].commentary.description1)
             self.assertEqual("Existing Description", brand_instance[0].description)
+
+
+class CommentaryFeatureOverrideTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.token = "XYZSSAAA"
+        self.headers = {
+            "content_type": "application/json",
+            "HTTP_AUTHORIZATION": f"Token {self.token}",
+        }
+        self.mock_feature_override = {
+            "customers_served": {
+                "corporate": {
+                    "additional_details": "some additional details",
+                    "offered": True,
+                    "urls": [],
+                }
+            }
+        }
+        self.existing_brand = Brand.objects.create(
+            name="Existing bank", tag="existing_tag", description="Existing Description"
+        )
+        self.exisitng_commentary = Commentary.objects.create(
+            brand=self.existing_brand,
+            rating="worst",
+            description1="Existing Summary",
+            feature_override=self.mock_feature_override,
+        )
+
+    def test_get_success(self):
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            url = reverse(
+                "rest_api:brand_feature_override", kwargs={"brand_id": self.exisitng_commentary.id}
+            )
+            response = self.client.get(path=url, **self.headers)
+            expected = self.exisitng_commentary.feature_override
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json(), expected)
+
+    def test_get_missing_commentary_failure(self):
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            nonexsistant_commentary_id = 9999
+            url = reverse(
+                "rest_api:brand_feature_override", kwargs={"brand_id": nonexsistant_commentary_id}
+            )
+            response = self.client.get(path=url, **self.headers)
+            self.assertEqual(response.status_code, 404)
+            self.assertEqual(response.json(), {"error": "Brand's Commentary does not exsist"})
+
+    def test_put_override_feature_success(self):
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            valid_feature_data = {
+                "policies": {
+                    "environmental_policy": {
+                        "additional_details": "Comprehensive testing on mocking, mockdiversity, and climate stub.",
+                        "offered": True,
+                        "urls": ["https://www.somebankurl.url/"],
+                    }
+                }
+            }
+            url = reverse(
+                "rest_api:brand_feature_override", kwargs={"brand_id": self.exisitng_commentary.id}
+            )
+            response = self.client.put(
+                path=url, data=json.dumps(valid_feature_data), **self.headers
+            )
+            updated = Commentary.objects.get(id=self.exisitng_commentary.id)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json(), valid_feature_data, updated.feature_override)
+
+    def test_put_creates_feature_success(self):
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            commentary_without_feature_override = Commentary.objects.create(
+                brand=Brand.objects.create(name="b", tag="b", description="d"),
+                rating="worst",
+                description1="Existing Summary",
+            )
+            url = reverse(
+                "rest_api:brand_feature_override",
+                kwargs={"brand_id": commentary_without_feature_override.id},
+            )
+            response = self.client.put(
+                path=url, data=json.dumps(self.mock_feature_override), **self.headers
+            )
+
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json(), self.mock_feature_override)
+
+    def test_put_invalid_data_failure(self):
+        with self.settings(REST_API_CONTACT_SINGLE_TOKEN=self.token):
+            invalid_feature_data = {
+                "customers_served": {
+                    "business_and_corporate": {
+                        "offered": True,
+                        "additional_details": "some additional details",
+                        "urls": [],
+                    }
+                }
+            }
+            url = reverse(
+                "rest_api:brand_feature_override", kwargs={"brand_id": self.exisitng_commentary.id}
+            )
+            response = self.client.put(
+                path=url, data=json.dumps(invalid_feature_data), **self.headers
+            )
+
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(),
+                {
+                    "error": [
+                        "Additional properties are not allowed ('business_and_corporate' was unexpected)"
+                    ]
+                },
+            )

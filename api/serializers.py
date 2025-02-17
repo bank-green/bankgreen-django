@@ -71,3 +71,9 @@ class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
         fields = "__all__"
+
+
+class CommentaryFeatureOverrideSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Commentary
+        fields = ["feature_override"]

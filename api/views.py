@@ -1,5 +1,4 @@
 from rest_framework import permissions, status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,7 +9,12 @@ from brand.models.commentary import Commentary
 from brand.models.contact import Contact
 
 from .authentication import SingleTokenAuthentication
-from .serializers import BrandSerializer, BrandSuggestionSerializer, ContactSerializer
+from .serializers import (
+    BrandSerializer,
+    BrandSuggestionSerializer,
+    CommentaryFeatureOverrideSerializer,
+    ContactSerializer,
+)
 
 
 class BrandSuggestionAPIView(APIView):
@@ -90,3 +94,48 @@ class BrandsView(APIView):
             status_code = status.HTTP_200_OK if brand_instance else status.HTTP_201_CREATED
             return Response(serializer.data, status=status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BrandFeatureOverride(APIView):
+    permission_classes = []
+    authentication_classes = [SingleTokenAuthentication]
+    renderer_classes = [JSONRenderer]
+
+    def get(self, request, brand_id):
+        if not brand_id:
+            return Response(
+                {"error": "Brand Id missing in request url."}, status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            commentary_instance = Commentary.objects.get(brand_id=brand_id)
+        except:
+            return Response(
+                {"error": "Brand's Commentary does not exsist"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = CommentaryFeatureOverrideSerializer(commentary_instance)
+
+        return Response(serializer.data.get("feature_override"))
+
+    def put(self, request, brand_id):
+        if not brand_id:
+            return Response(
+                {"error": "Brand Id missing in request url."}, status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            commentary_instance = Commentary.objects.get(brand_id=brand_id)
+        except:
+            return Response(
+                {"error": "Brand's Commentary does not exsist"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        commentary_instance = Commentary.objects.filter(pk=brand_id).first()
+        serializer = CommentaryFeatureOverrideSerializer(
+            commentary_instance, data={"feature_override": request.data}, partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data["feature_override"], status=status.HTTP_200_OK)
+        return Response(
+            {"error": serializer.errors["feature_override"]}, status=status.HTTP_400_BAD_REQUEST
+        )
