@@ -5,8 +5,6 @@ from django.utils.html import escape, format_html
 
 from cities_light.models import Country, Region, SubRegion
 
-from datasource.models.datasource import Datasource
-
 
 class LinkedDatasourcesFilter(admin.SimpleListFilter):
     title = "Linked Datasources"
