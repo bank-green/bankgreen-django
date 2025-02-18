@@ -1,4 +1,5 @@
 import json
+import time
 
 from brand.models import Brand, Commentary, Contact
 from brand.models.commentary import InstitutionType, RatingChoice
@@ -13,7 +14,6 @@ exec(open('scripts/groot_357_import_ireland_credit_unions/iclu_to_brand.py').rea
 DIR = "scripts/groot_357_import_ireland_credit_unions/"
 # !NOTE: get iclu.json from GROOT-357 ticket
 IRISH_STANDARD_CREDIT_UNIONS = DIR + "iclu.json"
-FAILED_FILE = DIR + "failed.json"
 SUCCESS_TAGS_FILE = DIR + "success_tags.json"
 
 
@@ -97,13 +97,12 @@ print("Number of failed: ", len(failed))
 # save a json list of successfull tags
 with open(SUCCESS_TAGS_FILE, "w") as outfile:
     data = {}
-    data["tags"] = list(successful_tags)
+    data["tags"] = list(successful_tags) + already_saved_tags
     json.dump(data, outfile, indent=2)
 
 # save a json list of the failed attempts
-with open(FAILED_FILE, "w") as outfile:
-    d = {}
-    d["failed"] = failed
-    json.dump(d, outfile, indent=2)
+timestamp = str(round(time.time()))
+with open(DIR + f"failed_{timestamp}.json", "w") as outfile:
+    json.dump(failed, outfile, indent=2)
 
 print("Done")
