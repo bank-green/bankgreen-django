@@ -12,6 +12,10 @@ from brand.models.contact import Contact
 from .authentication import SingleTokenAuthentication
 from .serializers import BrandSerializer, BrandSuggestionSerializer, ContactSerializer
 
+from api.serializers import CommentarySerializer
+from brand.models import Commentary
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 class BrandSuggestionAPIView(APIView):
     permission = [permissions.IsAuthenticated]
@@ -90,3 +94,13 @@ class BrandsView(APIView):
             status_code = status.HTTP_200_OK if brand_instance else status.HTTP_201_CREATED
             return Response(serializer.data, status=status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+    @api_view(["GET"])
+    def get_bank_commentary(request, bank_id):
+        try:
+            commentary = Commentary.objects.get(brand_id=bank_id)
+            serializer = CommentarySerializer(commentary)
+            return Response(serializer.data)
+        except Commentary.DoesNotExist:
+            return Response({"error": "Bank commentary not found"}, status=404)
