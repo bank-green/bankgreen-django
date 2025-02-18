@@ -17,6 +17,8 @@ from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
 from brand.models.embrace_campaign import EmbraceCampaign
 from brand.models.features import BrandFeature, FeatureType
+from datasource.constants import model_names
+from datasource.models.datasource import Datasource, SuggestedAssociation
 
 from .models import Brand, Contact
 from .utils.harvest_data import update_commentary_feature_data
@@ -126,15 +128,15 @@ class BrandFeaturesInline(admin.StackedInline):
 
 
 # TODO make this a series of dropdowns
-# class DatasourceInline(admin.StackedInline):
-#     model = Datasource
-#     extra = 0
+class DatasourceInline(admin.StackedInline):
+    model = Datasource
+    extra = 0
 
-#     readonly_fields = ("name", "source_id")
-#     fields = [readonly_fields]
+    readonly_fields = ("name", "source_id")
+    fields = [readonly_fields]
 
-#     fk_name = "brand"
-#     show_change_link = True
+    fk_name = "brand"
+    show_change_link = True
 
 
 class BrandFeaturesReadonlyInline(admin.StackedInline):
@@ -314,7 +316,7 @@ class BrandAdmin(VersionAdmin):
 
     list_per_page = 800
 
-    inlines = [CommentaryInline, BrandFeaturesInline]
+    inlines = [CommentaryInline, BrandFeaturesInline, DatasourceInline]
 
     def save_model(self, request, obj, form, change):
         """

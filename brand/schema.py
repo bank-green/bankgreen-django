@@ -19,6 +19,7 @@ from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
 
 from brand.models.commentary import RatingChoice
+from datasource.models.datasource import Datasource as DatasourceModel
 from utils.brand_utils import filter_json_field
 
 from .models import Brand as BrandModel
@@ -33,6 +34,19 @@ from .models.commentary import InstitutionType as InstitutionTypeModel
 logger = logging.getLogger(__name__)
 
 
+class Datasource(DjangoObjectType):
+    subclass = graphene.String()
+
+    def resolve_subclass(obj, info):
+        try:
+            return type(obj.subclass()).__name__
+        except NotImplementedError:
+            return None
+
+    class Meta:
+        model = DatasourceModel
+        fields = ("name", "source_link")
+        interfaces = (relay.Node,)
 
 class BrandFilter(FilterSet):
     choices = tuple(countries)
