@@ -8,10 +8,7 @@ class SingleTokenAuthentication(TokenAuthentication):
     def authenticate(self, request) -> None:
         request_token = (
             request.headers["Authorization"].split(" ")[-1]
-            if "Authorization" in request.headers
-            else None
         )
 
         if request_token == settings.REST_API_CONTACT_SINGLE_TOKEN:
             return None
-        raise AuthenticationFailed("Invalid token")
