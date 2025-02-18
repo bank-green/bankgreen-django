@@ -12,3 +12,4 @@ class SingleTokenAuthentication(TokenAuthentication):
 
         if request_token == settings.REST_API_CONTACT_SINGLE_TOKEN:
             return None
+        raise AuthenticationFailed("Invalid token")
