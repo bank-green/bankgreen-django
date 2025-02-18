@@ -19,11 +19,7 @@ from django.views.generic import CreateView
 
 from cities_light.models import Region, SubRegion
 from dal import autocomplete
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 
-from api.serializers import CommentarySerializer
-from brand.models import Commentary
 from scripts.check_duplicates import return_all_duplicates
 from scripts.find_missing_brands_vs_pages import (
     get_missing_brand_and_bankpages,
@@ -202,15 +198,6 @@ def check_prismic_mismatches(request):
         context={"missing_brands_pages": missing_brands_pages},
     )
 
-
-@api_view(["GET"])
-def get_bank_commentary(request, bank_id):
-    try:
-        commentary = Commentary.objects.get(brand_id=bank_id)
-        serializer = CommentarySerializer(commentary)
-        return Response(serializer.data)
-    except Commentary.DoesNotExist:
-        return Response({"error": "Bank commentary not found"}, status=404)
 
 
 class CustomPasswordResetView(PasswordResetView):
