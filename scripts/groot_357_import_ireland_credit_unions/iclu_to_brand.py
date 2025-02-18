@@ -36,6 +36,7 @@ print("Processing iclu...")
 successful_tags = set()
 failed = []
 
+# incase we need to run this again, lets make sure we don't rerun successfully saved brand
 with open(SUCCESS_TAGS_FILE, "r") as open_file:
     already_saved_tags = json.load(open_file)["tags"]
 
@@ -44,6 +45,7 @@ with open(IRISH_STANDARD_CREDIT_UNIONS, "r") as open_file:
 
     # TODO: Double check "Credit Union" name
     credit_union_institution = InstitutionType.objects.get(name="Credit Union")
+
     for cu in json_result:
         try:
             countries = [COUNTRY_KEY[cu["country"]]]
@@ -90,7 +92,6 @@ with open(IRISH_STANDARD_CREDIT_UNIONS, "r") as open_file:
 
 
 print("Successful tags:: ", successful_tags)
-print()
 print("Number of successful: ", len(successful_tags))
 print("Number of failed: ", len(failed))
 
