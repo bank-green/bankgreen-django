@@ -1,5 +1,9 @@
 import json
+import re
 import time
+
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 from brand.models import Brand, Commentary, Contact
 from brand.models.commentary import InstitutionType, RatingChoice
@@ -19,13 +23,15 @@ SUCCESS_TAGS_FILE = DIR + "success_tags.json"
 
 def generate_tag(name):
     name = name.lower()
-    name = name.replace(".", "")
-    return name.replace(" ", "_")
+    name = name.replace(" ", "_")
+    name = re.sub(r"[^a-zA-Z0-9_]", "", name)
+    return name
 
 
 def make_valid_website(url):
     if not url.startswith(("http://", "https://")):
-        url = "http://" + url
+        url = "https://" + url
+    url = url.strip()
     return url
 
 
@@ -81,14 +87,17 @@ with open(IRISH_STANDARD_CREDIT_UNIONS, "r") as open_file:
                 )
                 contact_instance.save()
             successful_tags.add(tag)
-        except Exception as e:
-            obj = {}
-            obj["e"] = repr(e)
+        except ValidationError as e:
+            obj = {"e": repr(e)}
             if cu:
                 obj["data"] = cu
             if tag:
                 obj["tag"] = tag
             failed.append(obj)
+        except IntegrityError as e:
+            # integrity errors have to do with duplicate email addresses in contacts.
+            # it's almost always because branches share emails
+            pass
 
 
 print("Successful tags:: ", successful_tags)
