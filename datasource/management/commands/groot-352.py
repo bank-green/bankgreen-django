@@ -34,9 +34,11 @@ class Command(BaseCommand):
         # selects the two fields to check for duplicates
         brand_values = Brand.objects.values("tag", "name")
         existing_tags = [x["tag"] for x in brand_values]
-        existing_names = [["name"] for x in brand_values]
+        existing_names = [x["name"] for x in brand_values]
         for row in filtered_usnic:
+            print(row["legal_name"])
             if row["legal_name"] in existing_names:
+                print("skip")
                 continue
             else:
                 existing_names.append(row["legal_name"])
