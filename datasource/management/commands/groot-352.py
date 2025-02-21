@@ -36,9 +36,7 @@ class Command(BaseCommand):
         existing_tags = [x["tag"] for x in brand_values]
         existing_names = [x["name"] for x in brand_values]
         for row in filtered_usnic:
-            print(row["legal_name"])
             if row["legal_name"] in existing_names:
-                print("skip")
                 continue
             else:
                 existing_names.append(row["legal_name"])
@@ -51,7 +49,6 @@ class Command(BaseCommand):
                 # checks if rssd number is in the list and adds _CDFI
                 if rssd in rssd_ids:
                     new_name = row[3] + "_CDFI"
-                    print("CDFI")
             except:
                 rssd = ""
             # removes special characters exept letters/numbers and spaces since we want to replace spaces with _
