@@ -244,12 +244,7 @@ class Commentary(models.Model):
         # Ensure no cycles when saving
         self.compute_inherited_rating(throw_error=True)
 
-    # updating last_viewed
     def save(self, *args, **kwargs):
-        if self.pk:
-            old = Commentary.objects.filter(pk=self.pk).first()
-            if old and old.rating != self.rating:  # Only update last viewed
-                self.last_reviewed = now()
 
         if self.inherit_brand_rating:
             self.rating = RatingChoice.INHERIT
