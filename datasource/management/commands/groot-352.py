@@ -91,6 +91,7 @@ class Command(BaseCommand):
                 commentary.institution_type.set([fcu, cdfi])
             else:
                 commentary.institution_type.set([fcu])
+            commentary.save()
             print(brand)
 
         print("completed transfer of FCU")
