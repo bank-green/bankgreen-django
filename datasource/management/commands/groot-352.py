@@ -1,13 +1,24 @@
+import json
+import os
 import re
 from datetime import datetime
+from pathlib import Path
 
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.core.validators import URLValidator
 from django.utils import timezone
 
+import requests
+from dotenv import load_dotenv
+
 from brand.models import *
+from brand.models.commentary import InstitutionType
 from datasource.models import *
+
+
+ENV_DIR = str(Path().cwd() / "bankgreen/.env")
+load_dotenv(ENV_DIR)
 
 
 class Command(BaseCommand):
@@ -16,8 +27,8 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         print("Running db_changes_fcu.py")
         rssd_ids = []
-        with open(r"datasource\management\commands\cdfi_rssd_numbers.txt", "r") as file:
-            rssd_ids = [line.strip() for line in file]
+        with open(r"datasource/management/commands/cdfi_rssd_numbers.txt", "r") as file:
+            rssd_ids = {line.strip() for line in file}
         filtered_usnic = Usnic.objects.filter(entity_type="FCU").values(
             "ncua",
             "website",
@@ -33,69 +44,102 @@ class Command(BaseCommand):
         )
         # selects the two fields to check for duplicates
         brand_values = Brand.objects.values("tag", "name")
-        existing_tags = [x["tag"] for x in brand_values]
-        existing_names = [x["name"] for x in brand_values]
+        existing_tags = {x["tag"] for x in brand_values}
+        existing_names = {x["name"] for x in brand_values}
+
+        fcu = InstitutionType.objects.get(name="Credit Union")
+        cdfi = InstitutionType.objects.get(name="CDFI")
         for row in filtered_usnic:
             if row["legal_name"] in existing_names:
                 continue
-            else:
-                existing_names.append(row["legal_name"])
+            existing_names.add(row["legal_name"])
             # getting the datetime django wants
             naive_datetime = datetime.now()
             aware_datetime = timezone.make_aware(naive_datetime)
-            new_name = row["legal_name"] + "_FCU"
-            try:
-                rssd = row["rssd"]
-                # checks if rssd number is in the list and adds _CDFI
-                if rssd in rssd_ids:
-                    new_name = row[3] + "_CDFI"
-            except:
-                rssd = ""
+            new_name = row.get("legal_name") + "_FCU"
+            rssd = row.get("rssd")
+            # checks if rssd number is in the list and adds _CDFI
+            if rssd in rssd_ids:
+                new_name = row["legal_name"] + "_CDFI"
             # removes special characters exept letters/numbers and spaces since we want to replace spaces with _
-            tag_name = re.sub(r"[^A-Za-z0-9 ]+", "", row["legal_name"].lower())
+            tag_name = re.sub(r"[^A-Za-z0-9 ]+", "", row.get("legal_name").lower())
             mapped_rows = {
                 "created": aware_datetime,
                 "modified": aware_datetime,
-                "ncua": row["ncua"],
-                "countries": row["country"],
-                "name": row["legal_name"],
+                "ncua": row.get("ncua"),
+                "countries": row.get("country"),
+                "name": row.get("legal_name"),
                 "aliases": new_name.lower(),
-                "tag": _generate_tag(tag_name.lower().replace(" ", "_"), 0, existing_tags),
+                "tag": generate_tag(tag_name.lower().replace(" ", "_"), 0, existing_tags),
                 "rssd": rssd,
-                "lei": row["lei"],
-                "fdic_cert": row["fdic_cert"],
-                "ein": row["ein"],
-                "occ": row["occ"],
-                "thrift_hc": row["thrift_hc"],
-                "cusip": row["cusip"],
+                "lei": row.get("lei"),
+                "fdic_cert": row.get("fdic_cert"),
+                "ein": row.get("ein"),
+                "occ": row.get("occ"),
+                "thrift_hc": row.get("thrift_hc"),
+                "cusip": row.get("cusip"),
             }
             # adds tags to existing ones to check there are no duplicates
-            existing_tags.append(mapped_rows["tag"])
-            # checks if there is a website url
-            websiteurl = row["website"]
-            if websiteurl != None:
-                websiteurl = check_website_URL(row["website"].lower())
-                mapped_rows["website"] = websiteurl
+            existing_tags.add(mapped_rows["tag"])
+            # checks if there is a website url and finds one if necessary
+            website = row.get("website") or find_website(row.get("legal_name"))
+            website = check_website_URL(website)
             # creates the Brand object
-            Brand.objects.create(**mapped_rows)
+            brand = Brand.objects.create(**mapped_rows)
+            commentary = Commentary.objects.create(display_on_website=True, brand=brand)
+            if rssd in rssd_ids:
+                commentary.institution_type.set([fcu, cdfi])
+            else:
+                commentary.institution_type.set([fcu])
+            print(brand)
 
-        print("completed transfer of CFU")
+        print("completed transfer of FCU")
 
 
 def check_website_URL(url):
-    if url == None:
-        return ""
-    else:
-        validator = URLValidator()
-        try:
-            validator(url)
-            return url
-        except ValidationError:
-            url = "https://" + url
-            return url
+    if not url:
+        return None
+    validator = URLValidator()
+    try:
+        validator(url)
+        return url
+    except ValidationError:
+        url = "https://" + url
+
+    try:
+        validator(url)
+    except ValidationError:
+        return None
 
 
-def _generate_tag(bt_tag, increment=0, existing_tags=None):
+def find_website(fcu_name):
+    url = "https://api.perplexity.ai/chat/completions"
+
+    payload = {
+        "model": "sonar",
+        "messages": [
+            {"role": "system", "content": "return only a url."},
+            {"role": "user", "content": f"Return this credit union's website {fcu_name}"},
+        ],
+        "max_tokens": 15,
+        "temperature": 0.2,
+        "top_p": 0.9,
+        "top_k": 0,
+        "stream": False,
+        "presence_penalty": 0,
+        "frequency_penalty": 1,
+    }
+    headers = {
+        "Authorization": f"Bearer {os.environ['PERPLEXITY_KEY']}",
+        "Content-Type": "application/json",
+    }
+
+    response = requests.request("POST", url, json=payload, headers=headers)
+    url = json.loads(response.text)["choices"][0]["message"]["content"]
+    return url
+
+
+def generate_tag(bt_tag, increment=0, existing_tags=None):
     og_tag = bt_tag
     # memoize existing tags for faster recursion
     if increment < 1:
@@ -106,4 +150,4 @@ def _generate_tag(bt_tag, increment=0, existing_tags=None):
     if bt_tag not in existing_tags:
         return bt_tag
     else:
-        return _generate_tag(og_tag, increment=increment + 1, existing_tags=existing_tags)
+        return generate_tag(og_tag, increment=increment + 1, existing_tags=existing_tags)
