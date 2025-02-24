@@ -84,6 +84,7 @@ class Command(BaseCommand):
             # checks if there is a website url and finds one if necessary
             website = row.get("website") or find_website(row.get("legal_name"))
             website = check_website_URL(website)
+            mapped_rows["website"] = website
             # creates the Brand object
             brand = Brand.objects.create(**mapped_rows)
             commentary = Commentary.objects.create(display_on_website=True, brand=brand)
