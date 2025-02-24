@@ -103,6 +103,9 @@ class Commentary(models.Model):
 
     display_on_website = models.BooleanField(default=False)
     comment = models.TextField(help_text="Meta. Comments for staff and/or editors", blank=True)
+    last_reviewed = models.DateTimeField(
+        null=True, blank=True, help_text="date of last rating update"
+    )
     rating = models.CharField(
         max_length=8,
         null=False,

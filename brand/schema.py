@@ -239,6 +239,7 @@ class HarvestDataDictionary(graphene.ObjectType):
 
 
 class Commentary(DjangoObjectType):
+    last_reviewed = graphene.DateTime()
     description1 = HtmlFromMarkdown()
     description2 = HtmlFromMarkdown()
     description3 = HtmlFromMarkdown()
