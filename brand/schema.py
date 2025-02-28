@@ -477,6 +477,8 @@ class Query(graphene.ObjectType):
     brands = DjangoFilterConnectionField(Brand)
 
     def resolve_brands(self, info, **kwargs):
+        cache_timeout_in_minutes = 20
+
         sorted_args = json.dumps(kwargs, sort_keys=True)
         cache_key = f"brand_query_cache{hashlib.md5(sorted_args.encode('utf-8')).hexdigest()}"
 
@@ -492,7 +494,7 @@ class Query(graphene.ObjectType):
         else:
             result = queryset
 
-        cache.set(cache_key, result, timeout=60 * 10)
+        cache.set(cache_key, result, timeout=60 * cache_timeout_in_minutes)
         return result
 
     features = DjangoListField(Feature)
