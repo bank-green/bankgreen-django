@@ -1,8 +1,10 @@
 import ast
+import hashlib
 import json
 import logging
 import re
 
+from django.core.cache import cache
 from django.db.models import Case, Count, Q, When
 
 import graphene
@@ -473,6 +475,27 @@ class Query(graphene.ObjectType):
             raise GraphQLError(str(e))
 
     brands = DjangoFilterConnectionField(Brand)
+
+    def resolve_brands(self, info, **kwargs):
+        cache_timeout_in_minutes = 20
+
+        sorted_args = json.dumps(kwargs, sort_keys=True)
+        cache_key = f"brand_query_cache{hashlib.md5(sorted_args.encode('utf-8')).hexdigest()}"
+
+        cached_result = cache.get(cache_key)
+        if cached_result:
+            return cached_result
+
+        queryset = BrandModel.objects.all()
+        filterset = BrandFilter(data=kwargs, queryset=queryset)
+
+        if filterset.is_valid():
+            result = filterset.qs
+        else:
+            result = queryset
+
+        cache.set(cache_key, result, timeout=60 * cache_timeout_in_minutes)
+        return result
 
     features = DjangoListField(Feature)
 

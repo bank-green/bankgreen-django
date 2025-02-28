@@ -137,6 +137,13 @@ location /graphql {
 Then restart Nginx and Gunicorn:
 `sudo systemctl restart nginx && sudo systemctl restart gunicorn`
 
+## Generating GraphQL schema (Introspection Schema)
+Dumps GraphQL schema data to `./gql_schema.json` ([More info here](https://docs.graphene-python.org/projects/django/en/latest/introspection/))
+
+```bash
+python manage.py graphql_schema
+```
+
 # Deploying
 Deployment uses the `Justfile`, which you can also copy and paste into your terminal if you prefer. Otherwise, this will require
 1. Installing the `just` ([packages here](https://github.com/casey/just?tab=readme-ov-file#packages))
