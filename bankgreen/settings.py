@@ -174,8 +174,12 @@ CORS_ALLOWED_ORIGIN_REGEXES = (
 
 CACHE_MAX_AGE = os.environ.get("CACHE_MAX_AGE")
 
-# lets us pull all banks at once without pagination
-GRAPHENE = {"RELAY_CONNECTION_MAX_LIMIT": 10000}
+GRAPHENE = {
+    # lets us pull all banks at once without pagination
+    "RELAY_CONNECTION_MAX_LIMIT": 10000,
+    "SCHEMA": "brand.schema.schema",
+    "SCHEMA_OUTPUT": "gql_schema.json",
+}
 
 CITIES_LIGHT_TRANSLATION_LANGUAGES = [""]
 CITIES_LIGHT_INCLUDE_CITY_TYPES = [""]
@@ -188,4 +192,12 @@ REST_FRAMEWORK = {
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["api.authentication.SingleTokenAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "bgd_cache_table",
+        "TIMEOUT": 60 * 20,
+    }
 }
