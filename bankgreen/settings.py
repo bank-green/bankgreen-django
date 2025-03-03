@@ -196,7 +196,8 @@ REST_FRAMEWORK = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": "bgd_memcache",
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "bgd_cache_table",
+        "TIMEOUT": 60 * 20,
     }
 }
