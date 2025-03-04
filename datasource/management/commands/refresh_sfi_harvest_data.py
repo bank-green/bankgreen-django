@@ -1,7 +1,10 @@
 import logging
+
 from django.core.management.base import BaseCommand
+
 from brand.models import Commentary
 from brand.utils.harvest_data import update_commentary_feature_data
+
 
 """
     To be used with cron job, please see GROOT-312 ticket for more context
