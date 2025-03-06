@@ -113,7 +113,6 @@ for row in filtered_usnic:
     # getting the datetime django wants
     naive_datetime = datetime.now()
     aware_datetime = timezone.make_aware(naive_datetime)
-    # checks if rssd number is in the list and adds _CDFI
     # removes special characters exept letters/numbers and spaces since we want to replace spaces with _
     tag_name = re.sub(r"[^A-Za-z0-9 ]+", "", row.get("legal_name").lower())
     mapped_rows = {
