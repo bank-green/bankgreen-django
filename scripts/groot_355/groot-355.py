@@ -3,23 +3,21 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from django.db.models import Q
-
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+from django.db.models import Q
 from django.utils import timezone
 
 import requests
 from dotenv import load_dotenv
 
 from brand.models import *
-from datasource.models import *
-
-from brand.models import *
 from brand.models.commentary import InstitutionType
 from datasource.models import *
-#to run in django shell using 'python manage.py shell'
-# exec(open('scripts/groot_355/groot-355.py').read()) 
+
+
+# to run in django shell using 'python manage.py shell'
+# exec(open('scripts/groot_355/groot-355.py').read())
 
 
 DIR = "scripts/groot_355/"
@@ -27,6 +25,7 @@ ENV_DIR = str(Path().cwd() / "bankgreen/.env")
 load_dotenv(ENV_DIR)
 
 canadian_fcu_names = DIR + "canadian_fcu.txt"
+
 
 def generate_tag(bt_tag, increment=0, existing_tags=None):
     og_tag = bt_tag
@@ -41,6 +40,7 @@ def generate_tag(bt_tag, increment=0, existing_tags=None):
     else:
         return generate_tag(og_tag, increment=increment + 1, existing_tags=existing_tags)
 
+
 def check_website_URL(url):
     new_url = url.lower()
     validator = URLValidator()
@@ -50,6 +50,7 @@ def check_website_URL(url):
     except ValidationError:
         new_url = "https://" + new_url
         return new_url
+
 
 def find_website(fcu_name):
     url = "https://api.perplexity.ai/chat/completions"
@@ -77,12 +78,13 @@ def find_website(fcu_name):
     url = json.loads(response.text)["choices"][0]["message"]["content"]
     return url
 
+
 print("starting groot-355.py")
 
 canadian_fcu = set()
 number_of_entries = 0
 regex_pattern = r"^(" + "|".join([re.escape(name) for name in canadian_fcu]) + r")"
-#gets information from a file that just have the values you are looking for
+# gets information from a file that just have the values you are looking for
 with open(canadian_fcu_names, "r") as file:
     canadian_fcu.update({line.strip() for line in file})
 query = Q()
@@ -145,7 +147,3 @@ for row in filtered_usnic:
     commentary.save()
     number_of_entries += 1
 print("completed transfer of CFU")
-
-
-
-
