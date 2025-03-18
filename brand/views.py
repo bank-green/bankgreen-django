@@ -201,7 +201,6 @@ def check_prismic_mismatches(request):
 
 
 def clear_cache(request):
-    print("hi", request)
     """
     Clears django.core.cache, as used by the graphql brand queries
     at bankgreen-django/brand/schema.py > resolve_brands
