@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
 from django.core import serializers
+from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import inlineformset_factory
 from django.forms.models import model_to_dict
@@ -197,6 +198,16 @@ def check_prismic_mismatches(request):
         "missing_brand_vs_prismic_pages.html",
         context={"missing_brands_pages": missing_brands_pages},
     )
+
+
+def clear_cache(request):
+    print("hi", request)
+    """
+    Clears django.core.cache, as used by the graphql brand queries
+    at bankgreen-django/brand/schema.py > resolve_brands
+    """
+    cache.clear()
+    return HttpResponse(status=204)
 
 
 class CustomPasswordResetView(PasswordResetView):
