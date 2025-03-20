@@ -50,6 +50,7 @@ class Datasource(DjangoObjectType):
         fields = ("name", "source_link")
         interfaces = (relay.Node,)
 
+
 class BrandFilter(FilterSet):
     choices = tuple(countries)
 
@@ -267,7 +268,6 @@ class Commentary(DjangoObjectType):
     def resolve_FRN(self, info):
         return self.FRN 
 
-
     def resolve_top_pick(obj, info):
         return obj.top_pick
 
@@ -357,7 +357,6 @@ class Query(graphene.ObjectType):
     commentaries = DjangoFilterConnectionField(Commentary)
 
     brand = graphene.Field(Brand, tag=graphene.Argument(graphene.String, required=True))
-    brands = DjangoFilterConnectionField(Brand, filterset_class=BrandFilter)
 
     brand_by_name = graphene.Field(Brand, name=graphene.Argument(graphene.String, required=True))
 
