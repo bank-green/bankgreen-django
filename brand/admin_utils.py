@@ -5,9 +5,9 @@ from django.utils.html import escape, format_html
 
 from cities_light.models import Country, Region, SubRegion
 
-from datasource.models.datasource import Datasource
 
-
+# class not required as datasource is removed
+"""""
 class LinkedDatasourcesFilter(admin.SimpleListFilter):
     title = "Linked Datasources"
     parameter_name = "Linked Datasources"
@@ -17,12 +17,6 @@ class LinkedDatasourcesFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         value = self.value()
-        if value == "Linked":
-            brand_pks = [x.brand.pk for x in Datasource.objects.filter(brand__isnull=False)]
-            return queryset.filter(pk__in=brand_pks)
-        if value == "Unlinked":
-            brand_pks = [x.brand.pk for x in Datasource.objects.filter(brand__isnull=False)]
-            return queryset.exclude(pk__in=brand_pks)
         return queryset
 
 
@@ -35,7 +29,7 @@ def link_datasources(datasources, datasource_str):
         link = format_html(f'<a href="{url}" />{string_to_show}</a>')
         links.append(link)
     return links
-
+"""""
 
 def link_contacts(contacts=None):
     links = []

@@ -42,8 +42,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG") == "True"
-
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(" ")
+# Corrcct
+ALLOWED_HOSTS = ["*"]
 
 # Calendar URL
 SEMI_PUBLIC_CALENDAR_URL = os.environ.get("CALENDAR_URL")
@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     # my apps
-    "datasource",
+    # Remember to remove datasource 
     "brand",
     # third party apps
     "graphene_django",

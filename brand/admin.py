@@ -11,14 +11,13 @@ from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 from reversion.admin import VersionAdmin
 
-from brand.admin_utils import LinkedDatasourcesFilter, link_contacts, link_datasources
+from brand.admin_utils import  link_contacts 
 from brand.forms import EmbraceCampaignForm
 from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
 from brand.models.embrace_campaign import EmbraceCampaign
 from brand.models.features import BrandFeature, FeatureType
-from datasource.constants import model_names
-from datasource.models.datasource import Datasource, SuggestedAssociation
+
 
 from .models import Brand, Contact
 from .utils.harvest_data import update_commentary_feature_data
@@ -127,16 +126,7 @@ class BrandFeaturesInline(admin.StackedInline):
 #     return obj.name.upper()
 
 
-# TODO make this a series of dropdowns
-class DatasourceInline(admin.StackedInline):
-    model = Datasource
-    extra = 0
-
-    readonly_fields = ("name", "source_id")
-    fields = [readonly_fields]
-
-    fk_name = "brand"
-    show_change_link = True
+# DatsourceInline is removed as datasource is removed
 
 
 class BrandFeaturesReadonlyInline(admin.StackedInline):
@@ -197,7 +187,8 @@ class SubRegionAdminOverride(SubRegionAdmin):
         "region__name_ascii",
     )  # type: ignore
 
-
+# filter is disabled as datasource is removed
+"""""
 class HasSuggestionsFilter(admin.SimpleListFilter):
     title = "suggested associations"
     parameter_name = "suggested associations"
@@ -234,7 +225,7 @@ class HasSuggestionsFilter(admin.SimpleListFilter):
             ]
             return queryset.filter(pk__in=brand_pks)
         return queryset
-
+"""""
 
 @admin.register(InstitutionType)
 class InstitutionTypes(admin.ModelAdmin):
@@ -252,26 +243,9 @@ class BrandAdmin(VersionAdmin):
     change_list_template = "change_list_template.html"
     change_form_template = "brand_change_form.html"
 
-    @admin.display(description="related datasources")
-    def related_datasources(self, obj):
-        datasources = obj.datasources.filter(brand=obj)
-        links = []
-        for model in model_names:
-            links += link_datasources(datasources, model)
-        return format_html("<br />".join(links))
+  # Removed datasourceinline as datasource is removed
+    # inlines = [DatasourceInline]
 
-    @admin.display(description="suggested associations")
-    def suggested_associations(self, obj):
-        suggested_associations = SuggestedAssociation.objects.filter(brand=obj)
-        datasources = [x.datasource for x in suggested_associations]
-        links = []
-        for model in model_names:
-            links += link_datasources(datasources, model)
-        return format_html("<br />".join(links))
-
-    def num_suggest(self, obj):
-        num = SuggestedAssociation.objects.filter(brand=obj).count()
-        return str(num) if num else ""
 
     @admin.display(ordering="-commentary__rating_inherited")
     def rating_inherited(self, obj):
@@ -286,12 +260,11 @@ class BrandAdmin(VersionAdmin):
         return str(num) if num else ""
 
     search_fields = ["name", "tag", "website"]
-    readonly_fields = ["related_datasources", "suggested_associations", "created", "modified"]
+    readonly_fields = ["created", "modified"] # removed "suggested_datasource"
     autocomplete_fields = ["subregions"]
     fields = (
         ("name", "tag"),
         ("website", "aliases"),
-        ("related_datasources"),
         ("suggested_associations"),
         ("countries"),
         ("regions"),
@@ -306,8 +279,6 @@ class BrandAdmin(VersionAdmin):
     list_filter = (
         "commentary__display_on_website",
         "commentary__rating",
-        HasSuggestionsFilter,
-        LinkedDatasourcesFilter,
         ("countries", ChoiceDropdownFilter),
     )
     list_display = ("short_name", "short_tag", "rating_inherited", "pk", "website", "num_linked")
@@ -316,7 +287,7 @@ class BrandAdmin(VersionAdmin):
 
     list_per_page = 800
 
-    inlines = [CommentaryInline, BrandFeaturesInline, DatasourceInline]
+    inlines = [CommentaryInline, BrandFeaturesInline] # removed DatasourceInline
 
     def save_model(self, request, obj, form, change):
         """
@@ -337,14 +308,6 @@ class BrandAdmin(VersionAdmin):
         qs = super(BrandAdmin, self).get_queryset(request).filter(brandsuggestion__isnull=True)
         return qs
 
-    def number_of_related_datasources(self, obj):
-        """
-        Counting the number of data sources is related to.
-        """
-        related_datasources = obj.datasources.all().count()
-        return related_datasources
-
-    number_of_related_datasources.short_description = "Nr. Dts"
 
     def change_view(self, request, object_id, extra_context=None):
         brand = Brand.objects.get(id=object_id)

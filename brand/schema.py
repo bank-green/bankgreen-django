@@ -21,7 +21,7 @@ from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
 
 from brand.models.commentary import RatingChoice
-from datasource.models.datasource import Datasource as DatasourceModel
+# Remove datasource from import
 from utils.brand_utils import filter_json_field
 
 from .models import Brand as BrandModel
@@ -36,6 +36,8 @@ from .models.commentary import InstitutionType as InstitutionTypeModel
 logger = logging.getLogger(__name__)
 
 
+# class no longer relevant as datasource is removed
+"""""
 class Datasource(DjangoObjectType):
     subclass = graphene.String()
 
@@ -49,7 +51,7 @@ class Datasource(DjangoObjectType):
         model = DatasourceModel
         fields = ("name", "source_link")
         interfaces = (relay.Node,)
-
+"""""
 
 class BrandFilter(FilterSet):
     choices = tuple(countries)
@@ -183,7 +185,7 @@ class Brand(DjangoObjectType):
             "aliases",
             "regions",
             "subregions",
-            "datasources",
+            # "datasources" datasource removed from required fields
         ]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
