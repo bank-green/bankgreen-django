@@ -80,4 +80,5 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
+    path("clear_cache/", views.clear_cache, name="clear_cache"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
