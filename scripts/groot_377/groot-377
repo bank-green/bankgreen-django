@@ -107,6 +107,7 @@ filtered_usnic = Usnic.objects.filter(query).values(
 brand_values = Brand.objects.values("tag", "name")
 existing_tags = {x["tag"] for x in brand_values}
 existing_names = {x["name"] for x in brand_values}
+fcu = InstitutionType.objects.get(name="Credit Union")
 for row in filtered_usnic:
     if row["legal_name"] in existing_names:
         continue
@@ -142,7 +143,6 @@ for row in filtered_usnic:
     Brand.objects.create(**mapped_rows)
     brand_instance = Brand.objects.get(name=mapped_rows["name"])
     commentary = Commentary.objects.create(display_on_website=True, brand=brand_instance)
-    fcu = InstitutionType.objects.get(name="Credit Union")
     commentary.institution_type.set([fcu])
     commentary.save()
     number_of_entries += 1
