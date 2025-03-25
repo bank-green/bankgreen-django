@@ -10,6 +10,7 @@ from cities_light.models import Region, SubRegion
 from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
 
+
 # Removed Datasource imports
 
 
@@ -123,7 +124,6 @@ class Brand(TimeStampedModel):
         old_name = self.name
         new_name = old_name
 
-
         return (old_name, new_name)
 
     # TODO: Figure out how I can deduplicate these refreshes, perhaps specifying a
@@ -136,15 +136,14 @@ class Brand(TimeStampedModel):
 
         old_description = self.description
 
-
         return (old_description, self)
 
     def refresh_countries(self):
         """refresh countries is additive. It never removes countries from brands"""
         old_countries = self.countries
         new_countries = self.countries
-       
-       # Removed datasource specific code
+
+        # Removed datasource specific code
 
         return old_countries, new_countries
 

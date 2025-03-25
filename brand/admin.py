@@ -11,13 +11,12 @@ from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 from reversion.admin import VersionAdmin
 
-from brand.admin_utils import  link_contacts 
+from brand.admin_utils import link_contacts
 from brand.forms import EmbraceCampaignForm
 from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
 from brand.models.embrace_campaign import EmbraceCampaign
 from brand.models.features import BrandFeature, FeatureType
-
 
 from .models import Brand, Contact
 from .utils.harvest_data import update_commentary_feature_data
@@ -187,6 +186,7 @@ class SubRegionAdminOverride(SubRegionAdmin):
         "region__name_ascii",
     )  # type: ignore
 
+
 # filter is disabled as datasource is removed
 """""
 class HasSuggestionsFilter(admin.SimpleListFilter):
@@ -225,7 +225,8 @@ class HasSuggestionsFilter(admin.SimpleListFilter):
             ]
             return queryset.filter(pk__in=brand_pks)
         return queryset
-"""""
+""" ""
+
 
 @admin.register(InstitutionType)
 class InstitutionTypes(admin.ModelAdmin):
@@ -243,9 +244,8 @@ class BrandAdmin(VersionAdmin):
     change_list_template = "change_list_template.html"
     change_form_template = "brand_change_form.html"
 
-  # Removed datasourceinline as datasource is removed
+    # Removed datasourceinline as datasource is removed
     # inlines = [DatasourceInline]
-
 
     @admin.display(ordering="-commentary__rating_inherited")
     def rating_inherited(self, obj):
@@ -260,7 +260,7 @@ class BrandAdmin(VersionAdmin):
         return str(num) if num else ""
 
     search_fields = ["name", "tag", "website"]
-    readonly_fields = ["created", "modified"] # removed "suggested_datasource"
+    readonly_fields = ["created", "modified"]  # removed "suggested_datasource"
     autocomplete_fields = ["subregions"]
     fields = (
         ("name", "tag"),
@@ -287,7 +287,7 @@ class BrandAdmin(VersionAdmin):
 
     list_per_page = 800
 
-    inlines = [CommentaryInline, BrandFeaturesInline] # removed DatasourceInline
+    inlines = [CommentaryInline, BrandFeaturesInline]  # removed DatasourceInline
 
     def save_model(self, request, obj, form, change):
         """
@@ -307,7 +307,6 @@ class BrandAdmin(VersionAdmin):
         # filter out all but base class
         qs = super(BrandAdmin, self).get_queryset(request).filter(brandsuggestion__isnull=True)
         return qs
-
 
     def change_view(self, request, object_id, extra_context=None):
         brand = Brand.objects.get(id=object_id)

@@ -21,6 +21,7 @@ from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
 
 from brand.models.commentary import RatingChoice
+
 # Remove datasource from import
 from utils.brand_utils import filter_json_field
 
@@ -51,7 +52,8 @@ class Datasource(DjangoObjectType):
         model = DatasourceModel
         fields = ("name", "source_link")
         interfaces = (relay.Node,)
-"""""
+""" ""
+
 
 class BrandFilter(FilterSet):
     choices = tuple(countries)

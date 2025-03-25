@@ -29,7 +29,8 @@ def link_datasources(datasources, datasource_str):
         link = format_html(f'<a href="{url}" />{string_to_show}</a>')
         links.append(link)
     return links
-"""""
+""" ""
+
 
 def link_contacts(contacts=None):
     links = []

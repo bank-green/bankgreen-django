@@ -10,9 +10,12 @@ from rest_framework.test import APIClient
 from brand.models.commentary import Commentary, RatingChoice
 from brand.models.contact import Contact
 from brand.tests.utils import create_test_brands
-# removed datasource import
 
 from ..models import Brand
+
+
+# removed datasource import
+
 
 # removed datasource
 # from datasource.models import Banktrack, Usnic
@@ -129,6 +132,7 @@ class BrandDatasourceTestCase(TestCase):
         brands_created, _ = Brand.create_brand_from_banktrack([self.kinged_fred])
         self.brand = brands_created[0]
 """
+
 
 class CommentaryTestCase(TestCase):
     def setUp(self) -> None:
