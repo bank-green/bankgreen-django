@@ -266,9 +266,6 @@ class Commentary(DjangoObjectType):
 
     FRN = graphene.String()
 
-    def resolve_FRN(self, info):
-        return self.FRN
-
     def resolve_top_pick(obj, info):
         return obj.top_pick
 
