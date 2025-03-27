@@ -10,7 +10,8 @@ from cities_light.models import Region, SubRegion
 from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
 
-import datasource.models as dsm
+
+# Removed Datasource imports
 
 
 def validate_tag(value):
@@ -123,19 +124,6 @@ class Brand(TimeStampedModel):
         old_name = self.name
         new_name = old_name
 
-        # Favor Banktrack names
-        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            if len(banktrack_datasources) > 0:
-                new_name = banktrack_datasources[0].name
-                self.name = new_name
-                self.save()
-                return (old_name, new_name)
-        elif wikidata_datasources := dsm.Wikidata.objects.filter(brand=self):
-            if len(wikidata_datasources) > 0:
-                new_name = wikidata_datasources[0].name
-                self.name = new_name
-                self.save()
-
         return (old_name, new_name)
 
     # TODO: Figure out how I can deduplicate these refreshes, perhaps specifying a
@@ -148,30 +136,14 @@ class Brand(TimeStampedModel):
 
         old_description = self.description
 
-        # Favor Banktrack descriptions
-        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            if len(banktrack_datasources) > 0:
-                self.description = banktrack_datasources[0].description
-                self.save()
-        elif bimpact_datasources := dsm.Bimpact.objects.filter(brand=self):
-            if len(bimpact_datasources) > 0:
-                self.description = bimpact_datasources[0].description
-                self.save()
-
         return (old_description, self)
 
     def refresh_countries(self):
         """refresh countries is additive. It never removes countries from brands"""
         old_countries = self.countries
         new_countries = self.countries
-        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            for banktrack_datasource in banktrack_datasources:
-                self.countries = old_countries + banktrack_datasource.countries
-                new_countries = self.countries
-        if bimpacts := dsm.Bimpact.objects.filter(brand=self):
-            for bimpact in bimpacts:
-                self.countries = old_countries + bimpact.countries
-                new_countries = self.countries
+
+        # Removed datasource specific code
 
         return old_countries, new_countries
 
