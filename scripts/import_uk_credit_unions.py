@@ -2,16 +2,16 @@ import json
 import os
 import re
 import time
+
 import django
-
-# Setup Django environment
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bankgreen.settings")
-django.setup()
-
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.utils.text import slugify
 from django.utils import timezone
+
+# Setup Django environment
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bankgreen.settings")
+django.setup()
 
 from brand.models import Brand, Commentary
 from brand.models.commentary import InstitutionType, RatingChoice
