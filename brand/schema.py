@@ -264,6 +264,8 @@ class Commentary(DjangoObjectType):
         interest_rates=graphene.String(),
     )
 
+    frn = graphene.String()
+
     def resolve_top_pick(obj, info):
         return obj.top_pick
 

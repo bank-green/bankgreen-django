@@ -89,6 +89,13 @@ class Commentary(models.Model):
         on_delete=models.CASCADE,
     )
 
+    FRN = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        help_text="Financial Registration Number (FRN) for the credit union",
+    )
+
     class Meta:
         ordering = ["brand"]
 
