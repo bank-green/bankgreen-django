@@ -89,7 +89,7 @@ class Commentary(models.Model):
         on_delete=models.CASCADE,
     )
 
-    FRN = models.CharField(
+    frn = models.CharField(
         max_length=50,
         null=True,
         blank=True,
