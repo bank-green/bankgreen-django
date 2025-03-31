@@ -17,7 +17,7 @@ from datasource.models import *
 
 
 # to run in django shell using 'python manage.py shell'
-# exec(open('scripts/groot_377/groot-377.py').read())
+# exec(open('scripts/groot_358/groot-358.py').read())
 
 
 DIR = "scripts/groot_358/"
