@@ -21,12 +21,12 @@ from brand.models.commentary import InstitutionType, RatingChoice
 """
 To run from Django shell:
 
-exec(open('scripts/groot_354_import_uk_credit_unions/import_uk_credit_unions.py').read())
+exec(open('scripts/import_uk_credit_unions.py').read())
 
 """
 
 # Define paths
-DIR = "scripts/groot_354_import_uk_credit_unions/"
+DIR = "scripts/"
 UK_CREDIT_UNIONS_FILE = os.path.join(DIR + "uk_credit_unions.json")
 SUCCESS_TAGS_FILE = DIR + "success_tags.json"
 
@@ -77,7 +77,7 @@ for cu in json_result:
                 brand=existing_brand, defaults={"rating": RatingChoice.UNKNOWN, "FRN": frn}
             )
             if not created and not commentary.FRN:
-                commentary.FRN = frn
+                commentary.frn = frn
                 commentary.save()
 
             print(f"Updated existing credit union: {firm_name} with FRN: {frn}")
@@ -87,7 +87,7 @@ for cu in json_result:
 
             # Create associated Commentary
             commentary = Commentary.objects.create(
-                brand=new_brand, rating=RatingChoice.UNKNOWN, FRN=frn, display_on_website=True,
+                brand=new_brand, rating=RatingChoice.UNKNOWN, frn=frn, display_on_website=True,
             )
 
             # Assign institution type
