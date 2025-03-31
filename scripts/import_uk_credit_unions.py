@@ -83,7 +83,7 @@ for cu in json_result:
             print(f"Updated existing credit union: {firm_name} with FRN: {frn}")
         else:
             # Create a new Brand
-            new_brand = Brand.objects.create(name=firm_name, tag=tag)
+            new_brand = Brand.objects.create(name=firm_name, tag=tag, countries=["GB"])
 
             # Create associated Commentary
             commentary = Commentary.objects.create(
