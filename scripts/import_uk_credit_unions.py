@@ -76,7 +76,7 @@ for cu in json_result:
             commentary, created = Commentary.objects.get_or_create(
                 brand=existing_brand, defaults={"rating": RatingChoice.UNKNOWN, "FRN": frn}
             )
-            if not created and not commentary.FRN:
+            if not created and not commentary.frn:
                 commentary.frn = frn
                 commentary.save()
 
