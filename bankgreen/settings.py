@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     # my apps
-    "datasource",
+    # Remember to remove datasource
     "brand",
     # third party apps
     "graphene_django",

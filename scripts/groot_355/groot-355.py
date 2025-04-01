@@ -9,11 +9,11 @@ from django.db.models import Q
 from django.utils import timezone
 
 import requests
+from datasource.models import *
 from dotenv import load_dotenv
 
 from brand.models import *
 from brand.models.commentary import InstitutionType
-from datasource.models import *
 
 
 # to run in django shell using 'python manage.py shell'
