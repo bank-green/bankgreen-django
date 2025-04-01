@@ -87,7 +87,7 @@ for cu in json_result:
 
             # Create associated Commentary
             commentary = Commentary.objects.create(
-                brand=new_brand, rating=RatingChoice.UNKNOWN, frn=frn, display_on_website=True,
+                brand=new_brand, rating=RatingChoice.UNKNOWN, frn=frn, display_on_website=True
             )
 
             # Assign institution type
