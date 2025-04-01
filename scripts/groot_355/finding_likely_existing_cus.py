@@ -1,0 +1,157 @@
+from brand.models import *
+from brand.models.commentary import InstitutionType
+
+
+"""
+This is a script to help us find credit unions that are already in DBG and go through them by hand
+"""
+
+cu_names = [
+    "Access Credit Union",
+    "Alterna Credit Union",
+    "DUCA Credit Union",
+    "BlueShore Financial Credit Union",
+    "UNI Financial",
+    "Gulf and Fraser Credit Union",
+    "Innovation Federal Credit Union",
+    "Interior Savings Credit Union",
+    "Coastal Community Credit Union",
+    "Your Neighbourhood Credit Union",
+    "Vision Credit Union",
+    "Kawartha Credit Union",
+    "Kindred Credit Union",
+    "Caisse Financial Group",
+    "Cornerstone Credit Union",
+    "Synergy Credit Union",
+    "Sunrise Credit Union",
+    "Northern Credit Union",
+    "Kootenay Savings Credit Union",
+    "Westoba Credit Union",
+    "Fusion Credit Union",
+    "Tandia Credit Union",
+    "Provincial Credit Union",
+    "Ukrainian Credit Union",
+    "Prairie Centre Credit Union",
+    "Mainstreet Credit Union",
+    "Buduchnist Credit Union",
+    "Salmon Arm Savings and Credit Union",
+    "Stride Credit Union",
+    "Credit Union Atlantic Limited",
+    "Sunshine Coast Credit Union",
+    "Brunswick Credit Union",
+    "IC Savings & Credit Union",
+    "Community Savings Credit Union",
+    "Integris Credit Union",
+    "1st Choice Savings & Credit Union Ltd",
+    "Northern Savings Credit Union",
+    "Penfinancial Credit Union",
+    "Newfoundland and Labrador Credit Union",
+    "Khalsa Credit Union",
+    "TCU Financial Group",
+    "Weyburn Credit Union",
+    "Lakeland Credit Union",
+    "Rosenort Credit Union",
+    "StellerVista Credit Union",
+    "Diamond North Credit Union",
+    "Radius Credit Union Ltd",
+    "Sharon's Credit Union",
+    "Parama Credit Union",
+    "Bow Valley Credit Union",
+    "Motor City Credit Union",
+    "Sudbury Credit Union",
+    "Bulkley Valley Credit Union",
+    "Copperfin Credit Union",
+    "St. Stanislaus-St. Casimir’s Polish Parishes Credit Union Limited",
+    "Niverville Credit Union",
+    "VantageOne Credit Union",
+    "Rocky Credit Union",
+    "Williams Lake & District Credit Union",
+    "Comtech Fire Credit Union Ltd",
+    "Summerland Credit Union",
+    "Omista Credit Union",
+    "Your Credit Union",
+    "Pathwise Credit Union",
+    "Moya Financial Credit Union Limited",
+    "OPPA Credit Union",
+    "Lakeview Credit Union",
+    "Crossroads Credit Union",
+    "Unity Credit Union",
+    "Swan Valley Credit Union",
+    "Atlantic Edge",
+    "Equity Credit Union",
+    "Consolidated Credit Union",
+    "Rapport Credit Union",
+    "Accent Credit Union",
+    "Sydney Credit Union",
+    "Biggar & District Credit Union",
+    "Valley Credit Union",
+    "Nelson And District Credit Union",
+    "Ladysmith & District Credit Union",
+    "Healthcare & Municipal Employees' Credit Union Limited",
+    "Christian Credit Union",
+    "Revelstoke Credit Union",
+    "Vermilion Credit Union",
+    "Belgian Alliance Credit Union",
+    "Compass Credit Union",
+    "Raymore Credit Union",
+    "Columbia Valley Credit Union",
+    "Kingston Community Credit Union",
+    "Winnipeg Police Credit Union",
+    "Osoyoos Credit Union",
+    "Southwest Credit Union",
+    "Northern Birch Credit Union",
+    "Ganaraska Credit Union",
+    "Community Credit Union",
+    "Momentum Credit Union",
+    "Oshawa Community Credit Union",
+    "Souris Credit Union",
+    "Me-Dian Credit Union",
+    "Turtleford Credit Union",
+    "Sandhills Credit Union",
+    "Bay Credit Union",
+    "St Joseph's Credit Union",
+    "Beaubear Credit Union",
+    "Public Service Credit Union",
+    "Victory Credit Union",
+    "Teachers Plus Credit Union",
+    "Dundalk Credit Union",
+    "Lahave River Credit Union",
+    "Morell Credit Union",
+    "iNova Credit Union",
+    "Glace Bay Central Credit Union",
+    "New Waterford Credit Union",
+    "North Sydney Credit Union",
+    "Venture Credit Union",
+    "Korean (Toronto) Credit Union",
+    "New Ross Credit Union",
+    "Valley First Credit Union",
+    "Acadian Credit Union",
+    "Educators Credit Union",
+    "ABCU Credit Union",
+    "Cape Breton Credit Union",
+    "Golden Horseshoe Credit Union",
+    "Princess Credit Union",
+    "Dominion Credit Union",
+    "NBTA Credit Union",
+    "Ontario Educational Credit Union",
+]
+
+
+canadian_brands = Brand.objects.all().filter(countries__contains="CA")
+
+
+CU = InstitutionType.objects.get(name="Credit Union")
+
+
+positives = {}
+for name in cu_names:
+    name = name[0:-13].lower()
+    matches = canadian_brands.filter(name__contains=name)
+
+    for x in matches:
+        commentary = Commentary.objects.get_or_create(brand=x)
+
+    matches = [x for x in matches if x.commentary.institution_type.filter(pk=CU.pk).exists()]
+
+    if len(matches) > 0:
+        positives[name] = [x.tag for x in matches]
