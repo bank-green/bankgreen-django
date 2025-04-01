@@ -1,30 +1,13 @@
-Vancity Credit Union
-Meridian Credit Union
-Coast Capital Savings
-Servus Credit Union
-First West Credit Union
 Access Credit Union
-Beem Credit Union
-Steinbach Credit Union
 Alterna Credit Union
-Affinity Credit Union
 DUCA Credit Union
-Prospera Credit Union
-Connect First Credit Union
-Conexus Credit Union
-Assiniboine Credit Union
-FirstOntario Credit Union
-Libro Credit Union
 BlueShore Financial Credit Union
 UNI Financial
-Windsor Family Credit Union
 Gulf and Fraser Credit Union
-Cambrian Credit Union
 Innovation Federal Credit Union
 Interior Savings Credit Union
 Coastal Community Credit Union
 Your Neighbourhood Credit Union
-Caisse Populaire Alliance
 Vision Credit Union
 Kawartha Credit Union
 Kindred Credit Union
@@ -44,7 +27,7 @@ Mainstreet Credit Union
 Buduchnist Credit Union
 Salmon Arm Savings and Credit Union
 Stride Credit Union
-Credit Union Atlantic Limited
+Atlantic Limited Credit Union
 Sunshine Coast Credit Union
 Brunswick Credit Union
 IC Savings & Credit Union
@@ -61,7 +44,6 @@ Lakeland Credit Union
 Rosenort Credit Union
 StellerVista Credit Union
 Diamond North Credit Union
-First Credit Union
 Radius Credit Union Ltd
 Sharon's Credit Union
 Parama Credit Union
@@ -134,7 +116,6 @@ Venture Credit Union
 Korean (Toronto) Credit Union
 New Ross Credit Union
 Valley First Credit Union
-Envision Credit Union
 Acadian Credit Union
 Educators Credit Union
 ABCU Credit Union
