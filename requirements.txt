@@ -32,7 +32,7 @@ np==1.0.2
 Markdown==3.3.7
 markdown-link-attr-modifier>=0.2.0,<0.3
 django-cities-light==3.9.2
-symspellpy==6.7.7
+#symspellpy==6.7.7
 django-autocomplete-light==3.9.4
 jsonschema==4.21.1
 graphql-core== 3.2.3

@@ -14,7 +14,6 @@ from dotenv import load_dotenv
 
 from brand.models import *
 from brand.models.commentary import InstitutionType
-from datasource.models import *
 
 
 ENV_DIR = str(Path().cwd() / "bankgreen/.env")
@@ -29,7 +28,9 @@ class Command(BaseCommand):
         rssd_ids = []
         with open(r"datasource/management/commands/cdfi_rssd_numbers.txt", "r") as file:
             rssd_ids = {line.strip() for line in file}
-        filtered_usnic = Usnic.objects.filter(entity_type="FCU").values(
+        filtered_usnic = Usnic.objects.filter(
+            entity_type="FCU"
+        ).values(  # Note: Usnic will be undefined # type: ignore
             "ncua",
             "website",
             "country",
@@ -61,7 +62,7 @@ class Command(BaseCommand):
             # checks if rssd number is in the list and adds _CDFI
             if rssd in rssd_ids:
                 new_name = row["legal_name"] + "_CDFI"
-            # removes special characters exept letters/numbers and spaces since we want to replace spaces with _
+            # removes special characters except letters/numbers and spaces since we want to replace spaces with _
             tag_name = re.sub(r"[^A-Za-z0-9 ]+", "", row.get("legal_name").lower())
             mapped_rows = {
                 "created": aware_datetime,
