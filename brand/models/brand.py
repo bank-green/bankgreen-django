@@ -10,8 +10,6 @@ from cities_light.models import Region, SubRegion
 from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
 
-import datasource.models as dsm
-
 
 def validate_tag(value):
     """This is the function that is used to validate the TAG"""
@@ -111,69 +109,6 @@ class Brand(TimeStampedModel):
             raise ValidationError(
                 f"A brand with tag {self.tag} already exists. Please edit that brand instead."
             )
-
-    def refresh_name(self, overwrite_existing=False):
-        # if the existing name is the default, we are overwriting
-        # otherwise, we're not doing anything.
-        if self.name == self.__class__.name.field.default:
-            overwrite_existing = True
-        if overwrite_existing is False:
-            return self.name, self.name
-
-        old_name = self.name
-        new_name = old_name
-
-        # Favor Banktrack names
-        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            if len(banktrack_datasources) > 0:
-                new_name = banktrack_datasources[0].name
-                self.name = new_name
-                self.save()
-                return (old_name, new_name)
-        elif wikidata_datasources := dsm.Wikidata.objects.filter(brand=self):
-            if len(wikidata_datasources) > 0:
-                new_name = wikidata_datasources[0].name
-                self.name = new_name
-                self.save()
-
-        return (old_name, new_name)
-
-    # TODO: Figure out how I can deduplicate these refreshes, perhaps specifying a
-    # field and an order of Datasource type priority
-    def refresh_description(self, overwrite_existing=False):
-        if self.description == self.__class__.description.field.default:
-            overwrite_existing = True
-        if overwrite_existing is False:
-            return (self.description, self.description)
-
-        old_description = self.description
-
-        # Favor Banktrack descriptions
-        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            if len(banktrack_datasources) > 0:
-                self.description = banktrack_datasources[0].description
-                self.save()
-        elif bimpact_datasources := dsm.Bimpact.objects.filter(brand=self):
-            if len(bimpact_datasources) > 0:
-                self.description = bimpact_datasources[0].description
-                self.save()
-
-        return (old_description, self)
-
-    def refresh_countries(self):
-        """refresh countries is additive. It never removes countries from brands"""
-        old_countries = self.countries
-        new_countries = self.countries
-        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            for banktrack_datasource in banktrack_datasources:
-                self.countries = old_countries + banktrack_datasource.countries
-                new_countries = self.countries
-        if bimpacts := dsm.Bimpact.objects.filter(brand=self):
-            for bimpact in bimpacts:
-                self.countries = old_countries + bimpact.countries
-                new_countries = self.countries
-
-        return old_countries, new_countries
 
     def refresh(self, name=True, description=True, countries=True, overwrite_existing=False):
         if name:

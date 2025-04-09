@@ -13,7 +13,6 @@ from dotenv import load_dotenv
 
 from brand.models import *
 from brand.models.commentary import InstitutionType
-from datasource.models import *
 
 
 # to run in django shell using 'python manage.py shell'
@@ -90,28 +89,18 @@ with open(canadian_fcu_names, "r") as file:
 query = Q()
 for name in canadian_fcu:
     query |= Q(legal_name__iexact=name)
-filtered_usnic = Usnic.objects.filter(query).values(
-    "ncua",
-    "website",
-    "country",
-    "legal_name",
-    "rssd",
-    "lei",
-    "fdic_cert",
-    "ein",
-    "occ",
-    "thrift_hc",
-    "cusip",
+filtered_brands = Brand.objects.filter(query).values(
+    "ncua", "website", "countries", "name", "lei", "fdic_cert", "ein", "occ", "thrift_hc", "cusip"
 )
 # selects the two fields to check for duplicates
 brand_values = Brand.objects.values("tag", "name")
 existing_tags = {x["tag"] for x in brand_values}
 existing_names = {x["name"] for x in brand_values}
 fcu = InstitutionType.objects.get(name="Credit Union")
-for row in filtered_usnic:
-    if row["legal_name"] in existing_names:
+for row in filtered_brands:
+    if row["name"] in existing_names:
         continue
-    existing_names.add(row["legal_name"])
+    existing_names.add(row["name"])
     # getting the datetime django wants
     naive_datetime = datetime.now()
     aware_datetime = timezone.make_aware(naive_datetime)

@@ -24,15 +24,3 @@ read_only_fields = {
     "brand",
     # "suggested_brands",
 }
-
-model_names = [
-    "banktrack",
-    "bimpact",
-    "bocc",
-    "fairfinance",
-    "gabv",
-    "marketforces",
-    "switchit",
-    "usnic",
-    "wikidata",
-]
