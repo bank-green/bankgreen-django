@@ -126,12 +126,11 @@ class BrandFilter(FilterSet):
 
     def filter_features(self, queryset, name, value):
         # return all brands that have "Yes" or "Maybe" for all given features
-        query = Q()
         for v in value:
-            query &= Q(
-                bank_features__feature__name__in=value, bank_features__offered__in=["Yes", "Maybe"]
+            queryset = queryset.filter(
+                bank_features__feature__name=v, bank_features__offered__in=["Yes", "Maybe"]
             )
-        return queryset.filter(query)
+        return queryset
 
     def filter_rating(self, queryset, name, value):
         # ratings matching the query exactly
