@@ -36,6 +36,7 @@ To setup the database, you must run migrations, add sample data by installing th
 `python manage.py migrate`   
 `python manage.py loaddata fixtures/initial/initial.json`   
 `python manage.py cities_light`   
+`python manage.py createcachetable`
 
 Then create a superuser:   
 `python manage.py createsuperuser`
