@@ -19,7 +19,9 @@ class StateBaseModel(models.Model):
             if c.code == self.state.country_code:
                 valid_country = True
         if not valid_country:
-            raise ValidationError("Cannot create, State is not in any of the Brand's Countries")
+            raise ValidationError(
+                f"State: {self.state} could not be added to Brand: {self.brand}. State does not belong to any of the Brand's countries: {self.brand.countries}."
+            )
 
     def save(self, *args, **kwargs):
         self.full_clean()
