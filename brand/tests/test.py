@@ -9,6 +9,8 @@ from rest_framework.test import APIClient
 
 from brand.models.commentary import Commentary, RatingChoice
 from brand.models.contact import Contact
+from brand.models.state import State
+from brand.models.brand_state import StateLicensed, StatePhysicalBranch
 from brand.tests.utils import create_test_brands
 from datasource.models import Banktrack, Usnic
 
@@ -515,3 +517,38 @@ class CommentaryFeatureOverrideTestCase(TestCase):
                     ]
                 },
             )
+
+
+class BrandStatesTestCase(TestCase):
+    def setUp(self) -> None:
+        self.usa_state1 = State.objects.create(
+            tag="new-hampshire-us", name="Wyoming", country_code="US"
+        )
+        self.usa_state2 = State.objects.create(tag="alabama-us", name="Alabama", country_code="US")
+        self.canada_state = State.objects.create(
+            tag="british-columbia-ca", name="British Columbia", country_code="CA"
+        )
+
+    def test_adding_brand_states_success(self):
+        usa_brand = Brand.objects.create(name="b", tag="b", description="d", countries=["US"])
+        StateLicensed.objects.create(brand=usa_brand, state=self.usa_state1)
+        StatePhysicalBranch.objects.create(brand=usa_brand, state=self.usa_state1)
+        StateLicensed.objects.create(brand=usa_brand, state=self.usa_state2)
+        StatePhysicalBranch.objects.create(brand=usa_brand, state=self.usa_state2)
+        state_physical_branch = usa_brand.state_physical_branch.all()
+        state_licensed = usa_brand.state_licensed.all()
+        self.assertEqual(state_licensed[0], self.usa_state2)
+        self.assertEqual(state_licensed[1], self.usa_state1)
+        self.assertEqual(state_physical_branch[0], self.usa_state2)
+        self.assertEqual(state_physical_branch[1], self.usa_state1)
+
+    def test_adding_state_of_wrong_country_raises(self):
+        usa_brand = Brand.objects.create(name="b", tag="b", description="d", countries=["US"])
+        with self.assertRaises(ValidationError):
+            StateLicensed.objects.create(brand=usa_brand, state=self.canada_state)
+
+    def test_adding_same_state_twice_raises(self):
+        usa_brand = Brand.objects.create(name="b", tag="b", description="d", countries=["US"])
+        StateLicensed.objects.create(brand=usa_brand, state=self.usa_state1)
+        with self.assertRaises(ValidationError):
+            StateLicensed.objects.create(brand=usa_brand, state=self.usa_state1)
