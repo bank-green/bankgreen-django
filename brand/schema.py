@@ -12,7 +12,7 @@ from cities_light.models import Region as RegionModel
 from cities_light.models import SubRegion as SubRegionModel
 from django_countries import countries
 from django_countries.graphql.types import Country
-from django_filters import BooleanFilter, ChoiceFilter, FilterSet, MultipleChoiceFilter
+from django_filters import BooleanFilter, CharFilter, ChoiceFilter, FilterSet, MultipleChoiceFilter
 from graphene import Scalar, relay
 from graphene_django import DjangoListField, DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
@@ -31,6 +31,7 @@ from .models import EmbraceCampaign as EmbraceCampaignModel
 from .models import FeatureType as FeatureModel
 from .models.commentary import InstitutionCredential as InstitutionCredentialModel
 from .models.commentary import InstitutionType as InstitutionTypeModel
+from .models.state import State as StateModel
 
 
 logger = logging.getLogger(__name__)
@@ -149,6 +150,9 @@ class BrandFilter(FilterSet):
 
         return direct_matches_qs | inheritors_qs
 
+    state_physical_branch = CharFilter(field_name="state_physical_branch__tag", lookup_expr="exact")
+    state_licensed = CharFilter(field_name="state_licensed__tag", lookup_expr="exact")
+
     class Meta:
         model = BrandModel
         fields = []
@@ -162,6 +166,11 @@ class Region(DjangoObjectType):
 class SubRegion(DjangoObjectType):
     class Meta:
         model = SubRegionModel
+
+
+class State(DjangoObjectType):
+    class Meta:
+        model = StateModel
 
 
 class Brand(DjangoObjectType):
@@ -184,6 +193,8 @@ class Brand(DjangoObjectType):
             "regions",
             "subregions",
             "datasources",
+            "state_licensed",
+            "state_physical_branch",
         ]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
@@ -351,7 +362,6 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
     commentary = relay.Node.Field(Commentary)
     commentaries = DjangoFilterConnectionField(Commentary)
-
     brand = graphene.Field(Brand, tag=graphene.Argument(graphene.String, required=True))
 
     brand_by_name = graphene.Field(Brand, name=graphene.Argument(graphene.String, required=True))
