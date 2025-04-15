@@ -36,6 +36,6 @@ brands_with_regions = Brand.objects.annotate(num_r=Count("regions")).filter(num_
 for brand in brands_with_regions:
     for region in brand.regions.all():
         if region.country.code2 in {"US", "CA", "AU"}:
-            tag = f"{region.slug}-{region.country.code2.lower()}"
+            tag = f"{region.country.code2.lower()}-{region.slug}"
             state = State.objects.get(tag=tag)
             StateLicensed.objects.create(brand=brand, state=state)
