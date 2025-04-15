@@ -3,11 +3,14 @@ to run:
 django shell < scripts/groot_387_add_states/script.py
 """
 
+from django.db.models import Count
+
 from cities_light.models import Region
+
+from brand.models.brand import Brand
 from brand.models.brand_state import StateLicensed
 from brand.models.state import State
-from brand.models.brand import Brand
-from django.db.models import Count
+
 
 usa_state_data = Region.objects.filter(country_id=234)
 canada_state_data = Region.objects.filter(country_id=38)

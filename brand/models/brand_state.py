@@ -1,8 +1,9 @@
-from brand.models.state import State
+from django.core.exceptions import ValidationError
 from django.db import models
 
+from brand.models.state import State
+
 from .brand import Brand
-from django.core.exceptions import ValidationError
 
 
 class StateBaseModel(models.Model):

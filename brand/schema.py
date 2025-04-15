@@ -12,7 +12,7 @@ from cities_light.models import Region as RegionModel
 from cities_light.models import SubRegion as SubRegionModel
 from django_countries import countries
 from django_countries.graphql.types import Country
-from django_filters import BooleanFilter, ChoiceFilter, FilterSet, MultipleChoiceFilter, CharFilter
+from django_filters import BooleanFilter, CharFilter, ChoiceFilter, FilterSet, MultipleChoiceFilter
 from graphene import Scalar, relay
 from graphene_django import DjangoListField, DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
@@ -29,9 +29,9 @@ from .models import BrandFeature as BrandFeatureModel
 from .models import Commentary as CommentaryModel
 from .models import EmbraceCampaign as EmbraceCampaignModel
 from .models import FeatureType as FeatureModel
-from .models.state import State as StateModel
 from .models.commentary import InstitutionCredential as InstitutionCredentialModel
 from .models.commentary import InstitutionType as InstitutionTypeModel
+from .models.state import State as StateModel
 
 
 logger = logging.getLogger(__name__)

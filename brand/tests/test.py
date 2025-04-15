@@ -7,10 +7,10 @@ from django.urls import reverse
 
 from rest_framework.test import APIClient
 
+from brand.models.brand_state import StateLicensed, StatePhysicalBranch
 from brand.models.commentary import Commentary, RatingChoice
 from brand.models.contact import Contact
 from brand.models.state import State
-from brand.models.brand_state import StateLicensed, StatePhysicalBranch
 from brand.tests.utils import create_test_brands
 from datasource.models import Banktrack, Usnic
 

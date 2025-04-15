@@ -13,11 +13,11 @@ from reversion.admin import VersionAdmin
 
 from brand.admin_utils import LinkedDatasourcesFilter, link_contacts, link_datasources
 from brand.forms import EmbraceCampaignForm
+from brand.models import State
 from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
 from brand.models.embrace_campaign import EmbraceCampaign
 from brand.models.features import BrandFeature, FeatureType
-from brand.models import StateLicensed, StatePhysicalBranch, State
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 

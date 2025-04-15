@@ -10,8 +10,8 @@ from cities_light.models import Region, SubRegion
 from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
 
-from brand.models.state import State
 import datasource.models as dsm
+from brand.models.state import State
 
 
 def validate_tag(value):
