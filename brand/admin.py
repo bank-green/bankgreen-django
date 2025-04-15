@@ -237,6 +237,34 @@ class HasSuggestionsFilter(admin.SimpleListFilter):
         return queryset
 
 
+class StatePhysicalBranchDropDownFilter(admin.SimpleListFilter):
+    template = "django_admin_listfilter_dropdown/dropdown_filter.html"
+    title = "state physical branch"
+    parameter_name = "state_physical_branch"
+
+    def lookups(self, request, model_admin):
+        return [(s.tag, str(s)) for s in State.objects.all()]
+
+    def queryset(self, request, queryset):
+        return queryset.filter(state_physical_branch__tag__exact=self.value())
+
+
+class StateLicensedDropDownFilter(admin.SimpleListFilter):
+    template = "django_admin_listfilter_dropdown/dropdown_filter.html"
+    title = "state licensed"
+    parameter_name = "state_licensed"
+
+    def lookups(self, request, model_admin):
+        return [(s.tag, str(s)) for s in State.objects.all()]
+
+    def queryset(self, request, queryset):
+        return queryset.filter(state_licensed__tag__exact=self.value())
+
+
+class ChoiceDropdownFilter(admin.ChoicesFieldListFilter):
+    template = "django_admin_listfilter_dropdown/dropdown_filter.html"
+
+
 @admin.register(InstitutionType)
 class InstitutionTypes(admin.ModelAdmin):
     model = InstitutionType
@@ -332,6 +360,8 @@ class BrandAdmin(VersionAdmin):
         HasSuggestionsFilter,
         LinkedDatasourcesFilter,
         ("countries", ChoiceDropdownFilter),
+        StateLicensedDropDownFilter,
+        StatePhysicalBranchDropDownFilter,
     )
     list_display = ("short_name", "short_tag", "rating_inherited", "pk", "website", "num_linked")
     list_display_links = ("short_name", "short_tag")
