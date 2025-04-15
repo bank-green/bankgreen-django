@@ -29,8 +29,7 @@ from .models import BrandFeature as BrandFeatureModel
 from .models import Commentary as CommentaryModel
 from .models import EmbraceCampaign as EmbraceCampaignModel
 from .models import FeatureType as FeatureModel
-from .models.brand_state import StateLicensed as StateLicensedModel
-from .models.brand_state import StatePhysicalBranch as StatePhysicalBranchModel
+from .models.state import State as StateModel
 from .models.commentary import InstitutionCredential as InstitutionCredentialModel
 from .models.commentary import InstitutionType as InstitutionTypeModel
 
@@ -169,6 +168,11 @@ class SubRegion(DjangoObjectType):
         model = SubRegionModel
 
 
+class State(DjangoObjectType):
+    class Meta:
+        model = StateModel
+
+
 class Brand(DjangoObjectType):
     """ """
 
@@ -189,6 +193,8 @@ class Brand(DjangoObjectType):
             "regions",
             "subregions",
             "datasources",
+            "state_licensed",
+            "state_physical_branch",
         ]
         interfaces = (relay.Node,)
         filterset_class = BrandFilter
@@ -356,7 +362,6 @@ class Query(graphene.ObjectType):
     node = relay.Node.Field()
     commentary = relay.Node.Field(Commentary)
     commentaries = DjangoFilterConnectionField(Commentary)
-
     brand = graphene.Field(Brand, tag=graphene.Argument(graphene.String, required=True))
 
     brand_by_name = graphene.Field(Brand, name=graphene.Argument(graphene.String, required=True))
