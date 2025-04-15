@@ -10,13 +10,13 @@ class State(models.Model):
 
     """
     Country code of Bank.Green supported country states
-    Must be compatable with django_countries `code` (ISO 3166-1 code 2)
+    Must be compatable with django_countries `code` (ISO 3166-1 alpha-2)
     """
 
     class CountryCode(models.TextChoices):
-        US = "US"
-        CA = "CA"
-        AU = "AU"
+        US = "US", "US"
+        CA = "CA", "CA"
+        AU = "AU", "AU"
 
     country_code = models.CharField(max_length=2, choices=CountryCode.choices)
 
