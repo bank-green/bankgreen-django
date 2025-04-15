@@ -17,6 +17,7 @@ from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
 from brand.models.embrace_campaign import EmbraceCampaign
 from brand.models.features import BrandFeature, FeatureType
+from brand.models import StateLicensed, StatePhysicalBranch, State
 from datasource.constants import model_names
 from datasource.models.datasource import Datasource, SuggestedAssociation
 
@@ -246,6 +247,28 @@ class InstitutionCredentials(admin.ModelAdmin):
     model = InstitutionCredential
 
 
+@admin.register(State)
+class StateAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    list_display = ("name", "country_code", "tag")
+
+
+class StateLicensedInline(admin.TabularInline):
+    model = Brand.state_licensed.through
+    autocomplete_fields = ["state"]
+    extra = 0
+    verbose_name = "State where Licensed"
+    verbose_name_plural = "States where Licensed"
+
+
+class StatePhysicalBranchInline(admin.TabularInline):
+    model = Brand.state_physical_branch.through
+    autocomplete_fields = ["state"]
+    extra = 0
+    verbose_name = "State where physical branch is located"
+    verbose_name_plural = "States where physical branches are located"
+
+
 @admin.register(Brand)
 class BrandAdmin(VersionAdmin):
     form = CountriesWidgetOverrideForm
@@ -316,7 +339,13 @@ class BrandAdmin(VersionAdmin):
 
     list_per_page = 800
 
-    inlines = [CommentaryInline, BrandFeaturesInline, DatasourceInline]
+    inlines = [
+        StateLicensedInline,
+        StatePhysicalBranchInline,
+        CommentaryInline,
+        BrandFeaturesInline,
+        DatasourceInline,
+    ]
 
     def save_model(self, request, obj, form, change):
         """
