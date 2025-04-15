@@ -12,7 +12,7 @@ from cities_light.models import Region as RegionModel
 from cities_light.models import SubRegion as SubRegionModel
 from django_countries import countries
 from django_countries.graphql.types import Country
-from django_filters import BooleanFilter, ChoiceFilter, FilterSet, MultipleChoiceFilter
+from django_filters import BooleanFilter, ChoiceFilter, FilterSet, MultipleChoiceFilter, CharFilter
 from graphene import Scalar, relay
 from graphene_django import DjangoListField, DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
@@ -29,6 +29,8 @@ from .models import BrandFeature as BrandFeatureModel
 from .models import Commentary as CommentaryModel
 from .models import EmbraceCampaign as EmbraceCampaignModel
 from .models import FeatureType as FeatureModel
+from .models.brand_state import StateLicensed as StateLicensedModel
+from .models.brand_state import StatePhysicalBranch as StatePhysicalBranchModel
 from .models.commentary import InstitutionCredential as InstitutionCredentialModel
 from .models.commentary import InstitutionType as InstitutionTypeModel
 
@@ -148,6 +150,9 @@ class BrandFilter(FilterSet):
         inheritors_qs = queryset.filter(Q(pk__in=inherited_matches_pks))
 
         return direct_matches_qs | inheritors_qs
+
+    state_physical_branch = CharFilter(field_name="state_physical_branch__tag", lookup_expr="exact")
+    state_licensed = CharFilter(field_name="state_licensed__tag", lookup_expr="exact")
 
     class Meta:
         model = BrandModel
