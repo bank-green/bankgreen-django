@@ -118,21 +118,16 @@ for row in cu_list:
     new_normalized_name = normalize_name(new_name)
     filtered_cus = existing_uk_cus.filter(name__contains=new_normalized_name)
     matching_tags = Brand.objects.filter(tag=tag)
-    if len(filtered_cus) == 1:
-        brand = filtered_cus[0]
+    if len(matching_tags) == 1:
+        brand = matching_tags.first()
         if not brand.website:
             brand.website = find_website(brand.name)
-        brand.frn = cu_list[1]
-        brand.commentary.display_on_website = True
+        if "GB" not in brand.countries:
+            brand.countries = list(brand.countries) + ["GB"]
+            brand.commentary.display_on_website = True
+        brand.commentary.display_on_webiste = True
         brand.save()
         brand.commentary.save()
-    elif len(matching_tags) == 1:
-        brand = matching_tags.first()
-        if "GB" not in brand.countries:
-            brand.countries.append("GB")
-            brand.commentary.display_on_website = True
-            brand.save()
-            brand.commentary.save()
     elif len(filtered_cus) < 1 and len(matching_tags) < 1:
         website = find_website(new_name)
         print(new_name)
