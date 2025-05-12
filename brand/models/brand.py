@@ -98,6 +98,9 @@ class Brand(TimeStampedModel):
     fdic_cert = models.TextField(default="", blank=True)
     occ = models.TextField(default="", blank=True)
     ein = models.TextField(default="", blank=True)
+    frn = models.TextField(
+        default="", blank=True, help_text="Financial Registration Number (used by UK regulators)"
+    )
 
     def __str__(self):
         return f"{self.tag}: {self.pk}"
