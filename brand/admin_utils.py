@@ -5,37 +5,6 @@ from django.utils.html import escape, format_html
 
 from cities_light.models import Country, Region, SubRegion
 
-from datasource.models.datasource import Datasource
-
-
-class LinkedDatasourcesFilter(admin.SimpleListFilter):
-    title = "Linked Datasources"
-    parameter_name = "Linked Datasources"
-
-    def lookups(self, request, model_admin):
-        return (("Linked", "Linked"), ("Unlinked", "Unlinked"))
-
-    def queryset(self, request, queryset):
-        value = self.value()
-        if value == "Linked":
-            brand_pks = [x.brand.pk for x in Datasource.objects.filter(brand__isnull=False)]
-            return queryset.filter(pk__in=brand_pks)
-        if value == "Unlinked":
-            brand_pks = [x.brand.pk for x in Datasource.objects.filter(brand__isnull=False)]
-            return queryset.exclude(pk__in=brand_pks)
-        return queryset
-
-
-def link_datasources(datasources, datasource_str):
-    links = []
-    filtered_datasources = [x for x in datasources if hasattr(x, datasource_str)]
-    for ds in filtered_datasources:
-        url = reverse("admin:%s_%s_change" % ("datasource", datasource_str), args=(ds.id,))
-        string_to_show = escape(f"{datasource_str}: {ds.name}")
-        link = format_html(f'<a href="{url}" />{string_to_show}</a>')
-        links.append(link)
-    return links
-
 
 def link_contacts(contacts=None):
     links = []

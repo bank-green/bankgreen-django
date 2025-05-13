@@ -1,9 +1,12 @@
+from datetime import timedelta
+
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 from django.urls import path, reverse
+from django.utils import timezone
 from django.utils.html import format_html
 
 from cities_light.admin import SubRegionAdmin
@@ -11,14 +14,12 @@ from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 from reversion.admin import VersionAdmin
 
-from brand.admin_utils import LinkedDatasourcesFilter, link_contacts, link_datasources
+from brand.admin_utils import link_contacts
 from brand.forms import EmbraceCampaignForm
 from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
 from brand.models.embrace_campaign import EmbraceCampaign
 from brand.models.features import BrandFeature, FeatureType
-from datasource.constants import model_names
-from datasource.models.datasource import Datasource, SuggestedAssociation
 
 from .models import Brand, Contact
 from .utils.harvest_data import update_commentary_feature_data
@@ -128,15 +129,6 @@ class BrandFeaturesInline(admin.StackedInline):
 
 
 # TODO make this a series of dropdowns
-class DatasourceInline(admin.StackedInline):
-    model = Datasource
-    extra = 0
-
-    readonly_fields = ("name", "source_id")
-    fields = [readonly_fields]
-
-    fk_name = "brand"
-    show_change_link = True
 
 
 class BrandFeaturesReadonlyInline(admin.StackedInline):
@@ -211,28 +203,31 @@ class HasSuggestionsFilter(admin.SimpleListFilter):
             (" Low Certainty Suggestions", " Low Certainty Suggestions"),
         )
 
+    # Updated HasSuggestionsFilter to use submission_date for certainty levels with BrandSuggestion
     def queryset(self, request, queryset):
         value = self.value()
         if value == "Any Suggestions":
-            brand_pks = [x.brand.pk for x in SuggestedAssociation.objects.all()]
-            return queryset.filter(pk__in=brand_pks)
-        if value == "No Suggestions":
-            brand_pks = [x.brand.pk for x in SuggestedAssociation.objects.all()]
-            return queryset.exclude(pk__in=brand_pks)
+            return queryset.filter(pk__in=BrandSuggestion.objects.values("pk"))
+        elif value == "No Suggestions":
+            return queryset.exclude(pk__in=BrandSuggestion.objects.values("pk"))
         elif value == "High Certainty Suggestions":
-            brand_pks = [x.brand.pk for x in SuggestedAssociation.objects.filter(certainty__lte=3)]
-            return queryset.filter(pk__in=brand_pks)
+            cutoff = timezone.now() - timedelta(days=30)
+            return queryset.filter(
+                pk__in=BrandSuggestion.objects.filter(submission_date__gte=cutoff).values("pk")
+            )
         elif value == " Medium Certainty Suggestions":
-            brand_pks = [
-                x.brand.pk
-                for x in SuggestedAssociation.objects.filter(certainty__gte=4, certainty__lte=7)
-            ]
-            return queryset.filter(pk__in=brand_pks)
+            recent_cutoff = timezone.now() - timedelta(days=30)
+            older_cutoff = timezone.now() - timedelta(days=90)
+            return queryset.filter(
+                pk__in=BrandSuggestion.objects.filter(
+                    submission_date__lt=recent_cutoff, submission_date__gte=older_cutoff
+                ).values("pk")
+            )
         elif value == " Low Certainty Suggestions":
-            brand_pks = [
-                x.datasource.pk for x in SuggestedAssociation.objects.filter(certainty__gte=8)
-            ]
-            return queryset.filter(pk__in=brand_pks)
+            cutoff = timezone.now() - timedelta(days=90)
+            return queryset.filter(
+                pk__in=BrandSuggestion.objects.filter(submission_date__lt=cutoff).values("pk")
+            )
         return queryset
 
 
@@ -252,54 +247,18 @@ class BrandAdmin(VersionAdmin):
     change_list_template = "change_list_template.html"
     change_form_template = "brand_change_form.html"
 
-    @admin.display(description="related datasources")
-    def related_datasources(self, obj):
-        datasources = obj.datasources.filter(brand=obj)
-        links = []
-        for model in model_names:
-            links += link_datasources(datasources, model)
-        return format_html("<br />".join(links))
-
-    @admin.display(description="suggested associations")
-    def suggested_associations(self, obj):
-        suggested_associations = SuggestedAssociation.objects.filter(brand=obj)
-        datasources = [x.datasource for x in suggested_associations]
-        links = []
-        for model in model_names:
-            links += link_datasources(datasources, model)
-        return format_html("<br />".join(links))
-
-    def num_suggest(self, obj):
-        num = SuggestedAssociation.objects.filter(brand=obj).count()
-        return str(num) if num else ""
-
-    @admin.display(ordering="-commentary__rating_inherited")
-    def rating_inherited(self, obj):
-        return obj.commentary.rating_inherited
-
-    @admin.display(ordering="tag")
-    def tag(self, obj):
-        return obj.tag
-
-    def num_linked(self, obj):
-        num = obj.datasources.count()
-        return str(num) if num else ""
-
     search_fields = ["name", "tag", "website"]
-    readonly_fields = ["related_datasources", "suggested_associations", "created", "modified"]
+    readonly_fields = ["created", "modified"]
     autocomplete_fields = ["subregions"]
     fields = (
         ("name", "tag"),
         ("website", "aliases"),
-        ("related_datasources"),
-        ("suggested_associations"),
         ("countries"),
         ("regions"),
         ("subregions"),
         ("rssd", "lei"),
         ("fdic_cert", "ncua"),
         ("permid"),
-        # "suggested_datasource",
         ("created", "modified"),
     )
 
@@ -307,16 +266,14 @@ class BrandAdmin(VersionAdmin):
         "commentary__display_on_website",
         "commentary__rating",
         HasSuggestionsFilter,
-        LinkedDatasourcesFilter,
         ("countries", ChoiceDropdownFilter),
     )
-    list_display = ("short_name", "short_tag", "rating_inherited", "pk", "website", "num_linked")
+    list_display = ("short_name", "short_tag", "pk", "website")
     list_display_links = ("short_name", "short_tag")
-    # list_editable=('website',)
 
     list_per_page = 800
 
-    inlines = [CommentaryInline, BrandFeaturesInline, DatasourceInline]
+    inlines = [CommentaryInline, BrandFeaturesInline]
 
     def save_model(self, request, obj, form, change):
         """
@@ -336,15 +293,6 @@ class BrandAdmin(VersionAdmin):
         # filter out all but base class
         qs = super(BrandAdmin, self).get_queryset(request).filter(brandsuggestion__isnull=True)
         return qs
-
-    def number_of_related_datasources(self, obj):
-        """
-        Counting the number of data sources is related to.
-        """
-        related_datasources = obj.datasources.all().count()
-        return related_datasources
-
-    number_of_related_datasources.short_description = "Nr. Dts"
 
     def change_view(self, request, object_id, extra_context=None):
         brand = Brand.objects.get(id=object_id)
