@@ -23,8 +23,8 @@ for [country_code, states] in [
     ["AU", australia_state_data],
 ]:
     for state in states:
-        State.objects.create(
-            tag=f"{state.slug}-{country_code.lower()}",
+        _, _ = State.objects.get_or_create(
+            tag=f"{country_code.lower()}-{state.slug}",
             name=state.name_ascii,
             country_code=country_code,
         )
@@ -38,4 +38,4 @@ for brand in brands_with_regions:
         if region.country.code2 in {"US", "CA", "AU"}:
             tag = f"{region.country.code2.lower()}-{region.slug}"
             state = State.objects.get(tag=tag)
-            StateLicensed.objects.create(brand=brand, state=state)
+            _, _ = StateLicensed.objects.get_or_create(brand=brand, state=state)

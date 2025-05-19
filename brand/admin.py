@@ -345,8 +345,6 @@ class BrandAdmin(VersionAdmin):
         ("related_datasources"),
         ("suggested_associations"),
         ("countries"),
-        ("regions"),
-        ("subregions"),
         ("rssd", "lei"),
         ("fdic_cert", "ncua"),
         ("permid"),
