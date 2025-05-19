@@ -2,7 +2,7 @@
 
 This is a [python django](https://www.djangoproject.com/) application for cataloging and creating environmental ratings of worldwide banks.
 
-Data is harvested from a variety of "data sources." Datasources are then associated with "brands." One brand may be comprised of zero, one, or many data sources.
+`Brand` objects are created either via the django admin or via the REST API. Each `Brand` contains factual information and is attached to one and only one `Commentary`. Data is served to the frontend via a read-only GraphQL API.
 
 # Installation and Development
 
@@ -56,9 +56,8 @@ To run the API endpoint tests:
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py collectstatic
-python manage.py refresh_datasources banktrack --local all
 python manage.py cities_light # refresh country/region database
-python manage.py update_contacts datasource/tests/test_data/contacts.csv
+python manage.py update_contacts brand/tests/test_data/contacts.csv
 python manage.py runserver
 ```
 
