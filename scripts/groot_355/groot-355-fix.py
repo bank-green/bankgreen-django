@@ -13,6 +13,7 @@ from brand.models.commentary import InstitutionType
 
 
 """
+  This script adds canadian credit unions
   to run:
   django shell < scripts/groot_355/groot-355-fix.py
 """

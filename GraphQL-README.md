@@ -55,15 +55,6 @@ query BrandsQuery(
           }
           details
         }
-        datasources {
-          edges {
-            node {
-              name
-              sourceLink
-              subclass
-            }
-          }
-        }
       }
     }
   }
@@ -118,15 +109,6 @@ query BrandByTagQuery($tag: String!) {
       }
       details
     }
-    datasources {
-      edges {
-        node {
-          name
-          sourceLink
-          subclass
-        }
-      }
-    }
   }
 }
 ```
@@ -180,15 +162,6 @@ query BrandByNameQuery($name: String!) {
       }
       details
     }
-    datasources {
-      edges {
-        node {
-          name
-          sourceLink
-          subclass
-        }
-      }
-    }
   }
 }
 ```
@@ -198,7 +171,7 @@ query BrandByNameQuery($name: String!) {
 
 ```graphql
 {
-  "name": "Vanbank"
+  "name": "Vancity"
 }
 ```
 
@@ -266,15 +239,6 @@ query BrandsQuery(
             name
           }
           details
-        }
-        datasources {
-          edges {
-            node {
-              name
-              sourceLink
-              subclass
-            }
-          }
         }
       }
     }

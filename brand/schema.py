@@ -21,7 +21,6 @@ from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
 
 from brand.models.commentary import RatingChoice
-from datasource.models.datasource import Datasource as DatasourceModel
 from utils.brand_utils import filter_json_field
 
 from .models import Brand as BrandModel
@@ -35,21 +34,6 @@ from .models.state import State as StateModel
 
 
 logger = logging.getLogger(__name__)
-
-
-class Datasource(DjangoObjectType):
-    subclass = graphene.String()
-
-    def resolve_subclass(obj, info):
-        try:
-            return type(obj.subclass()).__name__
-        except NotImplementedError:
-            return None
-
-    class Meta:
-        model = DatasourceModel
-        fields = ("name", "source_link")
-        interfaces = (relay.Node,)
 
 
 class BrandFilter(FilterSet):
@@ -127,13 +111,11 @@ class BrandFilter(FilterSet):
 
     def filter_features(self, queryset, name, value):
         # return all brands that have "Yes" or "Maybe" for all given features
-        return (
-            queryset.filter(
-                bank_features__feature__name__in=value, bank_features__offered__in=["Yes", "Maybe"]
+        for v in value:
+            queryset = queryset.filter(
+                bank_features__feature__name=v, bank_features__offered__in=["Yes", "Maybe"]
             )
-            .annotate(num_feats=Count("bank_features"))
-            .filter(num_feats=len(value))
-        )
+        return queryset
 
     def filter_rating(self, queryset, name, value):
         # ratings matching the query exactly
@@ -190,9 +172,6 @@ class Brand(DjangoObjectType):
             "commentary",
             "bank_features",
             "aliases",
-            "regions",
-            "subregions",
-            "datasources",
             "state_licensed",
             "state_physical_branch",
         ]
