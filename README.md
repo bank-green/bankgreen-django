@@ -97,30 +97,6 @@ This assumes that only the data wanted for the initial fixture is in the current
 django dumpdata cities_light.Subregion --indent 4 > fixtures/citieslight/subregion.json
 ```
 
-### Refresh datasources from API
-
-```
-# python manage.py refresh_datasources [DATASOURCE_NAME]
-# i.e.
-python manage.py refresh_datasources banktrack
-# or
-python manage.py refresh_datasources all
-```
-
-### Refresh datasources from local
-
-```
-# python manage.py refresh_datasources [DATASOURCE_NAME] --local [DATASOURCE_NAME]
-# i.e.
-python manage.py refresh_datasources banktrack --local banktrack
-```
-
-### Suggest Associations between brands and datasources
-_This is currently only implemented for USNIC datasources. Running may take between 1 and 10 minutes_
-```
-django manage.py suggest_associations
-```
-
 ## Rate limit in Nginx
 Rate limit for endpoint **/graphql** is 10 request/sec for every IP.
 To disable it do: `sudo nano etc/nginx/sites-available/bankgreen` and comment out or delete this part:
