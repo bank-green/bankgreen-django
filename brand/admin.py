@@ -150,6 +150,7 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
     fdic_cert = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
     ncua = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
     permid = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
+    frn = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
 
     def __init__(self, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
@@ -259,6 +260,7 @@ class BrandAdmin(VersionAdmin):
         ("rssd", "lei"),
         ("fdic_cert", "ncua"),
         ("permid"),
+        ("frn"),
         ("created", "modified"),
     )
 
