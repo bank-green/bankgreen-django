@@ -188,6 +188,8 @@ query BrandsQuery(
   $features: [String]
   $regions: [String]
   $subregions: [String]
+  $stateLicensed: String
+  $statePhysicalBranch: String
   $withCommentary: Boolean = false
   $withFeatures: Boolean = false
 ) {
@@ -198,6 +200,8 @@ query BrandsQuery(
     features: $features
     regions: $regions
     subregions: $subregions
+    stateLicensed: $stateLicensed
+    statePhysicalBranch: $statePhysicalBranch
   ) {
     edges {
       node {
@@ -209,6 +213,12 @@ query BrandsQuery(
           id
           name
           slug
+        }
+        stateLicensed {
+          tag
+        }
+        statePhysicalBranch {
+          tag
         }
         commentary @include(if: $withCommentary) {
           rating

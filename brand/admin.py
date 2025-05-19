@@ -16,6 +16,7 @@ from reversion.admin import VersionAdmin
 
 from brand.admin_utils import link_contacts
 from brand.forms import EmbraceCampaignForm
+from brand.models import State
 from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import Commentary, InstitutionCredential, InstitutionType
 from brand.models.embrace_campaign import EmbraceCampaign
@@ -232,6 +233,34 @@ class HasSuggestionsFilter(admin.SimpleListFilter):
         return queryset
 
 
+class StatePhysicalBranchDropDownFilter(admin.SimpleListFilter):
+    template = "django_admin_listfilter_dropdown/dropdown_filter.html"
+    title = "state physical branch"
+    parameter_name = "state_physical_branch"
+
+    def lookups(self, request, model_admin):
+        return [(s.tag, str(s)) for s in State.objects.all()]
+
+    def queryset(self, request, queryset):
+        return queryset.filter(state_physical_branch__tag__exact=self.value())
+
+
+class StateLicensedDropDownFilter(admin.SimpleListFilter):
+    template = "django_admin_listfilter_dropdown/dropdown_filter.html"
+    title = "state licensed"
+    parameter_name = "state_licensed"
+
+    def lookups(self, request, model_admin):
+        return [(s.tag, str(s)) for s in State.objects.all()]
+
+    def queryset(self, request, queryset):
+        return queryset.filter(state_licensed__tag__exact=self.value())
+
+
+class ChoiceDropdownFilter(admin.ChoicesFieldListFilter):
+    template = "django_admin_listfilter_dropdown/dropdown_filter.html"
+
+
 @admin.register(InstitutionType)
 class InstitutionTypes(admin.ModelAdmin):
     model = InstitutionType
@@ -240,6 +269,28 @@ class InstitutionTypes(admin.ModelAdmin):
 @admin.register(InstitutionCredential)
 class InstitutionCredentials(admin.ModelAdmin):
     model = InstitutionCredential
+
+
+@admin.register(State)
+class StateAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    list_display = ("name", "country_code", "tag")
+
+
+class StateLicensedInline(admin.TabularInline):
+    model = Brand.state_licensed.through
+    autocomplete_fields = ["state"]
+    extra = 0
+    verbose_name = "State where Licensed"
+    verbose_name_plural = "States where Licensed"
+
+
+class StatePhysicalBranchInline(admin.TabularInline):
+    model = Brand.state_physical_branch.through
+    autocomplete_fields = ["state"]
+    extra = 0
+    verbose_name = "State where physical branch is located"
+    verbose_name_plural = "States where physical branches are located"
 
 
 @admin.register(Brand)
@@ -255,8 +306,6 @@ class BrandAdmin(VersionAdmin):
         ("name", "tag"),
         ("website", "aliases"),
         ("countries"),
-        ("regions"),
-        ("subregions"),
         ("rssd", "lei"),
         ("fdic_cert", "ncua"),
         ("permid"),
@@ -269,13 +318,21 @@ class BrandAdmin(VersionAdmin):
         "commentary__rating",
         HasSuggestionsFilter,
         ("countries", ChoiceDropdownFilter),
+        StateLicensedDropDownFilter,
+        StatePhysicalBranchDropDownFilter,
     )
     list_display = ("short_name", "short_tag", "pk", "website")
     list_display_links = ("short_name", "short_tag")
 
     list_per_page = 800
 
-    inlines = [CommentaryInline, BrandFeaturesInline]
+    inlines = [
+        StateLicensedInline,
+        StatePhysicalBranchInline,
+        CommentaryInline,
+        BrandFeaturesInline,
+        DatasourceInline,
+    ]
 
     def save_model(self, request, obj, form, change):
         """

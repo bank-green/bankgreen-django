@@ -8,6 +8,8 @@ from cities_light.models import Region, SubRegion
 from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
 
+from brand.models.state import State
+
 
 def validate_tag(value):
     """This is the function that is used to validate the TAG"""
@@ -62,6 +64,20 @@ class Brand(TimeStampedModel):
     subregions = models.ManyToManyField(
         SubRegion, blank=True, help_text="regions in which there are local branches of a bank"
     )
+    state_licensed = models.ManyToManyField(
+        State,
+        blank=True,
+        through="StateLicensed",
+        help_text="State in which brand is licensed",
+        related_name="state_licensed",
+    )
+    state_physical_branch = models.ManyToManyField(
+        State,
+        blank=True,
+        through="StatePhysicalBranch",
+        help_text="State in which brand branches are physically located",
+        related_name="state_physical_branch",
+    )
 
     tag = models.CharField(
         max_length=100,
@@ -103,6 +119,7 @@ class Brand(TimeStampedModel):
 
     def clean(self):
         super().clean()
+
         if Brand.objects.filter(tag=self.tag).exclude(pk=self.pk).exists():
             raise ValidationError(
                 f"A brand with tag {self.tag} already exists. Please edit that brand instead."
