@@ -20,10 +20,7 @@ def validate_tag(value):
 
 class Brand(TimeStampedModel):
     """
-    A "Brand" is the instance shown to the end user.
-    Multiple Datasources may be associated with a single brand.
-    The brand's charasterics are initially determined by the data sources.
-    However, they may be overwritten by the user.
+    A "Brand" is the of a bank/insurer/asset manager shown to the end user.
     """
 
     name = models.CharField(
