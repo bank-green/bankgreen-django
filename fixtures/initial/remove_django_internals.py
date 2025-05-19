@@ -11,7 +11,6 @@ models_remove_list = [
     "auth.user",
     "sessions.session",
     "django_content_type",
-    "datasource.datasource",
 ]
 
 # Filter out entries with models in the remove list
