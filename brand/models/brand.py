@@ -1,16 +1,12 @@
 import re
-from typing import List, Tuple
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models.query import QuerySet
 from django.template.defaultfilters import truncatechars
 
 from cities_light.models import Region, SubRegion
 from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
-
-import datasource.models as dsm
 
 
 def validate_tag(value):
@@ -24,10 +20,7 @@ def validate_tag(value):
 
 class Brand(TimeStampedModel):
     """
-    A "Brand" is the instance shown to the end user.
-    Multiple Datasources may be associated with a single brand.
-    The brand's charasterics are initially determined by the data sources.
-    However, they may be overwritten by the user.
+    A "Brand" is the of a bank/insurer/asset manager shown to the end user.
     """
 
     name = models.CharField(
@@ -114,148 +107,6 @@ class Brand(TimeStampedModel):
             raise ValidationError(
                 f"A brand with tag {self.tag} already exists. Please edit that brand instead."
             )
-
-    def refresh_name(self, overwrite_existing=False):
-        # if the existing name is the default, we are overwriting
-        # otherwise, we're not doing anything.
-        if self.name == self.__class__.name.field.default:
-            overwrite_existing = True
-        if overwrite_existing is False:
-            return self.name, self.name
-
-        old_name = self.name
-        new_name = old_name
-
-        # Favor Banktrack names
-        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            if len(banktrack_datasources) > 0:
-                new_name = banktrack_datasources[0].name
-                self.name = new_name
-                self.save()
-                return (old_name, new_name)
-        elif wikidata_datasources := dsm.Wikidata.objects.filter(brand=self):
-            if len(wikidata_datasources) > 0:
-                new_name = wikidata_datasources[0].name
-                self.name = new_name
-                self.save()
-
-        return (old_name, new_name)
-
-    # TODO: Figure out how I can deduplicate these refreshes, perhaps specifying a
-    # field and an order of Datasource type priority
-    def refresh_description(self, overwrite_existing=False):
-        if self.description == self.__class__.description.field.default:
-            overwrite_existing = True
-        if overwrite_existing is False:
-            return (self.description, self.description)
-
-        old_description = self.description
-
-        # Favor Banktrack descriptions
-        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            if len(banktrack_datasources) > 0:
-                self.description = banktrack_datasources[0].description
-                self.save()
-        elif bimpact_datasources := dsm.Bimpact.objects.filter(brand=self):
-            if len(bimpact_datasources) > 0:
-                self.description = bimpact_datasources[0].description
-                self.save()
-
-        return (old_description, self)
-
-    def refresh_countries(self):
-        """refresh countries is additive. It never removes countries from brands"""
-        old_countries = self.countries
-        new_countries = self.countries
-        if banktrack_datasources := dsm.Banktrack.objects.filter(brand=self):
-            for banktrack_datasource in banktrack_datasources:
-                self.countries = old_countries + banktrack_datasource.countries
-                new_countries = self.countries
-        if bimpacts := dsm.Bimpact.objects.filter(brand=self):
-            for bimpact in bimpacts:
-                self.countries = old_countries + bimpact.countries
-                new_countries = self.countries
-
-        return old_countries, new_countries
-
-    def refresh(self, name=True, description=True, countries=True, overwrite_existing=False):
-        if name:
-            self.refresh_name(overwrite_existing)
-        if description:
-            self.refresh_description(overwrite_existing)
-        if countries:
-            self.refresh_countries()
-
-    @classmethod
-    def create_brand_from_banktrack(self, banks: List) -> Tuple[List, List]:
-        """
-        Add new brands to database using banktrack data.
-        """
-        brands_updated, brands_created = [], []
-
-        for bank in banks:
-            tag = bank.tag.replace(bank.tag_prepend_str, "")
-
-            # brand must be saved to bank after brand creation for refresh methods to work
-            brand, created = Brand.objects.get_or_create(tag=tag)
-            bank.brand = brand
-            bank.save()
-
-            brand.refresh(name=True, description=True, overwrite_existing=False)
-            brand.save()
-
-            if created:
-                brands_created.append(brand)
-            else:
-                brands_updated.append(brand)
-
-        return (brands_created, brands_updated)
-
-    @classmethod
-    def create_brand_from_usnic(self, banks: QuerySet) -> tuple[list, list, dict]:
-        """
-        Add new brands to database using USNIC data. Also checks for banks controlled by
-        chosen Usnic entries.
-        """
-        existing_brands, successful_brands = [], []
-
-        for bank in banks:
-            # Don't create new brand if it already exists
-            if bank["source_id"] in [x.tag for x in Brand.objects.all()]:
-                existing_brands.append(bank["name"])
-            # Otherwise create new brand with USNIC data
-            else:
-                brand = Brand(
-                    tag=bank["source_id"],
-                    id=bank["id"],
-                    name=bank["name"],
-                    countries=bank["country"],
-                    lei=bank["lei"],
-                    ein=bank["ein"],
-                    rssd=bank["rssd"],
-                    cusip=bank["cusip"],
-                    thrift=bank["thrift"],
-                    thrift_hc=bank["thrift_hc"],
-                    aba_prim=bank["aba_prim"],
-                    ncua=bank["ncua"],
-                    fdic_cert=bank["fdic_cert"],
-                    occ=bank["occ"],
-                )
-                brand.save()
-
-                # Add regions, if any
-                if "regions" in list(bank.keys()):
-                    for region in bank["regions"]:
-                        brand.regions.add(region)
-
-                # Add subregions, if any
-                if "subregions" in list(bank.keys()):
-                    for subregion in bank["subregions"]:
-                        brand.regions.add(subregion)
-
-                successful_brands.append(bank["name"])
-
-        return existing_brands, successful_brands
 
     @classmethod
     def _non_replacing_insert(cls, mydict: dict, key, value) -> dict:
