@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [("brand", "0052_commentary_last_reviewed")]
+    dependencies = [("brand", "0053_brand_frn")]
 
     operations = [
         migrations.CreateModel(

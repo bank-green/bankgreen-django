@@ -331,7 +331,6 @@ class BrandAdmin(VersionAdmin):
         StatePhysicalBranchInline,
         CommentaryInline,
         BrandFeaturesInline,
-        DatasourceInline,
     ]
 
     def save_model(self, request, obj, form, change):
