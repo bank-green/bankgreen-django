@@ -12,7 +12,7 @@ import requests
 def fetch_harvest_data(
     brand_tag, brand_url="", brand_country="", brand_name=""
 ) -> Union[Dict, Exception]:
-    base_url = "https://bank.green/harvest"
+    base_url = "https://harvest.bank.green/harvest"
 
     params = {
         "bankTag": brand_tag,
@@ -39,7 +39,7 @@ def fetch_harvest_data(
 def fetch_harvest_location_data(
     brand_tag, brand_url="", brand_country="", brand_name=""
 ) -> Union[Dict, Exception]:
-    base_url = "https://bank.green/location"
+    base_url = "https:///harvest.bank.green/location"
 
     params = {
         "bankTag": brand_tag,
@@ -55,8 +55,9 @@ def fetch_harvest_location_data(
 
     try:
         response = requests.get(
-            url, headers={"Authorization": f"Token {settings.HARVEST_TOKEN}"}, timeout=600
+            url, headers={"Authorization": f"Token {settings.HARVEST_TOKEN}"}, timeout=1000
         )
+        response.raise_for_status()
 
         return response.json()
     except Exception as e:
