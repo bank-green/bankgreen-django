@@ -11,7 +11,7 @@ from brand.utils.harvest_data import fetch_harvest_location_data
 
 
 class Command(BaseCommand):
-    help = "For US/CA/AU countries, this refreshes their state information using harvest"
+    help = "For brands located in US/CA/AU, this refreshes their state information using harvest"
     countries = ["AU", "US", "CA"]
 
     def handle(self, *args, **options):
@@ -19,10 +19,9 @@ class Command(BaseCommand):
 
         # the harvest location url endpoint only takes one country at a time
         for c in self.countries:
-            brands_by_country[c] = Brand.objects.filter(countries__contains=[c])
-
-        print(f"Fetching and updating state for  countries...")
-        for country, brands in brands_by_country:
+            brands_by_country[c] = Brand.objects.filter(countries__in=[c])
+        print(f"Initialized...")
+        for country, brands in brands_by_country.items():
             for brand in brands:
                 print(f"Attempt for: {brand.tag}, {country}")
                 data = fetch_harvest_location_data(
@@ -33,12 +32,12 @@ class Command(BaseCommand):
                 )
 
                 if isinstance(data, Exception):
-                    print(f"Error: {brand.tag}, failed to fetch:", data)
+                    print(f"\tError: {brand.tag}, failed to fetch:", data)
                     continue
 
                 location_data = data.get("location")
                 if not location_data:
-                    print(f"Error: {brand.tag}: missing location data")
+                    print(f"\tError: {brand.tag}: missing location data")
                     continue
 
                 state_licensed = location_data.get("licensed_to_operate_in")
@@ -55,3 +54,5 @@ class Command(BaseCommand):
                     if not state:
                         continue
                     brand.state_physical_branch.add(state)
+                print(f"\tCompleted: {brand.tag}, {country}")
+        print("Completed")
