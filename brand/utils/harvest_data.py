@@ -36,6 +36,33 @@ def fetch_harvest_data(
         return e
 
 
+def fetch_harvest_location_data(
+    brand_tag, brand_url="", brand_country="", brand_name=""
+) -> Union[Dict, Exception]:
+    base_url = "https://bank.green/location"
+
+    params = {
+        "bankTag": brand_tag,
+        "bankUrl": brand_url,
+        "bankCountry": brand_country,
+        "bankName": brand_name,
+    }
+
+    # URL encode the parameters
+    encoded_params = urlencode(params, doseq=True)
+
+    url = f"{base_url}?{encoded_params}"
+
+    try:
+        response = requests.get(
+            url, headers={"Authorization": f"Token {settings.HARVEST_TOKEN}"}, timeout=600
+        )
+
+        return response.json()
+    except Exception as e:
+        return e
+
+
 def update_commentary_feature_data(commentary, overwrite=False) -> None:
     if commentary is None:
         return None
