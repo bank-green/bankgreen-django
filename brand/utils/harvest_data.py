@@ -39,7 +39,7 @@ def fetch_harvest_data(
 def fetch_harvest_location_data(
     brand_tag, brand_url="", brand_country="", brand_name=""
 ) -> Union[Dict, Exception]:
-    base_url = "https:///harvest.bank.green/location"
+    base_url = "https://harvest.bank.green/location"
 
     params = {
         "bankTag": brand_tag,
