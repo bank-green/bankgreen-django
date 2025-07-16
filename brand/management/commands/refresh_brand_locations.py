@@ -15,11 +15,10 @@ class Command(BaseCommand):
     countries = ["AU", "US", "CA"]
 
     def handle(self, *args, **options):
-        brands_by_country = dict()
+        brands_by_country = {}
 
-        # the harvest location url endpoint only takes one country at a time
-        for c in self.countries:
-            brands_by_country[c] = Brand.objects.filter(countries__in=[c])
+        for country in self.countries:
+            brands_by_country[country] = Brand.objects.filter(countries__in=[country])
         print(f"Initialized...")
         for country, brands in brands_by_country.items():
             for brand in brands:
@@ -40,19 +39,17 @@ class Command(BaseCommand):
                     print(f"\tError: {brand.tag}: missing location data")
                     continue
 
-                state_licensed = location_data.get("licensed_to_operate_in")
-                state_physical_branch = location_data.get("physical_branches")
+                state_licensed = location_data.get("licensed_to_operate_in", [])
+                state_physical_branch = location_data.get("physical_branches", [])
 
-                for state_code in state_licensed or []:
+                for state_code in state_licensed:
                     state = State.objects.filter(tag=state_code).first()
-                    if not state:
-                        continue
-                    brand.state_licensed.add(state)
+                    if state:
+                        brand.state_licensed.add(state)
 
-                for state_code in state_physical_branch or []:
+                for state_code in state_physical_branch:
                     state = State.objects.filter(tag=state_code).first()
-                    if not state:
-                        continue
-                    brand.state_physical_branch.add(state)
+                    if state:
+                        brand.state_physical_branch.add(state)
                 print(f"\tCompleted: {brand.tag}, {country}")
         print("Completed")
