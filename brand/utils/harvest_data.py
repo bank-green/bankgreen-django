@@ -54,9 +54,7 @@ def fetch_harvest_location_data(
     url = f"{base_url}?{encoded_params}"
 
     try:
-        response = requests.get(
-            url, headers={"Authorization": f"Token {settings.HARVEST_TOKEN}"}, timeout=1000
-        )
+        response = requests.get(url, headers={"Authorization": f"Token {settings.HARVEST_TOKEN}"})
         response.raise_for_status()
 
         return response.json()
