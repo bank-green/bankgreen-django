@@ -39,12 +39,6 @@ urlpatterns = [
             csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))
         ),
     ),
-    path("region-autocomplete/", views.RegionAutocomplete.as_view(), name="region-autocomplete"),
-    path(
-        "subregion-autocomplete/",
-        views.SubRegionAutocomplete.as_view(),
-        name="subregion-autocomplete",
-    ),
     path("calendar/", views.calendar_redirect, name="calendar"),
     path("banks/<str:tag>/", views.brand_redirect, name="brand_quicklink"),
     path("sustainable-eco-banks/<str:tag>/", views.brand_redirect, name="brand_quicklink"),

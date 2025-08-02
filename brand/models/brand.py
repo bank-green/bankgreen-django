@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.template.defaultfilters import truncatechars
 
-from cities_light.models import Region, SubRegion
 from django_countries.fields import CountryField
 from model_utils.models import TimeStampedModel
 
@@ -57,12 +56,6 @@ class Brand(TimeStampedModel):
     website_locked = models.BooleanField(default=False)
     countries = CountryField(
         multiple=True, help_text="Where the brand offers retails services", blank=True
-    )
-    regions = models.ManyToManyField(
-        Region, blank=True, help_text="regions in which there are local branches of a bank"
-    )
-    subregions = models.ManyToManyField(
-        SubRegion, blank=True, help_text="regions in which there are local branches of a bank"
     )
     state_licensed = models.ManyToManyField(
         State,

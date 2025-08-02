@@ -9,8 +9,6 @@ from django.urls import path, reverse
 from django.utils import timezone
 from django.utils.html import format_html
 
-from cities_light.admin import SubRegionAdmin
-from cities_light.models import SubRegion
 from django_admin_listfilter_dropdown.filters import ChoiceDropdownFilter
 from reversion.admin import VersionAdmin
 
@@ -163,33 +161,10 @@ class CountriesWidgetOverrideForm(forms.ModelForm):
         self.fields["permid"].required = False
 
     class Meta:
-        widgets = {
-            "countries": FilteredSelectMultiple("countries", is_stacked=False),
-            "regions": FilteredSelectMultiple("regions", is_stacked=False),
-        }
-
-    def clean(self):
-        """
-        Checks that all regions have countries associated.
-        """
-        # raise_validation_error_for_missing_country(self)
-        # raise_validation_error_for_missing_region(self)
-
-        return self.cleaned_data
+        widgets = {"countries": FilteredSelectMultiple("countries", is_stacked=False)}
 
 
-admin.site.unregister(SubRegion)
 admin.site.login_template = "registration/login.html"
-
-
-@admin.register(SubRegion)
-class SubRegionAdminOverride(SubRegionAdmin):
-    search_fields = SubRegionAdmin.search_fields + (
-        "country__name",
-        "country__name_ascii",
-        "region__name",
-        "region__name_ascii",
-    )  # type: ignore
 
 
 class HasSuggestionsFilter(admin.SimpleListFilter):
@@ -301,7 +276,6 @@ class BrandAdmin(VersionAdmin):
 
     search_fields = ["name", "tag", "website"]
     readonly_fields = ["created", "modified"]
-    autocomplete_fields = ["subregions"]
     fields = (
         ("name", "tag"),
         ("website", "aliases"),
