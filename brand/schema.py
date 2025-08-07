@@ -8,8 +8,6 @@ from django.core.cache import cache
 from django.db.models import Case, Count, Q, When
 
 import graphene
-from cities_light.models import Region as RegionModel
-from cities_light.models import SubRegion as SubRegionModel
 from django_countries import countries
 from django_countries.graphql.types import Country
 from django_filters import BooleanFilter, CharFilter, ChoiceFilter, FilterSet, MultipleChoiceFilter
@@ -43,24 +41,6 @@ class BrandFilter(FilterSet):
 
     def filter_countries(self, queryset, name, value):
         return queryset.filter(countries__contains=value).order_by("name")
-
-    regions = TypedFilter(
-        method="filter_regions", lookup_expr="in", input_type=graphene.List(graphene.String)
-    )
-
-    def filter_regions(self, queryset, name, value):
-        return queryset.filter(
-            Q(regions__name_ascii__in=value) | Q(regions__geoname_code__in=value)
-        )
-
-    subregions = TypedFilter(
-        method="filter_subregions", lookup_expr="in", input_type=graphene.List(graphene.String)
-    )
-
-    def filter_subregions(self, queryset, name, value):
-        return queryset.filter(
-            Q(subregions__name_ascii__in=value) | Q(subregions__geoname_code__in=value)
-        )
 
     rating = MultipleChoiceFilter(
         method="filter_rating", field_name="commentary__rating", choices=RatingChoice.choices
@@ -140,16 +120,6 @@ class BrandFilter(FilterSet):
         fields = []
 
 
-class Region(DjangoObjectType):
-    class Meta:
-        model = RegionModel
-
-
-class SubRegion(DjangoObjectType):
-    class Meta:
-        model = SubRegionModel
-
-
 class State(DjangoObjectType):
     class Meta:
         model = StateModel
@@ -159,8 +129,6 @@ class Brand(DjangoObjectType):
     """ """
 
     countries = graphene.List(Country)
-    regions = Region
-    subregions = SubRegion
 
     class Meta:
         model = BrandModel

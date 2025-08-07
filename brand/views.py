@@ -18,7 +18,6 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
 
-from cities_light.models import Region, SubRegion
 from dal import autocomplete
 
 from scripts.check_duplicates import return_all_duplicates
@@ -32,34 +31,6 @@ from utils.brand_utils import concat_brand_feature_data, get_institution_data
 from .forms import BrandFeaturesForm
 from .models import Brand, BrandFeature
 from .models.commentary import InstitutionCredential, InstitutionType
-
-
-class RegionAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        # Don't forget to filter out results depending on the visitor !
-        if not self.request.user.is_authenticated:
-            return Region.objects.all()
-
-        qs = Region.objects.all()
-
-        if self.q:
-            qs = qs.filter(name__icontains=self.q)
-
-        return qs
-
-
-class SubRegionAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        # Don't forget to filter out results depending on the visitor !
-        if not self.request.user.is_authenticated:
-            return SubRegion.objects.all()
-
-        qs = SubRegion.objects.all()
-
-        if self.q:
-            qs = qs.filter(name__icontains=self.q)
-
-        return qs
 
 
 def update_success(request):
@@ -125,18 +96,6 @@ def serialize_brand_model_to_json():
         brand_data[0]["fields"].update(commentary_data[0]["fields"])
         brand_data[0]["fields"].update(feature_data)
         brand_data[0]["fields"].update(institute_dict)
-        brand_data[0]["fields"]["regions"] = ",".join(
-            [
-                reg_dict["display_name"]
-                for reg_dict in brand_instance.regions.all().values("display_name")
-            ]
-        )
-        brand_data[0]["fields"]["subregions"] = ",".join(
-            [
-                reg_dict["display_name"]
-                for reg_dict in brand_instance.subregions.all().values("display_name")
-            ]
-        )
         results.append(json.loads(json.dumps(brand_data[0])))
 
     with open(r"data.json", "w") as file:
