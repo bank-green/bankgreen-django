@@ -35,7 +35,6 @@ There's an .env file in the same path as settings.py where all environment varia
 To setup the database, you must run migrations, add sample data by installing the initial fixture and download a list of countries and regions:   
 `python manage.py migrate`   
 `python manage.py loaddata fixtures/initial/initial.json`   
-`python manage.py cities_light`   
 `python manage.py createcachetable`
 
 Then create a superuser:   
@@ -57,7 +56,6 @@ To run the API endpoint tests:
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py collectstatic
-python manage.py cities_light # refresh country/region database
 python manage.py update_contacts brand/tests/test_data/contacts.csv
 python manage.py runserver
 ```
@@ -91,11 +89,6 @@ sudo journalctl -u gunicorn.socket
 
 ### Updating initial fixture
 This assumes that only the data wanted for the initial fixture is in the current database. To update the initial fixture, run `python3 manage.py dumpdata --indent 4 > fixtures/initial/initial.json`. Remove internal django model entries from initial.json added to the database by running `python fixtures/initial/remove_django_internals.py` script. Specifically, this means any entries for the 'django_content_type' table, which has a UNIQUE constraint on it's fields, but more generally, refers to any internal Django tables not explicitly defined in the various models.   
-
-### Updating cities_light fixtures
-```
-django dumpdata cities_light.Subregion --indent 4 > fixtures/citieslight/subregion.json
-```
 
 ## Rate limit in Nginx
 Rate limit for endpoint **/graphql** is 10 request/sec for every IP.
