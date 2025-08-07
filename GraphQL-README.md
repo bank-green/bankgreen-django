@@ -40,7 +40,7 @@ query BrandsQuery(
           showOnSustainableBanksPage
           institutionType {
             name
-          }
+
           institutionCredentials {
             name
           }
@@ -113,7 +113,6 @@ query BrandByTagQuery($tag: String!) {
 }
 ```
 
-
 **variables**
 
 ```graphql
@@ -166,7 +165,6 @@ query BrandByNameQuery($name: String!) {
 }
 ```
 
-
 **variables**
 
 ```graphql
@@ -174,7 +172,6 @@ query BrandByNameQuery($name: String!) {
   "name": "Vancity"
 }
 ```
-
 
 ## filter banks by features
 
@@ -262,6 +259,7 @@ query BrandsQuery(
 ```
 
 ## all embrace campaigns
+
 ```
  query{
   embraceCampaigns{
@@ -274,6 +272,7 @@ query BrandsQuery(
 ```
 
 ## Filter brands, website, aliases and countries with embrace campaigns id
+
 ```
 query{
   brandsFilteredByEmbraceCampaign(id: 1){
@@ -281,7 +280,7 @@ query{
     website
     aliases
     tag
-    countries 
+    countries
     {
       name
     }
@@ -289,7 +288,7 @@ query{
 }
 ```
 
-## New Endpoint: harvestData
+## HarvestData
 
 Allows you to fetch and filter harvest data for sustainable banks.
 
@@ -319,20 +318,36 @@ query {
   }
 }
 ```
+
+`harvestData` returns information on a single brand, `tag` is required
+
+#### All/Filtered
+
+as to be used with sustainable-eco-banks page
+
 ```graphql
-query {
-  allHarvestData(
-    customersServed: String
-    depositProducts: String
-    financialFeatures: String
-    services: String
-    institutionalInformation: String
-    policies: String
-    loanProducts: String
-    interestRates: String
+query FilteredHarvestData(
+  $showOnSustainableBanksPage: Boolean
+  $country: String
+  $stateLicensed: String
+  $statePhysicalBranch: String
+  $customersServed: [String]
+  $depositProducts: [String]
+  $loanProducts: [String]
+  $services: [String]
+) {
+  filteredHarvestData(
+    showOnSustainableBanksPage: $showOnSustainableBanksPage
+    country: $country
+    stateLicensed: $stateLicensed
+    statePhysicalBranch: $statePhysicalBranch
+    customersServed: $customersServed
+    depositProducts: $depositProducts
+    loanProducts: $loanProducts
+    services: $services
   ) {
-    tag,
-    features{
+    tag
+    features {
       customersServed
       depositProducts
       financialFeatures
@@ -345,24 +360,43 @@ query {
   }
 }
 ```
-- *tag* is not required for **allHarvestData** query but required for **harvestData**. In **harvestData** query, you should pass tag of the bank (as param) you want to fetch data for.
-- All other parameters are optional and can be used for filtering the respective fields.
+
+example variable object:
+
+```json
+{
+  "showOnSustainableBanksPage": true,
+  "country": "US",
+  "stateLicensed": "US-AL",
+  "statePhysicalBranch": "US-AL",
+  "customersServed": ["retail_and_individual", "nonprofit", "government"],
+  "depositProducts": ["checkings_or_current", "savings"],
+  "loanProducts": ["corporate_lending", "small_business_lending"],
+  "services": ["mobile_banking", "local_branches", "ATM_network"]
+}
+```
 
 ### Example
 
+Return the customersServed and depositProducts data for the bank with the tag "atmos", filtering the customersServed field to only include entries containing the word "corporate":
+
 ```graphql
 query {
-  harvestData(tag: "atmos", customersServed: "corporate", financialFeatures: "interest_rates") {
+  harvestData(
+    tag: "atmos"
+    customersServed: "corporate"
+    financialFeatures: "interest_rates"
+  ) {
     customersServed
     depositProducts
   }
 }
 ```
 
-```
+```graphql
 {
-  commentary(id: "Q29tbWVudGFyeTozMzc="){
-    harvestData(customersServed: "corporate"){
+  commentary(id: "Q29tbWVudGFyeTozMzc=") {
+    harvestData(customersServed: "corporate") {
       customersServed
       depositProducts
     }
@@ -370,16 +404,62 @@ query {
 }
 ```
 
-The above two queries will return the customersServed and depositProducts data for the bank with the tag "atmos", filtering the customersServed field to only include entries containing the word "corporate".
+Returns the tags of all brands with harvest data:
 
-```
+```gql
 {
-  allHarvestData(depositProducts: "wealth_management"){
+  filteredHarvestData {
     tag
-    features{
+  }
+}
+```
+
+Returns all harvest data:
+
+```gql
+{
+  filteredHarvestData {
+    tag
+    features {
+      customersServed
       depositProducts
+      financialFeatures
+      services
+      institutionalInformation
+      policies
+      loanProducts
+      interestRates
     }
   }
 }
 ```
-The above query will return the depositProducts data for all banks, filtering the depositProducts field to only include entries containing the word "wealth_management".
+
+Returns list of brand tags for all brands with harvest data in Canada:
+
+```gql
+{
+  filteredHarvestData(country: "CA") {
+    tag
+  }
+}
+```
+
+Returns all harvest data for all brands with harvest data in Alabama, USA:
+
+```gql
+{
+  filteredHarvestData(country: "US", stateLicensed: "US-AL") {
+    tag
+    features {
+      customersServed
+      depositProducts
+      financialFeatures
+      services
+      institutionalInformation
+      policies
+      loanProducts
+      interestRates
+    }
+  }
+}
+```
