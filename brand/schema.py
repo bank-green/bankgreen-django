@@ -1,3 +1,4 @@
+import ast
 import hashlib
 import json
 import logging
@@ -14,7 +15,6 @@ from graphene import Scalar, relay
 from graphene_django import DjangoListField, DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
 from graphql import GraphQLError
-from graphql.language import ast
 from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
 
@@ -174,7 +174,7 @@ class JSONScalar(Scalar):
 
     @staticmethod
     def parse_literal(node):
-        if isinstance(node, ast.StringValueNode):
+        if isinstance(node, ast.StringValue):
             return json.loads(node.value)
 
     @staticmethod
@@ -332,16 +332,16 @@ class Query(graphene.ObjectType):
         interest_rates=graphene.String(),
     )
 
-    filtered_harvest_data = graphene.List(
+    all_harvest_data = graphene.List(
         HarvestDataDictionary,
-        show_on_sustainable_banks_page=graphene.Boolean(),
-        country=graphene.String(),
-        state_licensed=graphene.String(),
-        state_physical_branch=graphene.String(),
-        customers_served=graphene.List(graphene.String),
-        deposit_products=graphene.List(graphene.String),
-        loan_products=graphene.List(graphene.String),
-        services=graphene.List(graphene.String),
+        customers_served=graphene.String(),
+        deposit_products=graphene.String(),
+        financial_features=graphene.String(),
+        services=graphene.String(),
+        institutional_information=graphene.String(),
+        policies=graphene.String(),
+        loan_products=graphene.String(),
+        interest_rates=graphene.String(),
     )
 
     def resolve_brand(root, info, tag):
@@ -393,62 +393,43 @@ class Query(graphene.ObjectType):
             logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
             return
 
-    def resolve_filtered_harvest_data(
-        self,
-        info,
-        show_on_sustainable_banks_page=False,
-        country=None,
-        state_licensed=None,
-        state_physical_branch=None,
-        **kwargs,
-    ):
-        """
-        This query is built specifically for the need of bank.green's sustainable-eco-banks page
-        Returns
-        """
+    def resolve_all_harvest_data(self, info, **kwargs):
+        commentary_queries = CommentaryModel.objects.all()
+        tag_feature_json_dict = {
+            query.brand.tag: query.feature_json for query in commentary_queries
+        }
 
-        commentaries = CommentaryModel.objects.all()
+        filtered_data = []
 
-        if show_on_sustainable_banks_page:
-            commentaries = commentaries.filter(
-                show_on_sustainable_banks_page=show_on_sustainable_banks_page
+        try:
+            features_field = next(
+                (
+                    field
+                    for field in info.field_nodes[0].selection_set.selections
+                    if field.name.value == "features"
+                ),
+                None,
             )
+            if features_field and features_field.selection_set:
+                requested_fields = features_field.selection_set.selections
+                requested_fields = [field.name.value for field in requested_fields]
 
-        if country:
-            commentaries = commentaries.filter(brand__countries=country)
+            for tag, feature_json in tag_feature_json_dict.items():
+                filtered_data.append(
+                    {
+                        "tag": tag,
+                        "features": (
+                            filter_harvest_data(feature_json, requested_fields, **kwargs)
+                            if feature_json
+                            else {}
+                        ),
+                    }
+                )
 
-        if state_licensed:
-            state = StateModel.objects.get(tag=state_licensed)
-            commentaries = commentaries.filter(brand__state_licensed=state)
-
-        if state_physical_branch:
-            state = StateModel.objects.get(tag=state_physical_branch)
-            commentaries = commentaries.filter(brand__state_physical_branch=state)
-
-        requested_fields = kwargs.items()
-
-        def brand_has_requested_features(brand):
-            if not brand.get("features"):
-                return False
-
-            brand_features = brand.get("features")
-
-            for req_feature_k, req_features in requested_fields:
-                if req_feature_k not in brand_features:
-                    return False
-                for req_feature in req_features:
-                    if not brand_features[req_feature_k][req_feature].get("offered"):
-                        return False
-
-            return True
-
-        return [
-            HarvestDataDictionary(**data)
-            for data in filter(
-                brand_has_requested_features,
-                [{"tag": c.brand.tag, "features": c.feature_json} for c in commentaries],
-            )
-        ]
+            return [HarvestDataDictionary(**data) for data in filtered_data]
+        except Exception as e:
+            logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
+            raise GraphQLError(str(e))
 
     brands = DjangoFilterConnectionField(Brand)
 
