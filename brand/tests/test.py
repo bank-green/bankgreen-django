@@ -1,4 +1,6 @@
+import copy
 import json
+from typing import Any
 
 from django.contrib.auth.models import User
 from django.core.management import call_command
@@ -6,6 +8,7 @@ from django.forms import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 
+import graphene.test
 import pandas as pd
 from rest_framework.test import APIClient
 
@@ -13,6 +16,8 @@ from brand.models.brand_state import StateLicensed, StatePhysicalBranch
 from brand.models.commentary import Commentary, RatingChoice
 from brand.models.contact import Contact
 from brand.models.state import State
+from brand.schema import schema
+from brand.tests.test_data.feature_json import dummy_all_features, dummy_no_features
 from brand.tests.utils import create_test_brands
 
 from ..models import Brand
@@ -513,3 +518,134 @@ class TestUpdateContacts(TestCase):
         contact2 = Contact.objects.get(email="janeastrid@testbrand.com")
         self.assertEqual(contact2.fullname, "Jane Astrid")
         self.assertEqual(contact2.commentary, self.commentary)
+
+
+class BrandsFilterHarvestDataTest(TestCase):
+    """
+    Tests for `resolve_brands` and `harvest_data_filter_q` brands filter functionalty
+    Found in brand's Schema.py
+    As needed for the FE's sustainable-eco-banks page
+    """
+
+    def setUp(self) -> None:
+        Brand.objects.create(tag=f"normal_brand")
+
+        for n in range(2):
+            b = Brand.objects.create(tag=f"brand_with_empty_features_json{n}")
+            Commentary.objects.create(brand=b)
+
+        for n in range(2):
+            b = Brand.objects.create(tag=f"brand_with_all_features{n}")
+            Commentary.objects.create(brand=b, feature_json=dummy_all_features)
+
+        for n in range(2):
+            b = Brand.objects.create(tag=f"brand_offering_no_features{n}")
+            Commentary.objects.create(brand=b, feature_json=dummy_no_features)
+
+        dummy_partial_features = copy.deepcopy(dummy_all_features)
+        dummy_partial_features["customers_served"]["corporate"]["offered"] = False
+        dummy_partial_features["deposit_products"]["checkings_or_current"]["offered"] = False
+        del dummy_partial_features["services"]
+
+        for n in range(2):
+            b = Brand.objects.create(tag=f"brand_with_partial_features{n}")
+            Commentary.objects.create(brand=b, feature_json=dummy_partial_features)
+
+        self.gql_client = graphene.test.Client(schema)
+
+    def test_filters_successfully(self):
+        variables = {
+            "harvestData": {
+                "customersServed": ["corporate", "sme", "retail_and_individual"],
+                "depositProducts": ["checkings_or_current", "savings", "CDs"],
+                "services": ["mobile_banking", "ATM_network", "local_branches"],
+                "loanProducts": [
+                    "corporate_lending",
+                    "small_business_lending",
+                    "equipment_lending",
+                ],
+            }
+        }
+
+        query = """
+        query FilterBrands($harvestData: HarvestDataFilterInput) {
+            brands(harvestData: $harvestData) {
+                edges {
+                    node {
+                        tag
+                        harvestData {
+                            customersServed
+                            depositProducts
+                            services
+                            financialFeatures
+                        }
+                    }
+                }
+            }
+        }
+        """
+
+        res: Any = self.gql_client.execute(query, variables=variables)
+        res = res["data"]["brands"]["edges"]
+
+        self.assertEqual(len(res), 2)
+        for r in res:
+            data = r["node"]["harvestData"]
+            expected_fields = {
+                "customersServed",
+                "depositProducts",
+                "services",
+                "financialFeatures",
+            }
+            self.assertTrue(expected_fields.issubset(data.keys()))
+
+    def test_filters_partials_successfully(self):
+        variables = {
+            "harvestData": {
+                "customersServed": ["sme", "retail_and_individual"],
+                "depositProducts": ["savings", "CDs"],
+            }
+        }
+
+        query = """
+        query FilterBrands($harvestData: HarvestDataFilterInput) {
+            brands(harvestData: $harvestData) {
+                edges {
+                    node {
+                        tag
+                    }
+                }
+            }
+        }
+        """
+
+        res: Any = self.gql_client.execute(query, variables=variables)
+        res = res["data"]["brands"]["edges"]
+
+        self.assertEqual(len(res), 4)
+
+    def test_doesnt_filter_when_not_invoked(self):
+        variables = {}
+
+        query = """
+        query FilterBrands($harvestData: HarvestDataFilterInput) {
+            brands(harvestData: $harvestData) {
+                edges {
+                    node {
+                        tag
+                        harvestData {
+                            customersServed
+                            depositProducts
+                            services
+                            financialFeatures
+                        }
+                    }
+                }
+            }
+        }
+        """
+
+        res: Any = self.gql_client.execute(query, variables=variables)
+        res = res["data"]["brands"]["edges"]
+
+        self.assertEqual(len(res), 9)
