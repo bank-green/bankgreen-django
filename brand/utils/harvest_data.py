@@ -1,3 +1,4 @@
+import time
 from datetime import datetime, timedelta
 from typing import Dict, Union
 from urllib.parse import urlencode
@@ -10,7 +11,7 @@ import requests
 
 
 def fetch_harvest_data(
-    brand_tag, brand_url="", brand_country="", brand_name=""
+    brand_tag, brand_url="", brand_country="", brand_name="", retry_count=0, max_retries=2
 ) -> Union[Dict, Exception]:
     base_url = "https://harvest.bank.green/harvest"
 
@@ -31,13 +32,35 @@ def fetch_harvest_data(
             url, headers={"Authorization": f"Token {settings.HARVEST_TOKEN}"}, timeout=600
         )
 
+        # Explicitly check for 524 and 504 status codes
+        if response.status_code in [524, 504]:
+            if retry_count < max_retries:
+                print(
+                    f"Received {response.status_code} status code. Waiting 5 minutes before retry {retry_count + 1}..."
+                )
+                time.sleep(300)  # 5 minutes = 300 seconds
+                return fetch_harvest_data(
+                    brand_tag,
+                    brand_url,
+                    brand_country,
+                    brand_name,
+                    retry_count=retry_count + 1,
+                    max_retries=max_retries,
+                )
+            else:
+                print(f"Max retries reached for {response.status_code} status code")
+                return Exception(
+                    f"Failed after {max_retries} attempts due to {response.status_code} status code"
+                )
+
         return response.json()
+
     except Exception as e:
         return e
 
 
 def fetch_harvest_location_data(
-    brand_tag, brand_url="", brand_country="", brand_name=""
+    brand_tag, brand_url="", brand_country="", brand_name="", retry_count=0, max_retries=2
 ) -> Union[Dict, Exception]:
     base_url = "https://harvest.bank.green/location"
 
@@ -55,8 +78,29 @@ def fetch_harvest_location_data(
 
     try:
         response = requests.get(url, headers={"Authorization": f"Token {settings.HARVEST_TOKEN}"})
-        response.raise_for_status()
 
+        # Explicitly check for 524 and 504 status codes
+        if response.status_code in [524, 504]:
+            if retry_count < max_retries:
+                print(
+                    f"Received {response.status_code} status code. Waiting 2 minutes before retry {retry_count + 1}..."
+                )
+                time.sleep(120)  # 2 minutes = 120 seconds
+                return fetch_harvest_location_data(
+                    brand_tag,
+                    brand_url,
+                    brand_country,
+                    brand_name,
+                    retry_count=retry_count + 1,
+                    max_retries=max_retries,
+                )
+            else:
+                print(f"Max retries reached for {response.status_code} status code")
+                return Exception(
+                    f"Failed after {max_retries} attempts due to {response.status_code} status code"
+                )
+
+        response.raise_for_status()
         return response.json()
     except Exception as e:
         return e
@@ -82,4 +126,5 @@ def update_commentary_feature_data(commentary, overwrite=False) -> None:
             commentary.feature_refresh_date = datetime.now()
             commentary.save()
         else:
+            breakpoint()
             raise ValidationError({"data": "harvest data needs to be in dict format"})
