@@ -321,6 +321,13 @@ def filter_harvest_data(cached_harvest_data, requested_fields, **kwargs):
         raise GraphQLError(str(error))
 
 
+class HarvestDataFilterInput(graphene.InputObjectType):
+    customers_served = graphene.List(graphene.String)
+    deposit_products = graphene.List(graphene.String)
+    loan_products = graphene.List(graphene.String)
+    services = graphene.List(graphene.String)
+
+
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
     commentary = relay.Node.Field(Commentary)
@@ -447,7 +454,7 @@ class Query(graphene.ObjectType):
             logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
             raise GraphQLError(str(e))
 
-    brands = DjangoFilterConnectionField(Brand)
+    brands = DjangoFilterConnectionField(Brand, harvest_data=HarvestDataFilterInput())
 
     def resolve_brands(self, info, harvest_data=None, **kwargs):
         cache_timeout_in_minutes = 20
@@ -464,6 +471,8 @@ class Query(graphene.ObjectType):
 
         if filterset.is_valid():
             result = filterset.qs
+            if harvest_data:
+                result = result.filter(harvest_data_filter_q(harvest_data))
         else:
             result = queryset
 
@@ -471,6 +480,20 @@ class Query(graphene.ObjectType):
         return result
 
     features = DjangoListField(Feature)
+
+
+def harvest_data_filter_q(requested_fields):
+    base_path = "commentary__feature_json__"
+
+    query = Q()
+    if not requested_fields:
+        return query
+    for key in requested_fields:
+        path = base_path + key
+        for feature in requested_fields[key]:
+            is_feature_offered = {f"{path}__{feature.strip()}__offered": True}
+            query &= Q(**is_feature_offered)
+    return query
 
 
 schema = graphene.Schema(query=Query)
