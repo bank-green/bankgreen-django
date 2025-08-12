@@ -192,6 +192,7 @@ query BrandsQuery(
   $statePhysicalBranch: String
   $withCommentary: Boolean = false
   $withFeatures: Boolean = false
+  $harvestData: HarvestDataFilterInput
 ) {
   brands(
     country: $country
@@ -202,6 +203,7 @@ query BrandsQuery(
     subregions: $subregions
     stateLicensed: $stateLicensed
     statePhysicalBranch: $statePhysicalBranch
+    harvestData: $harvestData
   ) {
     edges {
       node {
@@ -233,12 +235,11 @@ query BrandsQuery(
           fossilFreeAllianceRating
           showOnSustainableBanksPage
         }
-        bankFeatures @include(if: $withFeatures) {
-          offered
-          feature {
-            name
-          }
-          details
+        harvestData {
+          customersServed
+          depositProducts
+          services
+          financialFeatures
         }
       }
     }
