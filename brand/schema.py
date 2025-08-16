@@ -459,7 +459,7 @@ class Query(graphene.ObjectType):
     def resolve_brands(self, info, harvest_data=None, **kwargs):
         cache_timeout_in_minutes = 20
 
-        sorted_args = json.dumps(kwargs, sort_keys=True)
+        sorted_args = json.dumps(kwargs | (harvest_data or {}), sort_keys=True)
         cache_key = f"brand_query_cache{hashlib.md5(sorted_args.encode('utf-8')).hexdigest()}"
 
         cached_result = cache.get(cache_key)
