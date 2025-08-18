@@ -1,4 +1,3 @@
-import ast
 import hashlib
 import json
 import logging
@@ -14,7 +13,7 @@ from django_filters import BooleanFilter, CharFilter, ChoiceFilter, FilterSet, M
 from graphene import Scalar, relay
 from graphene_django import DjangoListField, DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField, TypedFilter
-from graphql import GraphQLError
+from graphql import GraphQLError, StringValueNode
 from markdown import markdown
 from markdown.extensions.footnotes import FootnoteExtension
 
@@ -125,28 +124,6 @@ class State(DjangoObjectType):
         model = StateModel
 
 
-class Brand(DjangoObjectType):
-    """ """
-
-    countries = graphene.List(Country)
-
-    class Meta:
-        model = BrandModel
-        fields = [
-            "tag",
-            "name",
-            "website",
-            "countries",
-            "commentary",
-            "bank_features",
-            "aliases",
-            "state_licensed",
-            "state_physical_branch",
-        ]
-        interfaces = (relay.Node,)
-        filterset_class = BrandFilter
-
-
 class HtmlFromMarkdown(Scalar):
     """Markdown parsed into HTML"""
 
@@ -174,7 +151,7 @@ class JSONScalar(Scalar):
 
     @staticmethod
     def parse_literal(node):
-        if isinstance(node, ast.StringValue):
+        if isinstance(node, StringValueNode):
             return json.loads(node.value)
 
     @staticmethod
@@ -196,6 +173,45 @@ class HarvestData(graphene.ObjectType):
 class HarvestDataDictionary(graphene.ObjectType):
     features = graphene.Field(HarvestData)
     tag = graphene.String()
+
+
+class Brand(DjangoObjectType):
+    """ """
+
+    countries = graphene.List(Country)
+    harvest_data = graphene.Field(HarvestData)
+
+    class Meta:
+        model = BrandModel
+        fields = [
+            "tag",
+            "name",
+            "website",
+            "countries",
+            "commentary",
+            "bank_features",
+            "aliases",
+            "state_licensed",
+            "state_physical_branch",
+        ]
+        interfaces = (relay.Node,)
+        filterset_class = BrandFilter
+
+    def resolve_harvest_data(self, info, **kwargs):
+        try:
+            if not self.commentary.feature_json:
+                return None
+
+            requested_fields = [
+                field.name.value for field in info.field_nodes[0].selection_set.selections
+            ]
+
+            filtered_data = filter_harvest_data(
+                self.commentary.feature_json, requested_fields, **kwargs
+            )
+            return HarvestData(**filtered_data)
+        except:
+            return None
 
 
 class Commentary(DjangoObjectType):
@@ -303,6 +319,13 @@ def filter_harvest_data(cached_harvest_data, requested_fields, **kwargs):
         return filtered_data
     except Exception as error:
         raise GraphQLError(str(error))
+
+
+class HarvestDataFilterInput(graphene.InputObjectType):
+    customers_served = graphene.List(graphene.String)
+    deposit_products = graphene.List(graphene.String)
+    loan_products = graphene.List(graphene.String)
+    services = graphene.List(graphene.String)
 
 
 class Query(graphene.ObjectType):
@@ -431,12 +454,12 @@ class Query(graphene.ObjectType):
             logger.error(f"Unexpected error resolving harvest data for {tag}: {str(e)}")
             raise GraphQLError(str(e))
 
-    brands = DjangoFilterConnectionField(Brand)
+    brands = DjangoFilterConnectionField(Brand, harvest_data=HarvestDataFilterInput())
 
-    def resolve_brands(self, info, **kwargs):
+    def resolve_brands(self, info, harvest_data=None, **kwargs):
         cache_timeout_in_minutes = 20
 
-        sorted_args = json.dumps(kwargs, sort_keys=True)
+        sorted_args = json.dumps(kwargs | (harvest_data or {}), sort_keys=True)
         cache_key = f"brand_query_cache{hashlib.md5(sorted_args.encode('utf-8')).hexdigest()}"
 
         cached_result = cache.get(cache_key)
@@ -448,6 +471,8 @@ class Query(graphene.ObjectType):
 
         if filterset.is_valid():
             result = filterset.qs
+            if harvest_data:
+                result = result.filter(harvest_data_filter_q(harvest_data))
         else:
             result = queryset
 
@@ -455,6 +480,20 @@ class Query(graphene.ObjectType):
         return result
 
     features = DjangoListField(Feature)
+
+
+def harvest_data_filter_q(requested_fields):
+    base_path = "commentary__feature_json__"
+
+    query = Q()
+    if not requested_fields:
+        return query
+    for key in requested_fields:
+        path = base_path + key
+        for feature in requested_fields[key]:
+            is_feature_offered = {f"{path}__{feature.strip()}__offered": True}
+            query &= Q(**is_feature_offered)
+    return query
 
 
 schema = graphene.Schema(query=Query)
