@@ -53,7 +53,14 @@ class CommentaryAdmin(admin.ModelAdmin):
         return redirect("admin:brand_commentary_change", object_id=object_id)
 
     def feature_yaml(self, obj):
-        return format_html("<pre>{}</pre>", obj.feature_yaml)
+        content = obj.feature_yaml or ""
+        return format_html(
+            '<details><summary style="cursor:pointer; user-select:none;">{}</summary>'
+            '<pre style="white-space:pre-wrap; max-height:400px; overflow:auto; margin-top:8px;">{}</pre>'
+            "</details>",
+            "Show/Hide Feature YAML",
+            content,
+        )
 
     feature_yaml.short_description = "Feature Data (YAML)"
 
@@ -109,10 +116,18 @@ class CommentaryInline(admin.StackedInline):
             {"fields": ("institution_type", "institution_credentials")},
         ),
         ("Meta", {"fields": ("comment",)}),
+        ("Harvest Data", {"fields": (("feature_refresh_date", "feature_yaml"),)}),
     )
 
     def feature_yaml(self, obj):
-        return format_html("<pre>{}</pre>", obj.feature_yaml)
+        content = obj.feature_yaml or ""
+        return format_html(
+            '<details><summary style="cursor:pointer; user-select:none;">{}</summary>'
+            '<pre style="white-space:pre-wrap; max-height:400px; overflow:auto; margin-top:8px;">{}</pre>'
+            "</details>",
+            "Show/Hide Feature YAML",
+            content,
+        )
 
     feature_yaml.short_description = "Feature Data (YAML)"
 

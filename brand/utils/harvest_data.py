@@ -106,7 +106,11 @@ def fetch_harvest_location_data(
         return e
 
 
-def update_commentary_feature_data(commentary, overwrite=False) -> None:
+def update_commentary_feature_data(commentary, overwrite=False):
+    """
+    Refresh and persist feature data for the given commentary.
+    Returns the saved commentary on success, or None on failure/no-op.
+    """
     if commentary is None:
         return None
 
@@ -123,8 +127,12 @@ def update_commentary_feature_data(commentary, overwrite=False) -> None:
         )
         if isinstance(data, dict):
             commentary.feature_json = data
-            commentary.feature_refresh_date = datetime.now()
+            commentary.feature_refresh_date = timezone.now()
             commentary.save()
+            return commentary
         else:
-            breakpoint()
-            raise ValidationError({"data": "harvest data needs to be in dict format"})
+            # Gracefully indicate failure; callers can decide how to report it
+            return None
+
+    # If not overwriting and no refresh criteria met, treat as no-op
+    return None
