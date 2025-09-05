@@ -146,12 +146,6 @@ class BrandFeaturesReadonlyInline(admin.StackedInline):
     readonly_fields = ["feature", "details"]
 
 
-@admin.register(FeatureType)
-class BrandFeatureAdmin(admin.ModelAdmin):
-    search_fields = ("name", "description")
-    list_display = ("name", "description")
-
-
 class CountriesWidgetOverrideForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={"rows": 2, "cols": 100}))
     rssd = forms.CharField(widget=forms.Textarea(attrs={"rows": 1}))
