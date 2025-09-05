@@ -132,11 +132,6 @@ class CommentaryInline(admin.StackedInline):
     feature_yaml.short_description = "Feature Data (YAML)"
 
 
-class BrandFeaturesInline(admin.StackedInline):
-    model = BrandFeature
-    fields = (("feature", "details"),)
-
-
 # @admin.display(description='Name')
 # def upper_case_name(obj):
 #     return obj.name.upper()
@@ -315,12 +310,7 @@ class BrandAdmin(VersionAdmin):
 
     list_per_page = 800
 
-    inlines = [
-        StateLicensedInline,
-        StatePhysicalBranchInline,
-        CommentaryInline,
-        BrandFeaturesInline,
-    ]
+    inlines = [StateLicensedInline, StatePhysicalBranchInline, CommentaryInline]
 
     def save_model(self, request, obj, form, change):
         """
