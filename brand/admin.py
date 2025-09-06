@@ -53,7 +53,14 @@ class CommentaryAdmin(admin.ModelAdmin):
         return redirect("admin:brand_commentary_change", object_id=object_id)
 
     def feature_yaml(self, obj):
-        return format_html("<pre>{}</pre>", obj.feature_yaml)
+        content = obj.feature_yaml or ""
+        return format_html(
+            '<details><summary style="cursor:pointer; user-select:none;">{}</summary>'
+            '<pre style="white-space:pre-wrap; max-height:400px; overflow:auto; margin-top:8px;">{}</pre>'
+            "</details>",
+            "Show/Hide Feature YAML",
+            content,
+        )
 
     feature_yaml.short_description = "Feature Data (YAML)"
 
@@ -109,17 +116,20 @@ class CommentaryInline(admin.StackedInline):
             {"fields": ("institution_type", "institution_credentials")},
         ),
         ("Meta", {"fields": ("comment",)}),
+        ("Harvest Data", {"fields": (("feature_refresh_date", "feature_yaml"),)}),
     )
 
     def feature_yaml(self, obj):
-        return format_html("<pre>{}</pre>", obj.feature_yaml)
+        content = obj.feature_yaml or ""
+        return format_html(
+            '<details><summary style="cursor:pointer; user-select:none;">{}</summary>'
+            '<pre style="white-space:pre-wrap; max-height:400px; overflow:auto; margin-top:8px;">{}</pre>'
+            "</details>",
+            "Show/Hide Feature YAML",
+            content,
+        )
 
     feature_yaml.short_description = "Feature Data (YAML)"
-
-
-class BrandFeaturesInline(admin.StackedInline):
-    model = BrandFeature
-    fields = (("feature", "details"),)
 
 
 # @admin.display(description='Name')
@@ -134,12 +144,6 @@ class BrandFeaturesReadonlyInline(admin.StackedInline):
     model = BrandFeature
     fields = (("feature", "details"),)
     readonly_fields = ["feature", "details"]
-
-
-@admin.register(FeatureType)
-class BrandFeatureAdmin(admin.ModelAdmin):
-    search_fields = ("name", "description")
-    list_display = ("name", "description")
 
 
 class CountriesWidgetOverrideForm(forms.ModelForm):
@@ -300,12 +304,7 @@ class BrandAdmin(VersionAdmin):
 
     list_per_page = 800
 
-    inlines = [
-        StateLicensedInline,
-        StatePhysicalBranchInline,
-        CommentaryInline,
-        BrandFeaturesInline,
-    ]
+    inlines = [StateLicensedInline, StatePhysicalBranchInline, CommentaryInline]
 
     def save_model(self, request, obj, form, change):
         """
