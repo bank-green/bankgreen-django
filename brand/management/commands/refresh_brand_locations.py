@@ -18,7 +18,7 @@ class Command(BaseCommand):
         brands_by_country = {}
 
         for country in self.countries:
-            brands_by_country[country] = Brand.objects.filter(countries__in=[country])
+            brands_by_country[country] = Brand.objects.filter(countries__contains=country)
         print(f"Initialized...")
         for country, brands in brands_by_country.items():
             for brand in brands:
