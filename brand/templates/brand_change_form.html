@@ -1,12 +1,20 @@
 {% extends "admin/change_form.html" %}
 {% load i18n admin_urls %}
 
-{% block object-tools %}
-{{ block.super }}
-{% if is_change_view %}
-    <form method="get">  
-        <input type="hidden" name="model" value="brand">
-        <input type="submit" formaction="{% url 'admin:refresh_harvest_data' original.pk %}" value="{% trans 'Refresh Harvest Data' %}" class="button" style="margin-top: -48px; float: right; margin-right: 80px; border-radius: 25px; padding: 8px;">     
-    </form>
-{% endif %}
+{% block object-tools-items %}
+  {{ block.super }}
+  {% if is_change_view %}
+    <li>
+      <form method="post" action="{% url 'admin:brand_refresh_location' original.pk %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="button">{% trans 'Refresh Location Info' %}</button>
+      </form>
+    </li>
+    <li>
+      <form method="post" action="{% url 'admin:brand_refresh_features' original.pk %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="button">{% trans 'Refresh Feature Info' %}</button>
+      </form>
+    </li>
+  {% endif %}
 {% endblock %}

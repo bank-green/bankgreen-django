@@ -21,7 +21,7 @@ from brand.models.embrace_campaign import EmbraceCampaign
 from brand.models.features import BrandFeature, FeatureType
 
 from .models import Brand, Contact
-from .utils.harvest_data import update_commentary_feature_data
+from .utils.harvest_data import fetch_harvest_location_data, update_commentary_feature_data
 
 
 @admin.register(Commentary)
@@ -277,6 +277,105 @@ class BrandAdmin(VersionAdmin):
     form = CountriesWidgetOverrideForm
     change_list_template = "change_list_template.html"
     change_form_template = "brand_change_form.html"
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "<path:object_id>/refresh_location/",
+                self.admin_site.admin_view(self.refresh_location),
+                name="brand_refresh_location",
+            ),
+            path(
+                "<path:object_id>/refresh_features/",
+                self.admin_site.admin_view(self.refresh_features),
+                name="brand_refresh_features",
+            ),
+        ]
+        return custom_urls + urls
+
+    def _start_thread(self, target, *args, **kwargs):
+        import threading
+
+        t = threading.Thread(target=target, args=args, kwargs=kwargs, daemon=True)
+        t.start()
+        return t
+
+    def refresh_location(self, request, object_id):
+        # Kick off background refresh of location data for this brand
+        def worker(brand_id):
+            from django.db import connection
+
+            try:
+                brand = Brand.objects.get(pk=brand_id)
+                countries_check = ["AU", "US", "CA"]
+                # Determine which countries to process based on the brand's countries field
+                brand_countries = getattr(brand, "countries", []) or []
+                for country in [c for c in countries_check if c in brand_countries]:
+                    data = fetch_harvest_location_data(
+                        brand_tag=brand.tag,
+                        brand_url=brand.website,
+                        brand_country=country,
+                        brand_name=brand.name,
+                    )
+                    if isinstance(data, Exception):
+                        continue
+                    location_data = data.get("location") if isinstance(data, dict) else None
+                    if not location_data:
+                        continue
+                    state_licensed = location_data.get("licensed_to_operate_in", []) or []
+                    state_physical_branch = location_data.get("physical_branches", []) or []
+                    for state_code in state_licensed:
+                        state = State.objects.filter(tag=state_code).first()
+                        if state:
+                            brand.state_licensed.add(state)
+                    for state_code in state_physical_branch:
+                        state = State.objects.filter(tag=state_code).first()
+                        if state:
+                            brand.state_physical_branch.add(state)
+            except Exception:
+                # Best-effort background task; avoid crashing the thread
+                pass
+            finally:
+                # Ensure DB connection cleanup in threaded context
+                try:
+                    connection.close()
+                except Exception:
+                    pass
+
+        self._start_thread(worker, object_id)
+        self.message_user(
+            request,
+            "Working on refreshing location data. It may take up to 10 minutes for data to appear.",
+        )
+        return redirect("admin:brand_brand_change", object_id)
+
+    def refresh_features(self, request, object_id):
+        # Kick off background refresh of feature data for this brand
+        def worker(brand_id):
+            from django.db import connection
+
+            try:
+                brand = Brand.objects.get(pk=brand_id)
+                # Ensure commentary exists
+                commentary = getattr(brand, "commentary", None)
+                if commentary is None:
+                    commentary = Commentary.objects.create(brand_id=brand.id)
+                update_commentary_feature_data(commentary, overwrite=True)
+            except Exception:
+                pass
+            finally:
+                try:
+                    connection.close()
+                except Exception:
+                    pass
+
+        self._start_thread(worker, object_id)
+        self.message_user(
+            request,
+            "Working on updating feature data. It may take up to 10 minutes for data to appear.",
+        )
+        return redirect("admin:brand_brand_change", object_id)
 
     search_fields = ["name", "tag", "website"]
     readonly_fields = ["created", "modified"]
