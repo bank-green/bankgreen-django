@@ -221,6 +221,8 @@ class StatePhysicalBranchDropDownFilter(admin.SimpleListFilter):
         return [(s.tag, str(s)) for s in State.objects.all()]
 
     def queryset(self, request, queryset):
+        if not self.value():
+            return queryset
         return queryset.filter(state_physical_branch__tag__exact=self.value())
 
 
@@ -233,6 +235,8 @@ class StateLicensedDropDownFilter(admin.SimpleListFilter):
         return [(s.tag, str(s)) for s in State.objects.all()]
 
     def queryset(self, request, queryset):
+        if not self.value():
+            return queryset
         return queryset.filter(state_licensed__tag__exact=self.value())
 
 
