@@ -107,6 +107,11 @@ class CommentaryInline(admin.StackedInline):
                     ("rating", "show_on_sustainable_banks_page"),
                     ("rating_inherited", "inherit_brand_rating"),
                     ("embrace_campaign", "associated_contacts"),
+                    ("headline",),
+                    ("subtitle",),
+                    ("description1",),
+                    ("description2",),
+                    ("description3",),
                 )
             },
         ),
