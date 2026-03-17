@@ -17,7 +17,7 @@ pandas>=2.2
 pycountry==22.1.10
 python-dotenv==0.19.2
 qwikidata==0.4.0
-requests==2.32.2
+requests==2.32.4
 django-crispy-forms==1.13.0
 unidecode
 django-countries==7.6.1
