@@ -16,9 +16,9 @@ from brand.models.brand_state import StateLicensed, StatePhysicalBranch
 from brand.models.commentary import Commentary, RatingChoice
 from brand.models.contact import Contact
 from brand.models.state import State
-from brand.schema import schema
 from brand.tests.test_data.feature_json import dummy_all_features, dummy_no_features
 from brand.tests.utils import create_test_brands
+from schema import schema
 
 from ..models import Brand
 

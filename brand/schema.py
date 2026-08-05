@@ -496,4 +496,5 @@ def harvest_data_filter_q(requested_fields):
     return query
 
 
+# potentially dead: nothing appears to import this directly anymore, see root schema.py instead
 schema = graphene.Schema(query=Query)
