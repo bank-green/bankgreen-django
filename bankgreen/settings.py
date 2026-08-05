@@ -176,7 +176,7 @@ CACHE_MAX_AGE = os.environ.get("CACHE_MAX_AGE")
 GRAPHENE = {
     # lets us pull all banks at once without pagination
     "RELAY_CONNECTION_MAX_LIMIT": 10000,
-    "SCHEMA": "brand.schema.schema",
+    "SCHEMA": "schema.schema",
     "SCHEMA_OUTPUT": "gql_schema.json",
 }
 
