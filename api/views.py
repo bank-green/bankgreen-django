@@ -24,6 +24,7 @@ from .serializers import (
     BrandSuggestionSerializer,
     CommentaryFeatureOverrideSerializer,
     ContactSerializer,
+    SwitchSurveyPlanningSerializer,
     SwitchSurveySubmissionSerializer,
 )
 

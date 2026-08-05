@@ -6,6 +6,7 @@ from brand.models.brand_suggestion import BrandSuggestion
 from brand.models.commentary import Commentary
 from brand.models.contact import Contact
 from impact.models.switch_survey import SwitchSurveySubmission
+from impact.models.switch_survey_planning import SwitchSurveyPlanning
 
 
 # Serialization : It is the process of converting complex data into a format that can be easily
