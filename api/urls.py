@@ -13,4 +13,5 @@ urlpatterns = [
         views.BrandFeatureOverride.as_view(),
         name="brand_feature_override",
     ),
+    path("impact-survey/", views.SwitchSurveyView.as_view(), name="impact_survey"),
 ]
