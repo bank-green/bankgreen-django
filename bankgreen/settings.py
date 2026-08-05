@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "rest_framework",
     # my apps
     "brand",
+    "impact",
     # third party apps
     "graphene_django",
     "django_countries",
