@@ -180,6 +180,7 @@ GRAPHENE = {
     "SCHEMA_OUTPUT": "gql_schema.json",
 }
 
+# I think this block is overwritten by the REST_FRAMEWORK reassignment below and never actually takes effect
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 1,
@@ -188,6 +189,7 @@ REST_FRAMEWORK = {
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["api.authentication.SingleTokenAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_THROTTLE_RATES": {"anon": "5/min"},
 }
 
 CACHES = {
