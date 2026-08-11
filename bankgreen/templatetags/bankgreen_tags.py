@@ -6,7 +6,6 @@ from reversion.models import Revision, Version
 
 from brand.models.brand import Brand
 
-
 register = template.Library()
 
 

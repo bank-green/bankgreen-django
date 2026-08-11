@@ -18,7 +18,6 @@ from django.utils.encoding import force_str
 
 from dotenv import load_dotenv
 
-
 # this hack is necessary because force_text is removed from django4, but graphene < 3 requires it
 django.utils.encoding.force_text = force_str
 
@@ -60,6 +59,7 @@ INSTALLED_APPS = [
     "rest_framework",
     # my apps
     "brand",
+    "impact",
     # third party apps
     "graphene_django",
     "django_countries",
@@ -164,6 +164,13 @@ PASSWORD = os.environ.get("PASSWORD")
 
 REST_API_CONTACT_SINGLE_TOKEN = os.environ.get("REST_API_CONTACT_SINGLE_TOKEN")
 HARVEST_TOKEN = os.environ.get("HARVEST_TOKEN")
+MAILERLITE_API_BASE_URL = os.environ.get(
+    "MAILERLITE_API_BASE_URL", "https://connect.mailerlite.com/api"
+)
+MAILERLITE_API_KEY = os.environ.get("MAILERLITE_API_KEY")
+MAILERLITE_SWITCHED_GROUP_ID = os.environ.get("MAILERLITE_SWITCHED_GROUP_ID")
+MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID = os.environ.get("MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID")
+TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY")
 
 CORS_ALLOWED_ORIGIN_REGEXES = (
     os.environ.get("CORS_ALLOWED_ORIGIN_REGEXES").split(" ")
@@ -176,10 +183,11 @@ CACHE_MAX_AGE = os.environ.get("CACHE_MAX_AGE")
 GRAPHENE = {
     # lets us pull all banks at once without pagination
     "RELAY_CONNECTION_MAX_LIMIT": 10000,
-    "SCHEMA": "brand.schema.schema",
+    "SCHEMA": "schema.schema",
     "SCHEMA_OUTPUT": "gql_schema.json",
 }
 
+# I think this block is overwritten by the REST_FRAMEWORK reassignment below and never actually takes effect
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 1,
@@ -188,6 +196,8 @@ REST_FRAMEWORK = {
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["api.authentication.SingleTokenAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_THROTTLE_RATES": {"anon": "5/min"},
+    "NUM_PROXIES": 2,
 }
 
 CACHES = {

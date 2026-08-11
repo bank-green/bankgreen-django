@@ -1,6 +1,5 @@
 from brand.models import *
 
-
 full_headlines = Commentary.objects.all().exclude(headline__isnull=True).exclude(headline="")
 full_subtitles = Commentary.objects.all().exclude(subtitle__isnull=True).exclude(subtitle="")
 

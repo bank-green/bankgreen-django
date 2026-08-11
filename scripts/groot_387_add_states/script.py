@@ -11,7 +11,6 @@ from brand.models.brand import Brand
 from brand.models.brand_state import StateLicensed
 from brand.models.state import State
 
-
 usa_state_data = Region.objects.filter(country_id=234)
 canada_state_data = Region.objects.filter(country_id=38)
 australia_state_data = Region.objects.filter(country_id=13)

@@ -4,7 +4,6 @@
 
 from brand.models import *
 
-
 not_found = []
 undone = []
 

@@ -3,7 +3,6 @@ import openpyxl
 import pyth.plugins.plaintext.writer
 import pyth.plugins.rtf15.reader
 
-
 # Load the Excel file
 workbook = openpyxl.load_workbook("commentaries.xlsx")
 sheet = workbook.active
@@ -37,7 +36,6 @@ workbook.save("output.xlsx")
 import html2text
 import openpyxl
 
-
 # Load the Excel file
 workbook = openpyxl.load_workbook("output.xlsx")
 sheet = workbook.active
@@ -64,7 +62,6 @@ workbook.save("output2.xlsx")
 #######
 
 import openpyxl
-
 
 # Load the Excel file
 workbook = openpyxl.load_workbook("output.xlsx")

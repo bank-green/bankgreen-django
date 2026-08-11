@@ -6,7 +6,6 @@ from django.utils.timezone import make_aware
 
 from brand.models.brand import Brand
 
-
 """
   to run:
   django shell < scripts/Groot_390/groot-390.py

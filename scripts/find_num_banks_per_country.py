@@ -1,12 +1,13 @@
 """script is meant to be copy-pasted into django shell.
 In short, it prints the number of banks per country, with their ratings."""
 
-from brand.models import Brand, Commentary, RatingChoice
+from collections import OrderedDict
+
 from django.db.models import Count, F
 
-from collections import OrderedDict
 import yaml
 
+from brand.models import Brand, RatingChoice
 
 # Step 1: Retrieve all unique country codes from brands that have commentaries.
 # The 'countries' field (CountryField with multiple=True) stores country codes as a comma-separated string.

@@ -10,7 +10,6 @@ from unidecode import unidecode
 
 from brand.models import Brand, Commentary
 
-
 prismic_base_url = "https://bankgreen.cdn.prismic.io/api/v2"
 prismic_filter_documents_url = "/documents/search"
 

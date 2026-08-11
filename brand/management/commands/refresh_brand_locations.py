@@ -3,7 +3,6 @@ from django.core.management.base import BaseCommand
 from brand.models import Brand, State
 from brand.utils.harvest_data import fetch_harvest_location_data
 
-
 """
     To be used with cron job, ran ever 3 month
     please see GROOT-414 ticket for more context

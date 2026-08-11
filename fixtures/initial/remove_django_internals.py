@@ -1,6 +1,5 @@
 from json import dump, load
 
-
 with open("fixtures/initial/initial.json", "r") as file:
     initial = load(file)
 

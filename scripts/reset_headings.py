@@ -2,7 +2,6 @@ from django.db.models import Q
 
 from brand.models import *
 
-
 # this script deletes redundant headings
 
 great_headers = Commentary.objects.filter(header__icontains="great")

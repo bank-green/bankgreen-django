@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 from brand.models import *
 from brand.models.commentary import InstitutionType
 
-
 """
   This script adds canadian credit unions
   to run:
