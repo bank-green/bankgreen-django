@@ -14,7 +14,6 @@ from brand.models.brand import Brand
 from brand.models.commentary import Commentary
 from brand.models.contact import Contact
 from impact.models.switch_survey_emails import SwitchSurveyEmail
-from impact.models.switch_survey import SwitchSurveySubmission
 from impact.utils.mailerlite import subscribe, unsubscribe_from_group
 from impact.utils.turnstile import verify_token
 

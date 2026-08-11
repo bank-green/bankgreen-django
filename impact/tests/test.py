@@ -9,8 +9,8 @@ import graphene.test
 import requests
 from rest_framework.test import APIClient
 
-from impact.models.switch_survey_emails import SwitchSurveyEmail
 from impact.models.switch_survey import SwitchSurveySubmission
+from impact.models.switch_survey_emails import SwitchSurveyEmail
 from impact.models.switch_survey_planning import SwitchSurveyPlanning
 from impact.utils.mailerlite import subscribe
 from impact.utils.turnstile import verify_token
