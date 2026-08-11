@@ -16,12 +16,15 @@ def subscribe(email: str, group_id: Optional[str] = None) -> bool:
         logger.error("MailerLite group id is not configured; skipping subscribe")
         return False
     try:
-        # MailerLite rejects a quoted id with "The groups.0 field must be a number", so the id
-        # goes out as a JSON number even though it reaches us as a string from the environment.
+        group_number = int(group)
+    except (TypeError, ValueError):
+        logger.error(f"MailerLite group id is not numeric: {group!r}")
+        return False
+    try:
         response = requests.request(
             "POST",
             f"{settings.MAILERLITE_API_BASE_URL}/subscribers",
-            json={"email": email, "groups": [int(group)]},
+            json={"email": email, "groups": [group_number]},
             headers={
                 "Authorization": f"Bearer {settings.MAILERLITE_API_KEY}",
                 "Content-Type": "application/json",
@@ -33,8 +36,11 @@ def subscribe(email: str, group_id: Optional[str] = None) -> bool:
             return True
         logger.error(f"MailerLite API returned {response.status_code}: {response.text}")
         return False
-    except Exception as e:
+    except requests.RequestException as e:
         logger.error(f"MailerLite API call failed: {e}")
+        return False
+    except Exception as e:
+        logger.exception(f"Unexpected error in MailerLite subscribe: {e}")
         return False
 
 
@@ -77,6 +83,9 @@ def unsubscribe_from_group(email: str, group_id: str) -> bool:
             return True
         logger.error(f"MailerLite API returned {response.status_code}: {response.text}")
         return False
-    except Exception as e:
+    except requests.RequestException as e:
         logger.error(f"MailerLite API call failed: {e}")
+        return False
+    except Exception as e:
+        logger.exception(f"Unexpected error in MailerLite unsubscribe: {e}")
         return False

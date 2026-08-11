@@ -6,6 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 import graphene.test
+import requests
 from rest_framework.test import APIClient
 
 from impact.models.switch_survey_emails import SwitchSurveyEmail
@@ -400,7 +401,20 @@ class TurnstileVerifyTokenTestCase(TestCase):
 class MailerLiteSubscribeTestCase(TestCase):
     def test_subscribe_returns_false_on_request_exception(self):
         with patch(MAILERLITE_REQUEST) as mock_request:
-            mock_request.side_effect = Exception("network error")
+            mock_request.side_effect = requests.ConnectionError("network error")
+            self.assertFalse(subscribe("test@example.com"))
+
+    def test_subscribe_returns_false_when_group_id_is_not_numeric(self):
+        with (
+            patch(MAILERLITE_REQUEST) as mock_request,
+            self.settings(MAILERLITE_SWITCHED_GROUP_ID="id"),
+        ):
+            self.assertFalse(subscribe("test@example.com"))
+        mock_request.assert_not_called()
+
+    def test_subscribe_returns_false_on_unexpected_error(self):
+        with patch(MAILERLITE_REQUEST) as mock_request:
+            mock_request.side_effect = AttributeError("boom")
             self.assertFalse(subscribe("test@example.com"))
 
     def test_subscribe_uses_explicit_group_id_over_default(self):
