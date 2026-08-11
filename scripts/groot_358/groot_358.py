@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 from brand.models import *
 from brand.models.commentary import InstitutionType
 
-
 """
   to run:
   django shell < scripts/groot_358/groot-358.py

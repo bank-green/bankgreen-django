@@ -29,7 +29,6 @@ from brand import views
 from brand.views import CustomPasswordResetView
 from schema import schema
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", RedirectView.as_view(url=reverse_lazy("admin:index"))),

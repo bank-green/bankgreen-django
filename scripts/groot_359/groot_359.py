@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 from brand.models import *
 from brand.models.commentary import InstitutionType
 
-
 """
   script for finding and adding New Zealand credit unions. This was eventually done by hand
   but the script is here for reference.

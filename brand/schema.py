@@ -29,7 +29,6 @@ from .models.commentary import InstitutionCredential as InstitutionCredentialMod
 from .models.commentary import InstitutionType as InstitutionTypeModel
 from .models.state import State as StateModel
 
-
 logger = logging.getLogger(__name__)
 
 

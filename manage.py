@@ -1,5 +1,6 @@
 #!/home/skerdi/.pyenv/versions/3.9.10/envs/venv/bin/python3
 """Django's command-line utility for administrative tasks."""
+
 import os
 import sys
 

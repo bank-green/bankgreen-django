@@ -9,7 +9,6 @@ import yaml
 
 from brand.models import Brand, RatingChoice
 
-
 # Step 1: Retrieve all unique country codes from brands that have commentaries.
 # The 'countries' field (CountryField with multiple=True) stores country codes as a comma-separated string.
 # We first fetch these strings, then split and collect unique codes in Python.
@@ -80,7 +79,6 @@ sorted_filtered_results = dict(
 )
 
 from brand.models.state import COUNTRIES  # Import the COUNTRIES dictionary
-
 
 results_with_country_names = OrderedDict()
 for country_code, data in sorted_filtered_results.items():

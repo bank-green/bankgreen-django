@@ -1,6 +1,5 @@
 from django.db import models
 
-
 COUNTRIES = {"US": "United States", "CA": "Canada", "AU": "Australia"}
 
 

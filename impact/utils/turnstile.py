@@ -4,7 +4,6 @@ from django.conf import settings
 
 import requests
 
-
 logger = logging.getLogger(__name__)
 
 

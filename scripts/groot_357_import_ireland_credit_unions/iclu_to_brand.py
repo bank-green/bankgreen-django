@@ -8,7 +8,6 @@ from django.db import IntegrityError
 from brand.models import Brand, Commentary, Contact
 from brand.models.commentary import InstitutionType, RatingChoice
 
-
 """
 to run from django shell:
 

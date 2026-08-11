@@ -14,7 +14,6 @@ from dotenv import load_dotenv
 from brand.models import *
 from brand.models.commentary import InstitutionType
 
-
 # to run in django shell using 'python manage.py shell'
 # exec(open('scripts/groot_355/groot-355.py').read())
 

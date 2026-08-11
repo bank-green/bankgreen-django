@@ -18,7 +18,6 @@ from django.utils.encoding import force_str
 
 from dotenv import load_dotenv
 
-
 # this hack is necessary because force_text is removed from django4, but graphene < 3 requires it
 django.utils.encoding.force_text = force_str
 

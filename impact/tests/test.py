@@ -16,7 +16,6 @@ from impact.utils.mailerlite import subscribe
 from impact.utils.turnstile import verify_token
 from schema import schema
 
-
 MAILERLITE_REQUEST = "impact.utils.mailerlite.requests.request"
 TURNSTILE_POST = "impact.utils.turnstile.requests.post"
 

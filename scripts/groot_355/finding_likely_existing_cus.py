@@ -1,7 +1,6 @@
 from brand.models import *
 from brand.models.commentary import InstitutionType
 
-
 """
 This is a script to help us find credit unions that are already in DBG and go through them by hand
 """

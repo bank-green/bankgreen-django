@@ -27,7 +27,6 @@ from .serializers import (
     SwitchSurveySubmissionSerializer,
 )
 
-
 logger = logging.getLogger(__name__)
 
 

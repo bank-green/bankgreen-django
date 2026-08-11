@@ -13,7 +13,6 @@ from dotenv import load_dotenv
 from brand.models import *
 from brand.models.commentary import InstitutionType
 
-
 ENV_DIR = str(Path().cwd() / "bankgreen/.env")
 load_dotenv(ENV_DIR)
 

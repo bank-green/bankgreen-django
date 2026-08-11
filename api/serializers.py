@@ -8,7 +8,6 @@ from brand.models.contact import Contact
 from impact.models.switch_survey import SwitchSurveySubmission
 from impact.models.switch_survey_planning import SwitchSurveyPlanning
 
-
 # Serialization : It is the process of converting complex data into a format that can be easily
 #                 transmitted and stored. Examples : Json, XML etc.
 # ModelSerializer is used for serializing Django models into Json format.
