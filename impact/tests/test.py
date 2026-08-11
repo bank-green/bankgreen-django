@@ -16,6 +16,10 @@ from impact.utils.turnstile import verify_token
 from schema import schema
 
 
+MAILERLITE_REQUEST = "impact.utils.mailerlite.requests.request"
+TURNSTILE_POST = "impact.utils.turnstile.requests.post"
+
+
 def setUpModule():
     logging.getLogger("impact.utils").setLevel(logging.CRITICAL)
 
@@ -28,6 +32,9 @@ class SwitchSurveySubmissionAPITestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.url = reverse("rest_api:impact_survey")
+        self.switched_group_id = "111111111111111111"
+        self.planning_group_id = "222222222222222222"
+        self.subscriber_id = "31986843064993537"
         self.valid_payload = {
             "moved_from_bank_name": "Barclays",
             "moved_to_bank_name": "Triodos Bank",
@@ -106,7 +113,7 @@ class SwitchSurveySubmissionAPITestCase(TestCase):
         self.assertEqual(submission.moved_to_brand, brand1)
 
     def test_post_with_email_saves_follow_up(self):
-        with patch("impact.utils.mailerlite.requests.request") as mock_request:
+        with patch(MAILERLITE_REQUEST) as mock_request:
             mock_request.return_value = MagicMock(ok=True)
             self.client.post(
                 self.url,
@@ -119,7 +126,10 @@ class SwitchSurveySubmissionAPITestCase(TestCase):
         self.assertEqual(follow_up.submission, SwitchSurveySubmission.objects.first())
 
     def test_post_with_email_sets_mailerlite_synced(self):
-        with patch("impact.utils.mailerlite.requests.request") as mock_request:
+        with (
+            patch(MAILERLITE_REQUEST) as mock_request,
+            self.settings(MAILERLITE_SWITCHED_GROUP_ID=self.switched_group_id),
+        ):
             mock_request.return_value = MagicMock(ok=True)
             self.client.post(
                 self.url,
@@ -130,10 +140,10 @@ class SwitchSurveySubmissionAPITestCase(TestCase):
 
     def test_post_with_marketing_consent_subscribes_to_switched_group(self):
         with (
-            patch("impact.utils.mailerlite.requests.request") as mock_request,
+            patch(MAILERLITE_REQUEST) as mock_request,
             self.settings(
-                MAILERLITE_SWITCHED_GROUP_ID="111111111111111111",
-                MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID="222222222222222222",
+                MAILERLITE_SWITCHED_GROUP_ID=self.switched_group_id,
+                MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID=self.planning_group_id,
             ),
         ):
             mock_request.return_value = MagicMock(ok=True)
@@ -144,7 +154,7 @@ class SwitchSurveySubmissionAPITestCase(TestCase):
             )
         posts = [c for c in mock_request.call_args_list if c.args[0] == "POST"]
         self.assertEqual(len(posts), 1)
-        self.assertEqual(posts[0].kwargs["json"]["groups"], [111111111111111111])
+        self.assertEqual(posts[0].kwargs["json"]["groups"], [int(self.switched_group_id)])
 
     def test_post_with_email_but_no_marketing_consent_retains_address_without_subscribing(self):
         with (
@@ -172,12 +182,12 @@ class SwitchSurveySubmissionAPITestCase(TestCase):
 
     def test_post_with_email_removes_from_planning_group(self):
         with (
-            patch("impact.utils.mailerlite.requests.request") as mock_request,
-            self.settings(MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID="222222222222222222"),
+            patch(MAILERLITE_REQUEST) as mock_request,
+            self.settings(MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID=self.planning_group_id),
         ):
             mock_request.side_effect = [
                 MagicMock(
-                    ok=True, status_code=200, json=lambda: {"data": {"id": "31986843064993537"}}
+                    ok=True, status_code=200, json=lambda: {"data": {"id": self.subscriber_id}}
                 ),
                 MagicMock(ok=True, status_code=204),
             ]
@@ -187,11 +197,13 @@ class SwitchSurveySubmissionAPITestCase(TestCase):
         lookup, delete = mock_request.call_args_list
         self.assertEqual(lookup.args[0], "GET")
         self.assertEqual(delete.args[0], "DELETE")
-        self.assertIn("/subscribers/31986843064993537/groups/222222222222222222", delete.args[1])
+        self.assertIn(
+            f"/subscribers/{self.subscriber_id}/groups/{self.planning_group_id}", delete.args[1]
+        )
         self.assertNotIn("test@example.com", delete.args[1])
 
     def test_post_with_email_never_subscribed_makes_no_delete_call(self):
-        with patch("impact.utils.mailerlite.requests.request") as mock_request:
+        with patch(MAILERLITE_REQUEST) as mock_request:
             mock_request.return_value = MagicMock(ok=False, status_code=404, text="Not Found")
             response = self.client.post(
                 self.url, {**self.valid_payload, "email": "test@example.com"}, format="json"
@@ -201,13 +213,13 @@ class SwitchSurveySubmissionAPITestCase(TestCase):
         self.assertEqual(mock_request.call_args.args[0], "GET")
 
     def test_post_without_email_does_not_call_unsubscribe(self):
-        with patch("impact.utils.mailerlite.requests.request") as mock_request:
+        with patch(MAILERLITE_REQUEST) as mock_request:
             self.client.post(self.url, self.valid_payload, format="json")
         mock_request.assert_not_called()
 
     def test_post_mailerlite_4xx_handling(self):
         with (
-            patch("impact.utils.mailerlite.requests.request") as mock_request,
+            patch(MAILERLITE_REQUEST) as mock_request,
             patch("impact.utils.mailerlite.logger") as mock_logger,
         ):
             mock_request.return_value = MagicMock(ok=False, status_code=401, text="Unauthorized")
@@ -321,14 +333,14 @@ class SwitchSurveyPlanningAPITestCase(TestCase):
         self.assertEqual(SwitchSurveyPlanning.objects.count(), 0)
 
     def test_post_without_marketing_consent_does_not_call_mailerlite(self):
-        with patch("impact.utils.mailerlite.requests.request") as mock_request:
+        with patch(MAILERLITE_REQUEST) as mock_request:
             self.client.post(self.url, self.valid_payload, format="json")
             mock_request.assert_not_called()
         self.assertFalse(SwitchSurveyPlanning.objects.first().mailerlite_synced)
 
     def test_post_with_marketing_consent_subscribes_to_planning_group(self):
         with (
-            patch("impact.utils.mailerlite.requests.request") as mock_request,
+            patch(MAILERLITE_REQUEST) as mock_request,
             self.settings(MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID="222222222222222222"),
         ):
             mock_request.return_value = MagicMock(ok=True)
@@ -340,7 +352,7 @@ class SwitchSurveyPlanningAPITestCase(TestCase):
         self.assertEqual(kwargs["json"]["groups"], [222222222222222222])
 
     def test_post_mailerlite_failure_still_returns_201(self):
-        with patch("impact.utils.mailerlite.requests.request") as mock_request:
+        with patch(MAILERLITE_REQUEST) as mock_request:
             mock_request.return_value = MagicMock(ok=False, status_code=401, text="Unauthorized")
             response = self.client.post(
                 self.url, {**self.valid_payload, "is_agree_marketing": True}, format="json"
@@ -351,12 +363,12 @@ class SwitchSurveyPlanningAPITestCase(TestCase):
 
 class TurnstileVerifyTokenTestCase(TestCase):
     def test_verify_token_returns_true_on_success(self):
-        with patch("impact.utils.turnstile.requests.post") as mock_post:
+        with patch(TURNSTILE_POST) as mock_post:
             mock_post.return_value = MagicMock(ok=True, json=lambda: {"success": True})
             self.assertTrue(verify_token("some-token"))
 
     def test_verify_token_returns_false_when_body_says_failure(self):
-        with patch("impact.utils.turnstile.requests.post") as mock_post:
+        with patch(TURNSTILE_POST) as mock_post:
             mock_post.return_value = MagicMock(
                 ok=True, json=lambda: {"success": False, "error-codes": ["invalid-input-response"]}
             )
@@ -367,17 +379,17 @@ class TurnstileVerifyTokenTestCase(TestCase):
         self.assertFalse(verify_token(None))
 
     def test_verify_token_returns_false_on_request_exception(self):
-        with patch("impact.utils.turnstile.requests.post") as mock_post:
+        with patch(TURNSTILE_POST) as mock_post:
             mock_post.side_effect = Exception("network error")
             self.assertFalse(verify_token("some-token"))
 
     def test_verify_token_missing_does_not_call_siteverify(self):
-        with patch("impact.utils.turnstile.requests.post") as mock_post:
+        with patch(TURNSTILE_POST) as mock_post:
             verify_token("")
         mock_post.assert_not_called()
 
     def test_verify_token_sends_secret_and_token_only(self):
-        with patch("impact.utils.turnstile.requests.post") as mock_post:
+        with patch(TURNSTILE_POST) as mock_post:
             mock_post.return_value = MagicMock(ok=True, json=lambda: {"success": True})
             verify_token("some-token")
         _, kwargs = mock_post.call_args
@@ -387,12 +399,12 @@ class TurnstileVerifyTokenTestCase(TestCase):
 
 class MailerLiteSubscribeTestCase(TestCase):
     def test_subscribe_returns_false_on_request_exception(self):
-        with patch("impact.utils.mailerlite.requests.request") as mock_request:
+        with patch(MAILERLITE_REQUEST) as mock_request:
             mock_request.side_effect = Exception("network error")
             self.assertFalse(subscribe("test@example.com"))
 
     def test_subscribe_uses_explicit_group_id_over_default(self):
-        with patch("impact.utils.mailerlite.requests.request") as mock_request:
+        with patch(MAILERLITE_REQUEST) as mock_request:
             mock_request.return_value = MagicMock(ok=True)
             subscribe("test@example.com", group_id="333333333333333333")
         _, kwargs = mock_request.call_args
