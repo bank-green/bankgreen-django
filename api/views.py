@@ -184,9 +184,7 @@ class SwitchSurveyView(APIView):
                 # so we can contact the respondent to clarify their submitted survey data.
                 # Marketing consent gates the MailerLite subscription below, nothing else.
                 if email:
-                    follow_up = SwitchSurveyEmail.objects.create(
-                        submission=submission, email=email
-                    )
+                    follow_up = SwitchSurveyEmail.objects.create(submission=submission, email=email)
         except Exception as e:
             logger.error(f"Failed to save switch survey submission: {e}")
             return Response(

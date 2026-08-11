@@ -50,7 +50,10 @@ def unsubscribe_from_group(email: str, group_id: str) -> bool:
     }
     try:
         lookup = requests.request(
-            "GET", f"{settings.MAILERLITE_API_BASE_URL}/subscribers/{email}", headers=headers, timeout=5
+            "GET",
+            f"{settings.MAILERLITE_API_BASE_URL}/subscribers/{email}",
+            headers=headers,
+            timeout=5,
         )
         if lookup.status_code == 404:
             # Never subscribed, so the address is already out of every group. Expected for

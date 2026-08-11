@@ -407,9 +407,7 @@ class SwitchSurveyEmailCascadeTestCase(TestCase):
             amount="5000.00",
             currency="GBP",
         )
-        SwitchSurveyEmail.objects.create(
-            submission=self.submission, email="test@example.com"
-        )
+        SwitchSurveyEmail.objects.create(submission=self.submission, email="test@example.com")
 
     def test_deleting_submission_cascades_to_follow_up(self):
         self.submission.delete()
