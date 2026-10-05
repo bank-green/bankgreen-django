@@ -227,9 +227,12 @@ class SwitchSurveyPlanningView(APIView):
                 {"error": "Could not save submission"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-        if agree_marketing and subscribe(
-            email, group_id=settings.MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID
-        ):
+        group_ids = [settings.MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID]
+        if agree_marketing:
+            group_ids.append(settings.MAILERLITE_NEWSLETTER_GROUP_ID)
+
+        fields = {"agreed_to_marketing": int(bool(agree_marketing))}
+        if subscribe(email, group_ids=group_ids, fields=fields):
             planning.mailerlite_synced = True
             planning.save(update_fields=["mailerlite_synced"])
 

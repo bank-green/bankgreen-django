@@ -8,22 +8,27 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-def subscribe(email: str, group_id: Optional[str] = None) -> bool:
-    """Subscribe an email to a MailerLite group. Returns True on success."""
-    group = group_id or settings.MAILERLITE_SWITCHED_GROUP_ID
-    if not group:
+def subscribe(
+    email: str, group_ids: Optional[list[str]] = None, fields: Optional[dict] = None
+) -> bool:
+    """Subscribe an email to MailerLite group(s). Returns True on success."""
+    groups = group_ids or [settings.MAILERLITE_SWITCHED_GROUP_ID]
+    if not all(groups):
         logger.error("MailerLite group id is not configured; skipping subscribe")
         return False
     try:
-        group_number = int(group)
+        group_numbers = [int(g) for g in groups]
     except (TypeError, ValueError):
-        logger.error(f"MailerLite group id is not numeric: {group!r}")
+        logger.error(f"MailerLite group id is not numeric: {groups!r}")
         return False
+    payload = {"email": email, "groups": group_numbers}
+    if fields:
+        payload["fields"] = fields
     try:
         response = requests.request(
             "POST",
             f"{settings.MAILERLITE_API_BASE_URL}/subscribers",
-            json={"email": email, "groups": [group_number]},
+            json=payload,
             headers={
                 "Authorization": f"Bearer {settings.MAILERLITE_API_KEY}",
                 "Content-Type": "application/json",
