@@ -478,7 +478,7 @@ class SwitchSurveyGraphQLTestCase(TestCase):
             switchSurveySubmissions {
                 edges {
                     node {
-                        uuid
+                        created
                         movedFromBankName
                         movedToBankName
                         amount
@@ -494,7 +494,6 @@ class SwitchSurveyGraphQLTestCase(TestCase):
         self.assertEqual(submissions[0]["movedFromBankName"], "Barclays")
         self.assertEqual(submissions[0]["movedToBankName"], "Triodos Bank")
         self.assertEqual(submissions[0]["currency"], "GBP")
-        self.assertIn("uuid", submissions[0])
 
     def test_query_resolves_moved_to_brand_when_matched(self):
         from brand.tests.utils import create_test_brands
@@ -546,7 +545,7 @@ class SwitchSurveyGraphQLTestCase(TestCase):
 
     def test_query_filters_by_created_range_excludes_out_of_range(self):
         query = """
-        { switchSurveySubmissions(created_Gte: "2999-01-01T00:00:00") { edges { node { uuid } } } }
+        { switchSurveySubmissions(created_Gte: "2999-01-01") { edges { node { created } } } }
         """
         res: Any = self.gql_client.execute(query)
         nodes = [edge["node"] for edge in res["data"]["switchSurveySubmissions"]["edges"]]
@@ -561,7 +560,7 @@ class SwitchSurveyGraphQLTestCase(TestCase):
                 self.assertIsNone(res.get("data"))
 
     def test_query_first_exceeding_max_limit_returns_error(self):
-        query = "{ switchSurveySubmissions(first: 5000) { edges { node { uuid } } } }"
+        query = "{ switchSurveySubmissions(first: 5000) { edges { node { created } } } }"
         res: Any = self.gql_client.execute(query)
         self.assertIsNotNone(res.get("errors"))
         self.assertIn("1000", res["errors"][0]["message"])
