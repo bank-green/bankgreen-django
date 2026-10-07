@@ -332,16 +332,28 @@ class SwitchSurveyPlanningAPITestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(SwitchSurveyPlanning.objects.count(), 0)
 
-    def test_post_without_marketing_consent_does_not_call_mailerlite(self):
-        with patch(MAILERLITE_REQUEST) as mock_request:
-            self.client.post(self.url, self.valid_payload, format="json")
-            mock_request.assert_not_called()
-        self.assertFalse(SwitchSurveyPlanning.objects.first().mailerlite_synced)
-
-    def test_post_with_marketing_consent_subscribes_to_planning_group(self):
+    def test_post_without_marketing_consent_does_not_subscribe_to_newsletter(self):
         with (
             patch(MAILERLITE_REQUEST) as mock_request,
-            self.settings(MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID="222222222222222222"),
+            self.settings(
+                MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID="222222222222222222",
+                MAILERLITE_NEWSLETTER_GROUP_ID="444444444444444444",
+            ),
+        ):
+            mock_request.return_value = MagicMock(ok=True)
+            self.client.post(self.url, self.valid_payload, format="json")
+        self.assertTrue(SwitchSurveyPlanning.objects.first().mailerlite_synced)
+        _, kwargs = mock_request.call_args
+        self.assertEqual(kwargs["json"]["groups"], [222222222222222222])
+        self.assertEqual(kwargs["json"]["fields"], {"agreed_to_marketing": 0})
+
+    def test_post_with_marketing_consent_subscribes_to_planning_and_newsletter_groups(self):
+        with (
+            patch(MAILERLITE_REQUEST) as mock_request,
+            self.settings(
+                MAILERLITE_PLANNING_TO_SWITCH_GROUP_ID="222222222222222222",
+                MAILERLITE_NEWSLETTER_GROUP_ID="444444444444444444",
+            ),
         ):
             mock_request.return_value = MagicMock(ok=True)
             self.client.post(
@@ -349,7 +361,8 @@ class SwitchSurveyPlanningAPITestCase(TestCase):
             )
         self.assertTrue(SwitchSurveyPlanning.objects.first().mailerlite_synced)
         _, kwargs = mock_request.call_args
-        self.assertEqual(kwargs["json"]["groups"], [222222222222222222])
+        self.assertEqual(kwargs["json"]["groups"], [222222222222222222, 444444444444444444])
+        self.assertEqual(kwargs["json"]["fields"], {"agreed_to_marketing": 1})
 
     def test_post_mailerlite_failure_still_returns_201(self):
         with patch(MAILERLITE_REQUEST) as mock_request:
@@ -419,9 +432,16 @@ class MailerLiteSubscribeTestCase(TestCase):
     def test_subscribe_uses_explicit_group_id_over_default(self):
         with patch(MAILERLITE_REQUEST) as mock_request:
             mock_request.return_value = MagicMock(ok=True)
-            subscribe("test@example.com", group_id="333333333333333333")
+            subscribe("test@example.com", group_ids=["333333333333333333"])
         _, kwargs = mock_request.call_args
         self.assertEqual(kwargs["json"]["groups"], [333333333333333333])
+
+    def test_subscribe_omits_fields_when_none_given(self):
+        with patch(MAILERLITE_REQUEST) as mock_request:
+            mock_request.return_value = MagicMock(ok=True)
+            subscribe("test@example.com", group_ids=["333333333333333333"])
+        _, kwargs = mock_request.call_args
+        self.assertNotIn("fields", kwargs["json"])
 
 
 class SwitchSurveyEmailCascadeTestCase(TestCase):
