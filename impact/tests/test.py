@@ -43,9 +43,9 @@ class SwitchSurveySubmissionAPITestCase(TestCase):
             "turnstile_token": "test-token",
             "is_agree_privacy": True,
         }
-        patcher = patch("api.views.verify_token", return_value=True)
-        self.mock_verify_token = patcher.start()
-        self.addCleanup(patcher.stop)
+        turnstile_patcher = patch("api.views.verify_token", return_value=True)
+        self.mock_verify_token = turnstile_patcher.start()
+        self.addCleanup(turnstile_patcher.stop)
 
     def test_post_valid_submission_returns_201(self):
         response = self.client.post(self.url, self.valid_payload, format="json")
@@ -278,9 +278,12 @@ class SwitchSurveyPlanningAPITestCase(TestCase):
             "turnstile_token": "test-token",
             "is_agree_privacy": True,
         }
-        patcher = patch("api.views.verify_token", return_value=True)
-        self.mock_verify_token = patcher.start()
-        self.addCleanup(patcher.stop)
+        turnstile_patcher = patch("api.views.verify_token", return_value=True)
+        self.mock_verify_token = turnstile_patcher.start()
+        self.addCleanup(turnstile_patcher.stop)
+        mailerlite_patcher = patch(MAILERLITE_REQUEST, return_value=MagicMock(ok=True))
+        mailerlite_patcher.start()
+        self.addCleanup(mailerlite_patcher.stop)
 
     def test_post_valid_submission_returns_201(self):
         response = self.client.post(self.url, self.valid_payload, format="json")
