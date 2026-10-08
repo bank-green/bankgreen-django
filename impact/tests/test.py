@@ -43,9 +43,9 @@ class SwitchSurveySubmissionAPITestCase(TestCase):
             "turnstile_token": "test-token",
             "is_agree_privacy": True,
         }
-        patcher = patch("api.views.verify_token", return_value=True)
-        self.mock_verify_token = patcher.start()
-        self.addCleanup(patcher.stop)
+        turnstile_patcher = patch("api.views.verify_token", return_value=True)
+        self.mock_verify_token = turnstile_patcher.start()
+        self.addCleanup(turnstile_patcher.stop)
 
     def test_post_valid_submission_returns_201(self):
         response = self.client.post(self.url, self.valid_payload, format="json")
@@ -278,9 +278,12 @@ class SwitchSurveyPlanningAPITestCase(TestCase):
             "turnstile_token": "test-token",
             "is_agree_privacy": True,
         }
-        patcher = patch("api.views.verify_token", return_value=True)
-        self.mock_verify_token = patcher.start()
-        self.addCleanup(patcher.stop)
+        turnstile_patcher = patch("api.views.verify_token", return_value=True)
+        self.mock_verify_token = turnstile_patcher.start()
+        self.addCleanup(turnstile_patcher.stop)
+        mailerlite_patcher = patch(MAILERLITE_REQUEST, return_value=MagicMock(ok=True))
+        mailerlite_patcher.start()
+        self.addCleanup(mailerlite_patcher.stop)
 
     def test_post_valid_submission_returns_201(self):
         response = self.client.post(self.url, self.valid_payload, format="json")
@@ -475,7 +478,7 @@ class SwitchSurveyGraphQLTestCase(TestCase):
             switchSurveySubmissions {
                 edges {
                     node {
-                        uuid
+                        created
                         movedFromBankName
                         movedToBankName
                         amount
@@ -491,7 +494,6 @@ class SwitchSurveyGraphQLTestCase(TestCase):
         self.assertEqual(submissions[0]["movedFromBankName"], "Barclays")
         self.assertEqual(submissions[0]["movedToBankName"], "Triodos Bank")
         self.assertEqual(submissions[0]["currency"], "GBP")
-        self.assertIn("uuid", submissions[0])
 
     def test_query_resolves_moved_to_brand_when_matched(self):
         from brand.tests.utils import create_test_brands
@@ -543,7 +545,7 @@ class SwitchSurveyGraphQLTestCase(TestCase):
 
     def test_query_filters_by_created_range_excludes_out_of_range(self):
         query = """
-        { switchSurveySubmissions(created_Gte: "2999-01-01T00:00:00") { edges { node { uuid } } } }
+        { switchSurveySubmissions(created_Gte: "2999-01-01") { edges { node { created } } } }
         """
         res: Any = self.gql_client.execute(query)
         nodes = [edge["node"] for edge in res["data"]["switchSurveySubmissions"]["edges"]]
@@ -558,7 +560,7 @@ class SwitchSurveyGraphQLTestCase(TestCase):
                 self.assertIsNone(res.get("data"))
 
     def test_query_first_exceeding_max_limit_returns_error(self):
-        query = "{ switchSurveySubmissions(first: 5000) { edges { node { uuid } } } }"
+        query = "{ switchSurveySubmissions(first: 5000) { edges { node { created } } } }"
         res: Any = self.gql_client.execute(query)
         self.assertIsNotNone(res.get("errors"))
         self.assertIn("1000", res["errors"][0]["message"])
