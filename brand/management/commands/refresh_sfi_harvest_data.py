@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 
 from brand.models import Commentary
 from brand.utils.harvest_data import update_commentary_feature_data
@@ -6,6 +6,8 @@ from brand.utils.harvest_data import update_commentary_feature_data
 """
     To be used with cron job, please see GROOT-312 ticket for more context
 """
+
+EARLY_ABORT_THRESHOLD = 10
 
 
 class Command(BaseCommand):
@@ -29,4 +31,11 @@ class Command(BaseCommand):
             except Exception as e:
                 failure += 1
                 self.stderr.write(f"✗ {commentary.brand.tag} failed: {e}")
-        self.stdout.write(self.style.SUCCESS(f"Done. Success: {success}, Failed: {failure}"))
+            if success == 0 and failure >= EARLY_ABORT_THRESHOLD:
+                raise CommandError(
+                    f"Aborted: first {failure} banks failed. Success: {success}, Failed: {failure}"
+                )
+        summary = f"Done. Success: {success}, Failed: {failure}"
+        if failure > 0:
+            raise CommandError(summary)
+        self.stdout.write(self.style.SUCCESS(summary))

@@ -1,15 +1,22 @@
 import copy
+import io
 import json
+import logging
+from datetime import timedelta
 from typing import Any
+from unittest.mock import patch
 
 from django.contrib.auth.models import User
 from django.core.management import call_command
+from django.core.management.base import CommandError
 from django.forms import ValidationError
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 import graphene.test
 import pandas as pd
+import requests
 from rest_framework.test import APIClient
 
 from brand.models.brand_state import StateLicensed, StatePhysicalBranch
@@ -18,6 +25,7 @@ from brand.models.contact import Contact
 from brand.models.state import State
 from brand.tests.test_data.feature_json import dummy_all_features, dummy_no_features
 from brand.tests.utils import create_test_brands
+from brand.utils.harvest_data import HARVEST_REQUIRED_SECTIONS, update_commentary_feature_data
 from schema import schema
 
 from ..models import Brand
@@ -649,3 +657,108 @@ class BrandsFilterHarvestDataTest(TestCase):
         res = res["data"]["brands"]["edges"]
 
         self.assertEqual(len(res), 9)
+
+
+HARVEST_GET = "brand.utils.harvest_data.requests.get"
+
+
+def make_harvest_response(status_code, body):
+    response = requests.Response()
+    response.status_code = status_code
+    response._content = json.dumps(body).encode()
+    response.url = "https://harvest.bank.green/harvest"
+    return response
+
+
+def make_valid_harvest_data():
+    return {section: {"key": {"offered": True}} for section in HARVEST_REQUIRED_SECTIONS}
+
+
+class HarvestFeatureDataTestCase(TestCase):
+    def setUp(self):
+        logging.getLogger("brand.utils.harvest_data").setLevel(logging.CRITICAL)
+        self.original_feature_json = {"existing": "data"}
+        self.original_refresh_date = timezone.now() - timedelta(days=30)
+        brand = Brand.objects.create(name="Harvest Bank", tag="harvest_bank")
+        self.commentary = Commentary.objects.create(
+            brand=brand,
+            feature_json=self.original_feature_json,
+            feature_refresh_date=self.original_refresh_date,
+            show_on_sustainable_banks_page=True,
+        )
+
+    def tearDown(self):
+        logging.getLogger("brand.utils.harvest_data").setLevel(logging.NOTSET)
+
+    def assert_commentary_unchanged(self):
+        self.commentary.refresh_from_db()
+        self.assertEqual(self.commentary.feature_json, self.original_feature_json)
+        self.assertEqual(self.commentary.feature_refresh_date, self.original_refresh_date)
+
+    def assert_rejected(self, response):
+        with (
+            patch(HARVEST_GET, return_value=response),
+            patch("brand.utils.harvest_data.logger") as mock_logger,
+        ):
+            result = update_commentary_feature_data(self.commentary, overwrite=True)
+        self.assertIsNone(result)
+        mock_logger.error.assert_called_once()
+        self.assert_commentary_unchanged()
+        return mock_logger.error.call_args[0][0]
+
+    def test_http_500_is_not_saved(self):
+        message = self.assert_rejected(
+            make_harvest_response(500, {"error": "Error communicating with external API"})
+        )
+        self.assertIn("HTTP 500", message)
+        self.assertIn("Error communicating with external API", message)
+
+    def test_http_401_is_not_saved(self):
+        message = self.assert_rejected(make_harvest_response(401, {"detail": "Invalid token"}))
+        self.assertIn("HTTP 401", message)
+        self.assertIn("Invalid token", message)
+
+    def test_missing_section_is_not_saved(self):
+        data = make_valid_harvest_data()
+        del data["policies"]
+        message = self.assert_rejected(make_harvest_response(200, data))
+        self.assertIn("policies", message)
+
+    def test_empty_sections_are_not_saved(self):
+        data = {section: {} for section in HARVEST_REQUIRED_SECTIONS}
+        self.assert_rejected(make_harvest_response(200, data))
+
+    def test_valid_data_is_saved(self):
+        data = make_valid_harvest_data()
+        with patch(HARVEST_GET, return_value=make_harvest_response(200, data)):
+            result = update_commentary_feature_data(self.commentary, overwrite=True)
+        self.assertEqual(result, self.commentary)
+        self.commentary.refresh_from_db()
+        self.assertEqual(self.commentary.feature_json, data)
+        self.assertGreater(self.commentary.feature_refresh_date, self.original_refresh_date)
+
+    def test_command_raises_on_failure(self):
+        response = make_harvest_response(500, {"error": "Error communicating with external API"})
+        with patch(HARVEST_GET, return_value=response):
+            with self.assertRaisesMessage(CommandError, "Done. Success: 0, Failed: 1"):
+                call_command("refresh_sfi_harvest_data", stdout=io.StringIO(), stderr=io.StringIO())
+        self.assert_commentary_unchanged()
+
+    def test_command_succeeds_when_all_saved(self):
+        stdout = io.StringIO()
+        response = make_harvest_response(200, make_valid_harvest_data())
+        with patch(HARVEST_GET, return_value=response):
+            call_command("refresh_sfi_harvest_data", stdout=stdout, stderr=io.StringIO())
+        self.assertIn("Done. Success: 1, Failed: 0", stdout.getvalue())
+
+    def test_command_aborts_when_first_banks_fail(self):
+        for i in range(11):
+            Commentary.objects.create(
+                brand=Brand.objects.create(name=f"Bank {i}", tag=f"bank_{i}"),
+                show_on_sustainable_banks_page=True,
+            )
+        response = make_harvest_response(500, {"error": "Error communicating with external API"})
+        with patch(HARVEST_GET, return_value=response) as mock_get:
+            with self.assertRaisesMessage(CommandError, "Aborted: first 10 banks failed"):
+                call_command("refresh_sfi_harvest_data", stdout=io.StringIO(), stderr=io.StringIO())
+        self.assertEqual(mock_get.call_count, 10)

@@ -1,3 +1,4 @@
+import logging
 import time
 from datetime import datetime, timedelta
 from typing import Dict, Union
@@ -8,6 +9,18 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 import requests
+
+logger = logging.getLogger(__name__)
+
+HARVEST_REQUIRED_SECTIONS = (
+    "customers_served",
+    "deposit_products",
+    "financial_features",
+    "services",
+    "institutional_information",
+    "policies",
+    "loan_products",
+)
 
 
 def fetch_harvest_data(
@@ -53,6 +66,7 @@ def fetch_harvest_data(
                     f"Failed after {max_retries} attempts due to {response.status_code} status code"
                 )
 
+        response.raise_for_status()
         return response.json()
 
     except Exception as e:
@@ -106,6 +120,27 @@ def fetch_harvest_location_data(
         return e
 
 
+def get_harvest_data_error(data) -> Union[str, None]:
+    """
+    Returns a reason string if the harvest data is not valid feature data, or None if it is.
+    Valid data is a dict with every required section present as a non-empty dict.
+    """
+    if isinstance(data, requests.HTTPError) and data.response is not None:
+        return f"HTTP {data.response.status_code}: {data.response.text[:500]}"
+    if isinstance(data, Exception):
+        return f"{type(data).__name__}: {str(data)[:500]}"
+    if not isinstance(data, dict):
+        return f"Unexpected response type {type(data).__name__}: {str(data)[:500]}"
+    invalid_sections = [
+        section
+        for section in HARVEST_REQUIRED_SECTIONS
+        if not isinstance(data.get(section), dict) or not data.get(section)
+    ]
+    if invalid_sections:
+        return f"Missing or empty sections {invalid_sections}: {str(data)[:500]}"
+    return None
+
+
 def update_commentary_feature_data(commentary, overwrite=False):
     """
     Refresh and persist feature data for the given commentary.
@@ -125,13 +160,15 @@ def update_commentary_feature_data(commentary, overwrite=False):
             brand_country=commentary.brand.countries[0].name if commentary.brand.countries else "",
             brand_name=commentary.brand.name,
         )
-        if isinstance(data, dict):
+        error = get_harvest_data_error(data)
+        if error is None:
             commentary.feature_json = data
             commentary.feature_refresh_date = timezone.now()
             commentary.save()
             return commentary
         else:
             # Gracefully indicate failure; callers can decide how to report it
+            logger.error(f"Rejected harvest data for {commentary.brand.tag}: {error}")
             return None
 
     # If not overwriting and no refresh criteria met, treat as no-op
