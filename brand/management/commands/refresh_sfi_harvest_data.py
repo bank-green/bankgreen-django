@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 
 from brand.models import Commentary
 from brand.utils.harvest_data import update_commentary_feature_data
@@ -6,6 +6,8 @@ from brand.utils.harvest_data import update_commentary_feature_data
 """
     To be used with cron job, please see GROOT-312 ticket for more context
 """
+
+EARLY_ABORT_THRESHOLD = 10
 
 
 class Command(BaseCommand):
@@ -17,16 +19,28 @@ class Command(BaseCommand):
         self.stdout.write(f"Updating {sfi_commentaries.count()} commentaries...")
         success = 0
         failure = 0
+        consecutive_failures = 0
         for commentary in sfi_commentaries:
             try:
                 result = update_commentary_feature_data(commentary, overwrite=True)
                 if result is not None:
                     success += 1
+                    consecutive_failures = 0
                     self.stdout.write(f"✓ Updated {commentary.brand.tag}")
                 else:
                     failure += 1
+                    consecutive_failures += 1
                     self.stderr.write(f"✗ Skipped/failed {commentary.brand.tag}")
             except Exception as e:
                 failure += 1
+                consecutive_failures += 1
                 self.stderr.write(f"✗ {commentary.brand.tag} failed: {e}")
-        self.stdout.write(self.style.SUCCESS(f"Done. Success: {success}, Failed: {failure}"))
+            if consecutive_failures >= EARLY_ABORT_THRESHOLD:
+                raise CommandError(
+                    f"Aborted: {consecutive_failures} banks failed in a row. "
+                    f"Success: {success}, Failed: {failure}"
+                )
+        summary = f"Done. Success: {success}, Failed: {failure}"
+        if failure > 0:
+            raise CommandError(summary)
+        self.stdout.write(self.style.SUCCESS(summary))
