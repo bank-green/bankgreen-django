@@ -19,21 +19,26 @@ class Command(BaseCommand):
         self.stdout.write(f"Updating {sfi_commentaries.count()} commentaries...")
         success = 0
         failure = 0
+        consecutive_failures = 0
         for commentary in sfi_commentaries:
             try:
                 result = update_commentary_feature_data(commentary, overwrite=True)
                 if result is not None:
                     success += 1
+                    consecutive_failures = 0
                     self.stdout.write(f"✓ Updated {commentary.brand.tag}")
                 else:
                     failure += 1
+                    consecutive_failures += 1
                     self.stderr.write(f"✗ Skipped/failed {commentary.brand.tag}")
             except Exception as e:
                 failure += 1
+                consecutive_failures += 1
                 self.stderr.write(f"✗ {commentary.brand.tag} failed: {e}")
-            if success == 0 and failure >= EARLY_ABORT_THRESHOLD:
+            if consecutive_failures >= EARLY_ABORT_THRESHOLD:
                 raise CommandError(
-                    f"Aborted: first {failure} banks failed. Success: {success}, Failed: {failure}"
+                    f"Aborted: {consecutive_failures} banks failed in a row. "
+                    f"Success: {success}, Failed: {failure}"
                 )
         summary = f"Done. Success: {success}, Failed: {failure}"
         if failure > 0:
